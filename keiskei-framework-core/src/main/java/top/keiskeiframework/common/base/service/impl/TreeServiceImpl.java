@@ -87,26 +87,15 @@ public class TreeServiceImpl<T extends TreeEntity> implements TreeService<T> {
             t.setSign(t.getId() + SPILT);
         }
         Field[] fields = t.getClass().getDeclaredFields();
-        List<Field> sortFields = new ArrayList<>(1);
         for (Field field : fields) {
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
+                long count = jpaRepository.count();
                 try {
                     field.setAccessible(true);
-                    log.info("{}",field.get(t));
                     if (null == field.get(t)) {
-                        sortFields.add(field);
+                        field.set(t, ++count);
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (!CollectionUtils.isEmpty(sortFields)) {
-            long count = jpaRepository.count();
-            for (Field field : sortFields) {
-                try {
-                    field.set(t, ++count);
                 } catch (IllegalAccessException ignored) {
                 }
             }
