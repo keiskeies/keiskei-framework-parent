@@ -35,8 +35,6 @@ import java.time.LocalDateTime;
  */
 @Data
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {

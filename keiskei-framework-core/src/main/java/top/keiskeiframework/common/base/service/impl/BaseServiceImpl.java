@@ -53,7 +53,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
 
     @Override
     public List<T> options() {
-        ParameterizedType parameterizedType = ((ParameterizedType)this.getClass().getGenericSuperclass());
+        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
         Type[] types = parameterizedType.getActualTypeArguments();
         Class<?> clazz = (Class<?>) types[0];
         Field[] fields = clazz.getDeclaredFields();
@@ -92,46 +92,31 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
 
     @Override
     public void changeSort(BaseSortDto baseSortDto) {
-
-        ParameterizedType parameterizedType = ((ParameterizedType)this.getClass().getGenericSuperclass());
-        Type[] types = parameterizedType.getActualTypeArguments();
-        Class<T> clazz = (Class<T>) types[0];
-
-        Field[] fields = clazz.getDeclaredFields();
-
-        List<Field> sortFields = new ArrayList<>();
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                field.setAccessible(true);
-                sortFields.add(field);
-            }
-        }
-
-        if (CollectionUtils.isEmpty(sortFields)) {
-            throw new BizException(BizExceptionEnum.NOT_FOUND_ERROR);
-        }
-
         try {
+            ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
+            Type[] types = parameterizedType.getActualTypeArguments();
+            Class<T> clazz = (Class<T>) types[0];
+
+            Field[] fields = clazz.getDeclaredFields();
             T t1 = clazz.newInstance();
             t1.setId(baseSortDto.getId1());
-            for (Field field : sortFields) {
-                field.set(t1, baseSortDto.getSortBy2());
-            }
-
-
             T t2 = clazz.newInstance();
             t2.setId(baseSortDto.getId2());
-            for (Field field : sortFields) {
-                field.set(t2, baseSortDto.getSortBy1());
+            for (Field field : fields) {
+                SortBy sortBy = field.getAnnotation(SortBy.class);
+                if (null != sortBy) {
+                    field.setAccessible(true);
+                    field.set(t1, baseSortDto.getSortBy2());
+                    field.set(t2, baseSortDto.getSortBy1());
+                }
             }
-
             jpaRepository.save(t1);
             jpaRepository.save(t2);
-
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -144,24 +129,15 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     @Override
     public T save(T t) {
         Field[] fields = t.getClass().getDeclaredFields();
-        List<Field> sortFields = new ArrayList<>(1);
         for (Field field : fields) {
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
+                long count = jpaRepository.count();
                 try {
                     field.setAccessible(true);
                     if (null == field.get(t)) {
-                        sortFields.add(field);
+                        field.set(t, ++count);
                     }
-                } catch (IllegalAccessException ignored) {
-                }
-            }
-        }
-        if (!CollectionUtils.isEmpty(sortFields)) {
-            long count = jpaRepository.count();
-            for (Field field : sortFields) {
-                try {
-                    field.set(t, ++count);
                 } catch (IllegalAccessException ignored) {
                 }
             }
@@ -173,17 +149,11 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     @Override
     public List<T> saveAll(List<T> tList) {
         Field[] fields = tList.get(0).getClass().getDeclaredFields();
-        List<Field> sortFields = new ArrayList<>(1);
+        long count = jpaRepository.count();
         for (Field field : fields) {
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
                 field.setAccessible(true);
-                sortFields.add(field);
-            }
-        }
-        if (!CollectionUtils.isEmpty(sortFields)) {
-            long count = jpaRepository.count();
-            for (Field field : sortFields) {
                 for (T t : tList) {
                     try {
                         field.set(t, ++count);
