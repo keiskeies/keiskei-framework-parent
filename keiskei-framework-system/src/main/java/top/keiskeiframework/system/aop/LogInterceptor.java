@@ -20,6 +20,7 @@ import top.keiskeiframework.common.enums.ApiErrorCode;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.vo.TokenUser;
 import top.keiskeiframework.system.entity.OperateLog;
+import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.service.IOperateLogService;
 import top.keiskeiframework.common.util.SecurityUtils;
 
@@ -54,7 +55,7 @@ public class LogInterceptor {
 
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
-            operateLog.setUserId(tokenUser.getId());
+            operateLog.setUser(User.builder().id(tokenUser.getId()).build());
             MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
 
         } catch (IllegalArgumentException ignored) {

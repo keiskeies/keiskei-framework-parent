@@ -12,6 +12,7 @@ import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.vo.TokenGrantedAuthority;
 import top.keiskeiframework.common.vo.TokenUser;
 import top.keiskeiframework.system.entity.OperateLog;
+import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.enums.OperateTypeEnum;
 import top.keiskeiframework.system.service.IOperateLogService;
 import top.keiskeiframework.system.util.ResponseUtils;
@@ -52,7 +53,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         OperateLog operateLog = new OperateLog();
         operateLog.setIp(SecurityUtils.getIpAddress(request));
         operateLog.setType(OperateTypeEnum.LOGIN.getType());
-        operateLog.setUserId(tokenUser.getId());
+        operateLog.setUser(User.builder().id(tokenUser.getId()).build());
         operateLogService.save(operateLog);
     }
 }

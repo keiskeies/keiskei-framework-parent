@@ -10,8 +10,7 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +36,9 @@ public class OperateLog extends BaseEntity {
 
     @ApiModelProperty(value = "操作人员", dataType = "Long")
     @NotNull(message = "操作人员不能为空", groups = {Insert.class})
-    private Long userId;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ApiModelProperty(value = "操作IP", dataType = "String")
     @NotNull(message = "请选择操作IP", groups = {Insert.class})

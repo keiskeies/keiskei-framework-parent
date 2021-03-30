@@ -2,10 +2,7 @@ package top.keiskeiframework.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -31,6 +28,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_user")
+@ToString(exclude = {"user"})
 public class User extends BaseEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
@@ -62,7 +60,7 @@ public class User extends BaseEntity {
     @NotBlank(message = "用户邮箱不能为空", groups = {Insert.class})
     private String email;
 
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.MERGE)
+    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.DETACH)
     @JoinTable(name = "sys_user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
@@ -72,8 +70,7 @@ public class User extends BaseEntity {
         return new HashSet<>(roles);
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "department_id")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Department department;
 
     /**

@@ -15,8 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,8 +74,15 @@ public class BaseRequest<T> {
                         Object value = baseCondition.getV();
                         String condition = baseCondition.getM();
                         // 需要限定的参数
-                        Expression expression = root.get(column);
-
+                        Expression expression;
+                        // 若为关联表 , 则使用左连接
+                        if (column.contains(".")) {
+                            String[] columns = column.split("\\.");
+                            Join join = root.join(columns[0], JoinType.LEFT);
+                            expression = join.get(columns[1]);
+                        } else {
+                            expression = root.get(column);
+                        }
                         switch (condition) {
                             case GT:
                                 predicates.add(criteriaBuilder.greaterThan(expression, (Comparable) value));

@@ -2,8 +2,9 @@ package top.keiskeiframework.system.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.lang.NonNull;
+import top.keiskeiframework.common.base.service.AbstractAuditorAware;
 import top.keiskeiframework.common.util.SecurityUtils;
-
 
 import java.util.Optional;
 
@@ -17,9 +18,10 @@ import java.util.Optional;
  */
 
 @Configuration
-public class PartnerAuditorAware implements AuditorAware<String> {
+public class PartnerAuditorAware extends AbstractAuditorAware implements AuditorAware<String> {
 
     @Override
+    @NonNull
     public Optional<String> getCurrentAuditor() {
         try {
             return Optional.of(SecurityUtils.getSessionUser().getDepartment());

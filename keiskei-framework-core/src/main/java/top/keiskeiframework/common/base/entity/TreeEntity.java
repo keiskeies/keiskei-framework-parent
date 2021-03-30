@@ -1,9 +1,11 @@
 package top.keiskeiframework.common.base.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.annotation.validate.Select;
 import top.keiskeiframework.common.annotation.validate.Update;
@@ -41,6 +43,20 @@ public class TreeEntity implements Serializable {
     private Long parentId;
 
     private String sign;
+
+    /**
+     * 物理删除标识
+     */
+    @JsonIgnore
+    private Boolean d = Boolean.FALSE;
+
+    /**
+     * 数据所属部门
+     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     */
+    @JsonIgnore
+    @CreatedBy
+    private String p;
 
     @Transient
     private List<? extends TreeEntity> children;

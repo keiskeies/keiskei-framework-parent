@@ -1,63 +1,9 @@
-server:
-  port: 10037
-  servlet:
-    session:
-      timeout: P60D
-      cookie:
-        http-only: false
-logging:
-  level:
-    top.keiskeiframework: debug
-#    org.springframework: debug
-  pattern:
-    file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
-    console: "%d [%X{mdcTraceId}] [%thread] %-5level %logger{36} %line - %msg%n"
-#  file:
-#    max-size: 100MB
-#    max-history: 90
-#    path: /opt/project/log/
 spring:
-  session:
-    store-type: redis
-  jackson:
-    default-property-inclusion: non_null
-  messages:
-    basename: i18n/messages
-  servlet:
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
-  datasource:
-    name: news_stand
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 123456
-    url: jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    timeout: 6000
-    password: 123456
-    database: 0
-  jpa:
-    database: mysql
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-        jdbc:
-          batch_size: 500
-          batch_versioned_data: true
-          order_inserts: true
+  profiles:
+    active: @environment@
+  application:
+    name: demo_test
 
-keiskei:
-  system:
-    permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
-    cross: true
 
 
 

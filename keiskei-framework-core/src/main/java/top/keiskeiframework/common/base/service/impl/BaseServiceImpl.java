@@ -137,7 +137,8 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id", unless = "#result == null")
     public T getById(Long id) {
-        return jpaRepository.findById(id).orElse(null);
+        T t = jpaRepository.findById(id).orElse(null);
+        return t;
     }
 
     @Override

@@ -63,10 +63,16 @@ public class BaseEntity implements Serializable {
     @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
     private LocalDateTime updateTime;
 
+    /**
+     * 物理删除标识
+     */
     @JsonIgnore
     private Boolean d = Boolean.FALSE;
 
-    @JsonIgnore
+    /**
+     * 数据所属部门
+     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     */
     @CreatedBy
     private String p;
 }
