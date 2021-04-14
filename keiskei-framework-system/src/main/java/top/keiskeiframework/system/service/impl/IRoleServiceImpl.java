@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.service.impl;
 
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.system.entity.Role;
 import top.keiskeiframework.system.repository.RoleRepository;
 import top.keiskeiframework.system.service.IRoleService;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IRoleServiceImpl extends BaseServiceImpl<Role> implements IRoleService {
+public class IRoleServiceImpl extends ListServiceImpl<Role> implements IRoleService {
 
     @Autowired
     private RoleRepository roleRepository;

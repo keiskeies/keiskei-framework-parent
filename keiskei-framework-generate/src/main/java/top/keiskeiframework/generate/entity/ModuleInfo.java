@@ -2,13 +2,12 @@ package top.keiskeiframework.generate.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
@@ -16,12 +15,6 @@ import javax.validation.constraints.NotNull;
 
 import top.keiskeiframework.common.annotation.validate.Insert;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,7 +33,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
-public class ModuleInfo extends BaseEntity {
+public class ModuleInfo extends ListEntity {
 
     private static final long serialVersionUID = 754302484437506602L;
 

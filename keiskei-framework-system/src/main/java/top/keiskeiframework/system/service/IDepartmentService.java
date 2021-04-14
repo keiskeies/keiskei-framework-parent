@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.service;
 
-import top.keiskeiframework.common.base.service.TreeService;
+import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.system.entity.Department;
 
 /**
@@ -11,7 +11,7 @@ import top.keiskeiframework.system.entity.Department;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface IDepartmentService extends TreeService<Department> {
+public interface IDepartmentService extends BaseService<Department> {
 
 
 }

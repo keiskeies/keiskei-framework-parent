@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.vo.BaseSortDto;
 import top.keiskeiframework.common.vo.R;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class BaseController<T extends BaseEntity> {
+public class ListController<T extends ListEntity> {
     
     @Autowired
     private BaseService<T> baseService;

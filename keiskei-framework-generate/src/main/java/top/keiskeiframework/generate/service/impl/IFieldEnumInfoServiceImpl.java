@@ -1,7 +1,7 @@
 package top.keiskeiframework.generate.service.impl;
 
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.FieldEnumInfo;
 import top.keiskeiframework.generate.service.IFieldEnumInfoService;
 
@@ -14,7 +14,7 @@ import top.keiskeiframework.generate.service.IFieldEnumInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IFieldEnumInfoServiceImpl extends BaseServiceImpl<FieldEnumInfo> implements IFieldEnumInfoService {
+public class IFieldEnumInfoServiceImpl extends ListServiceImpl<FieldEnumInfo> implements IFieldEnumInfoService {
 
 
 }

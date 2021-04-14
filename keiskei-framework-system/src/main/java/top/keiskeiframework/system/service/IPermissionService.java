@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.service;
 
-import top.keiskeiframework.common.base.service.TreeService;
+import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.system.entity.Permission;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IPermissionService extends TreeService<Permission> {
+public interface IPermissionService extends BaseService<Permission> {
 
 
 }

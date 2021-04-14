@@ -6,9 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -33,7 +32,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
-public class TableInfo extends BaseEntity {
+public class TableInfo extends ListEntity {
 
     private static final long serialVersionUID = 7715195221883078519L;
 

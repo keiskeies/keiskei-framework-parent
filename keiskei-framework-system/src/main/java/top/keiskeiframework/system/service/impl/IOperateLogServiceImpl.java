@@ -1,7 +1,7 @@
 package top.keiskeiframework.system.service.impl;
 
 import org.springframework.scheduling.annotation.Async;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.system.entity.OperateLog;
 import top.keiskeiframework.system.enums.OperateTypeEnum;
 import top.keiskeiframework.system.repository.OperateLogRepository;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IOperateLogServiceImpl extends BaseServiceImpl<OperateLog> implements IOperateLogService {
+public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService {
 
     @Autowired
     private OperateLogRepository operateLogRepository;

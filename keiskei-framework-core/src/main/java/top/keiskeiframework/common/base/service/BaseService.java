@@ -2,7 +2,6 @@ package top.keiskeiframework.common.base.service;
 
 import org.springframework.data.domain.Page;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.vo.BaseSortDto;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T extends BaseEntity> {
+public interface BaseService<T> {
 
     /**
      * 列表查询

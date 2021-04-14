@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.system.entity.ScheduledTask;
 import top.keiskeiframework.system.service.IScheduledTaskService;
@@ -20,7 +20,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IScheduledTaskServiceImpl extends BaseServiceImpl<ScheduledTask> implements IScheduledTaskService {
+public class IScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired

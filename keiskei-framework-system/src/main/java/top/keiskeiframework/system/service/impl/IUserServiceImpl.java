@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.cache.serivce.CacheStorageService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.enums.SystemEnum;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @since 2020年12月10日11:41:05
  */
 @Service
-public class IUserServiceImpl extends BaseServiceImpl<User> implements IUserService {
+public class IUserServiceImpl extends ListServiceImpl<User> implements IUserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired

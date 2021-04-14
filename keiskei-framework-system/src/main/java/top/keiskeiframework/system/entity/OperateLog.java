@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "sys_operate_log")
 @ApiModel(value = "OperateLog", description = "操作日志")
-public class OperateLog extends BaseEntity {
+public class OperateLog extends ListEntity {
 
     private static final long serialVersionUID = -1735705706625546610L;
 

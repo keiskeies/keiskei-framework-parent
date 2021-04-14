@@ -1,7 +1,7 @@
 package top.keiskeiframework.generate.service.impl;
 
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.service.IItemInfoService;
 
@@ -14,6 +14,6 @@ import top.keiskeiframework.generate.service.IItemInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IItemInfoServiceImpl extends BaseServiceImpl<ProjectInfo> implements IItemInfoService {
+public class IItemInfoServiceImpl extends ListServiceImpl<ProjectInfo> implements IItemInfoService {
 
 }

@@ -3,7 +3,7 @@ package top.keiskeiframework.generate.controller;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.BaseController;
+import top.keiskeiframework.common.base.controller.ListController;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 
 /**
@@ -17,5 +17,5 @@ import top.keiskeiframework.generate.entity.ProjectInfo;
 @RestController
 @RequestMapping("/admin/v1/generate/item")
 @Api(tags = "文件生成 - 项目管理")
-public class ItemController extends BaseController<ProjectInfo> {
+public class ItemController extends ListController<ProjectInfo> {
 }

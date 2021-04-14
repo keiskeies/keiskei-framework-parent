@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
-public class FieldEnumInfo extends BaseEntity {
+public class FieldEnumInfo extends ListEntity {
     private static final long serialVersionUID = -7401234718671320506L;
 
     @ApiModelProperty(value = "所属字段", dataType = "Long")

@@ -40,7 +40,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity implements Serializable {
+public class ListEntity implements Serializable {
 
     private static final long serialVersionUID = -8025795001235125591L;
 

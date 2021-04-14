@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,7 +29,7 @@ import java.util.Set;
 @Entity
 @Table(name = "sys_user")
 @ToString(exclude = {"user"})
-public class User extends BaseEntity {
+public class User extends ListEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
 

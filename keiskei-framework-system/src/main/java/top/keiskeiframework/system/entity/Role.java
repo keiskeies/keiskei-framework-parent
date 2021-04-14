@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +30,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_role")
-public class Role extends BaseEntity {
+public class Role extends ListEntity {
 
     private static final long serialVersionUID = 1L;
 

@@ -4,14 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
+import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.base.service.TreeService;
+import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.TreeEntityUtils;
@@ -32,17 +34,22 @@ import java.util.Set;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeServiceImpl<T extends TreeEntity> implements TreeService<T> {
+public class TreeServiceImpl<T extends TreeEntity> implements BaseService<T> {
 
     @Autowired
     protected JpaRepository<T, Long> jpaRepository;
     @Autowired
     protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
     @Autowired
-    protected TreeService<T> treeService;
+    protected BaseService<T> baseService;
 
     protected final static String SPILT = "/";
     protected final static String CACHE_NAME = "SPRING_TREE_CACHE";
+
+    @Override
+    public Page<T> page(BaseRequest<T> request) {
+        return null;
+    }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
@@ -66,6 +73,11 @@ public class TreeServiceImpl<T extends TreeEntity> implements TreeService<T> {
         }
 
         return jpaRepository.findAll(Sort.by(orders));
+    }
+
+    @Override
+    public List<T> options(T t) {
+        return null;
     }
 
     @Override
@@ -101,6 +113,11 @@ public class TreeServiceImpl<T extends TreeEntity> implements TreeService<T> {
             }
         }
         return jpaRepository.save(t);
+    }
+
+    @Override
+    public List<T> saveAll(List<T> ts) {
+        return null;
     }
 
     @Override
@@ -166,7 +183,7 @@ public class TreeServiceImpl<T extends TreeEntity> implements TreeService<T> {
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void deleteById(Long id) {
-        Set<Long> childIds = new TreeEntityUtils<>(treeService.options()).getChildIds(id);
+        Set<Long> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
         for (Long cid : childIds) {
             jpaRepository.deleteById(cid);
         }

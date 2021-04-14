@@ -2,7 +2,7 @@ package top.keiskeiframework.generate.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.base.service.impl.BaseServiceImpl;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ModuleInfo;
 import top.keiskeiframework.generate.repository.ModuleInfoRepository;
 import top.keiskeiframework.generate.service.IModuleInfoService;
@@ -16,7 +16,7 @@ import top.keiskeiframework.generate.service.IModuleInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IModuleInfoServiceImpl extends BaseServiceImpl<ModuleInfo> implements IModuleInfoService {
+public class IModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo> implements IModuleInfoService {
 
     @Autowired
     private ModuleInfoRepository moduleInfoRepository;

@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.vo.BaseSortDto;
@@ -32,7 +32,7 @@ import java.util.List;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
+public class ListServiceImpl<T extends ListEntity> implements BaseService<T> {
 
     @Autowired
     protected JpaRepository<T, Long> jpaRepository;

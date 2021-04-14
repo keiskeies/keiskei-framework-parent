@@ -2,7 +2,7 @@ package top.keiskeiframework.generate.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import java.lang.reflect.Field;
 
@@ -28,9 +28,9 @@ public enum TableInfoTypeEnum {
     public Field[] getDefaultColumns() {
         Class<?> clazz = null;
         if (this.equals(TREE)) {
-            clazz = BaseEntity.class;
+            clazz = ListEntity.class;
         } else {
-            clazz = BaseEntity.class;
+            clazz = ListEntity.class;
         }
         return clazz.getDeclaredFields();
     }
