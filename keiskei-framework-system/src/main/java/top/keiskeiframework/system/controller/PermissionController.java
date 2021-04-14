@@ -25,7 +25,7 @@ import java.util.List;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/{version}/system/permission")
+@RequestMapping("/admin/v1/system/permission")
 @Api(tags = "系统设置 - 权限管理")
 public class PermissionController extends TreeController<Permission> {
 

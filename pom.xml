@@ -155,10 +155,6 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-core</artifactId>
-        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

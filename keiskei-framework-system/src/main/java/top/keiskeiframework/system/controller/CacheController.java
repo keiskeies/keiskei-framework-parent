@@ -23,7 +23,7 @@ import java.util.Map;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/{version}/system/cache")
+@RequestMapping("/admin/v1/system/cache")
 @Api(tags = "系统设置 - 缓存管理")
 public class CacheController {
     @Autowired

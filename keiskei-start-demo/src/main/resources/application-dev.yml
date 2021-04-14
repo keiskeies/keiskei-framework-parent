@@ -31,8 +31,8 @@ spring:
     name: news_stand
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
-    url: jdbc:mysql://192.168.31.169:13306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    password: Cjm@12070817
+    url: jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
   redis:
     timeout: 6000
     password: 123456
@@ -40,9 +40,7 @@ spring:
     sentinel:
       master: mymaster
       nodes:
-        - 192.168.31.169:16379
-        - 192.168.31.169:16380
-        - 192.168.31.169:16381
+        - 127.0.0.1:16379
   jpa:
     database: mysql
     show-sql: true

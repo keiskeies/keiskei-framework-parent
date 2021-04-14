@@ -42,7 +42,7 @@ public class FileController {
      * @return .
      */
     @ApiOperation("普通上传")
-    @PostMapping("/admin/{version}/common/file/upload")
+    @PostMapping("/admin/v1/common/file/upload")
     @ResponseBody
     public R<FileInfo> upload(MultipartFile file) {
         MultiFileInfo fileInfo = new MultiFileInfo(file);
@@ -56,7 +56,7 @@ public class FileController {
      * @return .
      */
     @ApiOperation("带进度条上传")
-    @PostMapping("/admin/{version}/common/file/uploadWithProgress")
+    @PostMapping("/admin/v1/common/file/uploadWithProgress")
     @ResponseBody
     public R<FileInfo> uploadWithProgress(@Validated({UploadWithProgress.class}) MultiFileInfo fileInfo) {
         return R.ok(fileStorageService.uploadWithProgress(fileInfo));
@@ -70,7 +70,7 @@ public class FileController {
      */
     @ApiOperation("上传文件分片")
     @ResponseBody
-    @PostMapping("/admin/{version}/common/file/uploadPart")
+    @PostMapping("/admin/v1/common/file/uploadPart")
     public R<Boolean> uploadPart(@Validated({UploadPart.class}) MultiFileInfo fileInfo) {
         fileStorageService.uploadPart(fileInfo);
         return R.ok(true);
@@ -84,7 +84,7 @@ public class FileController {
      */
     @ApiOperation("合并文件分片")
     @ResponseBody
-    @PostMapping("/admin/{version}/common/file/mergingChunks")
+    @PostMapping("/admin/v1/common/file/mergingChunks")
     public R<FileInfo> mergingChunks(@Validated({MergingChunks.class}) MultiFileInfo fileInfo) {
         return R.ok(fileStorageService.mergingChunks(fileInfo));
     }
@@ -96,7 +96,7 @@ public class FileController {
      * @return .
      */
     @ApiOperation("获取文件上传进度")
-    @GetMapping("/admin/{version}/common/file/progress")
+    @GetMapping("/admin/v1/common/file/progress")
     @ResponseBody
     public R<Integer> progress(@RequestParam("fileSign") String fileSign) {
         fileSign = String.format(FileStorageService.UPLOAD_PROGRESS_FORMAT, fileSign);
@@ -116,7 +116,7 @@ public class FileController {
      * @return .
      */
     @ApiOperation("判断文件是否存在")
-    @GetMapping("/admin/{version}/common/file/exist/{fileName:.+}")
+    @GetMapping("/admin/v1/common/file/exist/{fileName:.+}")
     @ResponseBody
     public R<FileInfo> exist(@PathVariable("fileName") String fileName) {
         return R.ok(fileStorageService.exist(fileName));
@@ -128,7 +128,7 @@ public class FileController {
      * @param fileName .
      * @param response .
      */
-    @GetMapping("/{api:api|admin}/{version}/common/file/show/{fileName:.+}")
+    @GetMapping("/{api:api|admin}/v1/common/file/show/{fileName:.+}")
     public void show(@PathVariable("fileName") String fileName, HttpServletResponse response, @RequestParam(value = "x-oss-process", required = false) String process) {
         try {
             fileStorageService.show(fileName, process, response);
@@ -142,7 +142,7 @@ public class FileController {
      * @param fileName 文件名称
      * @param response 响应
      */
-    @GetMapping("/{api:api|admin}/{version}/common/file/download/{fileName:.+}")
+    @GetMapping("/{api:api|admin}/v1/common/file/download/{fileName:.+}")
     public void download(@PathVariable("fileName") String fileName,
                          HttpServletResponse response) {
         fileStorageService.show(fileName, null, response);

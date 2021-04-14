@@ -25,7 +25,7 @@ import top.keiskeiframework.common.util.SecurityUtils;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/{version}/system/self")
+@RequestMapping("/admin/v1/system/self")
 @Api(tags = "系统设置 - 个人中心")
 public class SelfController {
 

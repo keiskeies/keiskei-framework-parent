@@ -6,10 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.annotation.validate.Select;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.annotation.validate.UpdatePart;
+import top.keiskeiframework.common.util.SecurityUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -44,6 +46,9 @@ public class TreeEntity implements Serializable {
 
     private String sign;
 
+    @Transient
+    private List<? extends TreeEntity> children;
+
     /**
      * 物理删除标识
      */
@@ -52,14 +57,22 @@ public class TreeEntity implements Serializable {
 
     /**
      * 数据所属部门
-     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
      */
-    @JsonIgnore
-    @CreatedBy
     private String p;
 
-    @Transient
-    private List<? extends TreeEntity> children;
+    /**
+     * 数据创建人
+     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     */
+    @CreatedBy
+    private Long createUserId;
+
+    /**
+     * 最后修改人
+     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     */
+    @LastModifiedBy
+    private Long updateUserId;
 
 
 }

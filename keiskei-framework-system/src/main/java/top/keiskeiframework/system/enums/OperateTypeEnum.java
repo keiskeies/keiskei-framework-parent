@@ -19,6 +19,7 @@ public enum OperateTypeEnum {
     UPDATE("put","更新"),
     UPDATE_PART("patch","更新部分数据"),
     DELETE("delete","删除"),
+    GET("get","查询"),
 
     ;
 

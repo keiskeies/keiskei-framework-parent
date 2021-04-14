@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.annotation.validate;
+package top.keiskeiframework.common.annotation;
 
 import org.springframework.lang.Nullable;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author ：陈加敏 right_way@foxmail.com
  * @since ：2019/12/11 0:29
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented

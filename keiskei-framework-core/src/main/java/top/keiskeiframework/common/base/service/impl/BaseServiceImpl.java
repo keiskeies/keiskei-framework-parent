@@ -11,13 +11,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.annotation.validate.SortBy;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
-import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.BaseSortDto;
 
 import java.lang.reflect.Field;

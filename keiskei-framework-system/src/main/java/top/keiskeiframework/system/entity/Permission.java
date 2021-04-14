@@ -7,11 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.validate.SortBy;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 

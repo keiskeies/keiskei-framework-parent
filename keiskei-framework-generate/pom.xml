@@ -25,6 +25,10 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.30</version>
         </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-core</artifactId>
+        </dependency>
     </dependencies>
 
 

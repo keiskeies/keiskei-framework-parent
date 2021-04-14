@@ -43,6 +43,8 @@ public class LogInterceptor {
 
     @Autowired
     private IOperateLogService operateLogService;
+    private final static String LOG_NAME_FORMATTER = "[%s - %s]";
+    private final static String MESSAGE_FORMATTER = "%s - %s";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")
     public void pointCut() {
@@ -58,7 +60,8 @@ public class LogInterceptor {
             operateLog.setUser(User.builder().id(tokenUser.getId()).build());
             MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
 
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
         }
 
         try {
@@ -66,7 +69,8 @@ public class LogInterceptor {
             operateLog.setType(request.getMethod());
             operateLog.setIp(SecurityUtils.getIpAddress(request));
             operateLog.setUrl(request.getRequestURI());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
         try {
@@ -75,12 +79,12 @@ public class LogInterceptor {
             Api api = point.getTarget().getClass().getAnnotation(Api.class);
             Object[] params = point.getArgs();
 
-            operateLog.setName(Arrays.toString(api.tags()) + " - " + annotation.value());
+            operateLog.setName(String.format(LOG_NAME_FORMATTER, api.tags()[0], annotation.value()));
 
             StringBuilder sb = new StringBuilder();
             for (Object param : params) {
                 if (param instanceof BaseRequest) {
-                    sb.append(param.toString());
+                    sb.append(param);
                 } else if (!(param instanceof HttpServletRequest) && !(param instanceof HttpServletResponse)) {
                     sb.append(JSON.toJSONString(param, SerializerFeature.IgnoreErrorGetter));
                 }
@@ -96,8 +100,8 @@ public class LogInterceptor {
         try {
             result = point.proceed();
             if (result instanceof R) {
-                R r = (R) result;
-                r.setMsg(operateLog.getName() + ApiErrorCode.fromCode(r.getCode()).getMsg());
+                R<?> r = (R<?>) result;
+                r.setMsg(String.format(MESSAGE_FORMATTER, operateLog.getName(), ApiErrorCode.fromCode(r.getCode()).getMsg()));
                 return r;
             }
             return result;

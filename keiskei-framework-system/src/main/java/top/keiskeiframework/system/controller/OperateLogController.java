@@ -17,7 +17,7 @@ import top.keiskeiframework.system.service.IOperateLogService;
  * @since 2020-12-16 13:36:30
  */
 @RestController
-@RequestMapping("/admin/{version}/system/operateLog")
+@RequestMapping("/admin/v1/system/operateLog")
 @Api(tags = "系统设置 - 操作日志")
 public class OperateLogController extends BaseController<OperateLog> {
 

@@ -15,7 +15,7 @@ import top.keiskeiframework.generate.entity.ProjectInfo;
  * @since 2020/12/27 22:58
  */
 @RestController
-@RequestMapping("/admin/{version}/generate/item")
+@RequestMapping("/admin/v1/generate/item")
 @Api(tags = "文件生成 - 项目管理")
 public class ItemController extends BaseController<ProjectInfo> {
 }

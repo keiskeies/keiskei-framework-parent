@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.annotation.validate.SortBy;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.TreeService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;

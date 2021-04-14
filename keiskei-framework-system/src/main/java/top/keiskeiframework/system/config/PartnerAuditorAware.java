@@ -17,14 +17,14 @@ import java.util.Optional;
  * @since 2020/12/17 16:47
  */
 
-@Configuration
-public class PartnerAuditorAware extends AbstractAuditorAware implements AuditorAware<String> {
+@Configuration("partnerAuditorAware")
+public class PartnerAuditorAware extends AbstractAuditorAware implements AuditorAware<Long> {
 
     @Override
     @NonNull
-    public Optional<String> getCurrentAuditor() {
+    public Optional<Long> getCurrentAuditor() {
         try {
-            return Optional.of(SecurityUtils.getSessionUser().getDepartment());
+            return Optional.of(SecurityUtils.getSessionUser().getId());
         } catch (Exception e) {
             return Optional.empty();
         }

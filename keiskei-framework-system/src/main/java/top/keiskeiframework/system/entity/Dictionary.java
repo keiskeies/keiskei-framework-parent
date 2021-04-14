@@ -7,8 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.validate.SortBy;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
 import javax.persistence.Entity;
@@ -50,7 +49,7 @@ public class Dictionary extends TreeEntity {
     @NotBlank(message = "主题不能为空", groups = {Insert.class})
     private String effect;
 
-    @ApiModelProperty(value = "排序", dataType = "Integer")
+    @ApiModelProperty(value = "排序", dataType = "Long")
     @SortBy(desc = false)
     private Long sortBy;
 }

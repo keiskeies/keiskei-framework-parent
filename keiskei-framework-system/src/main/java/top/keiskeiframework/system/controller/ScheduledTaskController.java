@@ -21,7 +21,7 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/{version}/system/scheduledTask")
+@RequestMapping("/admin/v1/system/scheduledTask")
 @Api(tags = "系统设置 - 定时任务")
 public class ScheduledTaskController extends BaseController<ScheduledTask> {
 

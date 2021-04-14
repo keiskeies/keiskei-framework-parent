@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.annotation.validate;
+package top.keiskeiframework.common.annotation.data;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
