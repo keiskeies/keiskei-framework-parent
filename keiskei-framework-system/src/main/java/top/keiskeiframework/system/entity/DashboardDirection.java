@@ -34,10 +34,6 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends ListEntity {
 
-    @ApiModelProperty(value = "排序", dataType = "Long")
-    @SortBy(desc = false)
-    private Long sortBy;
-
     @ApiModelProperty(value = "字段", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
     private String field;
@@ -46,17 +42,10 @@ public class DashboardDirection extends ListEntity {
     @NotBlank(groups = {Insert.class, Update.class})
     private String fieldName;
 
-    @ApiModelProperty(value = "字段值", dataType = "String")
-    private String fieldValue;
-
     @ApiModelProperty(value = "分段", dataType = "String")
     private Double delta;
 
     @ApiModelProperty(value = "时间结点", dataType = "String")
     private String type;
-
-    @ApiModelProperty(value = "轴方向", dataType = "String")
-    @NotBlank(groups = {Insert.class, Update.class})
-    private String direction;
 
 }

@@ -65,31 +65,24 @@ public class Dashboard extends ListEntity {
     private String end;
 
     @ApiModelProperty(value = "图表宽度", dataType = "Integer")
-    private Integer width;
+    private Integer width = 12;
 
     @ApiModelProperty(value = "图表高度", dataType = "Integer")
-    private Integer height;
+    private Integer height = 9;
 
+    @ApiModelProperty(value = "一维坐标类型", dataType = "Integer")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private XType xFieldType;
 
+    @ApiModelProperty(value = "一维坐标名称", dataType = "String")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private String xFieldName;
+
+    @ApiModelProperty(value = "二维坐标", dataType = "String")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "dashboard_id")
-    @OrderBy("sortBy")
-    @Where(clause = "direction = 'x'")
-    private List<DashboardDirection> xs;
-
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dashboard_id")
-    @OrderBy("sortBy")
-    @Where(clause = "direction = 'y'")
     private List<DashboardDirection> ys;
 
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dashboard_id")
-    @OrderBy("sortBy")
-    @Where(clause = "direction = 'z'")
-    private List<DashboardDirection> zs;
 
 
     @Transient
@@ -127,4 +120,12 @@ public class Dashboard extends ListEntity {
             java.lang.String.class,
             java.lang.Float.class
     );
+
+    public enum XType{
+        // 时间类型
+        TIME,
+        // 字段分类
+        FIELD
+
+    }
 }
