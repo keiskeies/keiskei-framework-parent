@@ -1,4 +1,4 @@
-package top.keiskeiframework.system.entity;
+package top.keiskeiframework.dashboard.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
@@ -81,7 +80,7 @@ public class Dashboard extends ListEntity {
     @ApiModelProperty(value = "二维坐标", dataType = "String")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "dashboard_id")
-    private List<DashboardDirection> ys;
+    private List<DashboardDirection> yFields;
 
 
 

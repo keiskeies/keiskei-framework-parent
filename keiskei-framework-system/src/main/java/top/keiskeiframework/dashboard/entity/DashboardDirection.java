@@ -1,4 +1,4 @@
-package top.keiskeiframework.system.entity;
+package top.keiskeiframework.dashboard.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,17 +35,10 @@ import javax.validation.constraints.NotBlank;
 public class DashboardDirection extends ListEntity {
 
     @ApiModelProperty(value = "字段", dataType = "String")
-    @NotBlank(groups = {Insert.class, Update.class})
     private String field;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
-    private String fieldName;
-
-    @ApiModelProperty(value = "分段", dataType = "String")
-    private Double delta;
-
-    @ApiModelProperty(value = "时间结点", dataType = "String")
-    private String type;
+    private String name;
 
 }

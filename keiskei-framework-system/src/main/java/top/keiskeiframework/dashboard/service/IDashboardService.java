@@ -1,7 +1,7 @@
-package top.keiskeiframework.system.service;
+package top.keiskeiframework.dashboard.service;
 
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.system.entity.Dashboard;
+import top.keiskeiframework.dashboard.entity.Dashboard;
 
 /**
  * <p>

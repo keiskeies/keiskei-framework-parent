@@ -1,11 +1,11 @@
-package top.keiskeiframework.system.service;
+package top.keiskeiframework.common.base.service;
 
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import org.reflections.Reflections;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.system.dto.CacheDTO;
+import top.keiskeiframework.common.vo.CacheDTO;
 
 import java.util.List;
 import java.util.Set;

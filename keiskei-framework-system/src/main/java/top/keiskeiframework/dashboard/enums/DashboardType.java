@@ -1,4 +1,4 @@
-package top.keiskeiframework.system.enums;
+package top.keiskeiframework.dashboard.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

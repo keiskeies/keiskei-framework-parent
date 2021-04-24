@@ -1,8 +1,8 @@
-package top.keiskeiframework.system.repository;
+package top.keiskeiframework.dashboard.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import top.keiskeiframework.system.entity.Dashboard;
+import top.keiskeiframework.dashboard.entity.Dashboard;
 
 import java.util.List;
 

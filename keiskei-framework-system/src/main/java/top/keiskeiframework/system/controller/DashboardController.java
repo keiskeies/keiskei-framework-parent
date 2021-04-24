@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.keiskeiframework.common.base.controller.ListController;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.dto.CacheDTO;
-import top.keiskeiframework.system.entity.Dashboard;
-import top.keiskeiframework.system.service.EntityFactory;
-import top.keiskeiframework.system.service.IDashboardService;
+import top.keiskeiframework.common.vo.CacheDTO;
+import top.keiskeiframework.dashboard.entity.Dashboard;
+import top.keiskeiframework.common.base.service.EntityFactory;
+import top.keiskeiframework.dashboard.service.IDashboardService;
 
 import java.util.List;
 import java.util.Map;

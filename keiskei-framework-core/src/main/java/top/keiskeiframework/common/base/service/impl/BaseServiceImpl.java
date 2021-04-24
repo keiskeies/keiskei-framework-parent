@@ -45,13 +45,13 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public List<T> findAll(Example<T> e) {
-        return jpaRepository.findAll(e);
+    public List<T> findAll(Specification<T> s, Sort sort) {
+        return jpaSpecificationExecutor.findAll(s, sort);
     }
 
     @Override
-    public List<T> findAll(Specification<T> s, Sort sort) {
-        return jpaSpecificationExecutor.findAll(s, sort);
+    public List<T> findAll(Example<T> e) {
+        return jpaRepository.findAll(e);
     }
 
     @Override

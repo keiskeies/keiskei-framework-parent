@@ -1,4 +1,4 @@
-package top.keiskeiframework.system.dto;
+package top.keiskeiframework.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
