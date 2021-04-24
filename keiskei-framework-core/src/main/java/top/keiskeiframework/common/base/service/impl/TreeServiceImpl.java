@@ -1,13 +1,10 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
@@ -34,14 +31,8 @@ import java.util.Set;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeServiceImpl<T extends TreeEntity> implements BaseService<T> {
+public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> implements BaseService<T> {
 
-    @Autowired
-    protected JpaRepository<T, Long> jpaRepository;
-    @Autowired
-    protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
-    @Autowired
-    protected BaseService<T> baseService;
 
     protected final static String SPILT = "/";
     protected final static String CACHE_NAME = "SPRING_TREE_CACHE";
@@ -116,6 +107,7 @@ public class TreeServiceImpl<T extends TreeEntity> implements BaseService<T> {
     }
 
     @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public List<T> saveAll(List<T> ts) {
         return null;
     }
@@ -137,8 +129,8 @@ public class TreeServiceImpl<T extends TreeEntity> implements BaseService<T> {
     }
 
     @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void changeSort(BaseSortDto baseSortDto) {
-
         ParameterizedType parameterizedType = ((ParameterizedType)this.getClass().getGenericSuperclass());
         Type[] types = parameterizedType.getActualTypeArguments();
         Class<T> clazz = (Class<T>) types[0];

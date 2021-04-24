@@ -1,6 +1,10 @@
 package top.keiskeiframework.common.base.service;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.vo.BaseSortDto;
 
@@ -22,6 +26,18 @@ public interface BaseService<T> {
      * @return .
      */
     Page<T> page(BaseRequest<T> request);
+    Page<T> page(Specification<T> s, Pageable p);
+    Page<T> page(Example<T> s, Pageable p);
+
+    /**
+     * 查询全部
+     * @param s 查询条件
+     * @return 。
+     */
+    List<T> findAll(Specification<T> s);
+    List<T> findAll(Specification<T> s, Sort sort);
+    List<T> findAll(Example<T> e);
+    List<T> findAll(Example<T> e, Sort sort);
 
     /**
      * 下拉框列表
@@ -83,5 +99,6 @@ public interface BaseService<T> {
      * @param id id
      */
     void deleteById(Long id);
+
 
 }

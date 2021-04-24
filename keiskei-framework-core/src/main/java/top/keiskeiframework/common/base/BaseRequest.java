@@ -133,6 +133,7 @@ public class BaseRequest<T> {
         };
     }
 
+
     @Data
     @ApiModel(value = "BaseCondition", description = "查询条件")
     public static class Condition {

@@ -1,15 +1,12 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
@@ -32,14 +29,8 @@ import java.util.List;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends ListEntity> implements BaseService<T> {
+public class ListServiceImpl<T extends ListEntity> extends BaseServiceImpl<T> implements BaseService<T> {
 
-    @Autowired
-    protected JpaRepository<T, Long> jpaRepository;
-    @Autowired
-    protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
-    @Autowired
-    protected BaseService<T> baseService;
 
     protected final static String CACHE_NAME = "SPRING_BASE_CACHE";
 
@@ -48,6 +39,7 @@ public class ListServiceImpl<T extends ListEntity> implements BaseService<T> {
     public Page<T> page(BaseRequest<T> request) {
         return jpaSpecificationExecutor.findAll(request.getSpecification(), request.getPageable());
     }
+
 
     @Override
     public List<T> options() {
@@ -120,8 +112,7 @@ public class ListServiceImpl<T extends ListEntity> implements BaseService<T> {
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id", unless = "#result == null")
     public T getById(Long id) {
-        T t = jpaRepository.findById(id).orElse(null);
-        return t;
+        return jpaRepository.findById(id).orElse(null);
     }
 
     @Override
