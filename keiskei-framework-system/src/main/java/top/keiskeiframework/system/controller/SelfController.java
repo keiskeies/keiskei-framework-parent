@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.common.vo.TokenUser;
+import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.system.dto.UserDto;
 import top.keiskeiframework.system.dto.UserPasswordDto;
 import top.keiskeiframework.system.entity.User;
@@ -42,9 +42,8 @@ public class SelfController {
     @ApiOperation("修改")
     public R<UserDto> update(@RequestBody UserDto userDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = new User();
+        User user = userService.getById(tokenUser.getId());
         BeanUtils.copyPropertiesIgnoreNull(userDto, user);
-        user.setId(tokenUser.getId());
         userService.update(user);
         return R.ok(userDto);
     }

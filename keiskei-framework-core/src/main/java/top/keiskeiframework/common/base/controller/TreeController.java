@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.vo.BaseSortDto;
+import top.keiskeiframework.common.vo.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class TreeController<T extends TreeEntity> {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDto baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDTO baseSortDto) {
         baseService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }

@@ -2,8 +2,7 @@ package top.keiskeiframework.system.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import top.keiskeiframework.common.vo.TokenGrantedAuthority;
-import top.keiskeiframework.system.entity.Permission;
+import top.keiskeiframework.common.vo.user.TokenGrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.vo;
+package top.keiskeiframework.common.vo.cache;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

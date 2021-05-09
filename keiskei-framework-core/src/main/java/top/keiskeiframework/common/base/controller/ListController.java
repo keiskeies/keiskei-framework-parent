@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.vo.BaseSortDto;
+import top.keiskeiframework.common.vo.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class ListController<T extends ListEntity> {
+public class ListController<T extends BaseEntity> {
     
     @Autowired
     private BaseService<T> baseService;
@@ -62,7 +62,7 @@ public class ListController<T extends ListEntity> {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDto baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDTO baseSortDto) {
         baseService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }

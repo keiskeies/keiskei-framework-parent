@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.vo.BaseSortDto;
+import top.keiskeiframework.common.vo.base.BaseSortDTO;
+import top.keiskeiframework.common.vo.base.ChartRequestDTO;
+import top.keiskeiframework.common.vo.charts.ChartOptionVO;
 
 import java.util.List;
 
@@ -91,7 +93,7 @@ public interface BaseService<T> {
      *
      * @param baseSortDto .
      */
-    void changeSort(BaseSortDto baseSortDto);
+    void changeSort(BaseSortDTO baseSortDto);
 
     /**
      * 删除
@@ -99,5 +101,13 @@ public interface BaseService<T> {
      * @param id id
      */
     void deleteById(Long id);
+
+
+    /**
+     * 数据图表
+     * @param chartRequestDTO 图表条件
+     * @return 。
+     */
+    ChartOptionVO getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

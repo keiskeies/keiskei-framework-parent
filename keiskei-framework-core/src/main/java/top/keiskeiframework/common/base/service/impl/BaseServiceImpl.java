@@ -9,16 +9,29 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.vo.BaseSortDto;
+import top.keiskeiframework.common.util.DateTimeUtils;
+import top.keiskeiframework.common.vo.base.BaseSortDTO;
+import top.keiskeiframework.common.vo.base.ChartRequestDTO;
+import top.keiskeiframework.common.vo.charts.Axis;
+import top.keiskeiframework.common.vo.charts.ChartOptionVO;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -28,12 +41,14 @@ import java.util.List;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
-public abstract class BaseServiceImpl<T> implements BaseService<T> {
+public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
 
     @Autowired
     protected JpaRepository<T, Long> jpaRepository;
     @Autowired
     protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
+    @Autowired
+    protected EntityManager entityManager;
     @Autowired
     protected BaseService<T> baseService;
 
@@ -169,7 +184,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public void changeSort(BaseSortDto baseSortDto) {
+    public void changeSort(BaseSortDTO baseSortDto) {
         try {
             ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
             Type[] types = parameterizedType.getActualTypeArguments();
@@ -204,4 +219,66 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
     }
+
+    @Override
+    public ChartOptionVO getChartOptions(ChartRequestDTO chartRequestDTO) {
+        ChartOptionVO result = new ChartOptionVO();
+
+        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
+        Type[] types = parameterizedType.getActualTypeArguments();
+        Class<T> clazz = (Class<T>) types[0];
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(clazz);
+        Root<T> root = query.from(clazz);
+
+        if (null != chartRequestDTO.getStart() && null != chartRequestDTO.getEnd()) {
+            List<Predicate> predicates = new ArrayList<>();
+            Expression<LocalDateTime> expression = root.get("createTime");
+            predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
+
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+
+        List<T> list;
+        Axis axis = new Axis();
+        if (chartRequestDTO.getColumnType().equals(ChartRequestDTO.ColumnType.TIME)) {
+
+            query.multiselect(
+                    builder.function("WEEKDAY", LocalDateTime.class, root.get("createTime")).as(String.class).alias("index").alias("index"),
+                    builder.count(root).alias("indexNumber")
+            );
+            query.groupBy(builder.literal("index"));
+            list = entityManager.createQuery(query).getResultList();
+            axis.setData(DateTimeUtils.timeRange(chartRequestDTO.getStart(), chartRequestDTO.getEnd(), chartRequestDTO.getUnit()));
+        } else {
+
+            query.multiselect(
+                    root.get(chartRequestDTO.getColumn()).as(String.class).alias("index"),
+                    builder.count(root.get(chartRequestDTO.getColumn())).alias("indexNumber")
+            );
+
+
+            query.groupBy(root.get(chartRequestDTO.getColumn()));
+            list = entityManager.createQuery(query).getResultList();
+            axis.setData(list.stream().map(T::getIndex).collect(Collectors.toList()));
+        }
+        if (chartRequestDTO.getYHorizontal()) {
+            result.setYAxis(axis);
+        } else {
+            result.setXAxis(axis);
+        }
+        switch (chartRequestDTO.getChartType()) {
+            case "bar":
+                break;
+            case "radar":
+                break;
+            default:
+                Map<String, List<T>> tMap = list.stream().collect(Collectors.groupingBy(T::getIndex));
+
+                break;
+        }
+        return null;
+    }
+
+
 }

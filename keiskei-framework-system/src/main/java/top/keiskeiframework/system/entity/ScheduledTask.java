@@ -9,7 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -34,7 +34,7 @@ import javax.validation.constraints.NotBlank;
 @Accessors(chain = true)
 @Table(name = "sys_scheduled_task")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class ScheduledTask extends ListEntity {
+public class ScheduledTask extends BaseEntity {
 
     private static final long serialVersionUID = -2520015535285512159L;
 

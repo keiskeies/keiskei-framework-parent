@@ -11,7 +11,8 @@ import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.vo.base.ChartRequestDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -37,7 +38,9 @@ import java.util.Map;
 @Entity
 @Table(name = "sys_dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
-public class Dashboard extends ListEntity {
+public class Dashboard extends BaseEntity {
+
+    private static final long serialVersionUID = -5855392143364324899L;
 
     @ApiModelProperty(value = "排序", dataType = "Long")
     @SortBy(desc = false)
@@ -64,14 +67,11 @@ public class Dashboard extends ListEntity {
     private String end;
 
     @ApiModelProperty(value = "图表宽度", dataType = "Integer")
-    private Integer width = 12;
-
-    @ApiModelProperty(value = "图表高度", dataType = "Integer")
-    private Integer height = 9;
+    private Integer span = 1;
 
     @ApiModelProperty(value = "一维坐标类型", dataType = "Integer")
     @NotBlank(groups = {Insert.class, Update.class})
-    private XType xFieldType;
+    private ChartRequestDTO.ColumnType xFieldType;
 
     @ApiModelProperty(value = "一维坐标名称", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
@@ -82,11 +82,8 @@ public class Dashboard extends ListEntity {
     @JoinColumn(name = "dashboard_id")
     private List<DashboardDirection> yFields;
 
-
-
     @Transient
     public Map<String, String> entityInfo;
-
 
     public Map<String, String> getEntityInfo() {
         if (!StringUtils.isEmpty(getEntityName())) {
@@ -120,11 +117,4 @@ public class Dashboard extends ListEntity {
             java.lang.Float.class
     );
 
-    public enum XType{
-        // 时间类型
-        TIME,
-        // 字段分类
-        FIELD
-
-    }
 }

@@ -1,8 +1,9 @@
-package top.keiskeiframework.common.vo;
+package top.keiskeiframework.common.vo.base;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -12,7 +13,8 @@ import javax.validation.constraints.NotNull;
  * @author cjm
  */
 @Data
-public class BaseSortDto {
+public class BaseSortDTO implements Serializable {
+    private static final long serialVersionUID = -899342361316647661L;
 
     @NotNull
     private Long id1;

@@ -7,7 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -32,7 +32,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
-public class FieldInfo extends ListEntity {
+public class FieldInfo extends BaseEntity {
 
     private static final long serialVersionUID = -6407989526318566170L;
 

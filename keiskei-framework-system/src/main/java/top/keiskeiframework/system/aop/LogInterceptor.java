@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.enums.ApiErrorCode;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.common.vo.TokenUser;
+import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.system.entity.OperateLog;
 import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.service.IOperateLogService;
@@ -26,8 +26,6 @@ import top.keiskeiframework.common.util.SecurityUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**

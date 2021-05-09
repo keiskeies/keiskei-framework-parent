@@ -2,10 +2,11 @@ package top.keiskeiframework.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,11 +26,10 @@ import java.util.Set;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "sys_user")
 @ToString(exclude = {"user"})
-public class User extends ListEntity {
+public class User extends BaseEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
 
@@ -102,4 +102,8 @@ public class User extends ListEntity {
      */
     @JsonIgnore
     private LocalDateTime accountExpiredTime;
+
+    public User(String index, Long indexNumber) {
+        super(index, indexNumber);
+    }
 }

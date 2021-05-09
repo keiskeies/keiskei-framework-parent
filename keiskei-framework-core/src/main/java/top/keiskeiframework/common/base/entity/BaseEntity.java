@@ -7,15 +7,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.validate.Select;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.annotation.validate.UpdatePart;
@@ -38,9 +39,10 @@ import java.time.LocalDateTime;
 @Data
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class ListEntity implements Serializable {
+public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -8025795001235125591L;
 
@@ -97,6 +99,22 @@ public class ListEntity implements Serializable {
         p = SecurityUtils.getDepartment();
     }
 
+    /**
+     * 图表下标
+     */
+    @Transient
+    private String index;
+
+    /**
+     * 图表下标数量
+     */
+    @Transient
+    private Long indexNumber;
+
+    public BaseEntity(String index, Long indexNumber) {
+        this.index = index;
+        this.indexNumber = indexNumber;
+    }
 
 
 

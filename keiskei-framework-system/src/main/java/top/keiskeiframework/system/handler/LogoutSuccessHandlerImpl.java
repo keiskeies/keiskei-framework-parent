@@ -9,6 +9,7 @@ import top.keiskeiframework.system.util.ResponseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -24,6 +25,8 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        HttpSession session = request.getSession();
+        session.invalidate();
         ResponseUtils.write(request, response, JSON.toJSONString(R.ok(true)));
     }
 }

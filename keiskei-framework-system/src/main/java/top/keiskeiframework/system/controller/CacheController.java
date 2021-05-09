@@ -9,7 +9,7 @@ import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.cache.serivce.CacheStorageService;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.common.vo.CacheDTO;
+import top.keiskeiframework.common.vo.cache.CacheDTO;
 
 import java.util.List;
 import java.util.Map;

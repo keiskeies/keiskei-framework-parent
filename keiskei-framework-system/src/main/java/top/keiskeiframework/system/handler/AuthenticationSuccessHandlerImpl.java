@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.common.vo.TokenGrantedAuthority;
-import top.keiskeiframework.common.vo.TokenUser;
+import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.system.entity.OperateLog;
 import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.enums.OperateTypeEnum;
@@ -20,7 +18,6 @@ import top.keiskeiframework.system.util.ResponseUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 
 /**
  * <p>

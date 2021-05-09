@@ -2,7 +2,7 @@ package top.keiskeiframework.generate.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,7 +33,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
-public class ModuleInfo extends ListEntity {
+public class ModuleInfo extends BaseEntity {
 
     private static final long serialVersionUID = 754302484437506602L;
 

@@ -29,26 +29,7 @@ import java.util.Map;
 @Slf4j
 public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
-    public Map<String, List> data(Long id) throws Exception {
-        Dashboard dashboard = getById(id);
-        Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-        BaseService<?> baseService = (BaseService<?>)SpringUtils.getBean(dashboard.getEntityName() + "ServiceImpl");
 
-        Specification specification = (Specification) (root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            Expression expression = root.get("createTime");
-            predicates.add(criteriaBuilder.between(expression, (Comparable) dashboard.getStart(), (Comparable) dashboard.getEnd()));
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-
-        List dataList = baseService.findAll(specification);
-        log.info(JSON.toJSONString(dashboard));
-
-
-
-        return null;
-
-    }
 
 
 }

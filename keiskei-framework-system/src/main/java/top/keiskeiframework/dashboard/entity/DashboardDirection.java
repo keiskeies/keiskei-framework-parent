@@ -7,10 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -32,7 +31,7 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "sys_dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
-public class DashboardDirection extends ListEntity {
+public class DashboardDirection extends BaseEntity {
 
     @ApiModelProperty(value = "字段", dataType = "String")
     private String field;

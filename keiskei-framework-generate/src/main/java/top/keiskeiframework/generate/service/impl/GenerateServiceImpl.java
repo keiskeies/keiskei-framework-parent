@@ -11,7 +11,7 @@ import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.file.config.LocalFileProperties;
 import top.keiskeiframework.common.util.SecurityUtils;
-import top.keiskeiframework.common.vo.TokenUser;
+import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.generate.config.GenerateProperties;
 import top.keiskeiframework.generate.entity.*;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;

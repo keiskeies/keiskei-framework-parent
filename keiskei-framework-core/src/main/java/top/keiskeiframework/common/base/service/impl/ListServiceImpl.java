@@ -5,7 +5,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 
@@ -17,7 +17,7 @@ import top.keiskeiframework.common.enums.BizExceptionEnum;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends ListEntity> extends BaseServiceImpl<T> implements BaseService<T> {
+public class ListServiceImpl<T extends BaseEntity> extends BaseServiceImpl<T> implements BaseService<T> {
 
 
     protected final static String CACHE_NAME = "SPRING_BASE_CACHE";
