@@ -5,7 +5,7 @@ import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.data.RadarSeriesData;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ public class RadarSeries extends Series implements Serializable {
     private AreaStyle areaStyle;
 
     @NonNull
-    private List<RadarSeriesData> data;
+    private Collection<RadarSeriesData> data;
 
     @Data
     public static class AreaStyle implements Serializable{

@@ -3,7 +3,7 @@ package top.keiskeiframework.common.vo.charts.series.data;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -23,5 +23,5 @@ public class RadarSeriesData implements Serializable {
     private String name;
 
     @NonNull
-    private List<Number> value;
+    private Collection<?> value;
 }

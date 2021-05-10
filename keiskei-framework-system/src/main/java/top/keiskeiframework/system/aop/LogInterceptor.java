@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.enums.ApiErrorCode;
+import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.system.entity.OperateLog;

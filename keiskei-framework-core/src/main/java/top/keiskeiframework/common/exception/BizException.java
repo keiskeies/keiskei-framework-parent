@@ -1,9 +1,8 @@
 package top.keiskeiframework.common.exception;
 
-import top.keiskeiframework.common.enums.ApiErrorCode;
-import top.keiskeiframework.common.enums.IErrorCode;
+import top.keiskeiframework.common.enums.exception.ApiErrorCode;
+import top.keiskeiframework.common.enums.exception.IErrorCode;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 
 /**

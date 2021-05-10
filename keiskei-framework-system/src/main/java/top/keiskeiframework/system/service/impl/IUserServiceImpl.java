@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.cache.serivce.CacheStorageService;
-import top.keiskeiframework.common.enums.BizExceptionEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.SecurityUtils;

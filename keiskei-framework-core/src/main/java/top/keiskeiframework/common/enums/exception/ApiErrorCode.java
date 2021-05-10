@@ -1,6 +1,5 @@
-package top.keiskeiframework.common.enums;
+package top.keiskeiframework.common.enums.exception;
 
-import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

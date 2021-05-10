@@ -1,11 +1,9 @@
 package top.keiskeiframework.common.aop;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import top.keiskeiframework.common.enums.ApiErrorCode;
-import top.keiskeiframework.common.enums.BizExceptionEnum;
+import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.R;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**

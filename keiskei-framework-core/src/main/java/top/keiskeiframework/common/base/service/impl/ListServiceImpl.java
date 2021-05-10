@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.Assert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.enums.BizExceptionEnum;
 
 /**
  * 基础查询接口

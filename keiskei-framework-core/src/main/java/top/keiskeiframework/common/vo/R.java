@@ -1,7 +1,7 @@
 package top.keiskeiframework.common.vo;
 
-import top.keiskeiframework.common.enums.ApiErrorCode;
-import top.keiskeiframework.common.enums.IErrorCode;
+import top.keiskeiframework.common.enums.exception.ApiErrorCode;
+import top.keiskeiframework.common.enums.exception.IErrorCode;
 import lombok.Data;
 
 import java.io.Serializable;

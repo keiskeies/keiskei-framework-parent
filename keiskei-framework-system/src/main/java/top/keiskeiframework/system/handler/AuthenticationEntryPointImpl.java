@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.handler;
 
-import top.keiskeiframework.common.enums.BizExceptionEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.vo.R;
 import com.alibaba.fastjson.JSON;
 import org.springframework.security.core.AuthenticationException;

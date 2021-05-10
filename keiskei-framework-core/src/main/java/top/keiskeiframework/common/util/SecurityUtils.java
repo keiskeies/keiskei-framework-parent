@@ -2,7 +2,7 @@ package top.keiskeiframework.common.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.enums.BizExceptionEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.user.TokenUser;
 

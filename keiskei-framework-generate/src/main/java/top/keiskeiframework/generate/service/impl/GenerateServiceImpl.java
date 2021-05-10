@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.Lockable;
-import top.keiskeiframework.common.enums.BizExceptionEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.file.config.LocalFileProperties;
 import top.keiskeiframework.common.util.SecurityUtils;

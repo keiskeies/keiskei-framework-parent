@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum DashboardType {
+public enum DashboardTypeEnum {
     //
     BAR("bar", "柱状图"),
     LINE("line", "折线图"),

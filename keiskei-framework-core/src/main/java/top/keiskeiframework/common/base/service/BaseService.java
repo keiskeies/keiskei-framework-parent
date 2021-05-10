@@ -11,6 +11,7 @@ import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.dto.dashboard.SeriesDataDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 基础查询接口
@@ -116,6 +117,6 @@ public interface BaseService<T> {
      * @param chartRequestDTO 图表条件
      * @return 。
      */
-    List<SeriesDataDTO> getChartOptions(ChartRequestDTO chartRequestDTO);
+    Map<String, Long> getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

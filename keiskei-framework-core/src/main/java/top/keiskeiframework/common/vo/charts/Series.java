@@ -3,6 +3,7 @@ package top.keiskeiframework.common.vo.charts;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,4 +20,5 @@ public class Series implements Serializable {
     private String name;
     private String type;
     private Integer animationDuration;
+
 }

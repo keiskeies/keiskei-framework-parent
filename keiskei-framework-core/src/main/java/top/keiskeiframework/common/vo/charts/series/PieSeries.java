@@ -5,7 +5,7 @@ import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.data.PieSeriesData;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -26,6 +26,6 @@ public class PieSeries extends Series implements Serializable {
     private String[] center = {"50%", "38%"};
 
     @NonNull
-    private List<PieSeriesData> data;
+    private Collection<PieSeriesData> data;
 
 }

@@ -47,6 +47,12 @@ public class DashboardDirection extends BaseEntity {
     @NotBlank(groups = {Insert.class, Update.class})
     private String entityClass;
 
+    @ApiModelProperty(value = "实体类名称", dataType = "String")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private String entityName;
+
+
+
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
     private String type;

@@ -2,7 +2,7 @@ package top.keiskeiframework.common.file.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import top.keiskeiframework.common.enums.IErrorCode;
+import top.keiskeiframework.common.enums.exception.IErrorCode;
 
 /**
  * <p>

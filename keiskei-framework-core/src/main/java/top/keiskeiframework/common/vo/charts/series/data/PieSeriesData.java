@@ -20,6 +20,6 @@ import java.io.Serializable;
 public class PieSeriesData implements Serializable {
 
     private static final long serialVersionUID = -732244914968958590L;
-    private Number value;
     private String name;
+    private Number value;
 }

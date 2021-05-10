@@ -4,7 +4,7 @@ import lombok.*;
 import top.keiskeiframework.common.vo.charts.Series;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -26,6 +26,6 @@ public class BarSeries extends Series implements Serializable {
     private String barWidth = "60%";
 
     @NonNull
-    private List<Number> data;
+    private Collection<Number> data;
 
 }

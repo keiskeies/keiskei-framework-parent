@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.enums;
+package top.keiskeiframework.common.enums.exception;
 
 /**
  * @author James Chen right_way@foxmail.com

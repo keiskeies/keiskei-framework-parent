@@ -5,7 +5,7 @@ import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.style.ItemStyle;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -25,5 +25,5 @@ public class LineSeries extends Series implements Serializable {
     private ItemStyle itemStyle;
     private String type = "line";
     @NonNull
-    private List<Number> data;
+    private Collection<Number> data;
 }

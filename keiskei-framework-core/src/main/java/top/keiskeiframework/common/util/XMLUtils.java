@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.util;
 
-import top.keiskeiframework.common.enums.GlobalExceptionEnum;
+import top.keiskeiframework.common.enums.exception.GlobalExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
