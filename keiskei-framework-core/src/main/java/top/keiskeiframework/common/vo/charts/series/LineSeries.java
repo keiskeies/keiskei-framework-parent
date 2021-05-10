@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.vo.charts.series;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.style.ItemStyle;
 
@@ -18,10 +17,13 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class LineSeries extends Series implements Serializable {
     private static final long serialVersionUID = -5085259754180445771L;
     private Boolean smooth = Boolean.TRUE;
     private ItemStyle itemStyle;
     private String type = "line";
+    @NonNull
     private List<Number> data;
 }

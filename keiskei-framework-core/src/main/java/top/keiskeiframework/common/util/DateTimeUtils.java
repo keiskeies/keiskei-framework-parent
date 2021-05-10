@@ -1,5 +1,7 @@
 package top.keiskeiframework.common.util;
 
+import top.keiskeiframework.common.exception.BizException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -80,8 +82,8 @@ public class DateTimeUtils {
         }
     }
 
-    private final static List<String> HOURS_RANGE = Arrays.asList("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
-    private final static List<String> WEEKS_RANGE = Arrays.asList("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY");
+    public final static List<String> HOURS_RANGE = Arrays.asList("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
+    public final static List<String> WEEKS_RANGE = Arrays.asList("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY");
 
     public static List<String> timeRange(LocalDateTime start, LocalDateTime end, ChronoUnit unit) {
         if (ChronoUnit.HOURS.equals(unit)) {
@@ -109,6 +111,24 @@ public class DateTimeUtils {
         }
         return result.stream().sorted().collect(Collectors.toList());
     }
+
+    public static ChronoUnit getUnitByString(String unitString) {
+        switch (unitString) {
+            case "Hours":
+            case "Days":
+            case "Weeks":
+            case "Months":
+            case "Years":
+                for (ChronoUnit unit : ChronoUnit.values()) {
+                    if (unit.toString().equalsIgnoreCase(unitString)) {
+                        return unit;
+                    }
+                }
+        }
+        throw new UnsupportedTemporalTypeException("Unsupported unit: " + unitString);
+    }
+
+
 
     /**
      * 字符串转时间 自动匹配
@@ -156,16 +176,4 @@ public class DateTimeUtils {
 
     }
 
-
-    public static void main(String[] args) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime kkk = now.plusYears(2L);
-        System.out.println(timeRange(now, kkk, ChronoUnit.HOURS));
-        System.out.println(timeRange(now, kkk, ChronoUnit.DAYS));
-        System.out.println(timeRange(now, kkk, ChronoUnit.WEEKS));
-        System.out.println(timeRange(now, kkk, ChronoUnit.MONTHS));
-        System.out.println(timeRange(now, kkk, ChronoUnit.YEARS));
-
-
-    }
 }

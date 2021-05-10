@@ -7,13 +7,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -36,8 +43,13 @@ public class DashboardDirection extends BaseEntity {
     @ApiModelProperty(value = "字段", dataType = "String")
     private String field;
 
-    @ApiModelProperty(value = "字段名称", dataType = "String")
+    @ApiModelProperty(value = "实体类", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
-    private String name;
+    private String entityClass;
+
+    @ApiModelProperty(value = "图表类型", dataType = "String")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private String type;
+
 
 }

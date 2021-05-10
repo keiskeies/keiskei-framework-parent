@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.vo.charts.series;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.data.PieSeriesData;
 
@@ -19,10 +18,14 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class PieSeries extends Series implements Serializable {
     private static final long serialVersionUID = 7755013680905254636L;
     private Integer[] radius = {15, 95};
     private String[] center = {"50%", "38%"};
+
+    @NonNull
     private List<PieSeriesData> data;
 
 }

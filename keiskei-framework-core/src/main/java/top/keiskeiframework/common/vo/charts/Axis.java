@@ -1,6 +1,9 @@
 package top.keiskeiframework.common.vo.charts;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,12 +17,16 @@ import java.util.List;
  * @since 2021/5/9 22:15
  */
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Axis implements Serializable {
     private static final long serialVersionUID = -8240149682292046994L;
 
     private String type;
-    private List<String> data;
     private AxisTick axisTick;
+
+    @NonNull
+    private List<String> data;
 
     @Data
     public static class AxisTick implements Serializable {

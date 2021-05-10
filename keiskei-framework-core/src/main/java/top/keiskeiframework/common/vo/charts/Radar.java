@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.vo.charts;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +14,9 @@ import java.util.List;
  * @since 2021/5/9 22:24
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Radar implements Serializable {
     private static final long serialVersionUID = 9065801904058866173L;
 
@@ -22,6 +25,8 @@ public class Radar implements Serializable {
     private List<String> center;
     private Integer splitNumber;
     private SplitArea splitArea;
+
+    @NonNull
     private List<Indicator> indicator;
 
     @Data
@@ -42,6 +47,8 @@ public class Radar implements Serializable {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Indicator implements Serializable {
         private static final long serialVersionUID = -7065029137670618519L;
         private String name;

@@ -14,9 +14,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DashboardType {
+    //
+    BAR("bar", "柱状图"),
+    LINE("line", "折线图"),
+    PIE("pie","饼图"),
+    RADAR("radar", "雷达图")
+
 
 
     ;
 
+    private final String id;
     private final String name;
 }

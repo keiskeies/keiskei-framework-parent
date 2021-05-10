@@ -16,12 +16,6 @@
             <artifactId>keiskei-framework-system</artifactId>
             <version>1.0.0-Release</version>
         </dependency>
-        <!--监控sql日志-->
-        <dependency>
-            <groupId>org.bgee.log4jdbc-log4j2</groupId>
-            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-            <version>1.16</version>
-        </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
@@ -49,35 +43,6 @@
             </activation>
             <properties>
                 <environment>dev</environment>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-devtools</artifactId>
-                    <optional>true</optional>
-                    <scope>true</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-actuator</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>io.micrometer</groupId>
-                    <artifactId>micrometer-registry-prometheus</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>home</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <environment>home</environment>
             </properties>
             <dependencies>
                 <dependency>

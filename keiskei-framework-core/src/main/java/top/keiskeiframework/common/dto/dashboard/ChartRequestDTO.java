@@ -1,6 +1,6 @@
-package top.keiskeiframework.common.vo.base;
+package top.keiskeiframework.common.dto.dashboard;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,15 +16,20 @@ import java.util.List;
  * @since 2021/5/9 22:37
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ChartRequestDTO implements Serializable {
     private static final long serialVersionUID = -1354993776756493818L;
 
     private String column;
-    private String chartType;
-    private Boolean yHorizontal = Boolean.FALSE;
+    private String chartType = "line";
     private ColumnType columnType;
     private ChronoUnit unit;
+
+    @NonNull
     private LocalDateTime start;
+    @NonNull
     private LocalDateTime end;
 
     public enum ColumnType {

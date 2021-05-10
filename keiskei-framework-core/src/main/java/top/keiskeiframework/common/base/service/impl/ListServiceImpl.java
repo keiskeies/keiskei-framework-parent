@@ -33,7 +33,6 @@ public class ListServiceImpl<T extends BaseEntity> extends BaseServiceImpl<T> im
     @Override
     @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #t.id", unless = "#result == null")
     public T update(T t) {
-        Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
         t = jpaRepository.save(t);
         return t;
     }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.vo.base.BaseSortDTO;
+import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.util.List;

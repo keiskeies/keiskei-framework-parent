@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.vo.base.BaseSortDTO;
-import top.keiskeiframework.common.vo.base.ChartRequestDTO;
-import top.keiskeiframework.common.vo.charts.ChartOptionVO;
+import top.keiskeiframework.common.dto.base.BaseSortDTO;
+import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.dto.dashboard.SeriesDataDTO;
 
 import java.util.List;
 
@@ -28,17 +28,23 @@ public interface BaseService<T> {
      * @return .
      */
     Page<T> page(BaseRequest<T> request);
+
     Page<T> page(Specification<T> s, Pageable p);
+
     Page<T> page(Example<T> s, Pageable p);
 
     /**
      * 查询全部
+     *
      * @param s 查询条件
      * @return 。
      */
     List<T> findAll(Specification<T> s);
+
     List<T> findAll(Specification<T> s, Sort sort);
+
     List<T> findAll(Example<T> e);
+
     List<T> findAll(Example<T> e, Sort sort);
 
     /**
@@ -88,6 +94,7 @@ public interface BaseService<T> {
      */
     T update(T t);
 
+
     /**
      * 更改排序
      *
@@ -105,9 +112,10 @@ public interface BaseService<T> {
 
     /**
      * 数据图表
+     *
      * @param chartRequestDTO 图表条件
      * @return 。
      */
-    ChartOptionVO getChartOptions(ChartRequestDTO chartRequestDTO);
+    List<SeriesDataDTO> getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.vo.charts.series.data;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,9 +14,14 @@ import java.util.List;
  * @since 2021/5/9 21:51
  */
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class RadarSeriesData implements Serializable {
 
     private static final long serialVersionUID = 4252943431260003924L;
-    private List<Number> value;
     private String name;
+
+    @NonNull
+    private List<Number> value;
 }

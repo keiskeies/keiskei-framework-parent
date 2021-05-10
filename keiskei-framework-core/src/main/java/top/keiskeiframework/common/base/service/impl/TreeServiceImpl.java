@@ -8,7 +8,7 @@ import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.vo.base.BaseSortDTO;
+import top.keiskeiframework.common.dto.base.BaseSortDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -71,6 +71,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
         t = jpaRepository.save(t);
         return t;
     }
+
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")

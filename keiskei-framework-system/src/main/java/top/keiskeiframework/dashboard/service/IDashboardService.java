@@ -1,6 +1,7 @@
 package top.keiskeiframework.dashboard.service;
 
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.vo.charts.ChartOptionVO;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 
 /**
@@ -13,5 +14,11 @@ import top.keiskeiframework.dashboard.entity.Dashboard;
  */
 public interface IDashboardService extends BaseService<Dashboard> {
 
+    /**
+     * 获取图表及结构
+     * @param id 图表ID
+     * @return 。
+     */
+    ChartOptionVO getChartOption(Long id);
 
 }

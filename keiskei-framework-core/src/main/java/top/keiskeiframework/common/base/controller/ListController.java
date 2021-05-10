@@ -10,7 +10,7 @@ import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.vo.base.BaseSortDTO;
+import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.util.List;

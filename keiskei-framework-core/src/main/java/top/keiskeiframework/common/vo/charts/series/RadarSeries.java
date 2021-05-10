@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.vo.charts.series;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import top.keiskeiframework.common.vo.charts.Series;
 import top.keiskeiframework.common.vo.charts.series.data.RadarSeriesData;
 
@@ -18,11 +17,15 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class RadarSeries extends Series implements Serializable {
     private static final long serialVersionUID = 5295284467232758863L;
     private String type = "radar";
     private Integer symbolSize = Integer.MIN_VALUE;
     private AreaStyle areaStyle;
+
+    @NonNull
     private List<RadarSeriesData> data;
 
     @Data

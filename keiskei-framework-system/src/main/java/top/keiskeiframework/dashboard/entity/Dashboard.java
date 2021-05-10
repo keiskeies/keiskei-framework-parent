@@ -7,20 +7,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.common.vo.base.ChartRequestDTO;
+import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -50,14 +46,6 @@ public class Dashboard extends BaseEntity {
     @NotBlank(groups = {Insert.class, Update.class})
     private String name;
 
-    @ApiModelProperty(value = "图表类型", dataType = "String")
-    @NotBlank(groups = {Insert.class, Update.class})
-    private String type;
-
-    @ApiModelProperty(value = "实体名称", dataType = "String")
-    @NotBlank(groups = {Insert.class, Update.class})
-    private String entityName;
-
     @ApiModelProperty(value = "时间起点", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
     private String start;
@@ -69,52 +57,29 @@ public class Dashboard extends BaseEntity {
     @ApiModelProperty(value = "图表宽度", dataType = "Integer")
     private Integer span = 1;
 
-    @ApiModelProperty(value = "一维坐标类型", dataType = "Integer")
-    @NotBlank(groups = {Insert.class, Update.class})
-    private ChartRequestDTO.ColumnType xFieldType;
+    @ApiModelProperty(value = "xy坐标翻转", dataType = "Integer")
+    private Boolean yHorizontal = Boolean.FALSE;
 
-    @ApiModelProperty(value = "一维坐标名称", dataType = "String")
+    @ApiModelProperty(value = "x坐标字段", dataType = "String")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private String xField;
+
+    @ApiModelProperty(value = "x坐标名称", dataType = "String")
     @NotBlank(groups = {Insert.class, Update.class})
     private String xFieldName;
 
-    @ApiModelProperty(value = "二维坐标", dataType = "String")
+    @ApiModelProperty(value = "x坐标类型", dataType = "Integer")
+    @NotBlank(groups = {Insert.class, Update.class})
+    private ChartRequestDTO.ColumnType xFieldType;
+
+    @ApiModelProperty(value = "时间类型间隔", dataType = "String")
+    private String xFieldDelta;
+
+    @ApiModelProperty(value = "y坐标", dataType = "String")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "dashboard_id")
+    @NotEmpty(groups = {Insert.class, Update.class})
     private List<DashboardDirection> yFields;
 
-    @Transient
-    public Map<String, String> entityInfo;
-
-    public Map<String, String> getEntityInfo() {
-        if (!StringUtils.isEmpty(getEntityName())) {
-            try {
-                Class<?> clazz = Class.forName(entityName);
-                Field[] fields = clazz.getDeclaredFields();
-                this.entityInfo = new HashMap<>(fields.length);
-                for (Field field : fields) {
-                    if (DATA_CLASS_SET.contains(field.getType())) {
-                        System.out.println(field.getType().getName());
-                        ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
-                        if (null != apiModelProperty) {
-                            this.entityInfo.put(field.getName(), apiModelProperty.value());
-                        } else {
-                            this.entityInfo.put(field.getName(), field.getName());
-                        }
-                    }
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return entityInfo;
-    }
-
-    private final static List<Class<?>> DATA_CLASS_SET = Arrays.asList(
-            java.lang.Integer.class,
-            java.lang.Long.class,
-            java.lang.Double.class,
-            java.lang.String.class,
-            java.lang.Float.class
-    );
 
 }
