@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.entity;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_role")
+@ApiModel(value = "Role", description = "角色")
 public class Role extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -45,4 +47,9 @@ public class Role extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
     private Set<Permission> permissions = new HashSet<>();
     public Set<Permission> getPermissions() { return new HashSet<>(permissions); }
+
+    public Role(String index, Long indexNumber) {
+        super(index, indexNumber);
+    }
+    public Role(Long id){super(id);}
 }

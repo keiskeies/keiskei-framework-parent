@@ -50,6 +50,7 @@ public class LogInterceptor {
 
     @Around("pointCut()")
     public Object recordSysLog(ProceedingJoinPoint point) throws Throwable {
+        long start = System.currentTimeMillis();
 
         OperateLog operateLog = new OperateLog();
 
@@ -108,11 +109,12 @@ public class LogInterceptor {
             throw throwable;
         } finally {
             try {
+                long end = System.currentTimeMillis();
                 if (result != null) {
                     operateLog.setResponseParam(JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter));
-                    log.info("{} -结束 - 返回结果:{}", operateLog.getName(), operateLog.getResponseParam());
+                    log.info("{} -结束 - 返回结果:{} - 用时: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
                 } else {
-                    log.info("{} -结束", operateLog.getName());
+                    log.info("{} -结束 - 用时: {}", operateLog.getName(), end - start);
                 }
             } catch (Exception e) {
                 log.error("日志记录出错!", e);

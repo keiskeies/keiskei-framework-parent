@@ -53,12 +53,11 @@ public class GlobalExceptionHandler {
         } else if (e instanceof DataIntegrityViolationException) {
             message = "该条数据被引用";
         } else {
-            log.error("全局异常:", e);
             message = e.getMessage();
         }
         R<?> r = R.failed(message);
         r.setCode(code);
-
+        log.error("全局异常:", e);
         return r;
     }
 }

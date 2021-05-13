@@ -43,7 +43,6 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {
-
     private static final long serialVersionUID = -8025795001235125591L;
 
     @Id
@@ -114,6 +113,10 @@ public class BaseEntity implements Serializable {
     public BaseEntity(String index, Long indexNumber) {
         this.index = index;
         this.indexNumber = indexNumber;
+    }
+
+    public BaseEntity(Long id) {
+        this.id = id;
     }
 
 

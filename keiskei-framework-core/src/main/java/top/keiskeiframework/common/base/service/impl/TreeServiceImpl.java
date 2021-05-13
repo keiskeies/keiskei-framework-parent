@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
@@ -27,6 +28,8 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
     protected final static String SPILT = "/";
     protected final static String CACHE_NAME = "SPRING_TREE_CACHE";
 
+    @Autowired
+    private TreeServiceImpl<T> baseService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")

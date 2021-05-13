@@ -2,7 +2,6 @@ package top.keiskeiframework.common.vo.charts.series;
 
 import lombok.*;
 import top.keiskeiframework.common.vo.charts.Series;
-import top.keiskeiframework.common.vo.charts.series.data.RadarSeriesData;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -21,25 +20,20 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class RadarSeries extends Series implements Serializable {
     private static final long serialVersionUID = 5295284467232758863L;
-    private String type = "radar";
-    private Integer symbolSize = Integer.MIN_VALUE;
-    private AreaStyle areaStyle;
 
     @NonNull
     private Collection<RadarSeriesData> data;
 
     @Data
-    public static class AreaStyle implements Serializable{
-        private static final long serialVersionUID = 1996002094691670173L;
+    @NoArgsConstructor
+    @RequiredArgsConstructor
+    @AllArgsConstructor
+    public static class RadarSeriesData implements Serializable {
 
-        @Data
-        public static class Normal implements Serializable {
-            private static final long serialVersionUID = 4745956789202888771L;
-            private Integer shadowBlur;
-            private String shadowColor;
-            private Integer shadowOffsetX;
-            private Integer shadowOffsetY;
-            private Integer opacity;
-        }
+        private static final long serialVersionUID = 4252943431260003924L;
+        private String name;
+
+        @NonNull
+        private Collection<?> value;
     }
 }

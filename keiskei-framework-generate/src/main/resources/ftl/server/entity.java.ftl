@@ -62,7 +62,7 @@ public class ${table.name} extends ${parentName}Entity {
     </#if>
 <#--    一对一-->
     <#if field.oneToOne??>
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "${field.oneToOne?uncap_first}_id")
     private ${field.oneToOne} ${field.oneToOne?uncap_first};
 
@@ -80,6 +80,16 @@ public class ${table.name} extends ${parentName}Entity {
     <#else>
 <#--        普通字段-->
     private ${field.propertyType} ${field.propertyName};
+
+    <#if parentNam?lower_case == "base">
+    public ${table.name}(String index, Long indexNumber) {
+        super(index, indexNumber);
+    }
+
+    public ${table.name}(Long id) {
+        super(id);
+    }
+    </#if>
 
     </#if>
 </#list>

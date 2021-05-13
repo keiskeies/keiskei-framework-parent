@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.entity;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_permission")
+@ApiModel(value = "Permission", description = "操作权限")
 public class Permission extends TreeEntity {
 
     private static final long serialVersionUID = -7872341210410988194L;

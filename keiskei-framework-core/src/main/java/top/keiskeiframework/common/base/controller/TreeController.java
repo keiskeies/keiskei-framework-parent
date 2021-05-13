@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
@@ -23,7 +24,7 @@ import java.util.List;
 public class TreeController<T extends TreeEntity> {
 
     @Autowired
-    private BaseService<T> baseService;
+    private TreeServiceImpl<T> baseService;
 
 
     @GetMapping(value = {"","/options"})

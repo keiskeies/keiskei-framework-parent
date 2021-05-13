@@ -1,12 +1,14 @@
 package top.keiskeiframework.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
@@ -31,6 +33,8 @@ import java.util.Set;
 @Entity
 @Table(name = "sys_user")
 @ToString(exclude = {"user"})
+@ApiModel(value = "User", description = "管理员")
+@Chartable
 public class User extends BaseEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
@@ -108,4 +112,5 @@ public class User extends BaseEntity {
     public User(String index, Long indexNumber) {
         super(index, indexNumber);
     }
+    public User(Long id){super(id);}
 }

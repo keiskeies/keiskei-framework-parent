@@ -6,11 +6,16 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import org.reflections.Reflections;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -33,6 +38,13 @@ public class EntityFactory {
         Set<Class<? extends BaseEntity>> classSet = reflections.getSubTypesOf(BaseEntity.class);
         for (Class<? extends BaseEntity> clazz : classSet) {
             System.out.println(clazz.getName());
+            Chartable chartable = clazz.getDeclaredAnnotation(Chartable.class);
+            if (null == chartable) {
+                continue;
+            }
+            if (clazz.getSuperclass().equals(TreeEntity.class)) {
+                continue;
+            }
             ApiModel apiModel = clazz.getDeclaredAnnotation(ApiModel.class);
             if (null != apiModel) {
                 BASE_ENTITY_LIST.add(new CacheDTO(clazz.getName(), apiModel.description()));
@@ -42,7 +54,8 @@ public class EntityFactory {
         }
     }
 
-
+    private final static CacheDTO CREATE_TIME = new CacheDTO("createTime", "创建时间");
+    private final static CacheDTO UPDATE_TIME = new CacheDTO("updateTime", "更新时间");
     public static List<CacheDTO> getEntityInfo(String entityClass) {
         List<CacheDTO> entityFields = null;
 
@@ -65,22 +78,34 @@ public class EntityFactory {
                 e.printStackTrace();
             }
         }
+        entityFields.add(CREATE_TIME);
+        entityFields.add(UPDATE_TIME);
         return entityFields;
     }
 
     public static boolean columnEntityContains(@NotBlank String entityClass, @NotBlank String entityField) {
         try {
             Class<?> clazz = Class.forName(entityClass);
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (DATA_CLASS_SET.contains(field.getType())) {
-                    if (field.getName().equals(entityField)) {
-                        return true;
-                    }
-                }
+            if (columnEntityContains(clazz, entityField)) {
+                return true;
+            } else {
+                clazz = clazz.getSuperclass();
+                return columnEntityContains(clazz, entityField);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean columnEntityContains(@NotNull Class<?> clazz, @NotBlank String entityField) {
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (DATA_CLASS_SET.contains(field.getType())) {
+                if (field.getName().equals(entityField)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -90,7 +115,8 @@ public class EntityFactory {
             java.lang.Long.class,
             java.lang.Double.class,
             java.lang.String.class,
-            java.lang.Float.class
+            java.lang.Float.class,
+            LocalDateTime.class
     );
 
 }

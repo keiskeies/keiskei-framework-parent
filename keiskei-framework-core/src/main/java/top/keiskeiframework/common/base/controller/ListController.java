@@ -10,6 +10,7 @@ import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
@@ -26,7 +27,7 @@ import java.util.List;
 public class ListController<T extends BaseEntity> {
     
     @Autowired
-    private BaseService<T> baseService;
+    private ListServiceImpl<T> baseService;
 
 
     @GetMapping
@@ -57,7 +58,7 @@ public class ListController<T extends BaseEntity> {
     @PutMapping
     @ApiOperation("更新")
     public R<T> update(@RequestBody  @Validated({Update.class}) T fieldInfo) {
-        return R.ok(baseService.update(fieldInfo));
+        return R.ok(baseService.update(fieldInfo, fieldInfo.getId()));
     }
 
     @PutMapping("/sort")

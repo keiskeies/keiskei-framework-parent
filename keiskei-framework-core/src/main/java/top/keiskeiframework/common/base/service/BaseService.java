@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
-import top.keiskeiframework.common.dto.dashboard.SeriesDataDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -94,6 +93,7 @@ public interface BaseService<T> {
      * @return .
      */
     T update(T t);
+    T update(T t, Long id);
 
 
     /**

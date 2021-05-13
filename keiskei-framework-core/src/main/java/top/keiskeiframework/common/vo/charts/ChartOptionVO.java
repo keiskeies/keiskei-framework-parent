@@ -16,11 +16,12 @@ import java.util.List;
 @Data
 public class ChartOptionVO implements Serializable {
     private static final long serialVersionUID = -2401179965618911915L;
-    private Axis xAxis;
-    private Axis yAxis;
+    private Boolean horizontal = Boolean.FALSE;
+    private Axis axis;
     private List<Series> series;
     private Legend legend;
     private Radar radar;
     private Tooltip tooltip;
     private Grid grid;
+    private Title title;
 }

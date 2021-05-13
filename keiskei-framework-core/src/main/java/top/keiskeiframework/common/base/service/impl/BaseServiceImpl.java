@@ -16,6 +16,8 @@ import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
@@ -25,7 +27,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,6 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
     protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
     @Autowired
     protected EntityManager entityManager;
-    @Autowired
-    protected BaseService<T> baseService;
 
 
     @Override
@@ -183,6 +182,12 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
         return t;
     }
 
+    @Override
+    public T update(T t, Long id) {
+        t = jpaRepository.save(t);
+        return t;
+    }
+
 
     @Override
     public void changeSort(BaseSortDTO baseSortDto) {
@@ -239,8 +244,8 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
         query.where(predicates.toArray(new Predicate[0]));
 
         List<T> list;
-        if (ChartRequestDTO.ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
-            Expression<String> index = getTimeIndex(builder, root, chartRequestDTO.getColumn(), chartRequestDTO.getUnit());
+        if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
+            Expression<String> index = getTimeIndex(builder, root, chartRequestDTO.getColumn(), chartRequestDTO.getTimeDelta());
 
             query.multiselect(
                     index.alias("index"),
@@ -248,7 +253,9 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
             );
             query.groupBy(index);
             list = entityManager.createQuery(query).getResultList();
-            list.forEach(e -> e.setIndex(DateTimeUtils.WEEKS_RANGE.get(Integer.parseInt(e.getIndex()))));
+            if (TimeDeltaEnum.WEEK_DAY.equals(chartRequestDTO.getTimeDelta())) {
+                list.forEach(e -> e.setIndex(DateTimeUtils.WEEK_RANGE.get(Integer.parseInt(e.getIndex()))));
+            }
         } else {
 
             Expression<String> index = root.get(chartRequestDTO.getColumn()).as(String.class);
@@ -271,24 +278,51 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
      * @param builder 构建工具
      * @param root    root
      * @param column  字段名
-     * @param unit    单位
+     * @param delta    单位
      * @return 。
      */
-    protected Expression<String> getTimeIndex(CriteriaBuilder builder, Root<T> root, String column, ChronoUnit unit) {
+    protected Expression<String> getTimeIndex(CriteriaBuilder builder, Root<T> root, String column, TimeDeltaEnum delta) {
         Expression<String> index;
-        if (ChronoUnit.HOURS.equals(unit)) {
-            index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%H")).as(String.class);
-        } else if (ChronoUnit.DAYS.equals(unit)) {
-            index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y-%m-%d")).as(String.class);
-        } else if (ChronoUnit.WEEKS.equals(unit)) {
-            index = builder.function("WEEKDAY", LocalDateTime.class, root.get(column)).as(String.class);
-        } else if (ChronoUnit.MONTHS.equals(unit)) {
-            index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y-%m")).as(String.class);
-        } else if (ChronoUnit.YEARS.equals(unit)) {
-            index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y")).as(String.class);
-        } else {
-            throw new UnsupportedTemporalTypeException("Unsupported unit: " + unit);
+        switch (delta) {
+            case HOUR:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%H")).as(String.class);
+                break;
+            case ALL_HOURS:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y-%m-%d %H")).as(String.class);
+                break;
+            case WEEK_DAY:
+                index = builder.function("WEEKDAY", LocalDateTime.class, root.get(column)).as(String.class);
+                break;
+            case MONTH:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%m")).as(String.class);
+                break;
+            case MONTH_DAYS:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%d")).as(String.class);
+                break;
+            case ALL_DAYS:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y-%m-%d")).as(String.class);
+                break;
+            case ALL_MONTHS:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y-%m")).as(String.class);
+                break;
+            case QUARTER:
+                index = builder.function("QUARTER", LocalDateTime.class, root.get(column)).as(String.class);
+                break;
+            case ALL_QUARTERS:
+                index = builder.function( "CONCAT",
+                        LocalDateTime.class,
+                        builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y")),
+                        builder.literal("-"),
+                        builder.function("QUARTER", LocalDateTime.class, root.get(column))
+                ).as(String.class);
+                break;
+            case YEAR:
+                index = builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y")).as(String.class);
+                break;
+            default:
+                throw new UnsupportedTemporalTypeException("Unsupported unit: " + delta);
         }
+
         return index;
     }
 

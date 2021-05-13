@@ -54,7 +54,7 @@ public class DashboardController {
     @PutMapping
     @ApiOperation("更新")
     public R<Dashboard> update(@RequestBody  @Validated({Update.class}) Dashboard fieldInfo) {
-        return R.ok(dashboardService.update(fieldInfo));
+        return R.ok(dashboardService.update(fieldInfo, fieldInfo.getId()));
     }
 
     @PutMapping("/sort")

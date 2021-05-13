@@ -1,11 +1,13 @@
 package top.keiskeiframework.system.entity;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.collection.internal.PersistentBag;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
@@ -13,6 +15,8 @@ import top.keiskeiframework.common.base.entity.TreeEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -29,6 +33,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_dictionary")
+@ApiModel(value = "Dictionary", description = "数据字段")
 public class Dictionary extends TreeEntity {
 
     private static final long serialVersionUID = 1L;
@@ -52,4 +57,5 @@ public class Dictionary extends TreeEntity {
     @ApiModelProperty(value = "排序", dataType = "Long")
     @SortBy(desc = false)
     private Long sortBy;
+
 }

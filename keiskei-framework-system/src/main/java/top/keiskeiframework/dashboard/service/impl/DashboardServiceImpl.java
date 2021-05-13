@@ -8,25 +8,25 @@ import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.service.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.enums.dashboard.ChartType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.common.enums.dashboard.TimeTypeEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.util.SpringUtils;
 import top.keiskeiframework.common.vo.charts.*;
-import top.keiskeiframework.common.dto.dashboard.SeriesDataDTO;
-import top.keiskeiframework.common.vo.charts.series.BarSeries;
-import top.keiskeiframework.common.vo.charts.series.LineSeries;
+import top.keiskeiframework.common.vo.charts.series.LineOrBarSeries;
 import top.keiskeiframework.common.vo.charts.series.PieSeries;
 import top.keiskeiframework.common.vo.charts.series.RadarSeries;
-import top.keiskeiframework.common.vo.charts.series.data.PieSeriesData;
-import top.keiskeiframework.common.vo.charts.series.data.RadarSeriesData;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.entity.DashboardDirection;
 import top.keiskeiframework.dashboard.enums.DashboardExceptionEnum;
-import top.keiskeiframework.dashboard.enums.DashboardTypeEnum;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -41,123 +41,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
-
-    @Override
-    public ChartOptionVO getChartOption(Long id) {
-        Dashboard dashboard = baseService.getById(id);
-        Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-        ChartRequestDTO chartRequestDTO = new ChartRequestDTO(
-                DateTimeUtils.strToTime(dashboard.getStart()),
-                DateTimeUtils.strToTime(dashboard.getEnd())
-        );
-        if (ChartRequestDTO.ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
-            return getTimeChartOption(chartRequestDTO, dashboard);
-        } else {
-            return getFieldChartOption();
-        }
-    }
-
-
-    public ChartOptionVO getTimeChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
-        ChartOptionVO result = new ChartOptionVO();
-        chartRequestDTO.setUnit(DateTimeUtils.getUnitByString(dashboard.getXFieldDelta()));
-        List<DashboardDirection> yFields = dashboard.getYFields();
-        List<String> axisData = DateTimeUtils.timeRange(chartRequestDTO.getStart(), chartRequestDTO.getEnd(), chartRequestDTO.getUnit());
-        List<Series> seriesList = new ArrayList<>(yFields.size());
-        Series series = null;
-        int max = Integer.MIN_VALUE;
-        for (DashboardDirection direction : yFields) {
-            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
-            switch (chartRequestDTO.getChartType()) {
-                case "radar":
-                    List<Number> data = new ArrayList<>(dataMap.size());
-                    for (String key : axisData) {
-                        Long value = dataMap.getOrDefault(key, 0L);
-                        data.add(value);
-                        max = Math.max(max, value.intValue());
-                    }
-                    series = new RadarSeries(Collections.singleton(new RadarSeriesData(direction.getEntityName(), data)));
-                    seriesList.add(series);
-                    break;
-                case "pie":
-                    List<PieSeriesData> pieSeriesDataList = new ArrayList<>(axisData.size());
-                    for (Map.Entry<String, Long> entry : dataMap.entrySet()) {
-                        pieSeriesDataList.add(new PieSeriesData(entry.getKey(), entry.getValue()));
-                    }
-                    if (null == series) {
-                        series = new PieSeries(pieSeriesDataList);
-                        seriesList.add(series);
-                    } else {
-                        assert series instanceof PieSeries;
-                        PieSeries pieSeries = (PieSeries) series;
-                        pieSeries.getData().addAll(pieSeriesDataList);
-                    }
-                    break;
-                case "bar":
-                    data = new ArrayList<>(dataMap.size());
-                    for (String key : axisData) {
-                        data.add(dataMap.getOrDefault(key, 0L));
-                    }
-                    series = new BarSeries(data);
-                    seriesList.add(series);
-                    break;
-                default:
-                    data = new ArrayList<>(dataMap.size());
-                    for (String key : axisData) {
-                        data.add(dataMap.getOrDefault(key, 0L));
-                    }
-                    series = new LineSeries(data);
-                    seriesList.add(series);
-                    break;
-            }
-        }
-        if (DashboardTypeEnum.LINE.getId().equalsIgnoreCase(chartRequestDTO.getChartType()) ||
-                DashboardTypeEnum.BAR.getId().equalsIgnoreCase(chartRequestDTO.getChartType())) {
-            if (dashboard.getYHorizontal()) {
-                result.setYAxis(new Axis(axisData));
-            } else {
-                result.setXAxis(new Axis(axisData));
-            }
-        }
-        switch (chartRequestDTO.getChartType()) {
-            case "radar":
-                int finalMax = max;
-                Radar radar = new Radar(axisData.stream().map(e -> new Radar.Indicator(e, finalMax)).collect(Collectors.toList()));
-                result.setRadar(radar);
-                break;
-            case "pie": result.setLegend(new Legend(axisData)); break;
-            default: break;
-        }
-        result.setSeries(seriesList);
-        return result;
-    }
-
-    public ChartOptionVO getFieldChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
-        ChartOptionVO result = new ChartOptionVO();
-        List<DashboardDirection> yFields = dashboard.getYFields();
-        Set<String> axisData = new HashSet<>();
-        for (DashboardDirection direction : yFields) {
-            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
-            axisData.addAll(dataMap.keySet());
-
-        }
-
-
-        return null;
-    }
-
-    public Map<String, Long> getDataMap(ChartRequestDTO chartRequestDTO, Dashboard dashboard, DashboardDirection direction) {
-        chartRequestDTO.setColumn(direction.getField());
-        chartRequestDTO.setColumnType(dashboard.getXFieldType());
-        chartRequestDTO.setChartType(direction.getType());
-
-        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(
-                direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")) + "ServiceImpl"
-        );
-        return baseService.getChartOptions(chartRequestDTO);
-    }
-
-
     @Override
     public Dashboard save(Dashboard dashboard) {
         validate(dashboard);
@@ -170,33 +53,226 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
         return super.update(dashboard);
     }
 
+
+    @Override
+    public ChartOptionVO getChartOption(Long id) {
+        Dashboard dashboard = baseService.getById(id);
+        Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+
+        LocalDateTime[] startAndEnd;
+        switch (dashboard.getTimeType()) {
+            case CURRENT_DAY: startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null); break;
+            case CURRENT_WEEKS: startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null); break;
+            case CURRENT_MONTH: startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null); break;
+            case CURRENT_QUARTER: startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null); break;
+            case CURRENT_YEAR: startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null); break;
+            default: startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())}; break;
+        }
+
+        ChartRequestDTO chartRequestDTO = new ChartRequestDTO(
+                dashboard.getFieldType(),
+                startAndEnd[0],
+                startAndEnd[1]
+        );
+        if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
+            chartRequestDTO.setTimeDelta(dashboard.getFieldDelta());
+            return getTimeChartOption(chartRequestDTO, dashboard);
+        } else {
+            return getFieldChartOption(chartRequestDTO, dashboard);
+        }
+    }
+
+    /**
+     * 获取时间坐标的图表数据
+     *
+     * @param chartRequestDTO 。
+     * @param dashboard       。
+     * @return 。
+     */
+    public ChartOptionVO getTimeChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
+        ChartOptionVO result = new ChartOptionVO();
+        chartRequestDTO.setTimeDelta(dashboard.getFieldDelta());
+        List<DashboardDirection> yFields = dashboard.getDirections();
+        List<String> axisData = DateTimeUtils.timeRange(chartRequestDTO.getStart(), chartRequestDTO.getEnd(), chartRequestDTO.getTimeDelta());
+        List<Series> seriesList = new ArrayList<>(yFields.size());
+        List<String> legendData = new ArrayList<>(yFields.size());
+        AtomicInteger max = new AtomicInteger(0);
+        Series series = null;
+        for (DashboardDirection direction : yFields) {
+            chartRequestDTO.setEntityName(direction.getEntityName());
+            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
+            series = confirmSeries(chartRequestDTO, dataMap, axisData, max, seriesList, series);
+            legendData.add(direction.getEntityName());
+        }
+        confirmChartOptionVO(chartRequestDTO, dashboard, result, axisData, max, seriesList, legendData);
+        return result;
+    }
+
+    /**
+     * 获取字段类型图表数据
+     *
+     * @param chartRequestDTO 。
+     * @param dashboard       。
+     * @return 。
+     */
+    public ChartOptionVO getFieldChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
+        ChartOptionVO result = new ChartOptionVO();
+        List<DashboardDirection> yFields = dashboard.getDirections();
+        Set<String> axisDataSet = new HashSet<>();
+        Map<DashboardDirection, Map<String, Long>> dataList = new HashMap<>(yFields.size());
+        List<String> legendData = new ArrayList<>(yFields.size());
+        for (DashboardDirection direction : yFields) {
+            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
+            axisDataSet.addAll(dataMap.keySet());
+            dataList.put(direction, dataMap);
+        }
+        List<String> axisData = new ArrayList<>(axisDataSet);
+        List<Series> seriesList = new ArrayList<>(yFields.size());
+        AtomicInteger max = new AtomicInteger(0);
+        Series series = null;
+        for (Map.Entry<DashboardDirection, Map<String, Long>> entry : dataList.entrySet()) {
+            DashboardDirection direction = entry.getKey();
+            Map<String, Long> dataMap = entry.getValue();
+            chartRequestDTO.setEntityName(direction.getEntityName());
+            series = confirmSeries(chartRequestDTO, dataMap, axisData, max, seriesList, series);
+            legendData.add(direction.getEntityName());
+        }
+        confirmChartOptionVO(chartRequestDTO, dashboard, result, axisData, max, seriesList, legendData);
+        return result;
+    }
+
+    /**
+     * 组装图表完整结构
+     *
+     * @param chartRequestDTO 图表基本查询参数
+     * @param dashboard       图表参数
+     * @param result          图表完整结构数据
+     * @param axisData        图表下标
+     * @param max             数据最大值（雷达图使用）
+     * @param seriesList      图表数据
+     */
+    public void confirmChartOptionVO(ChartRequestDTO chartRequestDTO, Dashboard dashboard, ChartOptionVO result, List<String> axisData, AtomicInteger max, List<Series> seriesList, List<String> legendData) {
+        switch (chartRequestDTO.getChartType()) {
+            case RADAR:
+                Radar radar = new Radar(axisData.stream().map(e -> new Radar.Indicator(e, max.intValue())).collect(Collectors.toList()));
+                result.setRadar(radar);
+                result.setLegend(new Legend(legendData));
+                break;
+            case PIE:
+                result.setLegend(new Legend(axisData));
+                break;
+            default:
+                result.setAxis(new Axis(axisData));
+                result.setLegend(new Legend(legendData));
+                break;
+        }
+        result.setSeries(seriesList);
+        result.setHorizontal(dashboard.getHorizontal());
+        result.setTitle(new Title(dashboard.getName()));
+    }
+
+
+    /**
+     * 组装图表数据
+     *
+     * @param chartRequestDTO 图表基本查询参数
+     * @param dataMap         实体类查询结果
+     * @param axisData        图表下标
+     * @param max             数据最大值（雷达图使用）
+     * @param seriesList      图表数据
+     */
+    public Series confirmSeries(ChartRequestDTO chartRequestDTO, Map<String, Long> dataMap, List<String> axisData, AtomicInteger max, List<Series> seriesList, Series series) {
+        switch (chartRequestDTO.getChartType()) {
+            case RADAR:
+                List<Number> data = new ArrayList<>(dataMap.size());
+                for (String key : axisData) {
+                    Long value = dataMap.getOrDefault(key, 0L);
+                    data.add(value);
+                    max.set(Math.max(max.intValue(), value.intValue()));
+                }
+                series = new RadarSeries(Collections.singleton(
+                        new RadarSeries.RadarSeriesData(chartRequestDTO.getEntityName(), data)
+                ));
+                seriesList.add(series);
+                break;
+            case PIE:
+                List<PieSeries.PieSeriesData> pieSeriesDataList = new ArrayList<>(axisData.size());
+                for (Map.Entry<String, Long> dataEntry : dataMap.entrySet()) {
+                    pieSeriesDataList.add(new PieSeries.PieSeriesData(dataEntry.getKey(), dataEntry.getValue()));
+                }
+                if (null == series) {
+                    series = new PieSeries(pieSeriesDataList);
+                    seriesList.add(series);
+                } else {
+                    assert series instanceof PieSeries;
+                    PieSeries pieSeries = (PieSeries) series;
+                    pieSeries.getData().addAll(pieSeriesDataList);
+                }
+                break;
+            default:
+                data = new ArrayList<>(dataMap.size());
+                for (String key : axisData) {
+                    data.add(dataMap.getOrDefault(key, 0L));
+                }
+                series = new LineOrBarSeries(data);
+                seriesList.add(series);
+                break;
+        }
+        series.setName(chartRequestDTO.getEntityName());
+        series.setType(chartRequestDTO.getChartType().name());
+        return series;
+    }
+
+    /**
+     * 获取图表实体类基础数据
+     *
+     * @param chartRequestDTO 。
+     * @param dashboard       。
+     * @param direction       。
+     * @return 。
+     */
+    public Map<String, Long> getDataMap(ChartRequestDTO chartRequestDTO, Dashboard dashboard, DashboardDirection direction) {
+        chartRequestDTO.setColumn(direction.getField());
+        chartRequestDTO.setColumnType(dashboard.getFieldType());
+        chartRequestDTO.setChartType(direction.getType());
+
+        String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "I");
+
+        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(className + "ServiceImpl");
+        return baseService.getChartOptions(chartRequestDTO);
+    }
+
+
+    /**
+     * 图表记录数据校验
+     *
+     * @param dashboard 。
+     */
     private void validate(Dashboard dashboard) {
-        if (ChartRequestDTO.ColumnType.TIME.equals(dashboard.getXFieldType()) && StringUtils.isEmpty(dashboard.getXFieldDelta())) {
+        if (ColumnType.TIME.equals(dashboard.getFieldType()) && StringUtils.isEmpty(dashboard.getFieldDelta())) {
             throw new BizException(DashboardExceptionEnum.TYPE_EMPTY);
         }
-        List<DashboardDirection> yFields = dashboard.getYFields();
+        if (TimeTypeEnum.NORMAL.equals(dashboard.getTimeType())) {
+            if (StringUtils.isEmpty(dashboard.getStart()) || StringUtils.isEmpty(dashboard.getEnd())) {
+                throw new BizException(DashboardExceptionEnum.TIME_EMPTY);
+            }
+        }
+        List<DashboardDirection> yFields = dashboard.getDirections();
         if (yFields.size() > 1) {
-            // {折线/柱状图，饼图，雷达图}
-            int[] typeContains = {0, 0, 0};
-
             for (DashboardDirection direction : yFields) {
-                if (DashboardTypeEnum.LINE.getId().equalsIgnoreCase(direction.getType()) || DashboardTypeEnum.BAR.getId().equalsIgnoreCase(direction.getType())) {
-                    typeContains[0] = 1;
-                } else if (DashboardTypeEnum.PIE.getId().equalsIgnoreCase(direction.getType())) {
-                    typeContains[1] = 1;
-                } else if (DashboardTypeEnum.RADAR.getId().equalsIgnoreCase(direction.getType())) {
-                    typeContains[2] = 1;
+                if (ChartType.LINE_BAR.equals(dashboard.getType())) {
+                    if (!ChartType.LINE.equals(direction.getType()) && !ChartType.BAR.equals(direction.getType())) {
+                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
+                    }
+                } else {
+                    if (!dashboard.getType().equals(direction.getType())) {
+                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
+                    }
                 }
-
                 if (!EntityFactory.columnEntityContains(direction.getEntityClass(), direction.getField())) {
                     throw new BizException(DashboardExceptionEnum.ENTITY_FIELD_NOT_EXIST);
                 }
             }
-            if (typeContains[0] + typeContains[1] + typeContains[2] > 1) {
-                throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
-            }
         }
     }
-
-
 }

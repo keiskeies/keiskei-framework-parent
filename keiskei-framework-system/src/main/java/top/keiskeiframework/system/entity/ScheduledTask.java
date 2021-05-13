@@ -1,12 +1,14 @@
 package top.keiskeiframework.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.Version;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -29,10 +31,9 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Where(clause = "d = 0")
-@SQLDelete(sql = "UPDATE scheduled SET d = 1 WHERE id=? AND v=?")
 @Accessors(chain = true)
 @Table(name = "sys_scheduled_task")
+@ApiModel(value = "ScheduledTask", description = "定时任务")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class ScheduledTask extends BaseEntity {
 
@@ -55,4 +56,9 @@ public class ScheduledTask extends BaseEntity {
 
     @ApiModelProperty(value = "是否启用", dataType = "String")
     private Boolean enable = true;
+
+    public ScheduledTask(String index, Long indexNumber) {
+        super(index, indexNumber);
+    }
+    public ScheduledTask(Long id){super(id);}
 }

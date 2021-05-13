@@ -1,6 +1,9 @@
 package top.keiskeiframework.common.dto.dashboard;
 
 import lombok.*;
+import top.keiskeiframework.common.enums.dashboard.ChartType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,19 +26,17 @@ public class ChartRequestDTO implements Serializable {
     private static final long serialVersionUID = -1354993776756493818L;
 
     private String column;
-    private String chartType = "line";
+    private String entityName;
+    private ChartType chartType;
+
+    @NonNull
     private ColumnType columnType;
-    private ChronoUnit unit;
+    private TimeDeltaEnum timeDelta;
 
     @NonNull
     private LocalDateTime start;
     @NonNull
     private LocalDateTime end;
 
-    public enum ColumnType {
-        // 时间类型
-        TIME,
-        // 字段分类
-        FIELD
-    }
+
 }
