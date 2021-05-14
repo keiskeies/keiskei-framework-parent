@@ -2,12 +2,16 @@ package top.keiskeiframework.dashboard.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.service.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeTypeEnum;
@@ -39,22 +43,35 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
+public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
+
+    @Autowired
+    protected ListServiceImpl<Dashboard> baseService;
+    private static final String CACHE_NAME = CacheTimeEnum.M10;
+
 
     @Override
     public Dashboard save(Dashboard dashboard) {
         validate(dashboard);
-        return super.save(dashboard);
+        return baseService.save(dashboard);
     }
 
     @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #dashboard.id")
     public Dashboard update(Dashboard dashboard) {
         validate(dashboard);
-        return super.update(dashboard);
+        return baseService.update(dashboard, dashboard.getId());
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id")
+    public void deleteById(Long id) {
+        baseService.deleteById(id);
     }
 
 
     @Override
+    @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Long id) {
         Dashboard dashboard = baseService.getById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
@@ -154,7 +171,8 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
     public void confirmChartOptionVO(ChartRequestDTO chartRequestDTO, Dashboard dashboard, ChartOptionVO result, List<String> axisData, AtomicInteger max, List<Series> seriesList, List<String> legendData) {
         switch (chartRequestDTO.getChartType()) {
             case RADAR:
-                Radar radar = new Radar(axisData.stream().map(e -> new Radar.Indicator(e, max.intValue())).collect(Collectors.toList()));
+                int maxNumber = getMaxRange(max.intValue());
+                Radar radar = new Radar(axisData.stream().map(e -> new Radar.Indicator(e, maxNumber)).collect(Collectors.toList()));
                 result.setRadar(radar);
                 result.setLegend(new Legend(legendData));
                 break;
@@ -274,5 +292,28 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
                 }
             }
         }
+    }
+
+    private final static List<Integer> MAX_RANGE = new ArrayList<>(64);
+    static {
+        int number = 10;
+        MAX_RANGE.add(number);
+        int delta = 1;
+        for (int i = 0; i< 63; i++) {
+            if (i % 9 == 0) {
+                delta *= 10;
+            }
+            MAX_RANGE.add(number+=delta);
+        }
+    }
+
+
+    private static int getMaxRange(int number) {
+        for (int i : MAX_RANGE) {
+            if (number < i) {
+                return i;
+            }
+        }
+        return number;
     }
 }

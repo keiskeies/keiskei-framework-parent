@@ -46,7 +46,6 @@ public class Role extends BaseEntity {
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
     private Set<Permission> permissions = new HashSet<>();
-    public Set<Permission> getPermissions() { return new HashSet<>(permissions); }
 
     public Role(String index, Long indexNumber) {
         super(index, indexNumber);

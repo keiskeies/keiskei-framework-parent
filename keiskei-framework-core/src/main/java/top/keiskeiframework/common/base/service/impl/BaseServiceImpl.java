@@ -182,12 +182,6 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
         return t;
     }
 
-    @Override
-    public T update(T t, Long id) {
-        t = jpaRepository.save(t);
-        return t;
-    }
-
 
     @Override
     public void changeSort(BaseSortDTO baseSortDto) {

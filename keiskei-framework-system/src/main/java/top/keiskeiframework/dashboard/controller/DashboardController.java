@@ -3,18 +3,22 @@ package top.keiskeiframework.dashboard.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.service.EntityFactory;
-import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
+import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
-import top.keiskeiframework.common.vo.charts.ChartOptionVO;
+import top.keiskeiframework.common.enums.CacheTimeEnum;
+import top.keiskeiframework.common.util.SecurityUtils;
+import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,16 +36,19 @@ public class DashboardController {
 
     @Autowired
     private IDashboardService dashboardService;
-    
+
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        return R.ok(dashboardService.options());
+        List<QueryConditionDTO> queryConditions = Collections.singletonList(
+                new QueryConditionDTO("createUserId", SecurityUtils.getSessionUser().getId())
+        );
+        return R.ok(dashboardService.options(queryConditions));
     }
     
     @ApiOperation("详情")
     @GetMapping("/{id:-?[\\d]+}")
-    public R<ChartOptionVO> getOne(@PathVariable Long id) {
+    public R<?> getOne(@PathVariable Long id) {
         return R.ok(dashboardService.getChartOption(id));
     }
 
@@ -54,7 +61,8 @@ public class DashboardController {
     @PutMapping
     @ApiOperation("更新")
     public R<Dashboard> update(@RequestBody  @Validated({Update.class}) Dashboard fieldInfo) {
-        return R.ok(dashboardService.update(fieldInfo, fieldInfo.getId()));
+        fieldInfo = dashboardService.update(fieldInfo);
+        return R.ok(fieldInfo);
     }
 
     @PutMapping("/sort")
@@ -80,6 +88,7 @@ public class DashboardController {
 
     @ApiOperation("字段")
     @GetMapping("/table/field")
+    @Cacheable(cacheNames = CacheTimeEnum.M10, key = "#targetClass + '-field-' + #entityClass")
     public R<List<CacheDTO>> tableField(@RequestParam String entityClass) {
         return R.ok(EntityFactory.getEntityInfo(entityClass));
     }

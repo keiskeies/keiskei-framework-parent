@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * @author ：陈加敏 right_way@foxmail.com
  * @since ：2019/12/11 0:29
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented

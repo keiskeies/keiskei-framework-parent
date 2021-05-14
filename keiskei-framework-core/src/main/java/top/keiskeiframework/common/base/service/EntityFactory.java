@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import org.reflections.Reflections;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -56,16 +57,16 @@ public class EntityFactory {
 
     private final static CacheDTO CREATE_TIME = new CacheDTO("createTime", "创建时间");
     private final static CacheDTO UPDATE_TIME = new CacheDTO("updateTime", "更新时间");
-    public static List<CacheDTO> getEntityInfo(String entityClass) {
+    public static List<CacheDTO> getEntityInfo(@NonNull String entityClass) {
         List<CacheDTO> entityFields = null;
 
-        if (!StringUtils.isEmpty(entityClass)) {
             try {
                 Class<?> clazz = Class.forName(entityClass);
                 Field[] fields = clazz.getDeclaredFields();
                 entityFields = new ArrayList<>(fields.length);
                 for (Field field : fields) {
-                    if (DATA_CLASS_SET.contains(field.getType())) {
+                    Chartable chartable = field.getAnnotation(Chartable.class);
+                    if (null != chartable && DATA_CLASS_SET.contains(field.getType())) {
                         ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
                         if (null != apiModelProperty) {
                             entityFields.add(new CacheDTO(field.getName(), apiModelProperty.value()));
@@ -75,9 +76,9 @@ public class EntityFactory {
                     }
                 }
             } catch (ClassNotFoundException e) {
+                entityFields = new ArrayList<>();
                 e.printStackTrace();
             }
-        }
         entityFields.add(CREATE_TIME);
         entityFields.add(UPDATE_TIME);
         return entityFields;

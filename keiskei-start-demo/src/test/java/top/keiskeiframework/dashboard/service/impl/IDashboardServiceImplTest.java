@@ -1,23 +1,14 @@
 package top.keiskeiframework.dashboard.service.impl;
 
 
-import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.keiskeiframework.ApplicationTest;
-import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
-import top.keiskeiframework.common.util.DateTimeUtils;
-import top.keiskeiframework.common.vo.charts.ChartOptionVO;
-import top.keiskeiframework.dashboard.entity.Dashboard;
-import top.keiskeiframework.dashboard.entity.DashboardDirection;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DashboardServiceImplTest extends ApplicationTest {
+public class IDashboardServiceImplTest extends ApplicationTest {
 
     @Autowired
-    private DashboardServiceImpl dashboardService;
+    private IDashboardServiceImpl dashboardService;
 
     @Test
     public void testOption() {

@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -35,6 +36,11 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
     public List<T> options() {
         return super.options();
+    }
+
+    @Override
+    public List<T> options(List<QueryConditionDTO> t) {
+        return baseService.options();
     }
 
     @Override

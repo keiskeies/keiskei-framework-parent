@@ -7,7 +7,7 @@ server:
         http-only: false
 logging:
   level:
-    top.keiskeiframework: debug
+    top.keiskeiframework: info
   #    org.springframework: debug
   pattern:
     file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
@@ -29,10 +29,12 @@ spring:
       max-request-size: 500MB
   datasource:
     name: news_stand
+#    driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: root
     password: Cjm@12070817
     url: jdbc:log4jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
     timeout: 6000
     password: 123456
@@ -73,6 +75,8 @@ management:
     tags:
       application: ${spring.application.name}
 keiskei:
+  cache-expired:
+    FILE_MINUTE:
   system:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
     cross: true

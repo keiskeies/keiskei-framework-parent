@@ -87,10 +87,6 @@ public class Dashboard extends BaseEntity {
     @NotEmpty(message="y坐标不能为空", groups = {Insert.class, Update.class})
     private List<DashboardDirection> directions;
 
-    public List<DashboardDirection> getDirections() {
-        return new ArrayList<>(this.directions);
-    }
-
 
     public Dashboard(String index, Long indexNumber) {
         super(index, indexNumber);
