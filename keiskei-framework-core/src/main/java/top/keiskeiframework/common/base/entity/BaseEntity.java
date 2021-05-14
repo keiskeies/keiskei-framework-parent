@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -102,22 +101,20 @@ public class BaseEntity implements Serializable {
      * 图表下标
      */
     @Transient
-    private String index;
+    protected String index;
 
     /**
      * 图表下标数量
      */
     @Transient
-    private Long indexNumber;
+    protected Long indexNumber;
 
-    public BaseEntity(String index, Long indexNumber) {
+    BaseEntity(String index, Long indexNumber) {
         this.index = index;
         this.indexNumber = indexNumber;
     }
 
-    public BaseEntity(Long id) {
-        this.id = id;
-    }
+
 
 
 

@@ -5,18 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Example;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,19 +36,7 @@ public class ListServiceImpl<T extends BaseEntity> extends BaseServiceImpl<T> im
 
     @Override
     public List<T> options() {
-        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
-        Type[] types = parameterizedType.getActualTypeArguments();
-        Class<T> clazz = (Class<T>) types[0];
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(clazz);
-        Root<T> root = query.from(clazz);
-
-        query.multiselect(root.get("id"));
-        List<T> result = entityManager.createQuery(query).getResultList();
-        for (int i = 0; i < result.size(); i++) {
-            result.set(i, baseService.getById( result.get(i).getId()));
-        }
-        return result;
+        return this.options(new ArrayList<>(0));
     }
 
     @Override
@@ -60,15 +48,19 @@ public class ListServiceImpl<T extends BaseEntity> extends BaseServiceImpl<T> im
         CriteriaQuery<T> query = builder.createQuery(clazz);
         Root<T> root = query.from(clazz);
 
-        query.multiselect(root.get("id"));
+        query.select(root.get("id"));
+
         if (CollectionUtils.isEmpty(queryConditions)) {
             for (QueryConditionDTO queryCondition : queryConditions) {
                 query.where(builder.and(builder.equal(root.get(queryCondition.getColumn()), queryCondition.getValue())));
             }
         }
-        List<T> result = entityManager.createQuery(query).getResultList();
-        for (int i = 0; i < result.size(); i++) {
-            result.set(i, baseService.getById( result.get(i).getId()));
+
+        List<?> ids = entityManager.createQuery(query).getResultList();
+        List<T> result = new ArrayList<>(ids.size());
+
+        for (Object id : ids) {
+            result.add(baseService.getById((Long) id));
         }
         return result;
     }

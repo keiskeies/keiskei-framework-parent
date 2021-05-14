@@ -111,5 +111,4 @@ public class User extends BaseEntity {
     public User(String index, Long indexNumber) {
         super(index, indexNumber);
     }
-    public User(Long id){super(id);}
 }

@@ -86,11 +86,4 @@ public class Dashboard extends BaseEntity {
     @JoinColumn(name = "dashboard_id")
     @NotEmpty(message="y坐标不能为空", groups = {Insert.class, Update.class})
     private List<DashboardDirection> directions;
-
-
-    public Dashboard(String index, Long indexNumber) {
-        super(index, indexNumber);
-    }
-    public Dashboard(Long id){super(id);}
-
 }

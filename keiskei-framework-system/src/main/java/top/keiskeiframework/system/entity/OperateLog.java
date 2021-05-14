@@ -73,6 +73,4 @@ public class OperateLog extends BaseEntity {
         super(index, indexNumber);
     }
 
-    public OperateLog(Long id) {super(id);}
-
 }

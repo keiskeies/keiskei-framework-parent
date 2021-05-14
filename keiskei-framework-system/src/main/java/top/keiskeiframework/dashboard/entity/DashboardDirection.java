@@ -49,7 +49,4 @@ public class DashboardDirection extends BaseEntity {
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotNull(message="图表类型不能为空", groups = {Insert.class, Update.class})
     private ChartType type;
-
-    public DashboardDirection(Long id){super(id);}
-
 }

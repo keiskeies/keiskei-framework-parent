@@ -50,5 +50,4 @@ public class Role extends BaseEntity {
     public Role(String index, Long indexNumber) {
         super(index, indexNumber);
     }
-    public Role(Long id){super(id);}
 }
