@@ -3,21 +3,22 @@ package top.keiskeiframework.common.base.service;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javassist.*;
 import lombok.Getter;
 import org.reflections.Reflections;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 
-import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -37,48 +38,78 @@ public class EntityFactory {
         Reflections reflections = new Reflections("top.keiskeiframework");
         //获取继承了IAnimal的所有类
         Set<Class<? extends BaseEntity>> classSet = reflections.getSubTypesOf(BaseEntity.class);
+        //创建CtClass容器
+
         for (Class<? extends BaseEntity> clazz : classSet) {
             System.out.println(clazz.getName());
             Chartable chartable = clazz.getDeclaredAnnotation(Chartable.class);
             if (null == chartable) {
                 continue;
             }
-            if (clazz.getSuperclass().equals(TreeEntity.class)) {
-                continue;
-            }
+
+//                CtClass ctClass = getCtClass(clazz.getName());
+//                addChartMethod(ctClass, clazz);
+
             ApiModel apiModel = clazz.getDeclaredAnnotation(ApiModel.class);
             if (null != apiModel) {
                 BASE_ENTITY_LIST.add(new CacheDTO(clazz.getName(), apiModel.description()));
             } else {
                 BASE_ENTITY_LIST.add(new CacheDTO(clazz.getName(), clazz.getName()));
             }
+
         }
+    }
+
+
+    private static CtClass getCtClass(String classPath) {
+        ClassPool classPool = new ClassPool(true);
+        try {
+            classPool.insertClassPath(classPath);
+            return classPool.get(classPath);
+        } catch (NotFoundException e) {
+            return null;
+        }
+    }
+
+    private final static String CHART_METHOD_FORMAT = "public %s(String index, Long indexNumber) {super(index, indexNumber);}";
+
+    private static void addChartMethod(CtClass ctClass, Class<?> clazz) {
+        try {
+            CtMethod setMethod = CtMethod.make(String.format(CHART_METHOD_FORMAT, clazz.getSimpleName()), ctClass);
+            ctClass.addMethod(setMethod);
+        } catch (CannotCompileException e) {
+            e.printStackTrace();
+        }
+
+        clazz.getResource("").getPath();
+
     }
 
     private final static CacheDTO CREATE_TIME = new CacheDTO("createTime", "创建时间");
     private final static CacheDTO UPDATE_TIME = new CacheDTO("updateTime", "更新时间");
+
     public static List<CacheDTO> getEntityInfo(@NonNull String entityClass) {
         List<CacheDTO> entityFields = null;
 
-            try {
-                Class<?> clazz = Class.forName(entityClass);
-                Field[] fields = clazz.getDeclaredFields();
-                entityFields = new ArrayList<>(fields.length);
-                for (Field field : fields) {
-                    Chartable chartable = field.getAnnotation(Chartable.class);
-                    if (null != chartable && DATA_CLASS_SET.contains(field.getType())) {
-                        ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
-                        if (null != apiModelProperty) {
-                            entityFields.add(new CacheDTO(field.getName(), apiModelProperty.value()));
-                        } else {
-                            entityFields.add(new CacheDTO(field.getName(), field.getName()));
-                        }
+        try {
+            Class<?> clazz = Class.forName(entityClass);
+            Field[] fields = clazz.getDeclaredFields();
+            entityFields = new ArrayList<>(fields.length);
+            for (Field field : fields) {
+                Chartable chartable = field.getAnnotation(Chartable.class);
+                if (null != chartable && DATA_CLASS_SET.contains(field.getType())) {
+                    ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+                    if (null != apiModelProperty) {
+                        entityFields.add(new CacheDTO(field.getName(), apiModelProperty.value()));
+                    } else {
+                        entityFields.add(new CacheDTO(field.getName(), field.getName()));
                     }
                 }
-            } catch (ClassNotFoundException e) {
-                entityFields = new ArrayList<>();
-                e.printStackTrace();
             }
+        } catch (ClassNotFoundException e) {
+            entityFields = new ArrayList<>();
+            e.printStackTrace();
+        }
         entityFields.add(CREATE_TIME);
         entityFields.add(UPDATE_TIME);
         return entityFields;
@@ -119,5 +150,6 @@ public class EntityFactory {
             java.lang.Float.class,
             LocalDateTime.class
     );
+
 
 }
