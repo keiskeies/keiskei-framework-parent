@@ -28,7 +28,10 @@ public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog> implemen
     public void saveAsync(OperateLog operateLog) {
         String type = OperateTypeEnum.getType(operateLog.getType());
         if (null != type) {
-            operateLogRepository.save(operateLog);
+            try {
+                operateLogRepository.save(operateLog);
+            } catch (Exception ignored) {
+            }
         }
     }
 }
