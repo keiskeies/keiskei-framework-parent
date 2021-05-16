@@ -7,7 +7,6 @@
     <artifactId>keiskei-framework-parent</artifactId>
     <version>1.0.0-Release</version>
     <modules>
-        <module>keiskei-framework-lombok</module>
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-system</module>
@@ -157,21 +156,66 @@
             <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-core</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>cjm-nexus-central</id>
+            <name>cjm-nexus-central</name>
+            <url>http://nexus.cjm.jx.cn/repository/maven-central/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>cjm-nexus</id>
+            <name>cjm-nexus</name>
+            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>cjm-nexus</id>
+            <name>nexus cjm</name>
+            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
+        </repository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <!--生成doc jar包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
+            <!--生成源码jar包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

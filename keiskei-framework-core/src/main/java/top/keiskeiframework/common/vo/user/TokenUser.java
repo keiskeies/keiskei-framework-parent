@@ -7,6 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 /**
+ * <p>
+ * 管理员信息
+ * </p>
+ *
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/10 18:19
  */

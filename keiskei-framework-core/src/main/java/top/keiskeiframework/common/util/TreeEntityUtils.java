@@ -1,11 +1,15 @@
 package top.keiskeiframework.common.util;
 
-import top.keiskeiframework.common.base.entity.TreeEntity;
 import org.springframework.util.CollectionUtils;
+import top.keiskeiframework.common.base.entity.TreeEntity;
 
 import java.util.*;
 
 /**
+ * <p>
+ * 树形实体工具
+ * </p>
+ *
  * @author 陈加敏
  */
 public class TreeEntityUtils<T extends TreeEntity> {
@@ -27,6 +31,11 @@ public class TreeEntityUtils<T extends TreeEntity> {
         }
     }
 
+    /**
+     * 获取当前节点的节点树
+     * @param id 当前节点id
+     * @return .
+     */
     public List<T> getTree(Long id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
@@ -40,6 +49,11 @@ public class TreeEntityUtils<T extends TreeEntity> {
         return responses;
     }
 
+    /**
+     * 获取所有子节点id, 包括当前节点id
+     * @param id 当前节点id
+     * @return .
+     */
     public Set<Long> getChildIds(Long id) {
         List<T> tempList = map.get(id);
         Set<Long> tempIds = new HashSet<>();
@@ -54,6 +68,11 @@ public class TreeEntityUtils<T extends TreeEntity> {
         return tempIds;
     }
 
+    /**
+     * 获取所有子节点集合, 包括当前节点
+     * @param id 当前节点id
+     * @return .
+     */
     public Set<T> getChildren(Long id) {
         List<T> tempList = map.get(id);
         Set<T> children = new HashSet<>();

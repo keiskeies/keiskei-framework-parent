@@ -23,7 +23,7 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * <p>
- *
+ * redis锁实现工具
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com

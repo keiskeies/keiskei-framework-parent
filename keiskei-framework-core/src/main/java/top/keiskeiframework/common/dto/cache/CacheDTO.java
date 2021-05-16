@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 缓存
+ * 缓存DTO
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -31,6 +31,11 @@ public class CacheDTO {
      */
     private Object value;
 
+    /**
+     * 将map转换成集合
+     * @param data map
+     * @return .
+     */
     public static List<CacheDTO> of (Map<String, Object> data) {
         if (CollectionUtils.isEmpty(data)) {
             return null;

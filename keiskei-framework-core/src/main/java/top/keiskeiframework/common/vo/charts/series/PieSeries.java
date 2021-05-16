@@ -8,7 +8,7 @@ import java.util.Collection;
 
 /**
  * <p>
- *
+ * 饼图 series数据
  * </P>
  *
  * @author CJM right_way@foxmail.com
@@ -21,9 +21,15 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class PieSeries extends Series implements Serializable {
     private static final long serialVersionUID = 7755013680905254636L;
-
+    /**
+     * 数据
+     */
     @NonNull
     private Collection<PieSeriesData> data;
+
+    /**
+     * 饼图数据节点
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

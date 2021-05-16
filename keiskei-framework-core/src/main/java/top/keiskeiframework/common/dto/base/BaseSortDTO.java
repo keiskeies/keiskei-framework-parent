@@ -16,12 +16,25 @@ import java.io.Serializable;
 public class BaseSortDTO implements Serializable {
     private static final long serialVersionUID = -899342361316647661L;
 
+    /**
+     * id1
+     */
     @NotNull
     private Long id1;
+
+    /**
+     * sortby1 修改后的排序
+     */
     @NotNull
     private Long sortBy1;
+    /**
+     * ID2
+     */
     @NotNull
     private Long id2;
+    /**
+     * 修改后的排序
+     */
     @NotNull
     private Long sortBy2;
 }

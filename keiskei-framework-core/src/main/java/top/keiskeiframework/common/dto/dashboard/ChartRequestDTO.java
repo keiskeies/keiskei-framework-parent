@@ -7,12 +7,10 @@ import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 /**
  * <p>
- *
+ * 图表参数
  * </P>
  *
  * @author CJM right_way@foxmail.com
@@ -25,16 +23,36 @@ import java.util.List;
 public class ChartRequestDTO implements Serializable {
     private static final long serialVersionUID = -1354993776756493818L;
 
+    /**
+     * 字段
+     */
     private String column;
+    /**
+     * 实体类名称
+     */
     private String entityName;
+    /**
+     * 图表类型
+     */
     private ChartType chartType;
 
+    /**
+     * 字段类型
+     */
     @NonNull
     private ColumnType columnType;
+    /**
+     * 时间间隔
+     */
     private TimeDeltaEnum timeDelta;
-
+    /**
+     * 起始时间
+     */
     @NonNull
     private LocalDateTime start;
+    /**
+     * 结束时间
+     */
     @NonNull
     private LocalDateTime end;
 

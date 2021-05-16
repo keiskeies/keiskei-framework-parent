@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 公共异常枚举
+ * <p>
+ * 系统异常枚举
+ * </p>
  *
  * @author 陈加敏
  * @since 2019/7/19 14:34

@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.util;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -7,7 +8,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
+ * <p>
  * 依赖注入获取
+ * </p>
  *
  * @author 陈加敏 right_way@foxmail.com
  * @since 2019/8/7 17:38
@@ -17,8 +20,13 @@ import org.springframework.stereotype.Component;
 public class SpringUtils implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
+    /**
+     *
+     * @param applicationContext spring context
+     * @throws BeansException beansException
+     */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         if (SpringUtils.applicationContext == null) {
             SpringUtils.applicationContext = applicationContext;
         }
@@ -49,7 +57,7 @@ public class SpringUtils implements ApplicationContextAware {
      *
      * @param clazz .
      * @param <T>   .
-     * @return
+     * @return .
      */
     public static <T> T getBean(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);

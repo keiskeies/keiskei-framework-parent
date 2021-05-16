@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- *
+ * 文件上传校验
  * </p>
  *
  * @author 陈加敏 right_way@foxmail.com

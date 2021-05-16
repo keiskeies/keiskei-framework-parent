@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- * 访问叠加
+ * 访问计数标志
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com
@@ -17,8 +17,16 @@ import java.util.concurrent.TimeUnit;
 @Documented
 public @interface Countable {
 
+    /**
+     * 缓存键
+     * @return 。
+     */
     String key() default "";
 
+    /**
+     * 锁名称
+     * @return 。
+     */
     String lockName() default "SUPERPOSITION";
 
 

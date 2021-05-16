@@ -3,12 +3,10 @@ package top.keiskeiframework.common.vo.charts;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * <p>
- *
+ * 图表series基础数据
  * </P>
  *
  * @author CJM right_way@foxmail.com
@@ -17,6 +15,12 @@ import java.util.List;
 @Data
 public class Series implements Serializable {
     private static final long serialVersionUID = -4978366786197732637L;
+    /**
+     * 数据分类名称
+     */
     private String name;
+    /**
+     * 图表类型
+     */
     private String type;
 }

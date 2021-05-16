@@ -17,7 +17,7 @@ import javax.validation.Payload;
 
 /**
  * <p>
- *
+ * Enum值校验
  * </p>
  *
  * @author v_chenjiamin

@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- *
+ * 分片合并校验
  * </p>
  *
  * @author 陈加敏 right_way@foxmail.com

@@ -9,7 +9,6 @@ import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
@@ -25,7 +24,7 @@ import java.util.List;
  * @since 2020/12/21 13:02
  */
 public class ListController<T extends BaseEntity> {
-    
+
     @Autowired
     private ListServiceImpl<T> baseService;
 
@@ -38,7 +37,7 @@ public class ListController<T extends BaseEntity> {
 
 
     @GetMapping("/options")
-    @ApiOperation( "下拉框")
+    @ApiOperation("下拉框")
     public R<List<T>> list() {
         return R.ok(baseService.options());
     }
@@ -57,20 +56,20 @@ public class ListController<T extends BaseEntity> {
 
     @PutMapping
     @ApiOperation("更新")
-    public R<T> update(@RequestBody  @Validated({Update.class}) T fieldInfo) {
+    public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
         return R.ok(baseService.update(fieldInfo, fieldInfo.getId()));
     }
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDTO baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO baseSortDto) {
         baseService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }
 
     @DeleteMapping("/{id:-?[\\d]+}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long  id) {
+    public R<Boolean> delete(@PathVariable Long id) {
         baseService.deleteById(id);
         return R.ok(Boolean.TRUE);
     }

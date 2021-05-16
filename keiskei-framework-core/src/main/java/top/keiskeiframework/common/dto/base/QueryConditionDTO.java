@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * <p>
- *
+ * 查询条件
  * </p>
  *
  * @author v_chenjiamin
@@ -17,6 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QueryConditionDTO {
 
+    /**
+     * 字段
+     */
     private String column;
+    /**
+     * 值
+     */
     private Object value;
 }

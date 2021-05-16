@@ -21,6 +21,7 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-core</artifactId>
+            <version>1.0.0-Release</version>
         </dependency>
     </dependencies>
 

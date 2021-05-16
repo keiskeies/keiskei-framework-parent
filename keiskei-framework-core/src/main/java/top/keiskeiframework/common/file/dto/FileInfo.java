@@ -8,7 +8,9 @@ import java.io.Serializable;
 
 
 /**
+ * <p>
  * 文件信息接口类
+ * </p>
  *
  * @author 陈加敏
  * @since 2019/7/24 10:58

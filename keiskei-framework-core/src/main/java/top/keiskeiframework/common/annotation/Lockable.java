@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- *
+ * Redis锁工具
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com

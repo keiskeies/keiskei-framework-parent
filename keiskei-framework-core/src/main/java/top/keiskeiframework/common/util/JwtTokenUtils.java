@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * <p>
+ * jwt工具类
+ * </p>
+ *
  * @author James Chen right_way@foxmail.com
  * @since 2020/1/19 21:50
  */
@@ -42,13 +46,13 @@ public class JwtTokenUtils {
      * @param token .
      * @return .
      */
-    public static<T> T parse(String token,Class<T> tClass){
+    public static <T> T parse(String token, Class<T> tClass) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET)
                     .parseClaimsJws(token)
                     .getBody();
-            HashMap<?,?> map = claims.get("user", HashMap.class);
+            HashMap<?, ?> map = claims.get("user", HashMap.class);
             return JSON.parseObject(JSON.toJSONString(map), tClass);
         } catch (Exception e) {
             return null;

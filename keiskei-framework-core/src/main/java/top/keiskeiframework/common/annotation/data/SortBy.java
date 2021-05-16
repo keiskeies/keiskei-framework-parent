@@ -3,6 +3,9 @@ package top.keiskeiframework.common.annotation.data;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ * 查询按照字段排序
+ * </p>
  * @author James Chen right_way@foxmail.com
  */
 @Documented

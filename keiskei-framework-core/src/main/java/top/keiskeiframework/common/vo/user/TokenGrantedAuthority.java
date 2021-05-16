@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
+ * <p>
+ * 管理员权限
+ * </p>
+ *
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/10 18:22
  */

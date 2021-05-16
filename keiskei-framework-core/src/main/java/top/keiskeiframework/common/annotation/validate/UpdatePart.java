@@ -3,7 +3,10 @@ package top.keiskeiframework.common.annotation.validate;
 import java.lang.annotation.*;
 
 /**
- * 提交参数校验
+ * <p>
+ * 数据部分更新校验
+ * </p>
+ *
  * @author James Chen right_way@foxmail.com
  */
 @Documented

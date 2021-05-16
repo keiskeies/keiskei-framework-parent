@@ -40,11 +40,11 @@ public class OperateLog extends BaseEntity {
     @NotNull(message = "操作人员不能为空", groups = {Insert.class})
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @Chartable
     private User user;
 
     @ApiModelProperty(value = "操作IP", dataType = "String")
     @NotNull(message = "请选择操作IP", groups = {Insert.class})
+    @Chartable
     private String ip;
 
     @ApiModelProperty(value = "操作名称", dataType = "String")

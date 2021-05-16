@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * <p>
- *
+ * 访问计数器实现工具
  * </p>
  *
  * @author James Chen right_way@foxmail.com

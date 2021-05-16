@@ -1,11 +1,11 @@
 package top.keiskeiframework.common.file.dto;
 
-import top.keiskeiframework.common.file.annotations.Upload;
-import top.keiskeiframework.common.file.annotations.MergingChunks;
-import top.keiskeiframework.common.file.annotations.UploadPart;
-import top.keiskeiframework.common.file.annotations.UploadWithProgress;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import top.keiskeiframework.common.file.annotations.MergingChunks;
+import top.keiskeiframework.common.file.annotations.Upload;
+import top.keiskeiframework.common.file.annotations.UploadPart;
+import top.keiskeiframework.common.file.annotations.UploadWithProgress;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <p>
- *
+ * 文件信息
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com
@@ -47,13 +47,13 @@ public class MultiFileInfo {
      * 当前分片下标
      */
     @NotNull(groups = {UploadPart.class})
-    @Min(value = 0,groups = {UploadPart.class})
+    @Min(value = 0, groups = {UploadPart.class})
     private Integer chunk;
     /**
      * 总分片数
      */
     @NotNull(groups = {UploadPart.class})
-    @Min(value = 1,groups = {UploadPart.class})
+    @Min(value = 1, groups = {UploadPart.class})
     private Integer chunks;
     /**
      * 当前文件分片

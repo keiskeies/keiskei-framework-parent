@@ -1,10 +1,7 @@
 package top.keiskeiframework.common.aop;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import top.keiskeiframework.common.enums.exception.ApiErrorCode;
-import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.vo.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
@@ -15,11 +12,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import top.keiskeiframework.common.enums.exception.ApiErrorCode;
+import top.keiskeiframework.common.exception.BizException;
+import top.keiskeiframework.common.vo.R;
 
 import java.util.stream.Collectors;
 
 /**
- * 全局的的异常拦截器（拦截所有的控制器）
+ * <p>
+ * 全局异常拦截
+ * </p>
  *
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午3:20:17
@@ -29,7 +31,9 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     /**
-     * 拦截全局异常
+     * 异常处理
+     * @param e exception
+     * @return json
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
