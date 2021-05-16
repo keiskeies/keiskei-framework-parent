@@ -7,9 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.lombok.Chartable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -68,9 +68,5 @@ public class OperateLog extends BaseEntity {
     @ApiModelProperty(value = "返回结果", dataType = "String")
     @NotBlank(message = "返回结果不能为空", groups = {Insert.class})
     private String responseParam;
-
-    public OperateLog(String index, Long indexNumber) {
-        super(index, indexNumber);
-    }
 
 }

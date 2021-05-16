@@ -3,13 +3,12 @@ package top.keiskeiframework.common.base.service;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javassist.*;
 import lombok.Getter;
 import org.reflections.Reflections;
 import org.springframework.lang.NonNull;
-import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
+import top.keiskeiframework.lombok.Chartable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -34,21 +33,17 @@ public class EntityFactory {
     private static final List<CacheDTO> BASE_ENTITY_LIST = Lists.newArrayList();
 
     static {
+
         //获取该路径下所有类
         Reflections reflections = new Reflections("top.keiskeiframework");
         //获取继承了IAnimal的所有类
         Set<Class<? extends BaseEntity>> classSet = reflections.getSubTypesOf(BaseEntity.class);
-        //创建CtClass容器
-
         for (Class<? extends BaseEntity> clazz : classSet) {
             System.out.println(clazz.getName());
             Chartable chartable = clazz.getDeclaredAnnotation(Chartable.class);
             if (null == chartable) {
                 continue;
             }
-
-//                CtClass ctClass = getCtClass(clazz.getName());
-//                addChartMethod(ctClass, clazz);
 
             ApiModel apiModel = clazz.getDeclaredAnnotation(ApiModel.class);
             if (null != apiModel) {
@@ -60,36 +55,11 @@ public class EntityFactory {
         }
     }
 
-
-    private static CtClass getCtClass(String classPath) {
-        ClassPool classPool = new ClassPool(true);
-        try {
-            classPool.insertClassPath(classPath);
-            return classPool.get(classPath);
-        } catch (NotFoundException e) {
-            return null;
-        }
-    }
-
-    private final static String CHART_METHOD_FORMAT = "public %s(String index, Long indexNumber) {super(index, indexNumber);}";
-
-    private static void addChartMethod(CtClass ctClass, Class<?> clazz) {
-        try {
-            CtMethod setMethod = CtMethod.make(String.format(CHART_METHOD_FORMAT, clazz.getSimpleName()), ctClass);
-            ctClass.addMethod(setMethod);
-        } catch (CannotCompileException e) {
-            e.printStackTrace();
-        }
-
-        clazz.getResource("").getPath();
-
-    }
-
     private final static CacheDTO CREATE_TIME = new CacheDTO("createTime", "创建时间");
     private final static CacheDTO UPDATE_TIME = new CacheDTO("updateTime", "更新时间");
 
     public static List<CacheDTO> getEntityInfo(@NonNull String entityClass) {
-        List<CacheDTO> entityFields = null;
+        List<CacheDTO> entityFields;
 
         try {
             Class<?> clazz = Class.forName(entityClass);

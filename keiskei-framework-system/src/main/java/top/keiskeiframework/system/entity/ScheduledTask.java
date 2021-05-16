@@ -29,7 +29,6 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Accessors(chain = true)
@@ -57,9 +56,5 @@ public class ScheduledTask extends BaseEntity {
 
     @ApiModelProperty(value = "是否启用", dataType = "String")
     private Boolean enable = true;
-
-    public static void main(String[] args) {
-        new ScheduledTask("", 1L)
-    }
 
 }

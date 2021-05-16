@@ -8,14 +8,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.lombok.Chartable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,7 +51,6 @@ public class User extends BaseEntity {
     private String name;
 
     @ApiModelProperty(value = "启用状态", dataType = "Boolean")
-    @Chartable
     private Boolean enabled = true;
 
     @ApiModelProperty(value = "用户头像", dataType = "String")
@@ -108,7 +106,4 @@ public class User extends BaseEntity {
     @JsonIgnore
     private LocalDateTime accountExpiredTime;
 
-    public User(String index, Long indexNumber) {
-        super(index, indexNumber);
-    }
 }
