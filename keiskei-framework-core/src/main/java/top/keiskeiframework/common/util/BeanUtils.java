@@ -5,7 +5,9 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import java.beans.PropertyDescriptor;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,10 +20,11 @@ import java.util.regex.Pattern;
 public class BeanUtils {
 
 
-
     /**
      * 对象属性赋值,忽略空值
      *
+     * @param src    源文件
+     * @param target 目标文件
      * @author James Chen right_way@foxmail.com
      * @since 2017年7月5日 下午6:01:37
      */
@@ -46,14 +49,18 @@ public class BeanUtils {
     /**
      * 将Map转换为Bean
      *
+     * @param <T>   bean 类型
+     * @param clazz bean class
+     * @param map   map
      * @author James Chen right_way@foxmail.com
      * @since 2017年11月30日
+     * @return 实体类
      */
     public static <T> T mapToBean(Map<String, String> map, Class<T> clazz) {
         if (map == null) {
             return null;
         }
-        return JSON.parseObject(JSON.toJSONString(map),clazz);
+        return JSON.parseObject(JSON.toJSONString(map), clazz);
     }
 
     /**
@@ -63,7 +70,7 @@ public class BeanUtils {
 
     /**
      * Java驼峰字段转数据库下划线字段
-     * userName => user_name
+     * userName 转换成 user_name
      *
      * @param hump java字段
      * @return 数据库下划线字段

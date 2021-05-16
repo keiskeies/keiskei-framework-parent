@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 基础查询接口
+ * <p>
+ * 基础服务接口
+ * </p>
  *
- * @param <T>
+ * @param <T> 实体类
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
@@ -62,6 +64,7 @@ public interface BaseService<T> {
      * @return .
      */
     List<T> options(T t);
+
     List<T> options(List<QueryConditionDTO> t);
 
     /**

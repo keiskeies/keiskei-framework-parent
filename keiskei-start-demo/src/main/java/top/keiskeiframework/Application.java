@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  * @author James Chen right_way@foxmail.com
  * @version 1.0
  * <p>
- *
+ * 启动类
  * </p>
  * @since 2020/11/22 22:26
  */

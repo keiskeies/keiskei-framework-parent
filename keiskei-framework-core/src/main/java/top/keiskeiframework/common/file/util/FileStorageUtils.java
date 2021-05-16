@@ -1,8 +1,8 @@
 package top.keiskeiframework.common.file.util;
 
-import top.keiskeiframework.common.file.dto.MultiFileInfo;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.file.dto.MultiFileInfo;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * <p>
- *
+ * 文件处理工具
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com
@@ -20,10 +20,13 @@ public class FileStorageUtils {
 
 
     /**
+     * <p>
      * 获取文件MD5名称, 降低文件重复
+     * </p>
      *
      * @param fileInfo 文件信息
-     * @return .
+     * @return md5 String
+     * @throws IOException io异常
      */
     public static String getFileName(MultiFileInfo fileInfo) throws IOException {
         String fileName;

@@ -18,6 +18,7 @@ public class ScheduledOfTask implements Runnable {
 
     /**
      * 定时任务方法
+     * @param scheduledTask 定时任务
      */
     public void execute(ScheduledTask scheduledTask) {
     }

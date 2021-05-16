@@ -3,7 +3,7 @@ package top.keiskeiframework.common.enums.dashboard;
 
 /**
  * <p>
- *
+ * 图表字段类型
  * </p>
  *
  * @author v_chenjiamin

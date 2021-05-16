@@ -29,16 +29,19 @@ public @interface Lockable {
 
     /**
      * 是否使用等待/超时时间
+     * @return .
      */
     boolean timing() default false;
 
     /**
      * 是否使用公平锁
+     * @return /
      */
     boolean fail() default false;
 
     /**
      * 等待/超时时间 时间单位
+     * @return .
      */
     TimeUnit lockTimeUnit() default TimeUnit.MILLISECONDS;
 

@@ -21,7 +21,7 @@ import java.util.Set;
 
 /**
  * <p>
- *
+ * 实体类工厂
  * </p>
  *
  * @author v_chenjiamin

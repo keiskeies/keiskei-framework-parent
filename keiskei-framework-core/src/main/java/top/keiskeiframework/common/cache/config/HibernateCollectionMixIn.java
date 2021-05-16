@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 
 /**
  * <p>
- *
+ * hibernate 查询集合转换
  * </p>
  *
  * @author v_chenjiamin

@@ -38,7 +38,7 @@ public class FileController {
 
     /**
      * 普通上传
-     *
+     * @param file 文件信息
      * @return .
      */
     @ApiOperation("普通上传")
@@ -125,8 +125,9 @@ public class FileController {
     /**
      * 获取图片
      *
-     * @param fileName .
-     * @param response .
+     * @param fileName 文件类型
+     * @param response 相应
+     * @param process  文件处理参数
      */
     @GetMapping("/{api:api|admin}/v1/common/file/show/{fileName:.+}")
     public void show(@PathVariable("fileName") String fileName, HttpServletResponse response, @RequestParam(value = "x-oss-process", required = false) String process) {

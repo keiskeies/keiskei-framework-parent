@@ -16,13 +16,14 @@ import javax.persistence.criteria.Root;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * 基础查询接口
+ * <p>
+ * 树形实体类基础服务实现
+ * </p>
  *
- * @param <T>
+ * @param <T> 实体类
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */

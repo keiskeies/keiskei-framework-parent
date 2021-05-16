@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- *
+ * 基础服务实现
  * </p>
  *
  * @author v_chenjiamin
@@ -272,7 +272,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
      * @param builder 构建工具
      * @param root    root
      * @param column  字段名
-     * @param delta    单位
+     * @param delta   单位
      * @return 。
      */
     protected Expression<String> getTimeIndex(CriteriaBuilder builder, Root<T> root, String column, TimeDeltaEnum delta) {
@@ -303,7 +303,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
                 index = builder.function("QUARTER", LocalDateTime.class, root.get(column)).as(String.class);
                 break;
             case ALL_QUARTERS:
-                index = builder.function( "CONCAT",
+                index = builder.function("CONCAT",
                         LocalDateTime.class,
                         builder.function("DATE_FORMAT", LocalDateTime.class, root.get(column), builder.literal("%Y")),
                         builder.literal("-"),

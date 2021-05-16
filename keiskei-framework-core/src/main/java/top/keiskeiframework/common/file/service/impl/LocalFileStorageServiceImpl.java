@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 本地文件夫妇类
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com

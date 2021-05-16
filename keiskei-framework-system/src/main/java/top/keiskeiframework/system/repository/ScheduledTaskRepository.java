@@ -14,9 +14,10 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  */
 public interface ScheduledTaskRepository extends JpaRepository<ScheduledTask, Long>, JpaSpecificationExecutor<ScheduledTask> {
     /**
+     * 时间表达式查找
      *
-     * @param cronKey
-     * @return
+     * @param cronKey 定时方式
+     * @return 定时任务
      */
     ScheduledTask findTopByCronKey(String cronKey);
 

@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * 基础查询接口
  *
- * @param <T>
+ * @param <T> 实体类
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */

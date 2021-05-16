@@ -78,12 +78,24 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
 
         LocalDateTime[] startAndEnd;
         switch (dashboard.getTimeType()) {
-            case CURRENT_DAY: startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null); break;
-            case CURRENT_WEEKS: startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null); break;
-            case CURRENT_MONTH: startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null); break;
-            case CURRENT_QUARTER: startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null); break;
-            case CURRENT_YEAR: startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null); break;
-            default: startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())}; break;
+            case CURRENT_DAY:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null);
+                break;
+            case CURRENT_WEEKS:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null);
+                break;
+            case CURRENT_MONTH:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null);
+                break;
+            case CURRENT_QUARTER:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null);
+                break;
+            case CURRENT_YEAR:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null);
+                break;
+            default:
+                startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())};
+                break;
         }
 
         ChartRequestDTO chartRequestDTO = new ChartRequestDTO(
@@ -167,6 +179,7 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
      * @param axisData        图表下标
      * @param max             数据最大值（雷达图使用）
      * @param seriesList      图表数据
+     * @param legendData      数据指示器
      */
     public void confirmChartOptionVO(ChartRequestDTO chartRequestDTO, Dashboard dashboard, ChartOptionVO result, List<String> axisData, AtomicInteger max, List<Series> seriesList, List<String> legendData) {
         switch (chartRequestDTO.getChartType()) {
@@ -198,6 +211,8 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
      * @param axisData        图表下标
      * @param max             数据最大值（雷达图使用）
      * @param seriesList      图表数据
+     * @param series          图表数据结果
+     * @return .
      */
     public Series confirmSeries(ChartRequestDTO chartRequestDTO, Map<String, Long> dataMap, List<String> axisData, AtomicInteger max, List<Series> seriesList, Series series) {
         switch (chartRequestDTO.getChartType()) {
@@ -295,15 +310,16 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
     }
 
     private final static List<Integer> MAX_RANGE = new ArrayList<>(64);
+
     static {
         int number = 10;
         MAX_RANGE.add(number);
         int delta = 1;
-        for (int i = 0; i< 63; i++) {
+        for (int i = 0; i < 63; i++) {
             if (i % 9 == 0) {
                 delta *= 10;
             }
-            MAX_RANGE.add(number+=delta);
+            MAX_RANGE.add(number += delta);
         }
     }
 

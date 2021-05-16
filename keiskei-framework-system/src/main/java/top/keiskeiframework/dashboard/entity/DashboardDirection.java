@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <p>
- *
+ * 图表坐标
  * </p>
  *
  * @author v_chenjiamin
@@ -35,6 +35,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends BaseEntity {
 
+    private static final long serialVersionUID = -2719449560787668928L;
     @ApiModelProperty(value = "字段", dataType = "String")
     private String field;
 

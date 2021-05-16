@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- *
+ * 缓存处理接口类
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com
@@ -63,8 +63,8 @@ public interface CacheStorageService {
 
     /**
      * 模糊查询数据
-     * @param key
-     * @return
+     * @param key key
+     * @return .
      */
     List<Object> getLikeKey(String key);
 
@@ -100,8 +100,8 @@ public interface CacheStorageService {
 
     /**
      * 定时计数器
-     * @param key
-     * @return
+     * @param key key
+     * @return .
      */
     Boolean overTimeNum(String key);
 }

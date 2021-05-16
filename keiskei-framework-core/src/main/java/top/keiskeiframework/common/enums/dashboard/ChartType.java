@@ -2,7 +2,7 @@ package top.keiskeiframework.common.enums.dashboard;
 
 /**
  * <p>
- *
+ * 图表类型
  * </p>
  *
  * @author v_chenjiamin

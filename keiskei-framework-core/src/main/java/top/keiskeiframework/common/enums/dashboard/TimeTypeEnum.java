@@ -2,7 +2,7 @@ package top.keiskeiframework.common.enums.dashboard;
 
 /**
  * <p>
- *
+ * 时间类型
  * </p>
  *
  * @author v_chenjiamin

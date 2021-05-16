@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 图表
  * </p>
  *
  * @author v_chenjiamin

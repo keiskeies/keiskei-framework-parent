@@ -26,7 +26,8 @@ public class JwtTokenUtils {
     /**
      * 生成token
      *
-     * @param t 加密数据
+     * @param <T> bean 类型
+     * @param t   加密数据
      * @return .
      */
     public static <T> String getJwtString(T t) {
@@ -43,7 +44,9 @@ public class JwtTokenUtils {
     /**
      * 获取user
      *
-     * @param token .
+     * @param token  .
+     * @param tClass bean class
+     * @param <T>    bean 类型
      * @return .
      */
     public static <T> T parse(String token, Class<T> tClass) {

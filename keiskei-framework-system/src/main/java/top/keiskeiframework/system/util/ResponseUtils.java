@@ -6,7 +6,7 @@ import java.io.IOException;
 
 /**
  * <p>
- *
+ * 相应工具类
  * </p>
  *
  * @author James Chen right_way@foxmail.com
