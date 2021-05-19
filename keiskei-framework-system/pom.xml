@@ -14,14 +14,8 @@
     <version>1.0.0-Release</version>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-core</artifactId>
-            <version>1.0.0-Release</version>
         </dependency>
     </dependencies>
 

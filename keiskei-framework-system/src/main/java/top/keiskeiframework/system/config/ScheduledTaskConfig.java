@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.config;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ public class ScheduledTaskConfig implements SchedulingConfigurer {
     @Autowired
     private IScheduledTaskService scheduledTaskService;
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    public void configureTasks(@NonNull ScheduledTaskRegistrar taskRegistrar) {
         for (ScheduledTask scheduledTask : scheduledTaskService.options()) {
 
 

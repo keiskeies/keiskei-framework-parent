@@ -28,11 +28,11 @@ import java.util.List;
 public class TreeEntity extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
-    private Long parentId;
+    protected Long parentId;
 
-    private String sign;
+    protected String sign;
 
     @Transient
-    private List<? extends TreeEntity> children;
+    protected List<? extends TreeEntity> children;
 
 }

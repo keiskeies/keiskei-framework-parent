@@ -14,24 +14,10 @@ import java.lang.reflect.Field;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/22 19:43
  */
-@Getter
-@AllArgsConstructor
 public enum TableInfoTypeEnum {
 
     //
-    BASE("基础类型"),
-    TREE("层级类型"),
+    BASE,
+    TREE,
     ;
-    private final String msg;
-
-
-    public Field[] getDefaultColumns() {
-        Class<?> clazz = null;
-        if (this.equals(TREE)) {
-            clazz = BaseEntity.class;
-        } else {
-            clazz = BaseEntity.class;
-        }
-        return clazz.getDeclaredFields();
-    }
 }

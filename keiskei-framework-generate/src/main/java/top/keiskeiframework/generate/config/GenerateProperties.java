@@ -17,7 +17,16 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "keiskei-server-conf.generate")
 public class GenerateProperties {
 
+    /**
+     * 文件基础路径
+     */
     private String baseServerPath;
+    /**
+     * 后台文件路径
+     */
     private String baseAdminPath;
+    /**
+     * 前段文件路径
+     */
     private String baseFrontPath;
 }

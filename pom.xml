@@ -8,6 +8,8 @@
     <version>1.0.0-Release</version>
     <modules>
         <module>keiskei-framework-core</module>
+        <module>keiskei-framework-dashboard</module>
+        <module>keiskei-framework-log</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-system</module>
         <module>keiskei-framework-system-workflow</module>
@@ -25,6 +27,8 @@
         <keiskei.project.version>1.0.0-Release</keiskei.project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
     </properties>
     <dependencies>
@@ -156,6 +160,47 @@
             <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-lombok</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-core</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-generate</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-system</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-system-workflow</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-log</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-dashboard</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
     <repositories>
         <repository>
             <id>cjm-nexus-central</id>

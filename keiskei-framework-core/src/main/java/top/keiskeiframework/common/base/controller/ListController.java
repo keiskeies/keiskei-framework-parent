@@ -51,13 +51,13 @@ public class ListController<T extends BaseEntity> {
     @PostMapping
     @ApiOperation("新增")
     public R<T> save(@RequestBody @Validated({Insert.class}) T fieldInfo) {
-        return R.ok(baseService.save(fieldInfo));
+        return R.ok(baseService.saveAndNotify(fieldInfo));
     }
 
     @PutMapping
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
-        return R.ok(baseService.update(fieldInfo, fieldInfo.getId()));
+        return R.ok(baseService.updateAndNotify(fieldInfo));
     }
 
     @PutMapping("/sort")
@@ -70,7 +70,7 @@ public class ListController<T extends BaseEntity> {
     @DeleteMapping("/{id:-?[\\d]+}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable Long id) {
-        baseService.deleteById(id);
+        baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 }

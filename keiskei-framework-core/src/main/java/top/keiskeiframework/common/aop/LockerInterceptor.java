@@ -58,7 +58,7 @@ public class LockerInterceptor {
             for (int i = 0; i < arguments.length; i++) {
                 context.setVariable(paramNames[i], arguments[i]);
             }
-            key = lockable.lockName() + SPLIT + expression.getValue(context, String.class);
+            key = lockable.lockName() + SPLIT + point.getTarget().toString() + expression.getValue(context, String.class);
         }
         Lock lock = redisLockRegistry.obtain(key);
         if (null == lock) {

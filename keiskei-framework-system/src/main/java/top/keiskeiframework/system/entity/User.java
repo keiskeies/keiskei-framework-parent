@@ -40,6 +40,7 @@ public class User extends BaseEntity {
 
     @ApiModelProperty(value = "账号", dataType = "String")
     @NotBlank(message = "账号不能为空", groups = {Insert.class})
+    @Chartable
     private String username;
 
     @ApiModelProperty(value = "密码", dataType = "String")

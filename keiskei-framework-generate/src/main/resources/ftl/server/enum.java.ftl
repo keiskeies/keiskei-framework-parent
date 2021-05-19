@@ -6,23 +6,19 @@ import lombok.Getter;
 
 /**
  * <p>
- * ${enum.comment!} 字段枚举
+ * ${table.comment!} ${filed.comment!} 字段枚举
  * </p>
  *
  * @author ${author}
  * @since ${since}
  */
-@Getter
-@AllArgsConstructor
-public enum ${enum.name} {
+public enum ${table.name?uncap_first}${field.name?uncap_first}Enum {
 
-    //
-<#list enum.fields as field>
-    ${enum.name?upper_case}_${field.code}(${field.code}, ${field.msg}),
+<#list field.fieldEnums as enum>
+    // ${enum.comment}
+    ${enum.name},
 </#list>
     ;
 
-    private final int code;
-    private final String msg;
 
 }

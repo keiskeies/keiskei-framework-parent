@@ -3,7 +3,7 @@ package top.keiskeiframework.system.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;
-import top.keiskeiframework.common.base.service.AbstractAuditorAware;
+import top.keiskeiframework.common.base.service.impl.AbstractAuditorAware;
 import top.keiskeiframework.common.util.SecurityUtils;
 
 import java.util.Optional;

@@ -1,20 +1,17 @@
 package top.keiskeiframework.generate.entity;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.base.entity.BaseEntity;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -37,10 +34,6 @@ public class ModuleInfo extends BaseEntity {
 
     private static final long serialVersionUID = 754302484437506602L;
 
-    @ApiModelProperty(value = "所属项目", dataType = "Long")
-    @NotNull(message = "所属项目不能为空", groups = {Insert.class})
-    private Long itemId;
-
     @ApiModelProperty(value = "模块名称", dataType = "String")
     @NotBlank(message = "模块名称不能为空", groups = {Insert.class})
     private String name;
@@ -53,6 +46,7 @@ public class ModuleInfo extends BaseEntity {
     @NotBlank(message = "模块包名不能为空", groups = {Insert.class})
     private String packageName;
 
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "module_id")
     private List<TableInfo> tables;
 }

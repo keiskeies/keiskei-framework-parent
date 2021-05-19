@@ -21,15 +21,9 @@ public interface GenerateService {
 
     /**
      * 构建指定项目
-     * @param projectInfo 项目信息
+     * @param project 项目信息
      */
-    void build(ProjectInfo projectInfo);
-
-    /**
-     * 构建指定项目
-     * @param json 项目json
-     */
-    void build(String json);
+    void build(ProjectInfo project);
 
     /**
      * 刷新项目状态

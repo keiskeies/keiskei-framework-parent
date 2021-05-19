@@ -2,10 +2,13 @@ package top.keiskeiframework.generate.util;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
+import top.keiskeiframework.generate.entity.FieldInfo;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.entity.ModuleInfo;
 import top.keiskeiframework.generate.entity.TableInfo;
+import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
 import java.io.*;
@@ -66,7 +69,7 @@ public class GenerateFileUtils {
         for (ModuleInfo module : item.getModules()) {
             for (TableInfo table : module.getTables()) {
                 tableModuleMap.put(table.getName(), module.getName());
-                if (TableInfoTypeEnum.TREE.toString().equals(table.getType())) {
+                if (TableInfoTypeEnum.TREE.equals(table.getType())) {
                     treeTables.add(table.getName());
                 }
             }
@@ -81,7 +84,6 @@ public class GenerateFileUtils {
         cfg.put("since", DateTimeUtils.timeToString(LocalDateTime.now()));
         cfg.put("tableModuleMap", tableModuleMap);
         cfg.put("treeTables", treeTables);
-
 
 
         go2Fly("server/serverPom.xml", path + "pom.xml", cfg);
@@ -101,6 +103,12 @@ public class GenerateFileUtils {
                 }
                 go2Fly("server/service.java", resultFilePath + "service/I" + table.getName() + "Service.java", cfg);
                 go2Fly("server/impl/serviceImpl.java", resultFilePath + "service/impl/I" + table.getName() + "ServiceImpl.java", cfg);
+                for (FieldInfo field : table.getFields()) {
+                    if (FieldInfoTypeEnum.DICTIONARY.equals(field.getType()) && !CollectionUtils.isEmpty(field.getFieldEnums())) {
+                        cfg.put("field", field);
+                        go2Fly("server/enum.java.ftl", resultFilePath + "enums/" + table.getName() + upFirst(field.getName()) + "Enum.java", cfg);
+                    }
+                }
             }
         }
 
@@ -133,5 +141,9 @@ public class GenerateFileUtils {
                 e2.printStackTrace();
             }
         }
+    }
+
+    public static String upFirst(String str) {
+        return str.substring(0,1).toUpperCase() + str.substring(1);
     }
 }

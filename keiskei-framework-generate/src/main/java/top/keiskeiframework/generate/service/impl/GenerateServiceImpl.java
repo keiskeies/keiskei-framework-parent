@@ -1,6 +1,5 @@
 package top.keiskeiframework.generate.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
@@ -13,14 +12,14 @@ import top.keiskeiframework.common.file.config.LocalFileProperties;
 import top.keiskeiframework.common.util.SecurityUtils;
 import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.generate.config.GenerateProperties;
-import top.keiskeiframework.generate.entity.*;
+import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;
-import top.keiskeiframework.generate.service.*;
+import top.keiskeiframework.generate.service.GenerateService;
+import top.keiskeiframework.generate.service.IProjectInfoService;
 import top.keiskeiframework.generate.util.GenerateFileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -30,15 +29,7 @@ import java.util.List;
 public class GenerateServiceImpl implements GenerateService {
 
     @Autowired
-    private IItemInfoService itemInfoService;
-    @Autowired
-    private IModuleInfoService moduleInfoService;
-    @Autowired
-    private ITableInfoService tableInfoService;
-    @Autowired
-    private IFieldInfoService fieldInfoService;
-    @Autowired
-    private IFieldEnumInfoService fieldEnumInfoService;
+    private IProjectInfoService projectInfoService;
     @Autowired
     @Lazy
     private GenerateService generateService;
@@ -50,46 +41,29 @@ public class GenerateServiceImpl implements GenerateService {
 
     @Override
     @Async
-    @Lockable(key = "targetClass.name + '-' + #itemInfo.id")
+    @Lockable(key = "#itemInfo.id")
     public void build(Long itemId) {
 
         if (!BuildStatusEnum.NONE.equals(generateService.refreshStatus(itemId))) {
             throw new BizException(BizExceptionEnum.ERROR);
         }
 
-        ProjectInfo projectInfo = itemInfoService.getById(itemId);
+        ProjectInfo project = projectInfoService.getById(itemId);
 
-        ModuleInfo moduleQuery = ModuleInfo.builder().itemId(itemId).build();
-        List<ModuleInfo> modules = moduleInfoService.options(moduleQuery);
-        projectInfo.setModules(modules);
-
-        for (ModuleInfo moduleInfo : modules) {
-            List<TableInfo> tables = tableInfoService.options(TableInfo.builder().moduleId(moduleInfo.getId()).build());
-            moduleInfo.setTables(tables);
-            for (TableInfo tableInfo : tables) {
-                List<FieldInfo> fields = fieldInfoService.options(FieldInfo.builder().tableId(tableInfo.getId()).build());
-                tableInfo.setFields(fields);
-                for (FieldInfo fieldInfo : fields) {
-                    List<FieldEnumInfo> fieldEnums = fieldEnumInfoService.options(FieldEnumInfo.builder().fieldId(fieldInfo.getId()).build());
-                    fieldInfo.setFieldEnums(fieldEnums);
-                }
-            }
-        }
-
-        this.build(projectInfo);
+        generateService.build(project);
 
     }
 
     @Override
     @Async
-    @Lockable(key = "targetClass.name + '-' + #itemInfo.id")
-    public void build(ProjectInfo projectInfo) {
+    @Lockable(key = "#project.id")
+    public void build(ProjectInfo project) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
 
-        String basePath = localFileProperties.getPath() + "item/" + tokenUser.getId() + "/" + projectInfo.getId() + "/" + projectInfo.getName();
+        String basePath = localFileProperties.getPath() + "item/" + tokenUser.getId() + "/" + project.getId() + "/" + project.getName();
 
-        if (StringUtils.isEmpty(projectInfo.getAuthor())) {
-            projectInfo.setAuthor(tokenUser.getName() + " " + tokenUser.getEmail());
+        if (StringUtils.isEmpty(project.getAuthor())) {
+            project.setAuthor(tokenUser.getName() + " " + tokenUser.getEmail());
         }
 
         // 创建项目目录
@@ -106,7 +80,7 @@ public class GenerateServiceImpl implements GenerateService {
         }
 
         // 生成文件
-        GenerateFileUtils.go2Fly(projectInfo, basePath + "/server/");
+        GenerateFileUtils.go2Fly(project, basePath + "/server/");
         // 添加Dockerfile
 
         // 添加build.sh
@@ -114,15 +88,6 @@ public class GenerateServiceImpl implements GenerateService {
         // 文件打包
 
 
-    }
-
-    @Override
-    public void build(String json) {
-        ProjectInfo projectInfo = JSON.parseObject(json, ProjectInfo.class);
-
-        itemInfoService.save(projectInfo);
-
-        generateService.build(projectInfo);
     }
 
     @Override

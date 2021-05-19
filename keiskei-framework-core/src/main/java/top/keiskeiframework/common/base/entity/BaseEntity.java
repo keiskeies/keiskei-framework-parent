@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.annotation.validate.Select;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.annotation.validate.UpdatePart;
+import top.keiskeiframework.common.base.service.impl.AbstractAuditorAware;
 import top.keiskeiframework.common.util.SecurityUtils;
 
 import javax.persistence.*;
@@ -47,7 +48,7 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "行不能为空", groups = {Update.class, UpdatePart.class, Select.class})
-    private Long id;
+    protected Long id;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -55,40 +56,40 @@ public class BaseEntity implements Serializable {
     @CreationTimestamp
     @Column(updatable = false)
     @ApiModelProperty(value = "创建时间", dataType = "LocalDateTime")
-    private LocalDateTime createTime;
+    protected LocalDateTime createTime;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdateTimestamp
     @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
-    private LocalDateTime updateTime;
+    protected LocalDateTime updateTime;
 
     /**
      * 物理删除标识
      */
     @JsonIgnore
-    private Boolean d;
+    protected Boolean d;
 
 
     /**
      * 数据所属部门
      */
-    private String p;
+    protected String p;
 
     /**
      * 数据创建人
-     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @CreatedBy
-    private Long createUserId;
+    protected Long createUserId;
 
     /**
      * 最后修改人
-     * 数据初始化来源 {@link top.keiskeiframework.common.base.service.AbstractAuditorAware}
+     * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @LastModifiedBy
-    private Long updateUserId;
+    protected Long updateUserId;
 
 
     @PrePersist
@@ -113,6 +114,12 @@ public class BaseEntity implements Serializable {
         this.index = index;
         this.indexNumber = indexNumber;
     }
+
+    /**
+     * 访问次数
+     */
+    @Transient
+    protected Long visit;
 
 
 

@@ -14,7 +14,22 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-system</artifactId>
-            <version>1.0.0-Release</version>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-dashboard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-generate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-system-workflow</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>

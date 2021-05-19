@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
+import top.keiskeiframework.common.annotation.Lockable;
+import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
+import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -23,7 +26,7 @@ import java.util.Set;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> implements BaseService<T> {
+public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
 
 
     protected final static String SPILT = "/";
@@ -45,6 +48,26 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
+    @OperateNotify(type = OperateNotifyType.SAVE)
+    @Lockable(key = "#t.toString()")
+    public T saveAndNotify(T t) {
+        if (null != t.getParentId()) {
+            T parent = this.getById(t.getParentId());
+            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+            t = jpaRepository.save(t);
+            t.setSign(parent.getSign() + t.getId() + SPILT);
+
+        } else {
+            t = jpaRepository.save(t);
+            t.setSign(t.getId() + SPILT);
+        }
+        return super.save(t);
+    }
+
+
+    @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
+    @Lockable(key = "#t.toString()")
     public T save(T t) {
         if (null != t.getParentId()) {
             T parent = this.getById(t.getParentId());
@@ -63,6 +86,23 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public List<T> saveAll(List<T> ts) {
         return super.saveAll(ts);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
+    @OperateNotify(type = OperateNotifyType.UPDATE)
+    public T updateAndNotify(T t) {
+        Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+        if (null != t.getParentId()) {
+            T parent = this.getById(t.getParentId());
+            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+            t.setSign(parent.getSign() + t.getId() + SPILT);
+        } else {
+            t.setSign(t.getId() + SPILT);
+        }
+
+        t = jpaRepository.save(t);
+        return t;
     }
 
     @Override
@@ -86,6 +126,16 @@ public class TreeServiceImpl<T extends TreeEntity> extends BaseServiceImpl<T> im
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void changeSort(BaseSortDTO baseSortDto) {
         super.changeSort(baseSortDto);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
+    @OperateNotify(type = OperateNotifyType.DELETE)
+    public void deleteByIdAndNotify(Long id) {
+        Set<Long> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        for (Long cid : childIds) {
+            jpaRepository.deleteById(cid);
+        }
     }
 
     @Override

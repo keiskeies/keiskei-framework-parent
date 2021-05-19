@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import top.keiskeiframework.common.base.service.OperateLogService;
+import top.keiskeiframework.common.dto.log.OperateLogDTO;
+import top.keiskeiframework.common.enums.log.OperateTypeEnum;
 import top.keiskeiframework.common.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.vo.user.TokenUser;
-import top.keiskeiframework.system.entity.OperateLog;
-import top.keiskeiframework.system.entity.User;
-import top.keiskeiframework.system.enums.OperateTypeEnum;
-import top.keiskeiframework.system.service.IOperateLogService;
 import top.keiskeiframework.system.util.ResponseUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +30,8 @@ import java.io.IOException;
 @Slf4j
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
-    @Autowired
-    private IOperateLogService operateLogService;
+    @Autowired(required = false)
+    private OperateLogService operateLogService;
 
 
     @Override
@@ -47,10 +46,12 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         tokenUser.setPassword(null);
         ResponseUtils.write(request, response, JSON.toJSONString(R.ok(tokenUser)));
 
-        OperateLog operateLog = new OperateLog();
-        operateLog.setIp(SecurityUtils.getIpAddress(request));
-        operateLog.setType(OperateTypeEnum.LOGIN.getType());
-        operateLog.setUser(User.builder().id(tokenUser.getId()).build());
-        operateLogService.save(operateLog);
+        if (null != operateLogService) {
+            OperateLogDTO operateLog = new OperateLogDTO();
+            operateLog.setIp(SecurityUtils.getIpAddress(request));
+            operateLog.setType(OperateTypeEnum.LOGIN.getType());
+            operateLog.setUserId(tokenUser.getId());
+            operateLogService.saveLog(operateLog);
+        }
     }
 }

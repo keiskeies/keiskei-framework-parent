@@ -84,6 +84,14 @@ public interface BaseService<T> {
     T save(T t);
 
     /**
+     * 新增并通知
+     *
+     * @param t 。
+     * @return 。
+     */
+    T saveAndNotify(T t);
+
+    /**
      * 批量新增
      *
      * @param tList .
@@ -100,6 +108,14 @@ public interface BaseService<T> {
     T update(T t);
 
     /**
+     * 更新并通知
+     *
+     * @param t 。
+     * @return 。
+     */
+    T updateAndNotify(T t);
+
+    /**
      * 更改排序
      *
      * @param baseSortDto .
@@ -112,6 +128,13 @@ public interface BaseService<T> {
      * @param id id
      */
     void deleteById(Long id);
+
+    /**
+     * 删除并通知
+     *
+     * @param id 。
+     */
+    void deleteByIdAndNotify(Long id);
 
 
     /**

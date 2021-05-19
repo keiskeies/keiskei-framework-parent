@@ -21,7 +21,7 @@ public class IDashboardServiceImplTest extends ApplicationTest {
 //        List<DashboardDirection> dashboardDirections = new ArrayList<>();
 //        dashboardDirections.add(new DashboardDirection(
 //                "type",
-//                "top.keiskeiframework.system.entity.OperateLog",
+//                "top.keiskeiframework.log.entity.OperateLog",
 //                "操作日志",
 //                "pie"
 //        ));

@@ -16,7 +16,9 @@ import lombok.Getter;
 public enum FieldEnumInfoEffectEnum {
 
     //
-    dark, plain;
+    DARK,
+    PLAIN
+    ;
 
 
 }

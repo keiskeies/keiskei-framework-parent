@@ -14,12 +14,6 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-core</artifactId>
-            <version>1.0.0-Release</version>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-system</artifactId>
-            <version>1.0.0-Release</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>

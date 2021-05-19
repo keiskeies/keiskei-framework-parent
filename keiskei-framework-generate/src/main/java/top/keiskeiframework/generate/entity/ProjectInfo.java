@@ -7,9 +7,7 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -28,7 +26,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "gr_project_info")
-@ApiModel(value = "project_info", description = "项目信息")
+@ApiModel(value = "ProjectInfo", description = "项目信息")
 public class ProjectInfo extends BaseEntity {
 
     private static final long serialVersionUID = 8549325611615861124L;
@@ -56,7 +54,8 @@ public class ProjectInfo extends BaseEntity {
     @ApiModelProperty(value = "作者", dataType = "String")
     private String author;
 
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "project_id")
     private List<ModuleInfo> modules;
 
 }
