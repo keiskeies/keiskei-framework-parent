@@ -56,7 +56,7 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
         if (CollectionUtils.isEmpty(queryConditions)) {
             for (QueryConditionDTO queryCondition : queryConditions) {
-                query.where(builder.and(builder.equal(root.get(queryCondition.getColumn()), queryCondition.getValue())));
+                query.where(builder.and(builder.equal(root.get(queryCondition.getC()), queryCondition.getV())));
             }
         }
 

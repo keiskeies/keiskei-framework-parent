@@ -1,7 +1,7 @@
 package top.keiskeiframework.dashboard.service;
 
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.vo.charts.ChartOptionVO;
+import top.keiskeiframework.common.vo.dashboard.charts.ChartOptionVO;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 
 /**

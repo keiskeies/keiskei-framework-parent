@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.vo.charts;
+package top.keiskeiframework.common.vo.dashboard.charts;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

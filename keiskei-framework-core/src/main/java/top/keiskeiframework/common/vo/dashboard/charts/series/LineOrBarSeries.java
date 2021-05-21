@@ -1,7 +1,7 @@
-package top.keiskeiframework.common.vo.charts.series;
+package top.keiskeiframework.common.vo.dashboard.charts.series;
 
 import lombok.*;
-import top.keiskeiframework.common.vo.charts.Series;
+import top.keiskeiframework.common.vo.dashboard.charts.Series;
 
 import java.io.Serializable;
 import java.util.Collection;
