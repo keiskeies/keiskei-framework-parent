@@ -42,6 +42,7 @@ public class LogInterceptor {
     private OperateLogService operateLogService;
     private final static String LOG_NAME_FORMATTER = "[%s - %s]";
     private final static String MESSAGE_FORMATTER = "%s - %s";
+    private final static String GET = "GET";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")
     public void pointCut() {
@@ -58,26 +59,18 @@ public class LogInterceptor {
             operateLog.setUserId(tokenUser.getId());
             MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
 
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-        }
 
-        try {
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
             operateLog.setType(request.getMethod());
             operateLog.setIp(SecurityUtils.getIpAddress(request));
             operateLog.setUrl(request.getRequestURI());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
 
-        try {
             MethodSignature ms = (MethodSignature) point.getSignature();
             ApiOperation annotation = ms.getMethod().getAnnotation(ApiOperation.class);
             Api api = point.getTarget().getClass().getAnnotation(Api.class);
             Object[] params = point.getArgs();
 
-            operateLog.setName(String.format(LOG_NAME_FORMATTER, api.tags()[0], annotation.value()));
+            operateLog.setName(String.format(LOG_NAME_FORMATTER, String.join(",", api.tags()), annotation.value()));
 
             StringBuilder sb = new StringBuilder();
             for (Object param : params) {
@@ -89,9 +82,9 @@ public class LogInterceptor {
 
             }
             operateLog.setRequestParam(sb.toString());
-            log.info("{} - 开始 - 参数{}", operateLog.getName(), operateLog.getRequestParam());
+            log.info("{} - start - params: {}", operateLog.getName(), operateLog.getRequestParam());
         } catch (Exception e) {
-            log.error("日志记录出错!", e);
+            log.error("log error!", e);
         }
 
         Object result = null;
@@ -109,18 +102,19 @@ public class LogInterceptor {
         } finally {
             try {
                 long end = System.currentTimeMillis();
-                if (result != null) {
+                if (result != null && GET.equalsIgnoreCase(operateLog.getType())) {
                     operateLog.setResponseParam(JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter));
-                    log.info("{} -结束 - 返回结果:{} - 用时: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
+                    log.info("{} - end - result: {} - timer: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
                 } else {
-                    log.info("{} -结束 - 用时: {}", operateLog.getName(), end - start);
+                    log.info("{} - end - timer: {}", operateLog.getName(), end - start);
                 }
             } catch (Exception e) {
-                log.error("日志记录出错!", e);
-            }
-            MDC.clear();
-            if (null != operateLogService){
-                operateLogService.saveLog(operateLog);
+                log.error("log error!", e);
+            } finally {
+                MDC.clear();
+                if (null != operateLogService){
+                    operateLogService.saveLog(operateLog);
+                }
             }
         }
     }

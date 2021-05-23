@@ -1,9 +1,12 @@
 package top.keiskeiframework.common.dto.base;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import top.keiskeiframework.common.util.BaseRequestUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,45 +22,13 @@ import lombok.*;
 public class QueryConditionDTO {
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(name = "column")
-    private String c;
+    private String column;
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(name = "condition")
-    private ConditionEnum m;
+    private BaseRequestUtils.ConditionEnum condition;
 
     @ApiModelProperty(value = "字段值", dataType = "String")
-    @JSONField(name = "value")
-    private Object v;
-
-    public QueryConditionDTO(String c, Object v) {
-        this.c = c;
-        this.v = v;
-    }
-
-    public enum ConditionEnum {
-        // =
-        EQ,
-        // >=
-        GE,
-        // >
-        GT,
-        // <=
-        LE,
-        // <
-        LT,
-        // between
-        BT,
-        // like
-        LIKE,
-        // like _%
-        LL,
-        // like %_
-        LR,
-        // in
-        IN,
+    private List<Object> value;
 
 
-
-    }
 }

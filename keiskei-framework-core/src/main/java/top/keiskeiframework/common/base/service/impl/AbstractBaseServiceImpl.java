@@ -50,6 +50,12 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Autowired
     protected EntityManager entityManager;
 
+    protected Class<T> getTClass() {
+        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
+        Type[] types = parameterizedType.getActualTypeArguments();
+        return (Class<T>) types[0];
+    }
+
 
     @Override
     public Page<T> page(Specification<T> s, Pageable p) {
@@ -83,14 +89,13 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
 
     @Override
     public Page<T> page(BaseRequest<T> request) {
-        return jpaSpecificationExecutor.findAll(request.getSpecification(), request.getPageable());
+        Class<T> tClass = getTClass();
+        return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), request.getPageable(tClass));
     }
 
     @Override
     public List<T> options() {
-        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
-        Type[] types = parameterizedType.getActualTypeArguments();
-        Class<?> clazz = (Class<?>) types[0];
+        Class<T> clazz = getTClass();
         Field[] fields = clazz.getDeclaredFields();
 
         List<Sort.Order> orders = new ArrayList<>();
@@ -186,9 +191,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Override
     public void changeSort(BaseSortDTO baseSortDto) {
         try {
-            ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
-            Type[] types = parameterizedType.getActualTypeArguments();
-            Class<T> clazz = (Class<T>) types[0];
+            Class<T> clazz = getTClass();
             Field[] fields = clazz.getDeclaredFields();
             T t1 = clazz.newInstance();
             T t2 = clazz.newInstance();
@@ -223,9 +226,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Override
     public Map<String, Long> getChartOptions(ChartRequestDTO chartRequestDTO) {
 
-        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
-        Type[] types = parameterizedType.getActualTypeArguments();
-        Class<T> clazz = (Class<T>) types[0];
+        Class<T> clazz = getTClass();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(clazz);
         Root<T> root = query.from(clazz);

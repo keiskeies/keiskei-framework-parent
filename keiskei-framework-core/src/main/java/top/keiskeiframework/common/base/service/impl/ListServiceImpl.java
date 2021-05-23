@@ -1,24 +1,22 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.OperateNotifyType;
+import top.keiskeiframework.common.exception.BizException;
+import top.keiskeiframework.common.util.BaseRequestUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,25 +38,17 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
     @Override
     public List<T> options() {
-        return this.options(new ArrayList<>(0));
+        try {
+            return this.options(getTClass().newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BizException(e.getMessage());
+        }
     }
 
     @Override
-    public List<T> options(List<QueryConditionDTO> queryConditions) {
-        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
-        Type[] types = parameterizedType.getActualTypeArguments();
-        Class<T> clazz = (Class<T>) types[0];
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(clazz);
-        Root<T> root = query.from(clazz);
-
-        query.select(root.get("id"));
-
-        if (CollectionUtils.isEmpty(queryConditions)) {
-            for (QueryConditionDTO queryCondition : queryConditions) {
-                query.where(builder.and(builder.equal(root.get(queryCondition.getC()), queryCondition.getV())));
-            }
-        }
+    public List<T> options(@NonNull T t) {
+        CriteriaQuery<T> query = BaseRequestUtils.getCriteriaQuery(t, Collections.singletonList("id"));
 
         List<?> ids = entityManager.createQuery(query).getResultList();
         List<T> result = new ArrayList<>(ids.size());

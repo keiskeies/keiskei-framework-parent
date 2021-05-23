@@ -9,11 +9,10 @@ import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
+import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.dto.base.BaseSortDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -42,26 +41,11 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     }
 
     @Override
-    public List<T> options(List<QueryConditionDTO> t) {
-        return baseService.options();
-    }
-
-    @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.SAVE)
     @Lockable(key = "#t.toString()")
     public T saveAndNotify(T t) {
-        if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
-            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            t = jpaRepository.save(t);
-            t.setSign(parent.getSign() + t.getId() + SPILT);
-
-        } else {
-            t = jpaRepository.save(t);
-            t.setSign(t.getId() + SPILT);
-        }
-        return super.save(t);
+        return this.save(t);
     }
 
 
@@ -92,17 +76,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.UPDATE)
     public T updateAndNotify(T t) {
-        Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-        if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
-            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            t.setSign(parent.getSign() + t.getId() + SPILT);
-        } else {
-            t.setSign(t.getId() + SPILT);
-        }
-
-        t = jpaRepository.save(t);
-        return t;
+        return this.update(t);
     }
 
     @Override

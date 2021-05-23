@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.util.List;
@@ -64,8 +63,6 @@ public interface BaseService<T> {
      * @return .
      */
     List<T> options(T t);
-
-    List<T> options(List<QueryConditionDTO> t);
 
     /**
      * 根据id查询

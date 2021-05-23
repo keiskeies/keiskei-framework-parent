@@ -10,7 +10,6 @@ import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.service.EntityFactory;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.util.SecurityUtils;
@@ -18,7 +17,6 @@ import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,12 +38,10 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        List<QueryConditionDTO> queryConditions = Collections.singletonList(
-                new QueryConditionDTO("createUserId", SecurityUtils.getSessionUser().getId())
-        );
-        return R.ok(dashboardService.options(queryConditions));
+        Dashboard dashboard = Dashboard.builder().id(SecurityUtils.getSessionUser().getId()).build();
+        return R.ok(dashboardService.options(dashboard));
     }
-    
+
     @ApiOperation("详情")
     @GetMapping("/{id:-?[\\d]+}")
     public R<?> getOne(@PathVariable Long id) {
@@ -60,21 +56,21 @@ public class DashboardController {
 
     @PutMapping
     @ApiOperation("更新")
-    public R<Dashboard> update(@RequestBody  @Validated({Update.class}) Dashboard fieldInfo) {
+    public R<Dashboard> update(@RequestBody @Validated({Update.class}) Dashboard fieldInfo) {
         fieldInfo = dashboardService.update(fieldInfo);
         return R.ok(fieldInfo);
     }
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody  @Validated BaseSortDTO baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO baseSortDto) {
         dashboardService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }
 
     @DeleteMapping("/{id:-?[\\d]+}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long  id) {
+    public R<Boolean> delete(@PathVariable Long id) {
         dashboardService.deleteById(id);
         return R.ok(Boolean.TRUE);
     }
@@ -92,8 +88,6 @@ public class DashboardController {
     public R<List<CacheDTO>> tableField(@RequestParam String entityClass) {
         return R.ok(EntityFactory.getEntityInfo(entityClass));
     }
-
-
 
 
 }
