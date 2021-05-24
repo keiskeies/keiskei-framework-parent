@@ -16,6 +16,7 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.vo.user.TokenUser;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Transient;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  * @since 2021/5/20 18:42
  */
 public class BaseRequestUtils {
+    protected static final String IGNORE_COLUMN = "serialVersionUID";
     protected static EntityManager entityManager;
 
     /**
@@ -153,10 +155,46 @@ public class BaseRequestUtils {
         CriteriaQuery<T> query = builder.createQuery(clazz);
         Root<T> root = query.from(clazz);
 
-        Field[] fields = clazz.getDeclaredFields();
         List<OrderImpl> orderList = new ArrayList<>();
         List<Predicate> predicates = new ArrayList<>();
+
+        confirmCriteriaQuery(clazz.getDeclaredFields(), orderList, predicates, root, builder, t);
+        confirmCriteriaQuery(BaseEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
+        if (clazz.getSuperclass() == TreeEntity.class) {
+            confirmCriteriaQuery(TreeEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
+        }
+
+
+        if (!CollectionUtils.isEmpty(orderList)) {
+            query.orderBy(orderList.toArray(new Order[0]));
+        }
+        if (!CollectionUtils.isEmpty(predicates)) {
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+        if (!CollectionUtils.isEmpty(columns)) {
+            if (columns.size() > 1) {
+                query.multiselect(columns.stream().map(root::get).collect(Collectors.toList()));
+            } else {
+                query.select(root.get(columns.get(0)));
+            }
+        }
+        return query;
+    }
+
+    private static <T> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
         for (Field field : fields) {
+            if (IGNORE_COLUMN.equals(field.getName())) {
+                continue;
+            }
+            if (field.getAnnotation(JsonIgnore.class) != null) {
+                continue;
+            }
+            if (field.getAnnotation(Transient.class) != null) {
+                continue;
+            }
+            if (field.getType().isInterface()) {
+                continue;
+            }
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
                 orderList.add(new OrderImpl(root.get(field.getName()), !sortBy.desc()));
@@ -172,20 +210,6 @@ public class BaseRequestUtils {
             }
 
         }
-        if (!CollectionUtils.isEmpty(orderList)) {
-            query.orderBy(orderList.toArray(new Order[0]));
-        }
-        if (!CollectionUtils.isEmpty(predicates)) {
-            query.where(predicates.toArray(new Predicate[0]));
-        }
-        if (!CollectionUtils.isEmpty(columns)) {
-            if (columns.size() > 1) {
-                query.multiselect(columns.stream().map(root::get).collect(Collectors.toList()));
-            } else {
-                query.select(root.get(columns.get(0)));
-            }
-        }
-        return query;
     }
 
     /**
@@ -204,7 +228,7 @@ public class BaseRequestUtils {
         // 组装用户部门数据
         addDepartment(predicates, builder, root);
 
-        if (CollectionUtils.isEmpty(conditions)) {
+        if (!CollectionUtils.isEmpty(conditions)) {
             Expression expression;
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
@@ -237,7 +261,7 @@ public class BaseRequestUtils {
 
         // 组装用户部门数据
         addDepartment(predicates, builder, root);
-        if (CollectionUtils.isEmpty(conditions)) {
+        if (!CollectionUtils.isEmpty(conditions)) {
 
             Expression expression;
             for (QueryConditionDTO condition : conditions) {

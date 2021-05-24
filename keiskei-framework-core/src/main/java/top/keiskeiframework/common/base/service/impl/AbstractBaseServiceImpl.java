@@ -1,5 +1,8 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -221,6 +225,12 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Override
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
+        this.reconfirmIndex();
+    }
+
+    public void reconfirmIndex() {
+        entityManager.createNativeQuery("alter table " + getTClass() + " engine=InnoDB;");
+        entityManager.close();
     }
 
     @Override

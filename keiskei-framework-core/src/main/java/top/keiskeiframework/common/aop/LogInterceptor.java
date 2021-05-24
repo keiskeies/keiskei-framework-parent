@@ -102,7 +102,7 @@ public class LogInterceptor {
         } finally {
             try {
                 long end = System.currentTimeMillis();
-                if (result != null && GET.equalsIgnoreCase(operateLog.getType())) {
+                if (result != null && !GET.equalsIgnoreCase(operateLog.getType())) {
                     operateLog.setResponseParam(JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter));
                     log.info("{} - end - result: {} - timer: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
                 } else {
