@@ -78,24 +78,12 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
 
         LocalDateTime[] startAndEnd;
         switch (dashboard.getTimeType()) {
-            case CURRENT_DAY:
-                startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null);
-                break;
-            case CURRENT_WEEKS:
-                startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null);
-                break;
-            case CURRENT_MONTH:
-                startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null);
-                break;
-            case CURRENT_QUARTER:
-                startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null);
-                break;
-            case CURRENT_YEAR:
-                startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null);
-                break;
-            default:
-                startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())};
-                break;
+            case CURRENT_DAY: startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null); break;
+            case CURRENT_WEEKS: startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null); break;
+            case CURRENT_MONTH: startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null); break;
+            case CURRENT_QUARTER: startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null); break;
+            case CURRENT_YEAR: startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null); break;
+            default: startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())}; break;
         }
 
         ChartRequestDTO chartRequestDTO = new ChartRequestDTO(

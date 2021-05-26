@@ -110,11 +110,6 @@ public class BaseEntity implements Serializable {
     @Transient
     protected Long indexNumber;
 
-    public BaseEntity(String index, Long indexNumber) {
-        this.index = index;
-        this.indexNumber = indexNumber;
-    }
-
     /**
      * 访问次数
      */

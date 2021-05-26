@@ -250,7 +250,15 @@ public class BaseRequestUtils {
                 if (CollectionUtils.isEmpty(values)) {
                     continue;
                 }
-                expression = root.get(column);
+                // 若为关联表 , 则使用左连接
+                if (column.contains(".")) {
+                    String[] columns = column.split("\\.");
+                    Join join = root.join(columns[0], JoinType.LEFT);
+                    expression = join.get(columns[1]);
+                } else {
+                    expression = root.get(column);
+                }
+
                 addPredicate(predicates, condition, expression, builder);
             }
         }
@@ -309,7 +317,7 @@ public class BaseRequestUtils {
             }
         } else if (ConditionEnum.IN.equals(condition.getCondition())) {
             Object[] hasValueValues = condition.getValue().stream()
-                    .map(e -> null != e && !StringUtils.isEmpty(e.toString()))
+                    .filter(e -> null != e && !StringUtils.isEmpty(e.toString()))
                     .toArray();
             if (hasValueValues.length > 0) {
                 predicates.add(expression.in(hasValueValues));

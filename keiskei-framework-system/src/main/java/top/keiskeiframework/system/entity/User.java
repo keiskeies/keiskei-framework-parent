@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -31,7 +30,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "sys_user")
-@ToString(exclude = {"user"})
 @ApiModel(value = "User", description = "管理员")
 @Chartable
 public class User extends BaseEntity {
