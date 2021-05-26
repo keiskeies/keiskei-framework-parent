@@ -181,6 +181,17 @@ public class BaseRequestUtils {
         return query;
     }
 
+    /**
+     * 针对字段值拼装条件
+     *
+     * @param fields     实体类字段
+     * @param orderList  排序集合
+     * @param predicates 条件集合
+     * @param root       实体类
+     * @param builder    builder
+     * @param t          实体类
+     * @param <T>        实体类
+     */
     private static <T> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
         for (Field field : fields) {
             if (IGNORE_COLUMN.equals(field.getName())) {

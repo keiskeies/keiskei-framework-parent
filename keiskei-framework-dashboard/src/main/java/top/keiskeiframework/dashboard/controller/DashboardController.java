@@ -38,7 +38,7 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        Dashboard dashboard = Dashboard.builder().id(SecurityUtils.getSessionUser().getId()).build();
+        Dashboard dashboard = Dashboard.builder().createUserId(SecurityUtils.getSessionUser().getId()).build();
         return R.ok(dashboardService.options(dashboard));
     }
 
