@@ -39,6 +39,10 @@ public class ScheduledTask extends BaseEntity {
 
     private static final long serialVersionUID = -2520015535285512159L;
 
+    @ApiModelProperty(value = "任务名称", dataType = "String")
+    @NotBlank(message = "任务名称不能为空", groups = {Insert.class, Update.class})
+    private String name;
+
     @ApiModelProperty(value = "表达式", dataType = "String")
     @NotBlank(message = "表达式不能为空", groups = {Insert.class, Update.class})
     private String cron;

@@ -12,10 +12,10 @@ import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
 import top.keiskeiframework.generate.enums.FieldEnumInfoTypeEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>
@@ -41,14 +41,20 @@ public class FieldEnumInfo extends BaseEntity {
     private String name;
 
     @ApiModelProperty(value = "comment", dataType = "String")
-    @NotNull(message = "注释不能为空", groups = {Insert.class})
+    @NotBlank(message = "注释不能为空", groups = {Insert.class})
     private String comment;
 
     @ApiModelProperty(value = "类型", dataType = "String")
-    @NotBlank(message = "类型不能为空", groups = {Insert.class})
+    @NotNull(message = "类型不能为空", groups = {Insert.class})
     private FieldEnumInfoTypeEnum type;
 
     @ApiModelProperty(value = "主题", dataType = "String")
-    @NotBlank(message = "主题不能为空", groups = {Insert.class})
+    @NotNull(message = "主题不能为空", groups = {Insert.class})
     private FieldEnumInfoEffectEnum effect;
+
+    @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "field_enum_id")
+    private List<FieldEnumAffectInfo> fieldEnumAffects;
+
 }

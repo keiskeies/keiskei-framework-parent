@@ -36,7 +36,4 @@ public class Department extends TreeEntity {
     @NotBlank(message = "部门名称不能为空", groups = {Insert.class})
     private String name;
 
-    @ApiModelProperty(value = "部门标识", dataType = "String")
-    @NotBlank(message = "部门标识不能为空", groups = {Insert.class})
-    private String sign;
 }
