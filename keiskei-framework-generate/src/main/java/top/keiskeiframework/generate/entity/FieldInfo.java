@@ -57,6 +57,9 @@ public class FieldInfo extends BaseEntity {
     @ApiModelProperty(value = "更新必填", dataType = "Boolean")
     private Boolean updateRequire = Boolean.TRUE;
 
+    @ApiModelProperty(value = "字段校验", dataType = "String")
+    private String validate;
+
     @ApiModelProperty(value = "字段关系", dataType = "String")
     private FieldRelationEnum relation;
 
