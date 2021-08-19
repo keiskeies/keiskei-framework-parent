@@ -45,35 +45,33 @@ import java.util.stream.Collectors;
 @Slf4j
 public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
-    @Autowired
-    protected ListServiceImpl<Dashboard> baseService;
     private static final String CACHE_NAME = CacheTimeEnum.M10;
 
 
     @Override
     public Dashboard save(Dashboard dashboard) {
         validate(dashboard);
-        return baseService.save(dashboard);
+        return super.save(dashboard);
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #dashboard.id")
     public Dashboard update(Dashboard dashboard) {
         validate(dashboard);
-        return baseService.update(dashboard, dashboard.getId());
+        return super.update(dashboard, dashboard.getId());
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id")
     public void deleteById(Long id) {
-        baseService.deleteById(id);
+        super.deleteById(id);
     }
 
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Long id) {
-        Dashboard dashboard = baseService.getById(id);
+        Dashboard dashboard = super.getById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
         LocalDateTime[] startAndEnd;
@@ -87,6 +85,7 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
         }
 
         ChartRequestDTO chartRequestDTO = new ChartRequestDTO(
+                dashboard.getType(),
                 dashboard.getFieldType(),
                 startAndEnd[0],
                 startAndEnd[1]

@@ -34,7 +34,7 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
     protected final static String CACHE_NAME = "SPRING_BASE_CACHE";
     @Autowired
-    private ListServiceImpl<T> baseService;
+    protected ListServiceImpl<T> baseService;
 
     @Override
     public List<T> options() {

@@ -34,6 +34,7 @@ public class ChartRequestDTO implements Serializable {
     /**
      * 图表类型
      */
+    @NonNull
     private ChartType chartType;
 
     /**

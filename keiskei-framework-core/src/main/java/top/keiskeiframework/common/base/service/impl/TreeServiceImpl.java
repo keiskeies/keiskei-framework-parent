@@ -32,7 +32,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     protected final static String CACHE_NAME = "SPRING_TREE_CACHE";
 
     @Autowired
-    private TreeServiceImpl<T> baseService;
+    protected TreeServiceImpl<T> baseService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
