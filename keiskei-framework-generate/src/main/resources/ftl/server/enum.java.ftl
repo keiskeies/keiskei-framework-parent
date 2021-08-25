@@ -6,7 +6,7 @@ import lombok.Getter;
 
 /**
  * <p>
- * ${table.comment!} ${filed.comment!} 字段枚举
+ * ${table.comment!} ${field.comment!} 字段枚举
  * </p>
  *
  * @author ${author}

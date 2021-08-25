@@ -17,6 +17,7 @@ public enum FieldEnumInfoTypeEnum {
 
     //
     NONE,
+    SUCCESS,
     INFO,
     WARNING,
     DANGER;

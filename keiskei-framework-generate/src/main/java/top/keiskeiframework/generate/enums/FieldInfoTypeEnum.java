@@ -12,24 +12,29 @@ import lombok.Getter;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/18 17:32
  */
+@Getter
+@AllArgsConstructor
 public enum FieldInfoTypeEnum {
     //
-    NUMBER,
-    DECIMAL,
-    MONEY,
-    DATE,
-    TIME,
-    DATE_TIME,
-    WORD,
-    LONG_WORD,
-    LONG_TEXT,
-    TO_LONG_TEXT,
-    MIDDLE_ID,
-    IMAGE,
-    VIDEO,
-    FILE,
-    VISIT_TIMES,
-    ENABLE,
-    SORT,
-    DICTIONARY
+    NUMBER("Integer"),
+    DECIMAL("Double"),
+    MONEY("Long"),
+    DATE("LocalDate"),
+    TIME("LocalTime"),
+    DATE_TIME("LocalDateTime"),
+    WORD("String"),
+    LONG_WORD("String"),
+    LONG_TEXT("String"),
+    TO_LONG_TEXT("String"),
+    MIDDLE_ID(""),
+    IMAGE("String"),
+    VIDEO("String"),
+    FILE("String"),
+    VISIT_TIMES("Integer"),
+    ENABLE("Boolean"),
+    SORT("Long"),
+    DICTIONARY("");
+
+    private final String type;
+
 }

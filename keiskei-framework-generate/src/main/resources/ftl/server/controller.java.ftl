@@ -1,6 +1,7 @@
 package ${module.packageName}.controller;
 
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 <#assign parentNam = "BaseController">
@@ -19,7 +20,7 @@ import ${module.packageName}.service.I${table.name}Service;
  * @since ${since}
  */
 @RestController
-@RequestMapping("/api/v1/${module.path?uncap_first}/${table.name?uncap_first}")
+@RequestMapping("/admin/v1/${module.path?uncap_first}/${table.name?uncap_first}")
 @Api(tags = "${module.comment!} - ${table.comment!}")
 public class ${table.name}Controller extends ${parentNam}<${table.name}>{
 

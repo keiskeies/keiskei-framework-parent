@@ -7,15 +7,11 @@ server:
         http-only: false
 logging:
   level:
-    top.keiskeiframework: info
-  #    org.springframework: debug
+    top.keiskeiframework: debug
+    org.springframework: error
   pattern:
     file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
     console: "%d [%X{mdcTraceId}] [%thread] %-5level %logger{36} %line - %msg%n"
-#  file:
-#    max-size: 100MB
-#    max-history: 90
-#    path: /opt/project/log/
 spring:
   session:
     store-type: redis
@@ -29,36 +25,30 @@ spring:
       max-request-size: 500MB
   datasource:
     name: news_stand
-    #    driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    username: root
-    password: 123456
-    url: jdbc:log4jdbc:mysql://192.168.31.169:33060/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-  #    url: jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
     timeout: 6000
-    password: 123456
-    database: 3
-    sentinel:
-      master: mymaster
-      nodes:
-        - 192.168.31.169:16379
-        - 192.168.31.169:16380
-        - 192.168.31.169:16381
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DB:0}
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:localhost}
   jpa:
     database: mysql
-    #    show-sql: true
-    #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    #    generate-ddl: true
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
     hibernate:
       ddl-auto: update
-  #    properties:
-  #      hibernate:
-  #        format_sql: true
-  #        jdbc:
-  #          batch_size: 500
-  #          batch_versioned_data: true
-  #          order_inserts: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 500
+          batch_versioned_data: true
+          order_inserts: true
   devtools:
     restart:
       enabled: true
@@ -81,6 +71,10 @@ keiskei:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
     cross: true
     maximum-sessions: 1
+  generate:
+    base-path: /Users/cjm/IdeaProjects/items/user/
+    base-admin-path: /Users/cjm/IdeaProjects/items/admin/
+    base-front-path: /Users/cjm/IdeaProjects/items/front/
 
 
 

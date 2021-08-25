@@ -77,6 +77,7 @@ public class GenerateFileUtils {
 
 
         Map<String, Object> cfg = new HashMap<>(6);
+        cfg.put("item", item);
         cfg.put("name", item.getName());
         cfg.put("author", item.getAuthor());
         cfg.put("comment", item.getComment());
@@ -86,16 +87,31 @@ public class GenerateFileUtils {
         cfg.put("treeTables", treeTables);
 
 
-        go2Fly("server/serverPom.xml", path + "pom.xml", cfg);
-        go2Fly("server/application.java", path +"/src/main/java/" + item.getName() + "-start/top/keiskeiframework/Application.java", cfg);
+        String startModuleName = item.getName() + "-start";
+        String startModulePath = path + "/" + startModuleName;
+        go2Fly("server/pom/startModulePom.xml", startModulePath + "/pom.xml", cfg);
+        go2Fly("server/application.java", startModulePath +"/src/main/java/top/keiskeiframework/Application.java", cfg);
+        go2Fly("server/conf/SwaggerAddition.java", startModulePath +"/src/main/java/top/keiskeiframework/conf/SwaggerAddition.java", cfg);
+        go2Fly("server/conf/SwaggerConfig.java", startModulePath +"/src/main/java/top/keiskeiframework/conf/SwaggerConfig.java", cfg);
+        go2Fly("server/resources/application.yml", startModulePath +"/src/main/resources/application.yml", cfg);
+        go2Fly("server/resources/application-dev.yml", startModulePath +"/src/main/resources/application-dev.yml", cfg);
+        go2Fly("server/resources/application-prod.yml", startModulePath +"/src/main/resources/application-prod.yml", cfg);
 
+
+        go2Fly("server/pom/serverPom.xml", path + "pom.xml", cfg);
+        go2Fly("server/build/build.sh", path + "build.sh", cfg);
+        go2Fly("server/build/Dockerfile", path + "Dockerfile", cfg);
         for (ModuleInfo module : item.getModules()) {
             cfg.put("module", module);
             String modulePath = path + "/" + module.getName();
-            go2Fly("server/module.xml", modulePath + "/pom.xml", cfg);
+            go2Fly("server/pom/modulePom.xml", modulePath + "/pom.xml", cfg);
             String resultFilePath = modulePath + "/src/main/java/" + module.getPackageName().replace(".", "/") + "/";
             for (TableInfo table : module.getTables()) {
+                table.setTableName(camelToUnderline(module.getPath() + table.getName()));
+
                 cfg.put("table", table);
+                cfg.put("serialVersionUID",getSerialVersionUID());
+
                 go2Fly("server/entity.java", resultFilePath + "entity/" + table.getName() + ".java", cfg);
                 go2Fly("server/repository.java", resultFilePath + "repository/" + table.getName() + "Repository.java", cfg);
                 if (table.getBuildController()) {
@@ -106,7 +122,7 @@ public class GenerateFileUtils {
                 for (FieldInfo field : table.getFields()) {
                     if (FieldInfoTypeEnum.DICTIONARY.equals(field.getType()) && !CollectionUtils.isEmpty(field.getFieldEnums())) {
                         cfg.put("field", field);
-                        go2Fly("server/enum.java.ftl", resultFilePath + "enums/" + table.getName() + upFirst(field.getName()) + "Enum.java", cfg);
+                        go2Fly("server/enum.java", resultFilePath + "enums/" + table.getName() + upFirst(field.getName()) + "Enum.java", cfg);
                     }
                 }
             }
@@ -117,10 +133,6 @@ public class GenerateFileUtils {
 
     public static void go2Fly(String templateFile, String resultFile, Map<String, Object> cfg) {
         File docFile = new File(resultFile);
-        if (docFile.exists()) {
-            return;
-        }
-
         Configuration configuration = new Configuration();
         Writer out = null;
         try {
@@ -145,5 +157,27 @@ public class GenerateFileUtils {
 
     public static String upFirst(String str) {
         return str.substring(0,1).toUpperCase() + str.substring(1);
+    }
+
+
+    public static String camelToUnderline(String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        int len = param.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = param.charAt(i);
+            if (Character.isUpperCase(c)) {
+                sb.append("_");
+            }
+            sb.append(Character.toLowerCase(c));
+        }
+        return sb.toString();
+    }
+
+    public static String getSerialVersionUID() {
+        Random random = new Random();
+        return random.nextLong() + "";
     }
 }

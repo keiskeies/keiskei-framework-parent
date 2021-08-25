@@ -38,6 +38,10 @@ public class ModuleInfo extends BaseEntity {
     @NotBlank(message = "模块名称不能为空", groups = {Insert.class})
     private String name;
 
+    @ApiModelProperty(value = "模块路径", dataType = "String")
+    @NotBlank(message = "模块路径不能为空", groups = {Insert.class})
+    private String path;
+
     @ApiModelProperty(value = "模块注释", dataType = "String")
     @NotBlank(message = "模块注释不能为空", groups = {Insert.class})
     private String comment;

@@ -1,10 +1,14 @@
 package top.keiskeiframework.generate.controller;
 
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.generate.entity.ProjectInfo;
+import top.keiskeiframework.generate.enums.BuildStatusEnum;
+import top.keiskeiframework.generate.service.GenerateService;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -18,4 +22,26 @@ import top.keiskeiframework.generate.entity.ProjectInfo;
 @RequestMapping("/admin/v1/generate/project")
 @Api(tags = "文件生成 - 项目管理")
 public class ProjectController extends ListController<ProjectInfo> {
+
+    @Autowired
+    private GenerateService generateService;
+
+    @PostMapping("/{id:-?[\\d]+}/build/")
+    @ApiOperation("创建代码")
+    public R<Boolean> build(@PathVariable("id") Long id) {
+        generateService.build(id);
+        return R.ok(true, "项目构建中，请稍等。。。");
+    }
+
+    @GetMapping("/{id:-?[\\d]+}/status")
+    @ApiOperation("代码创建状态")
+    public R<BuildStatusEnum> status(@PathVariable("id") Long id) {
+        return R.ok(generateService.refreshStatus(id));
+    }
+
+    @GetMapping("/{id}/download")
+    @ApiOperation("代码下载地址")
+    public R<String> download(@PathVariable("id") Long id) {
+        return R.ok(generateService.getDownloadAddress(id));
+    }
 }

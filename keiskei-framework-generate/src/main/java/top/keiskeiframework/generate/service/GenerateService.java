@@ -20,12 +20,6 @@ public interface GenerateService {
     void build(Long itemId);
 
     /**
-     * 构建指定项目
-     * @param project 项目信息
-     */
-    void build(ProjectInfo project);
-
-    /**
      * 刷新项目状态
      * @param itemId 项目id
      * @return .

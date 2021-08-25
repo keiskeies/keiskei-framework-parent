@@ -17,6 +17,7 @@ import org.springframework.integration.redis.util.RedisLockRegistry;
 import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
+import top.keiskeiframework.common.exception.LockException;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.locks.Lock;
@@ -58,22 +59,35 @@ public class LockerInterceptor {
             for (int i = 0; i < arguments.length; i++) {
                 context.setVariable(paramNames[i], arguments[i]);
             }
-            key = lockable.lockName() + SPLIT + point.getTarget().toString() + expression.getValue(context, String.class);
+            key = lockable.lockName() + SPLIT + point.getTarget().getClass().getName() + "-" + expression.getValue(context, String.class);
         }
         Lock lock = redisLockRegistry.obtain(key);
         if (null == lock) {
-            throw new BizException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
 
-        boolean lockFlag = lock.tryLock(lockable.lockTime(), lockable.lockTimeUnit());
+        boolean lockFlag;
+        try {
+            lockFlag = lock.tryLock(lockable.waitTime(), lockable.lockTimeUnit());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+        }
         if (!lockFlag) {
-            lock.unlock();
-            throw new BizException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+            try {
+                lock.unlock();
+            } catch (Exception ignore) {
+            }
+            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         try {
             return point.proceed();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+            try {
+                lock.unlock();
+            } catch (Exception ignore) {
+            }
             throw throwable;
         }
     }

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "keiskei-server-conf.generate")
+@ConfigurationProperties(prefix = "keiskei.generate")
 public class GenerateProperties {
 
     /**
      * 文件基础路径
      */
-    private String baseServerPath;
+    private String basePath;
     /**
      * 后台文件路径
      */

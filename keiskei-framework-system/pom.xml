@@ -10,8 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>keiskei-framework-system</artifactId>
-    <name>keiskei-framework-system</name>
-    <version>1.0.0-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>

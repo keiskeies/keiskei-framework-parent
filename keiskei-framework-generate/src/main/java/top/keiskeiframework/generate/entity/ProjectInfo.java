@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.generate.enums.ProjectFileJarEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -53,6 +54,15 @@ public class ProjectInfo extends BaseEntity {
 
     @ApiModelProperty(value = "作者", dataType = "String")
     private String author;
+
+    @ApiModelProperty(value = "文件方式", dataType = "String")
+    private ProjectFileJarEnum fileJar = ProjectFileJarEnum.LOCAL;
+
+    @ApiModelProperty(value = "日志存储", dataType = "Boolean")
+    private Boolean sqlLog = false;
+
+    @ApiModelProperty(value = "构建工作流", dataType = "Boolean")
+    private Boolean workflow = false;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")

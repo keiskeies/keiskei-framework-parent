@@ -2,8 +2,8 @@ package ${module.packageName}.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-<#assign parentNam = table.type?lower_case?cap_first>
-import top.keiskeiframework.common.base.entity.${parentNam}Entity;
+<#assign parentName = table.type?lower_case?cap_first>
+import top.keiskeiframework.common.base.entity.${parentName}Entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ${module.packageName}.enums.*;
@@ -39,65 +39,73 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "${table.table}")
+@Table(name = "${table.tableName}")
 @ApiModel(value="${table.name}", description="${table.comment!}")
 public class ${table.name} extends ${parentName}Entity {
 
-    private static final long serialVersionUID = ${table.serialVersionUID}L;
+    private static final long serialVersionUID = ${serialVersionUID}L;
 
-<#list entity.fields as field>
-<#--        字段注释-->
-    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.propertyType}")
+<#list table.fields as field>
 <#--        必填校验-->
     <#if field.createRequire || field.updateRequire>
-        <#if field.propertyType == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+    <#if field.type.type == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
     </#if>
 <#--        JsonIgnore-->
     <#if field.jsonIgnore>
     @JsonIgnore
     </#if>
-<#--        时间字段序列化-->
-    <#if field.propertyType == "LocalDateTime" || field.propertyType == "LocalDate" || field.propertyType == "DateTime">
-    @JsonDeserialize(using = ${field.propertyType}Deserializer.class)
-    @JsonSerialize(using = ${field.propertyType}Serializer.class)
-    @JsonFormat(pattern = "<#if field.propertyType == "LocalDateTime">yyyy-MM-dd HH:mm:ss<#elseif field.propertyType == "LocalDate">yyyy-MM-dd<#else>HH:mm:ss</#if>")
-    </#if>
-    <#if field.relation??>
-        <#--        一对一-->
-        <#if field.relation == 'ONE_TO_ONE'>
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "${field.oneToOne?uncap_first}_id")
-    private ${field.oneToOne} ${field.oneToOne?uncap_first};
+    <#if field.type == "DICTIONARY">
+<#--        枚举字段-->
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="String")
+    private ${table.name?cap_first}${field.name?cap_first}Enum ${field.name}
 
-        <#--        一对多-->
+    <#elseif field.type == "MIDDLE_ID">
+<#--        关系字段-->
+    <#--        一对一-->
+        <#if field.relation == 'ONE_TO_ONE'>
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "${field.relationEntity?uncap_first}_id")
+    private ${field.relationEntity} ${field.relationEntity?uncap_first};
+
+    <#--        一对多-->
         <#elseif field.relation == 'ONE_TO_MANY'>
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="${table.name?lower_case}_id")
-    private List<${field.manyTomany}> ${field.manyTomany?uncap_first}s;
+    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s;
 
-        <#--        多对多-->
+    <#--        多对多-->
         <#elseif field.relation == 'MANY_TO_MANY'>
-    @ManyToMany(targetEntity = ${field.manyTomany}.class, cascade = CascadeType.DETACH)
-    @JoinTable(name = "${field.module?lower_case}_${table.name?lower_case}_${field.manyTomany?lower_case}",
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="List<${field.relationEntity!}>")
+    @ManyToMany(targetEntity = ${field.relationEntity}.class, cascade = CascadeType.DETACH)
+    @JoinTable(name = "${module.path?lower_case}_${table.name?lower_case}_${field.relationEntity?lower_case}",
         joinColumns = {@JoinColumn(name = "${table.name?lower_case}_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "${field.manyTomany?lower_case}_id", referencedColumnName = "id")})
-    private List<${field.manyTomany}> ${field.manyTomany?uncap_first}s;
+        inverseJoinColumns = {@JoinColumn(name = "${field.relationEntity?lower_case}_id", referencedColumnName = "id")})
+    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s;
 
-        <#--        多对一-->
+    <#--        多对一-->
         <#elseif field.relation == 'MANY_TO_ONE'>
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    private ${field.oneToOne} ${field.oneToOne?uncap_first};
+    private ${field.relationEntity} ${field.relationEntity?uncap_first};
 
         </#if>
     <#else>
-<#--        字段类型判断-->
-<#--        金钱-->
+<#--        普通字段-->
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.type}")
+    <#--        金钱-->
         <#if field.type == 'MONEY'>
     @JsonDeserialize(converter = MoneyDeserializer.class)
     @JsonSerialize(converter = MoneySerializer.class)
         </#if>
-<#--        普通字段-->
-    private ${field.propertyType} ${field.propertyName};
+    <#--        时间字段序列化-->
+        <#if field.type.type == "LocalDateTime" || field.type.type == "LocalDate" || field.type.type == "DateTime">
+    @JsonDeserialize(using = ${field.type.type}Deserializer.class)
+    @JsonSerialize(using = ${field.type.type}Serializer.class)
+    @JsonFormat(pattern = "<#if field.type.type == "LocalDateTime">yyyy-MM-dd HH:mm:ss<#elseif field.type.type == "LocalDate">yyyy-MM-dd<#else>HH:mm:ss</#if>")
+        </#if>
+    private ${field.type.type} ${field.name};
 
     </#if>
 </#list>
