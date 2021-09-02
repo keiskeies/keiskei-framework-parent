@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.generate.enums.TableControllerTypeEnum;
+import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
 import javax.persistence.*;
@@ -57,7 +57,7 @@ public class TableInfo extends BaseEntity {
     private Boolean buildController;
 
     @ApiModelProperty(value = "接口类型", dataType = "String")
-    private TableControllerTypeEnum controllerType;
+    private TableInfoControllerTypeEnum controllerType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "table_id")

@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
+ * <p>
+ * swagger文档配置
+ * </p>
  * @author ${author}
  * @since ${since}
  */

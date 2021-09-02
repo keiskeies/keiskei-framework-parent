@@ -29,10 +29,10 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
 
 
     protected final static String SPILT = "/";
-    protected final static String CACHE_NAME = "SPRING_TREE_CACHE";
+    protected final static String CACHE_NAME = "CACHE:TREE";
 
     @Autowired
-    protected TreeServiceImpl<T> baseService;
+    private TreeServiceImpl<T> baseService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
@@ -43,7 +43,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.SAVE)
-    @Lockable(key = "#t.toString()")
+    @Lockable(key = "#t.hashCode()")
     public T saveAndNotify(T t) {
         return this.save(t);
     }
@@ -51,7 +51,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
-    @Lockable(key = "#t.toString()")
+    @Lockable(key = "#t.hashCode()")
     public T save(T t) {
         if (null != t.getParentId()) {
             T parent = this.getById(t.getParentId());

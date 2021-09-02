@@ -12,16 +12,16 @@ package top.keiskeiframework.common.enums;
  * @since 2021/5/14 12:59
  */
 public class CacheTimeEnum {
-    public static final String M1 = "SPRING_TIME_M1_CACHE";
-    public static final String M5 = "SPRING_TIME_M5_CACHE";
-    public static final String M10 = "SPRING_TIME_M10_CACHE";
-    public static final String M30 = "SPRING_TIME_M30_CACHE";
-    public static final String H1 = "SPRING_TIME_H1_CACHE";
-    public static final String H2 = "SPRING_TIME_H2_CACHE";
-    public static final String H6 = "SPRING_TIME_H6_CACHE";
-    public static final String H12 = "SPRING_TIME_H12_CACHE";
-    public static final String D1 = "SPRING_TIME_D1_CACHE";
-    public static final String D2 = "SPRING_TIME_D2_CACHE";
-    public static final String D5 = "SPRING_TIME_D5_CACHE";
-    public static final String D7 = "SPRING_TIME_D7_CACHE";
+    public static final String M1 = "CACHE:TIMER:M1";
+    public static final String M5 = "CACHE:TIMER:M5";
+    public static final String M10 = "CACHE:TIMER:M10";
+    public static final String M30 = "CACHE:TIMER:M30";
+    public static final String H1 = "CACHE:TIMER:H1";
+    public static final String H2 = "CACHE:TIMER:H2";
+    public static final String H6 = "CACHE:TIMER:H6";
+    public static final String H12 = "CACHE:TIMER:H12";
+    public static final String D1 = "CACHE:TIMER:D1";
+    public static final String D2 = "CACHE:TIMER:D2";
+    public static final String D5 = "CACHE:TIMER:D5";
+    public static final String D7 = "CACHE:TIMER:D7";
 }

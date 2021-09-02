@@ -8,7 +8,7 @@ package top.keiskeiframework.generate.enums;
  * @author v_chenjiamin
  * @since 2021/5/18 15:02
  */
-public enum TableControllerTypeEnum {
+public enum TableInfoControllerTypeEnum {
     // 接口类型
     API,
     // 消息队列类型

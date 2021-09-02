@@ -12,7 +12,7 @@ import lombok.Getter;
  * @author ${author}
  * @since ${since}
  */
-public enum ${table.name?uncap_first}${field.name?uncap_first}Enum {
+public enum ${table.name?cap_first}${field.name?cap_first}Enum {
 
 <#list field.fieldEnums as enum>
     // ${enum.comment}

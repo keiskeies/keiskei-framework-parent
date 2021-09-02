@@ -5,13 +5,13 @@
     <parent>
         <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.0.0-Release</version>
+        <version>1.1.0-jpa-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>${name}-start</artifactId>
     <name>${name}-start</name>
-    <version>1.0.0-Release</version>
+    <version>1.1.0-jpa-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>${item.fileJar.jarName}</artifactId>
+            <artifactId>${item.fileJar.value}</artifactId>
         </dependency>
 <#if item.sqlLog>
         <dependency>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>${module.name}</artifactId>
-            <version>1.0.0-Release</version>
+            <version>1.1.0-jpa-Release</version>
         </dependency>
 </#list>
     </dependencies>

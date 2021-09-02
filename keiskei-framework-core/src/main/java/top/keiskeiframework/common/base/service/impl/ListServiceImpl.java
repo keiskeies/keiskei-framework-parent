@@ -32,9 +32,9 @@ import java.util.List;
 public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
 
 
-    protected final static String CACHE_NAME = "SPRING_BASE_CACHE";
+    protected final static String CACHE_NAME = "CACHE:BASE";
     @Autowired
-    protected ListServiceImpl<T> baseService;
+    private ListServiceImpl<T> baseService;
 
     @Override
     public List<T> options() {
@@ -60,7 +60,7 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
     }
 
     @Override
-    @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
     public T getById(Long id) {
         return super.getById(id);
     }
@@ -68,42 +68,39 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
     @Override
     @OperateNotify(type = OperateNotifyType.SAVE)
-    @Lockable(key = "#t.toString()")
+    @Lockable(key = "#t.hashCode()")
     public T saveAndNotify(T t) {
         return super.save(t);
     }
 
     @Override
-    @Lockable(key = "#t.toString()")
+    @Lockable(key = "#t.hashCode()")
     public T save(T t) {
         return super.save(t);
     }
 
     @Override
     @OperateNotify(type = OperateNotifyType.UPDATE)
+    @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T updateAndNotify(T t) {
-        return baseService.update(t, t.getId());
+        return jpaRepository.save(t);
     }
 
     @Override
+    @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T update(T t) {
-        return baseService.update(t, t.getId());
-    }
-
-    @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id")
-    public T update(T t, Long id) {
-        return super.update(t);
+        return jpaRepository.save(t);
     }
 
     @Override
-    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id")
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
     @OperateNotify(type = OperateNotifyType.DELETE)
     public void deleteByIdAndNotify(Long id) {
         super.deleteById(id);
     }
 
     @Override
-    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-' + #id")
+    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
     public void deleteById(Long id) {
         super.deleteById(id);
     }

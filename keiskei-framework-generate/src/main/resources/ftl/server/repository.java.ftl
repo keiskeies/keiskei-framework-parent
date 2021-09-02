@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author ${author}
  * @since ${since}
  */
-public interface ${table.name}Repository extends JpaRepository<${table.name}>, JpaSpecificationExecutor<${table.name}> {
+public interface ${table.name}Repository extends JpaRepository<${table.name}, Long>, JpaSpecificationExecutor<${table.name}> {
 
 }

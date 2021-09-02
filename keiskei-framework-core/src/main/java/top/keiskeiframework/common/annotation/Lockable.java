@@ -18,33 +18,33 @@ import java.util.concurrent.TimeUnit;
 @Inherited
 @Documented
 public @interface Lockable {
-
+    /**
+     * 锁键值
+     * 默认key为类名+方法名，可以用spel表达式自定义，加上方法参数
+     *
+     * @return 。
+     */
     String key() default "";
 
-    String lockName() default "LOCK";
-
+    /**
+     * 加锁等待时间
+     *
+     * @return 。
+     */
     int waitTime() default 3000;
-
-    int lockTime() default 6000;
-
-    /**
-     * 是否使用等待/超时时间
-     * @return .
-     */
-    boolean timing() default false;
-
-    /**
-     * 是否使用公平锁
-     * @return /
-     */
-    boolean fail() default false;
 
     /**
      * 等待/超时时间 时间单位
+     *
      * @return .
      */
     TimeUnit lockTimeUnit() default TimeUnit.MILLISECONDS;
 
+    /**
+     * 错误提示信息
+     *
+     * @return 。
+     */
     String message() default "点击过于频繁，请稍后再试";
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 <#assign parentName = table.type?lower_case?cap_first>
 import top.keiskeiframework.common.base.entity.${parentName}Entity;
+import top.keiskeiframework.common.util.data*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ${module.packageName}.enums.*;
@@ -17,13 +18,12 @@ import top.keiskeiframework.common.annotation.validate.*;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import top.keiskeiframework.common.util.json.MoneyDeserialize;
-import top.keiskeiframework.common.util.json.MoneySerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * <p>
@@ -48,16 +48,22 @@ public class ${table.name} extends ${parentName}Entity {
 <#list table.fields as field>
 <#--        必填校验-->
     <#if field.createRequire || field.updateRequire>
-    <#if field.type.type == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+    <#if field.type.value == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
     </#if>
 <#--        JsonIgnore-->
     <#if field.jsonIgnore>
     @JsonIgnore
     </#if>
-    <#if field.type == "DICTIONARY">
+    <#if field.type == "TAG">
+<#--        标签字段-->
+    @JsonDeserialize(using = TagDeserializer.class)
+    @JsonSerialize(using = TagSerializer.class)
+    private String ${field.name};
+
+    <#elseif field.type == "DICTIONARY">
 <#--        枚举字段-->
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="String")
-    private ${table.name?cap_first}${field.name?cap_first}Enum ${field.name}
+    private ${table.name?cap_first}${field.name?cap_first}Enum ${field.name};
 
     <#elseif field.type == "MIDDLE_ID">
 <#--        关系字段-->
@@ -93,19 +99,19 @@ public class ${table.name} extends ${parentName}Entity {
         </#if>
     <#else>
 <#--        普通字段-->
-    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.type}")
+    @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.value}")
     <#--        金钱-->
         <#if field.type == 'MONEY'>
     @JsonDeserialize(converter = MoneyDeserializer.class)
     @JsonSerialize(converter = MoneySerializer.class)
         </#if>
     <#--        时间字段序列化-->
-        <#if field.type.type == "LocalDateTime" || field.type.type == "LocalDate" || field.type.type == "DateTime">
-    @JsonDeserialize(using = ${field.type.type}Deserializer.class)
-    @JsonSerialize(using = ${field.type.type}Serializer.class)
-    @JsonFormat(pattern = "<#if field.type.type == "LocalDateTime">yyyy-MM-dd HH:mm:ss<#elseif field.type.type == "LocalDate">yyyy-MM-dd<#else>HH:mm:ss</#if>")
+        <#if field.type.value == "LocalDateTime" || field.type.value == "LocalDate" || field.type.value == "DateTime">
+    @JsonDeserialize(using = ${field.type.value}Deserializer.class)
+    @JsonSerialize(using = ${field.type.value}Serializer.class)
+    @JsonFormat(pattern = "<#if field.type.value == "LocalDateTime">yyyy-MM-dd HH:mm:ss<#elseif field.type.value == "LocalDate">yyyy-MM-dd<#else>HH:mm:ss</#if>")
         </#if>
-    private ${field.type.type} ${field.name};
+    private ${field.type.value} ${field.name};
 
     </#if>
 </#list>

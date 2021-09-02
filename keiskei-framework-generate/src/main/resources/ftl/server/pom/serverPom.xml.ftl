@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.0.0-Release</version>
+        <version>1.1.0-jpa-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <modules>
@@ -18,7 +18,7 @@
     <packaging>pom</packaging>
     <artifactId>${name}</artifactId>
     <name>${name}</name>
-    <version>1.0.0-Release</version>
+    <version>1.1.0-jpa-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>

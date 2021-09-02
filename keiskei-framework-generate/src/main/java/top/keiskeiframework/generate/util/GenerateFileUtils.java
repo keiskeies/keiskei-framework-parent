@@ -26,25 +26,15 @@ import java.util.*;
 public class GenerateFileUtils {
 
     public static void copyDir(String oldPath, String newPath) throws IOException {
-        File file = new File(oldPath);
-        //文件名称列表
-        String[] filePath = file.list();
 
-        if (!(new File(newPath)).exists()) {
-            (new File(newPath)).mkdir();
+        String[] cmds = {"cp", "-f", oldPath + "/.*", newPath};
+        Process p = Runtime.getRuntime().exec(cmds);
+        BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String s = "";
+        while((s=in.readLine()) != null){
+            System.out.println(s);
         }
-
-        for (int i = 0; i < Objects.requireNonNull(filePath).length; i++) {
-            if ((new File(oldPath + File.separator + filePath[i])).isDirectory()) {
-                copyDir(oldPath + File.separator + filePath[i], newPath + File.separator + filePath[i]);
-            }
-
-            if (new File(oldPath + File.separator + filePath[i]).isFile()) {
-                copyFile(oldPath + File.separator + filePath[i], newPath + File.separator + filePath[i]);
-            }
-
-        }
-
+        System.out.println("finished...");
     }
 
     public static void copyFile(String oldPath, String newPath) throws IOException {
@@ -52,7 +42,6 @@ public class GenerateFileUtils {
         File file = new File(newPath);
         FileInputStream in = new FileInputStream(oldFile);
         FileOutputStream out = new FileOutputStream(file);
-        ;
 
         byte[] buffer = new byte[2048];
 
@@ -61,14 +50,14 @@ public class GenerateFileUtils {
         }
     }
 
-    public static void go2Fly(ProjectInfo item, String path) {
+    public static void go2Fly(ProjectInfo item, String basePath) {
 
 
         Map<String, String> tableModuleMap = new HashMap<>();
         List<String> treeTables = new ArrayList<>();
         for (ModuleInfo module : item.getModules()) {
             for (TableInfo table : module.getTables()) {
-                tableModuleMap.put(table.getName(), module.getName());
+                tableModuleMap.put(table.getName(), module.getPath());
                 if (TableInfoTypeEnum.TREE.equals(table.getType())) {
                     treeTables.add(table.getName());
                 }
@@ -86,9 +75,11 @@ public class GenerateFileUtils {
         cfg.put("tableModuleMap", tableModuleMap);
         cfg.put("treeTables", treeTables);
 
+        String serverPath = basePath + "/server/";
+
 
         String startModuleName = item.getName() + "-start";
-        String startModulePath = path + "/" + startModuleName;
+        String startModulePath = serverPath + "/" + startModuleName;
         go2Fly("server/pom/startModulePom.xml", startModulePath + "/pom.xml", cfg);
         go2Fly("server/application.java", startModulePath +"/src/main/java/top/keiskeiframework/Application.java", cfg);
         go2Fly("server/conf/SwaggerAddition.java", startModulePath +"/src/main/java/top/keiskeiframework/conf/SwaggerAddition.java", cfg);
@@ -98,12 +89,12 @@ public class GenerateFileUtils {
         go2Fly("server/resources/application-prod.yml", startModulePath +"/src/main/resources/application-prod.yml", cfg);
 
 
-        go2Fly("server/pom/serverPom.xml", path + "pom.xml", cfg);
-        go2Fly("server/build/build.sh", path + "build.sh", cfg);
-        go2Fly("server/build/Dockerfile", path + "Dockerfile", cfg);
+        go2Fly("server/pom/serverPom.xml", serverPath + "pom.xml", cfg);
+        go2Fly("server/build/build.sh", serverPath + "build.sh", cfg);
+        go2Fly("server/build/Dockerfile", serverPath + "Dockerfile", cfg);
         for (ModuleInfo module : item.getModules()) {
             cfg.put("module", module);
-            String modulePath = path + "/" + module.getName();
+            String modulePath = serverPath + "/" + module.getName();
             go2Fly("server/pom/modulePom.xml", modulePath + "/pom.xml", cfg);
             String resultFilePath = modulePath + "/src/main/java/" + module.getPackageName().replace(".", "/") + "/";
             for (TableInfo table : module.getTables()) {
@@ -128,7 +119,19 @@ public class GenerateFileUtils {
             }
         }
 
+        String adminPath = basePath + "/admin/";
+        String routerPath = adminPath + "src/router";
+        for (ModuleInfo module : item.getModules()) {
+            cfg.put("module", module);
 
+            for (TableInfo table : module.getTables()) {
+                cfg.put("table", table);
+                String tablePath = adminPath + "src/views/" + unpFirst(module.getPath()) + "/" + unpFirst(table.getName());
+                go2Fly("pages/page.vue", tablePath + "/index.vue", cfg);
+            }
+            go2Fly("pages/router.js", routerPath + "/modules/" + unpFirst(module.getPath()) + "/" + unpFirst(module.getPath()) + ".js", cfg);
+        }
+        go2Fly("pages/routerIndex.js", routerPath + "/index.js", cfg);
     }
 
     public static void go2Fly(String templateFile, String resultFile, Map<String, Object> cfg) {
@@ -156,7 +159,10 @@ public class GenerateFileUtils {
     }
 
     public static String upFirst(String str) {
-        return str.substring(0,1).toUpperCase() + str.substring(1);
+        return str.substring(0,1).toUpperCase(Locale.ROOT) + str.substring(1);
+    }
+    public static String unpFirst(String str) {
+        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
     }
 
 

@@ -49,7 +49,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                 .consumes(Sets.newHashSet(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 // 返回参数格式
                 .produces(Sets.newHashSet(MediaType.APPLICATION_JSON_VALUE))
-                .tags(Sets.newHashSet("登录/退出"))
+                .tags(Sets.newHashSet("登录"))
                 .parameters(Arrays.asList(
                         new ParameterBuilder()
                                 .description("用户名")
@@ -79,28 +79,10 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                                 ).build()))
                 .build();
 
-        Operation loginOutOperation = new OperationBuilder(new CachingOperationNameGenerator())
-                .method(HttpMethod.POST)
-                .summary("退出登录")
-                .notes("退出登录")
-                // 返回参数格式
-                .produces(Sets.newHashSet(MediaType.APPLICATION_JSON_VALUE))
-                .tags(Sets.newHashSet("登录/退出"))
-                .responseMessages(Collections.singleton(
-                        new ResponseMessageBuilder().code(200).message("请求成功")
-                                .responseModel(new ModelRef(
-                                        "top.keiskeiframework.common.vo.R")
-                                ).build()))
-                .build();
-
-
-        ApiDescription loginApiDescription = new ApiDescription("登陆/退出", "/admin/v1/system/login", "登录接口",
+        ApiDescription loginApiDescription = new ApiDescription("登录", "/admin/v1/system/login", "登录接口",
                 Collections.singletonList(loginOperation), false);
 
-        ApiDescription loginOutApiDescription = new ApiDescription("登陆/退出", "/admin/v1/system/logout", "退出登录",
-                Collections.singletonList(loginOutOperation), false);
-
-        return Arrays.asList(loginApiDescription, loginOutApiDescription);
+        return Collections.singletonList(loginApiDescription);
     }
 
     /**

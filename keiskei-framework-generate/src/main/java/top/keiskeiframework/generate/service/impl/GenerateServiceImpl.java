@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.SecurityUtils;
@@ -17,6 +18,7 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
 import top.keiskeiframework.generate.util.GenerateFileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -36,7 +38,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     @Override
     @Async
-//    @Lockable(key = "#itemId", lockTime = 1000 * 60 * 20, message="代码构建中，请稍候~")
+    @Lockable(key = "#itemId", message="代码构建中，请稍候~")
     public void build(Long itemId) {
 
         if (!BuildStatusEnum.NONE.equals(generateService.refreshStatus(itemId))) {
@@ -64,18 +66,14 @@ public class GenerateServiceImpl implements GenerateService {
             throw new BizException(BizExceptionEnum.ERROR);
         }
         // 拷贝前端基础文件
-//        try {
-//            GenerateFileUtils.copyDir(generateProperties.getBaseAdminPath(), basePath + "/admin/");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            GenerateFileUtils.copyDir(generateProperties.getBaseAdminPath(), basePath + "/admin/");
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // 生成文件
-        GenerateFileUtils.go2Fly(project, basePath + "/server/");
-        // 添加Dockerfile
-
-        // 添加build.sh
-
+        GenerateFileUtils.go2Fly(project, basePath);
         // 文件打包
 
 

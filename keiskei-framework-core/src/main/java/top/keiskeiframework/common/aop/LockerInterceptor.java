@@ -14,12 +14,15 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.integration.redis.util.RedisLockRegistry;
+import org.springframework.util.DigestUtils;
 import top.keiskeiframework.common.annotation.Lockable;
+import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.exception.LockException;
 
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -38,7 +41,7 @@ public class LockerInterceptor {
     @Autowired
     private RedisLockRegistry redisLockRegistry;
 
-    private final static String SPLIT = ":";
+    private final static int MAX_KEY_LENGTH = 64;
 
     @Around(value = "@annotation(top.keiskeiframework.common.annotation.Lockable)")
     public Object aroundLock(ProceedingJoinPoint point) throws Throwable {
@@ -59,7 +62,12 @@ public class LockerInterceptor {
             for (int i = 0; i < arguments.length; i++) {
                 context.setVariable(paramNames[i], arguments[i]);
             }
-            key = lockable.lockName() + SPLIT + point.getTarget().getClass().getName() + "-" + expression.getValue(context, String.class);
+            String tempKey = expression.getValue(context, String.class);
+            assert tempKey != null;
+            if (tempKey.length() > MAX_KEY_LENGTH) {
+                tempKey = DigestUtils.md5DigestAsHex(tempKey.getBytes(StandardCharsets.UTF_8));
+            }
+            key = point.getTarget().getClass().getName() + SystemEnum.CACHE_SPLIT + tempKey;
         }
         Lock lock = redisLockRegistry.obtain(key);
         if (null == lock) {
@@ -84,11 +92,12 @@ public class LockerInterceptor {
             return point.proceed();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+            throw throwable;
+        } finally {
             try {
                 lock.unlock();
             } catch (Exception ignore) {
             }
-            throw throwable;
         }
     }
 }

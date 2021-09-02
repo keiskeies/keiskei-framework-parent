@@ -13,12 +13,12 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ProjectFileJarEnum {
+public enum ProjectInfoFileJarEnum {
     //
     LOCAL("keiskei-framework-file-local"),
     ALI_OSS("keiskei-framework-file-aliass"),
     JD_OSS("keiskei-framework-file-jdoss")
     ;
 
-    private final String jarName;
+    private final String value;
 }

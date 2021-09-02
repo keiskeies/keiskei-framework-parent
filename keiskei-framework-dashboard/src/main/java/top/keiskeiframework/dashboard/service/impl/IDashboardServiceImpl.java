@@ -58,7 +58,7 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #dashboard.id")
     public Dashboard update(Dashboard dashboard) {
         validate(dashboard);
-        return super.update(dashboard, dashboard.getId());
+        return super.update(dashboard);
     }
 
     @Override

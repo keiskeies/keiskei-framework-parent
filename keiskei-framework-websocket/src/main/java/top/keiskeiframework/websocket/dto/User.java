@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen right_way@foxmail.com
- * @data 2020/1/17 17:11
  */
 @Data
 @AllArgsConstructor

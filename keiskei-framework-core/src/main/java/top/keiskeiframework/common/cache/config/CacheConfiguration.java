@@ -45,7 +45,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
 
     @Bean
     public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
-        return new RedisLockRegistry(redisConnectionFactory, "keiskei.lock");
+        return new RedisLockRegistry(redisConnectionFactory, "LOCK", 5 * 60 * 1000);
     }
 
 

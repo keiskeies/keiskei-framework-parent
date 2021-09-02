@@ -47,11 +47,6 @@ spring:
     database: mysql
     hibernate:
       ddl-auto: none
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/main/java
-      exclude: WEB-INF/**
   freemarker:
     cache: false
 management:

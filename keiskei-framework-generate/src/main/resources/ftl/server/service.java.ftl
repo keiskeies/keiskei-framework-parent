@@ -1,7 +1,6 @@
 package ${module.packageName}.service;
 
-<#assign parentNam = table.type?lower_case?cap_first>
-import top.keiskeiframework.common.base.service.${parentNam}Service;
+import top.keiskeiframework.common.base.service.BaseService;
 import ${module.packageName}.entity.${table.name};
 
 /**
@@ -12,6 +11,6 @@ import ${module.packageName}.entity.${table.name};
  * @author ${author}
  * @since ${since}
  */
-public interface I${table.name}Service extends ${parentNam}Service<${table.name}> {
+public interface I${table.name}Service extends BaseService<${table.name}> {
 
 }

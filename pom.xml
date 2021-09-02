@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.keiskeiframework</groupId>
     <artifactId>keiskei-framework-parent</artifactId>
-    <version>1.0.0-Release</version>
+    <version>1.1.0-jpa-Release</version>
     <modules>
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-dashboard</module>
@@ -29,7 +29,7 @@
     </parent>
     <properties>
         <java.version>1.8</java.version>
-        <keiskei.project.version>1.0.0-Release</keiskei.project.version>
+        <keiskei.project.version>1.1.0-jpa-Release</keiskei.project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -171,7 +171,7 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-lombok</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
@@ -191,12 +191,12 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-alioss</artifactId>
-                <version>1.0.0-Release</version>
+                <version>1.1.0-jpa-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-jdoss</artifactId>
-                <version>1.0.0-Release</version>
+                <version>1.1.0-jpa-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
@@ -226,7 +226,7 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-websocket</artifactId>
-                <version>1.0.0-Release</version>
+                <version>1.1.0-jpa-Release</version>
             </dependency>
         </dependencies>
 

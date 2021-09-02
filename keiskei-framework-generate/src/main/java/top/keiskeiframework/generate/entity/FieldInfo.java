@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
-import top.keiskeiframework.generate.enums.FieldRelationEnum;
+import top.keiskeiframework.generate.enums.FieldInfoRelationEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -61,7 +61,7 @@ public class FieldInfo extends BaseEntity {
     private String validate;
 
     @ApiModelProperty(value = "字段关系", dataType = "String")
-    private FieldRelationEnum relation;
+    private FieldInfoRelationEnum relation;
 
     @ApiModelProperty(value = "关系关联表", dataType = "String")
     private String relationEntity;

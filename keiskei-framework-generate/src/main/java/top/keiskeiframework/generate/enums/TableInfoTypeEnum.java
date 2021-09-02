@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
 public enum TableInfoTypeEnum {
 
     //
-    BASE,
+    LIST,
     TREE,
     ;
 }

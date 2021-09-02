@@ -33,8 +33,11 @@ public enum FieldInfoTypeEnum {
     VISIT_TIMES("Integer"),
     ENABLE("Boolean"),
     SORT("Long"),
-    DICTIONARY("");
+    DICTIONARY(""),
+    TAG("String")
 
-    private final String type;
+    ;
+
+    private final String value;
 
 }

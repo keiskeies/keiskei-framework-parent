@@ -8,7 +8,7 @@ package top.keiskeiframework.generate.enums;
  * @author v_chenjiamin
  * @since 2021/5/17 12:11
  */
-public enum FieldRelationEnum {
+public enum FieldInfoRelationEnum {
     // 一对一
     ONE_TO_ONE,
     // 一对多

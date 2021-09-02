@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 登陆退出接口
  * </p>
  *
  * @author ${author}
