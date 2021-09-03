@@ -2,6 +2,7 @@ package top.keiskeiframework.system.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class ScheduledTaskController extends ListController<ScheduledTask> {
 
     @PostMapping("/excute/{id}")
     @ApiOperation("执行")
-    public R<Boolean> patch(@PathVariable Long id) {
+    public R<Boolean> patch(@PathVariable ObjectId id) {
         scheduledTaskService.excute(id);
         return R.ok(Boolean.TRUE);
     }

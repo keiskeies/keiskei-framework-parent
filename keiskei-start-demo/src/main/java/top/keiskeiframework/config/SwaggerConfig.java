@@ -1,6 +1,7 @@
 package top.keiskeiframework.config;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -56,6 +57,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                         .contact(new Contact("James Chen", "http://www.cjm.jx.cn", "right_way@foxmail.com"))
                         .build())
                 .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(ObjectId.class, String.class)
                 .directModelSubstitute(LocalTime.class, String.class)
                 .directModelSubstitute(LocalDateTime.class, String.class);
     }

@@ -7,11 +7,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.lombok.Chartable;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -28,8 +28,7 @@ import java.util.Set;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@Entity
-@Table(name = "sys_user")
+@Document("sys_user")
 @ApiModel(value = "User", description = "管理员")
 @Chartable
 public class User extends BaseEntity {
@@ -53,7 +52,6 @@ public class User extends BaseEntity {
     private Boolean enabled = true;
 
     @ApiModelProperty(value = "用户头像", dataType = "String")
-    @NotBlank(message = "请上传用户头像", groups = {Insert.class})
     private String avatar;
 
     @ApiModelProperty(value = "用户手机号", dataType = "String")
@@ -65,14 +63,14 @@ public class User extends BaseEntity {
     private String email;
 
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.DETACH)
-    @JoinTable(name = "sys_user_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+//    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.DETACH)
+//    @JoinTable(name = "sys_user_role",
+//            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+//    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Department department;
 
     /**

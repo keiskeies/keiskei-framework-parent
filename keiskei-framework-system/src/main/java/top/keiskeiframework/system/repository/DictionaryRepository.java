@@ -1,7 +1,8 @@
 package top.keiskeiframework.system.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.Dictionary;
 
 /**
@@ -12,6 +13,7 @@ import top.keiskeiframework.system.entity.Dictionary;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, JpaSpecificationExecutor<Dictionary> {
+@Repository
+public interface DictionaryRepository extends MongoRepository<Dictionary, ObjectId> {
 
 }

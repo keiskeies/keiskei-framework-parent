@@ -1,10 +1,9 @@
 package top.keiskeiframework.dashboard.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.keiskeiframework.dashboard.entity.Dashboard;
-
-import java.util.List;
 
 /**
  * <p>
@@ -14,13 +13,8 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface DashboardRepository extends JpaRepository<Dashboard, Long>, JpaSpecificationExecutor<Dashboard> {
+@Repository
+public interface DashboardRepository extends MongoRepository<Dashboard, ObjectId> {
 
-    /**
-     * 查询用户下所有图表
-     * @param userId 创建人
-     * @return 。
-     */
-    List<Dashboard> findAllByCreateUserIdOrderByCreateTimeDesc(Long userId);
 
 }

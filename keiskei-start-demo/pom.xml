@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.1.0-jpa-Release</version>
+        <version>1.1.0-mongo-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,38 +13,13 @@
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-system</artifactId>
+            <artifactId>keiskei-framework-data</artifactId>
         </dependency>
         <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-file-local</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-dashboard</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-generate</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-system-workflow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>2.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bgee.log4jdbc-log4j2</groupId>
-            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-            <version>1.16</version>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -74,23 +49,10 @@
                     <optional>true</optional>
                     <scope>true</scope>
                 </dependency>
-                <!--监控sql日志-->
                 <dependency>
-                    <groupId>org.bgee.log4jdbc-log4j2</groupId>
-                    <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-                    <version>1.16</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-actuator</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>io.micrometer</groupId>
-                    <artifactId>micrometer-registry-prometheus</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                    <version>2.0.4</version>
                 </dependency>
                 <dependency>
                     <groupId>com.github.xiaoymin</groupId>

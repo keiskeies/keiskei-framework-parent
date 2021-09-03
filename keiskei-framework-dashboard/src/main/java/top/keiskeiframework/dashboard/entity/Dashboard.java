@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
@@ -16,7 +17,6 @@ import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.dashboard.TimeTypeEnum;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -35,8 +35,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "dashboard")
+@Document("dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
 public class Dashboard extends BaseEntity {
 
@@ -81,8 +80,8 @@ public class Dashboard extends BaseEntity {
     private TimeDeltaEnum fieldDelta;
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dashboard_id")
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "dashboard_id")
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
     private List<DashboardDirection> directions;
 }

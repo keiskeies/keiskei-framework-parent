@@ -7,14 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
-import top.keiskeiframework.common.cache.serivce.CacheStorageService;
-import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.SystemEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.util.SecurityUtils;
-import top.keiskeiframework.common.vo.user.TokenGrantedAuthority;
-import top.keiskeiframework.common.vo.user.TokenUser;
 import top.keiskeiframework.system.dto.UserDto;
 import top.keiskeiframework.system.entity.Department;
 import top.keiskeiframework.system.entity.Permission;
@@ -25,6 +22,9 @@ import top.keiskeiframework.system.repository.UserRepository;
 import top.keiskeiframework.system.service.IDepartmentService;
 import top.keiskeiframework.system.service.IPermissionService;
 import top.keiskeiframework.system.service.IUserService;
+import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.system.vo.user.TokenGrantedAuthority;
+import top.keiskeiframework.system.vo.user.TokenUser;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -65,6 +65,7 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         }
         TokenUser tokenUser = new TokenUser();
         BeanUtils.copyProperties(user, tokenUser);
+        tokenUser.setId(user.getId());
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
             Department department = departmentService.getById(tokenUser.getDepartmentId());
@@ -110,13 +111,13 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(tokenUser, userDto);
 
-        if (SystemEnum.SUPER_ADMIN_ID == tokenUser.getId()) {
+        if (SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
             List<Permission> permissions = permissionService.options();
             userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
             return userDto;
         }
 
-        User user = userRepository.getOne(tokenUser.getId());
+        User user = userRepository.findById(tokenUser.getId()).get();
         Set<Permission> permissions = new HashSet<>();
 
         for (Role role : user.getRoles()) {

@@ -7,13 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -30,8 +29,7 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "dashboard_direction")
+@Document("dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends BaseEntity {
 
@@ -40,14 +38,14 @@ public class DashboardDirection extends BaseEntity {
     private String field;
 
     @ApiModelProperty(value = "实体类", dataType = "String")
-    @NotBlank(message="实体类不能为空", groups = {Insert.class, Update.class})
+    @NotBlank(message = "实体类不能为空", groups = {Insert.class, Update.class})
     private String entityClass;
 
     @ApiModelProperty(value = "实体类名称", dataType = "String")
-    @NotBlank(message="实体类名称不能为空", groups = {Insert.class, Update.class})
+    @NotBlank(message = "实体类名称不能为空", groups = {Insert.class, Update.class})
     private String entityName;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
-    @NotNull(message="图表类型不能为空", groups = {Insert.class, Update.class})
+    @NotNull(message = "图表类型不能为空", groups = {Insert.class, Update.class})
     private ChartType type;
 }

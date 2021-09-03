@@ -2,6 +2,7 @@ package top.keiskeiframework.dashboard.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +13,6 @@ import top.keiskeiframework.common.base.service.EntityFactory;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
-import top.keiskeiframework.common.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.service.IDashboardService;
@@ -38,13 +38,12 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        Dashboard dashboard = Dashboard.builder().createUserId(SecurityUtils.getSessionUser().getId()).build();
-        return R.ok(dashboardService.options(dashboard));
+        return R.ok(dashboardService.options());
     }
 
     @ApiOperation("详情")
-    @GetMapping("/{id:-?[\\d]+}")
-    public R<?> getOne(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public R<?> getOne(@PathVariable ObjectId id) {
         return R.ok(dashboardService.getChartOption(id));
     }
 
@@ -68,9 +67,9 @@ public class DashboardController {
         return R.ok(Boolean.TRUE);
     }
 
-    @DeleteMapping("/{id:-?[\\d]+}")
+    @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long id) {
+    public R<Boolean> delete(@PathVariable ObjectId id) {
         dashboardService.deleteById(id);
         return R.ok(Boolean.TRUE);
     }

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.1.0-jpa-Release</version>
+        <version>1.1.0-mongo-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

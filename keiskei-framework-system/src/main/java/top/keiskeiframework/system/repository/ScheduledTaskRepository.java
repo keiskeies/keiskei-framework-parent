@@ -1,7 +1,8 @@
 package top.keiskeiframework.system.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.ScheduledTask;
 
 /**
@@ -12,7 +13,8 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface ScheduledTaskRepository extends JpaRepository<ScheduledTask, Long>, JpaSpecificationExecutor<ScheduledTask> {
+@Repository 
+public interface ScheduledTaskRepository extends MongoRepository<ScheduledTask, ObjectId> {
     /**
      * 时间表达式查找
      *

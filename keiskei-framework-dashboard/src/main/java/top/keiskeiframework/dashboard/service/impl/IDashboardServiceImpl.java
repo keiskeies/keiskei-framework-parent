@@ -2,7 +2,7 @@ package top.keiskeiframework.dashboard.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.types.ObjectId;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -63,25 +63,37 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id")
-    public void deleteById(Long id) {
+    public void deleteById(ObjectId id) {
         super.deleteById(id);
     }
 
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
-    public ChartOptionVO getChartOption(Long id) {
+    public ChartOptionVO getChartOption(ObjectId id) {
         Dashboard dashboard = super.getById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
         LocalDateTime[] startAndEnd;
         switch (dashboard.getTimeType()) {
-            case CURRENT_DAY: startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null); break;
-            case CURRENT_WEEKS: startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null); break;
-            case CURRENT_MONTH: startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null); break;
-            case CURRENT_QUARTER: startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null); break;
-            case CURRENT_YEAR: startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null); break;
-            default: startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())}; break;
+            case CURRENT_DAY:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfDay(null);
+                break;
+            case CURRENT_WEEKS:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfWeek(null);
+                break;
+            case CURRENT_MONTH:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfMonth(null);
+                break;
+            case CURRENT_QUARTER:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfQuarter(null);
+                break;
+            case CURRENT_YEAR:
+                startAndEnd = DateTimeUtils.getStartAndEndDayOfYear(null);
+                break;
+            default:
+                startAndEnd = new LocalDateTime[]{DateTimeUtils.strToTime(dashboard.getStart()), DateTimeUtils.strToTime(dashboard.getEnd())};
+                break;
         }
 
         ChartRequestDTO chartRequestDTO = new ChartRequestDTO(

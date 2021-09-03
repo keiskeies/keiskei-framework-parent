@@ -7,12 +7,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.validate.Insert;
+import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.data.SortBy;
+import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -28,8 +27,7 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sys_permission")
+@Document("sys_permission")
 @ApiModel(value = "Permission", description = "操作权限")
 public class Permission extends TreeEntity {
 

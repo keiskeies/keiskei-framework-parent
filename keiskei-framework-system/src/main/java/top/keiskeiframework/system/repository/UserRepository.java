@@ -1,13 +1,15 @@
 package top.keiskeiframework.system.repository;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * @author v_chenjiamin
  */
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+@Repository
+public interface UserRepository extends MongoRepository<User, ObjectId> {
     /**
      * 通过用户名查找用户
      * @param username 用户名

@@ -1,8 +1,9 @@
 package top.keiskeiframework.system.repository;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
+@Repository 
+public interface RoleRepository extends MongoRepository<Role, ObjectId> {
 
 }

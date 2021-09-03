@@ -1,12 +1,14 @@
 package top.keiskeiframework.system.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.util.data.ObjectIdSerializer;
 import top.keiskeiframework.system.entity.ScheduledTask;
 import top.keiskeiframework.system.service.IScheduledTaskService;
 import top.keiskeiframework.system.thread.ScheduledOfTask;
@@ -29,7 +31,7 @@ public class IScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> im
 
 
     @Override
-    public void excute(Long id) {
+    public void excute(ObjectId id) {
 
         ScheduledTask scheduledTask = scheduledTaskService.getById(id);
         Assert.notNull(scheduledTask, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());

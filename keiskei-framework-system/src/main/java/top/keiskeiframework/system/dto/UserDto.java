@@ -2,7 +2,7 @@ package top.keiskeiframework.system.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import top.keiskeiframework.common.vo.user.TokenGrantedAuthority;
+import top.keiskeiframework.system.vo.user.TokenGrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 public class UserDto {
 
-    private Long id;
+    private Object id;
 
     @ApiModelProperty(value = "登录用户名", dataType = "String")
     private String username;
