@@ -20,7 +20,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> implements IScheduledTaskService {
+public class IScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Long> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired

@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -16,14 +15,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import top.keiskeiframework.common.annotation.validate.Select;
-import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.annotation.validate.UpdatePart;
 import top.keiskeiframework.common.base.service.impl.AbstractAuditorAware;
 import top.keiskeiframework.common.util.SecurityUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -42,13 +37,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity implements Serializable {
+public class SuperEntity<ID extends Serializable> implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "行不能为空", groups = {Update.class, UpdatePart.class, Select.class})
-    protected Long id;
+    @Transient
+    private ID id;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -66,16 +59,15 @@ public class BaseEntity implements Serializable {
     protected LocalDateTime updateTime;
 
     /**
-     * 物理删除标识
-     */
-    @JsonIgnore
-    protected Boolean d;
-
-
-    /**
      * 数据所属部门
      */
     protected String p;
+
+
+    @PrePersist
+    protected void onCreate() {
+        p = SecurityUtils.getDepartment();
+    }
 
     /**
      * 数据创建人
@@ -91,13 +83,6 @@ public class BaseEntity implements Serializable {
     @LastModifiedBy
     protected Long updateUserId;
 
-
-    @PrePersist
-    protected void onCreate() {
-        d = Boolean.FALSE;
-        p = SecurityUtils.getDepartment();
-    }
-
     /**
      * 图表下标
      */
@@ -109,15 +94,6 @@ public class BaseEntity implements Serializable {
      */
     @Transient
     protected Long indexNumber;
-
-    /**
-     * 访问次数
-     */
-    @Transient
-    protected Long visit;
-
-
-
 
 
 }

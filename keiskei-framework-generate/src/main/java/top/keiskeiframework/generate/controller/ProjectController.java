@@ -21,19 +21,19 @@ import top.keiskeiframework.generate.service.GenerateService;
 @RestController
 @RequestMapping("/admin/v1/generate/project")
 @Api(tags = "文件生成 - 项目管理")
-public class ProjectController extends ListController<ProjectInfo> {
+public class ProjectController extends ListController<ProjectInfo, Long> {
 
     @Autowired
     private GenerateService generateService;
 
-    @PostMapping("/{id:-?[\\d]+}/build/")
+    @PostMapping("/{id}/build/")
     @ApiOperation("创建代码")
     public R<Boolean> build(@PathVariable("id") Long id) {
         generateService.build(id);
         return R.ok(true, "项目构建中，请稍等。。。");
     }
 
-    @GetMapping("/{id:-?[\\d]+}/status")
+    @GetMapping("/{id}/status")
     @ApiOperation("代码创建状态")
     public R<BuildStatusEnum> status(@PathVariable("id") Long id) {
         return R.ok(generateService.refreshStatus(id));

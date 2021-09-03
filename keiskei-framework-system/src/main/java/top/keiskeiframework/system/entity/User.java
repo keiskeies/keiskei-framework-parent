@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
 import top.keiskeiframework.lombok.Chartable;
 
 import javax.persistence.*;
@@ -32,7 +32,7 @@ import java.util.Set;
 @Table(name = "sys_user")
 @ApiModel(value = "User", description = "管理员")
 @Chartable
-public class User extends BaseEntity {
+public class User extends BaseLongIdEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
 
@@ -53,7 +53,6 @@ public class User extends BaseEntity {
     private Boolean enabled = true;
 
     @ApiModelProperty(value = "用户头像", dataType = "String")
-    @NotBlank(message = "请上传用户头像", groups = {Insert.class})
     private String avatar;
 
     @ApiModelProperty(value = "用户手机号", dataType = "String")

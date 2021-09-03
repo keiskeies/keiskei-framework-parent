@@ -16,7 +16,7 @@ import top.keiskeiframework.system.service.IPermissionService;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IPermissionServiceImpl extends TreeServiceImpl<Permission> implements IPermissionService {
+public class IPermissionServiceImpl extends TreeServiceImpl<Permission, Long> implements IPermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;

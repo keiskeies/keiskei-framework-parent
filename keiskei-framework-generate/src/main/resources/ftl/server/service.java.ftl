@@ -11,6 +11,6 @@ import ${module.packageName}.entity.${table.name};
  * @author ${author}
  * @since ${since}
  */
-public interface I${table.name}Service extends BaseService<${table.name}> {
+public interface I${table.name}Service extends BaseService<${table.name}, ${table.idType.value}> {
 
 }

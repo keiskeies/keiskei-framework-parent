@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService, OperateLogService {
+public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> implements IOperateLogService, OperateLogService {
 
     @Autowired
     private OperateLogRepository operateLogRepository;

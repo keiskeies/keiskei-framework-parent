@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -32,7 +31,7 @@ import java.util.Set;
 @Entity
 @Table(name = "sys_role")
 @ApiModel(value = "Role", description = "角色")
-public class Role extends BaseEntity {
+public class Role extends BaseLongIdEntity {
 
     private static final long serialVersionUID = 1L;
 

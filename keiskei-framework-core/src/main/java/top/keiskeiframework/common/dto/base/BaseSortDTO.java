@@ -13,14 +13,14 @@ import java.io.Serializable;
  * @author cjm
  */
 @Data
-public class BaseSortDTO implements Serializable {
+public class BaseSortDTO<ID> implements Serializable {
     private static final long serialVersionUID = -899342361316647661L;
 
     /**
      * id1
      */
     @NotNull
-    private Long id1;
+    private ID id1;
 
     /**
      * sortby1 修改后的排序
@@ -31,7 +31,7 @@ public class BaseSortDTO implements Serializable {
      * ID2
      */
     @NotNull
-    private Long id2;
+    private ID id2;
     /**
      * 修改后的排序
      */

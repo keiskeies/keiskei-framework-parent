@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.SuperEntity;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,15 +24,15 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class ListController<T extends BaseEntity> {
+public class ListController<T extends SuperEntity<ID>, ID extends Serializable> {
 
     @Autowired
-    private ListServiceImpl<T> baseService;
+    private ListServiceImpl<T, ID> baseService;
 
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequest<T> request) {
+    public R<Page<T>> list(BaseRequest<T, ID> request) {
         return R.ok(baseService.page(request));
     }
 
@@ -42,9 +43,9 @@ public class ListController<T extends BaseEntity> {
         return R.ok(baseService.options());
     }
 
-    @GetMapping("/{id:-?[\\d]+}")
+    @GetMapping("/{id}")
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable Long id) {
+    public R<T> getOne(@PathVariable ID id) {
         return R.ok(baseService.getById(id));
     }
 
@@ -67,9 +68,9 @@ public class ListController<T extends BaseEntity> {
         return R.ok(Boolean.TRUE);
     }
 
-    @DeleteMapping("/{id:-?[\\d]+}")
+    @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long id) {
+    public R<Boolean> delete(@PathVariable ID id) {
         baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }

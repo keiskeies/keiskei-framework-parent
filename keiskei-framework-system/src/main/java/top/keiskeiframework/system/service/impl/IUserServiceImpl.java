@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @since 2020年12月10日11:41:05
  */
 @Service
-public class IUserServiceImpl extends ListServiceImpl<User> implements IUserService {
+public class IUserServiceImpl extends ListServiceImpl<User, Long> implements IUserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -65,6 +65,7 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         }
         TokenUser tokenUser = new TokenUser();
         BeanUtils.copyProperties(user, tokenUser);
+        tokenUser.setId(user.getId());
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
             Department department = departmentService.getById(tokenUser.getDepartmentId());

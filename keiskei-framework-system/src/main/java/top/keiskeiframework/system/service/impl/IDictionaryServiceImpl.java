@@ -16,7 +16,7 @@ import top.keiskeiframework.system.service.IDictionaryService;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IDictionaryServiceImpl extends TreeServiceImpl<Dictionary> implements IDictionaryService {
+public class IDictionaryServiceImpl extends TreeServiceImpl<Dictionary, Long> implements IDictionaryService {
 
     @Autowired
     private DictionaryRepository dictionaryRepository;

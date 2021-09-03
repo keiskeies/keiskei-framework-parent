@@ -10,6 +10,7 @@ import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.vo.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,10 +21,10 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class TreeController<T extends TreeEntity> {
+public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
 
     @Autowired
-    private TreeServiceImpl<T> baseService;
+    private TreeServiceImpl<T, ID> baseService;
 
 
     @GetMapping(value = {"", "/options"})
@@ -33,9 +34,9 @@ public class TreeController<T extends TreeEntity> {
         return R.ok(new TreeEntityUtils<>(list).getTree(null));
     }
 
-    @GetMapping("/{id:-?[\\d]+}")
+    @GetMapping("/{id}")
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable Long id) {
+    public R<T> getOne(@PathVariable ID id) {
         return R.ok(baseService.getById(id));
     }
 
@@ -53,14 +54,14 @@ public class TreeController<T extends TreeEntity> {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
         baseService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }
 
-    @DeleteMapping("/{id:-?[\\d]+}")
+    @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long id) {
+    public R<Boolean> delete(@PathVariable ID id) {
         baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }

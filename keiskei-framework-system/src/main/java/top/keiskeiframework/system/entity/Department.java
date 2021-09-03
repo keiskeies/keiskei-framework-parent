@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.TreeEntity;
+import top.keiskeiframework.common.base.entity.TreeLongIdEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ import java.util.Set;
 @Entity
 @Table(name = "sys_department")
 @ApiModel(value = "Department", description = "部门管理")
-public class Department extends TreeEntity {
+public class Department extends TreeLongIdEntity {
 
     private static final long serialVersionUID = 4845168322937249454L;
 

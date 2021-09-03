@@ -23,7 +23,6 @@ public class SecurityUtils {
         if (!(obj instanceof TokenUser)) {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
         }
-
         return (TokenUser) obj;
     }
 
@@ -38,6 +37,7 @@ public class SecurityUtils {
     }
 
     private final static String UN_KNOWN = "unKnown";
+
     public static String getIpAddress(HttpServletRequest request) {
         String xip = request.getHeader("X-Real-IP");
         String xFor = request.getHeader("X-Forwarded-For");

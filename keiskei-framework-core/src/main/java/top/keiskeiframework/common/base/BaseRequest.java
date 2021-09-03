@@ -1,15 +1,8 @@
 package top.keiskeiframework.common.base;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,13 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
+import top.keiskeiframework.common.base.entity.SuperEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
-import javax.persistence.criteria.*;
+import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +28,7 @@ import java.util.Set;
  * </p>
  * @since 2020/11/24 23:08
  */
-public class BaseRequest<T> {
+public class BaseRequest<T extends SuperEntity<ID>, ID extends Serializable> {
     /**
      * 默认排序字段
      */

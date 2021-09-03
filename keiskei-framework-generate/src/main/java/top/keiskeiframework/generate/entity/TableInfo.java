@@ -8,8 +8,9 @@ import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
 import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
+import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
 import javax.persistence.*;
@@ -33,7 +34,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
-public class TableInfo extends BaseEntity {
+public class TableInfo extends BaseLongIdEntity {
 
     private static final long serialVersionUID = 7715195221883078519L;
 
@@ -44,6 +45,9 @@ public class TableInfo extends BaseEntity {
     @ApiModelProperty(value = "表注释", dataType = "String")
     @NotBlank(message = "表注释不能为空", groups = {Insert.class})
     private String comment;
+
+    @ApiModelProperty(value = "主键类型", dataType = "String")
+    private TableInfoIdTypeEnum idType = TableInfoIdTypeEnum.LONG;
 
     @ApiModelProperty(value = "表名称", dataType = "String")
     @NotBlank(message = "表名称不能为空", groups = {Insert.class})

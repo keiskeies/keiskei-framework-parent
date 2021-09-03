@@ -22,7 +22,7 @@ import ${module.packageName}.service.I${table.name}Service;
 @RestController
 @RequestMapping("/admin/v1/${module.path?uncap_first}/${table.name?uncap_first}")
 @Api(tags = "${module.comment!} - ${table.comment!}")
-public class ${table.name}Controller extends ${parentNam}<${table.name}>{
+public class ${table.name}Controller extends ${parentNam}<${table.name}, ${table.idType.value}>{
 
     @Autowired
     private I${table.name}Service ${table.name?uncap_first}Service;

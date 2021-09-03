@@ -3,7 +3,7 @@ package ${module.packageName}.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 <#assign parentName = table.type?lower_case?cap_first>
-import top.keiskeiframework.common.base.entity.${parentName}Entity;
+import top.keiskeiframework.common.base.entity.*;
 import top.keiskeiframework.common.util.data*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -41,7 +41,7 @@ import java.util.List;
 @Entity
 @Table(name = "${table.tableName}")
 @ApiModel(value="${table.name}", description="${table.comment!}")
-public class ${table.name} extends ${parentName}Entity {
+public class ${table.name} extends ${parentName}${table.idType.value}Entity {
 
     private static final long serialVersionUID = ${serialVersionUID}L;
 

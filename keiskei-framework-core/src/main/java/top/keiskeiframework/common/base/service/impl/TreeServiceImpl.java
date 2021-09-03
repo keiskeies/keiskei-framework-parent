@@ -14,6 +14,7 @@ import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -25,14 +26,14 @@ import java.util.Set;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
+public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> extends AbstractBaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
 
     protected final static String SPILT = "/";
     protected final static String CACHE_NAME = "CACHE:TREE";
 
     @Autowired
-    private TreeServiceImpl<T> baseService;
+    private TreeServiceImpl<T, ID> baseService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
@@ -98,25 +99,25 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
-    public void changeSort(BaseSortDTO baseSortDto) {
+    public void changeSort(BaseSortDTO<ID> baseSortDto) {
         super.changeSort(baseSortDto);
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.DELETE)
-    public void deleteByIdAndNotify(Long id) {
-        Set<Long> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
-        for (Long cid : childIds) {
+    public void deleteByIdAndNotify(ID id) {
+        Set<ID> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        for (ID cid : childIds) {
             jpaRepository.deleteById(cid);
         }
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
-    public void deleteById(Long id) {
-        Set<Long> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
-        for (Long cid : childIds) {
+    public void deleteById(ID id) {
+        Set<ID> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        for (ID cid : childIds) {
             jpaRepository.deleteById(cid);
         }
     }

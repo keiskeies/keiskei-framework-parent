@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.entity.SuperEntity;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T> {
+public interface BaseService<T extends SuperEntity<ID>, ID extends Serializable> {
 
     /**
      * 列表查询
@@ -29,7 +31,7 @@ public interface BaseService<T> {
      * @param request 列表条件
      * @return .
      */
-    Page<T> page(BaseRequest<T> request);
+    Page<T> page(BaseRequest<T, ID> request);
 
     Page<T> page(Specification<T> s, Pageable p);
 
@@ -70,7 +72,7 @@ public interface BaseService<T> {
      * @param id id
      * @return .
      */
-    T getById(Long id);
+    T getById(ID id);
 
     /**
      * 新增
@@ -117,21 +119,21 @@ public interface BaseService<T> {
      *
      * @param baseSortDto .
      */
-    void changeSort(BaseSortDTO baseSortDto);
+    void changeSort(BaseSortDTO<ID> baseSortDto);
 
     /**
      * 删除
      *
      * @param id id
      */
-    void deleteById(Long id);
+    void deleteById(ID id);
 
     /**
      * 删除并通知
      *
      * @param id 。
      */
-    void deleteByIdAndNotify(Long id);
+    void deleteByIdAndNotify(ID id);
 
 
     /**

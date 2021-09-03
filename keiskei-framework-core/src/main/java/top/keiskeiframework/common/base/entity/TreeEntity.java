@@ -25,14 +25,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class TreeEntity extends BaseEntity implements Serializable {
+public class TreeEntity<ID extends Serializable> extends SuperEntity<ID> implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
-    protected Long parentId;
+    protected ID parentId;
 
     protected String sign;
 
     @Transient
-    protected List<? extends TreeEntity> children;
+    protected List<? extends TreeEntity<ID>> children;
 
 }

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +30,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
-public class ModuleInfo extends BaseEntity {
+public class ModuleInfo extends BaseLongIdEntity {
 
     private static final long serialVersionUID = 754302484437506602L;
 

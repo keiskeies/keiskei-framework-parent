@@ -8,13 +8,14 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.SuperEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +30,12 @@ import java.util.List;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
+public class ListServiceImpl<T extends SuperEntity<ID>, ID extends Serializable> extends AbstractBaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
 
     protected final static String CACHE_NAME = "CACHE:BASE";
     @Autowired
-    private ListServiceImpl<T> baseService;
+    private ListServiceImpl<T, ID> baseService;
 
     @Override
     public List<T> options() {
@@ -54,14 +55,14 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
         List<T> result = new ArrayList<>(ids.size());
 
         for (Object id : ids) {
-            result.add(baseService.getById((Long) id));
+            result.add(baseService.getById((ID) id));
         }
         return result;
     }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
-    public T getById(Long id) {
+    public T getById(ID id) {
         return super.getById(id);
     }
 
@@ -95,13 +96,13 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
     @OperateNotify(type = OperateNotifyType.DELETE)
-    public void deleteByIdAndNotify(Long id) {
+    public void deleteByIdAndNotify(ID id) {
         super.deleteById(id);
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
-    public void deleteById(Long id) {
+    public void deleteById(ID id) {
         super.deleteById(id);
     }
 

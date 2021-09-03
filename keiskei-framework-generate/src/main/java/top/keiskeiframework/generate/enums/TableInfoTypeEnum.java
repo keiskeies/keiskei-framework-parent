@@ -1,11 +1,5 @@
 package top.keiskeiframework.generate.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import top.keiskeiframework.common.base.entity.BaseEntity;
-
-import java.lang.reflect.Field;
-
 /**
  * <p>
  * 表类型

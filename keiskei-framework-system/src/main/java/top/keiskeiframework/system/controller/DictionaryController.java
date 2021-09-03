@@ -17,7 +17,7 @@ import top.keiskeiframework.system.entity.Dictionary;
 @RestController
 @RequestMapping("/admin/v1/system/dictionary")
 @Api(tags = "系统设置 - 数据字典")
-public class DictionaryController extends TreeController<Dictionary> {
+public class DictionaryController extends TreeController<Dictionary, Long> {
 
 
 

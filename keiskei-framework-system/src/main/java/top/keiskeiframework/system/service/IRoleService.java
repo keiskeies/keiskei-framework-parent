@@ -11,6 +11,6 @@ import top.keiskeiframework.system.entity.Role;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IRoleService extends BaseService<Role> {
+public interface IRoleService extends BaseService<Role, Long> {
 
 }

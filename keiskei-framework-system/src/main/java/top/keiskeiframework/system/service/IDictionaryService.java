@@ -15,6 +15,6 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IDictionaryService extends BaseService<Dictionary> {
+public interface IDictionaryService extends BaseService<Dictionary, Long> {
 
 }

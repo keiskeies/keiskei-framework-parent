@@ -3,6 +3,7 @@ package top.keiskeiframework.common.util;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,10 +13,10 @@ import java.util.*;
  *
  * @author 陈加敏
  */
-public class TreeEntityUtils<T extends TreeEntity> {
+public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> {
 
 
-    private final Map<Long, List<T>> map;
+    private final Map<ID, List<T>> map;
 
     public TreeEntityUtils(List<T> list) {
         map = new LinkedHashMap<>();
@@ -36,7 +37,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public List<T> getTree(Long id) {
+    public List<T> getTree(ID id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -54,9 +55,9 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<Long> getChildIds(Long id) {
+    public Set<ID> getChildIds(ID id) {
         List<T> tempList = map.get(id);
-        Set<Long> tempIds = new HashSet<>();
+        Set<ID> tempIds = new HashSet<>();
         tempIds.add(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return tempIds;
@@ -73,7 +74,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<T> getChildren(Long id) {
+    public Set<T> getChildren(ID id) {
         List<T> tempList = map.get(id);
         Set<T> children = new HashSet<>();
         if (CollectionUtils.isEmpty(tempList)) {

@@ -1,8 +1,5 @@
 package top.keiskeiframework.common.base.service.impl;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -15,7 +12,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.SuperEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -25,8 +22,8 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.*;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -45,10 +42,10 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
-public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
+public abstract class AbstractBaseServiceImpl<T extends SuperEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     @Autowired
-    protected JpaRepository<T, Long> jpaRepository;
+    protected JpaRepository<T, ID> jpaRepository;
     @Autowired
     protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
     @Autowired
@@ -92,7 +89,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     }
 
     @Override
-    public Page<T> page(BaseRequest<T> request) {
+    public Page<T> page(BaseRequest<T, ID> request) {
         Class<T> tClass = getTClass();
         return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), request.getPageable(tClass));
     }
@@ -136,28 +133,12 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     }
 
     @Override
-    public T getById(Long id) {
+    public T getById(ID id) {
         return jpaRepository.findById(id).orElse(null);
     }
 
     @Override
     public T save(T t) {
-        Field[] fields = t.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                long count = jpaRepository.count();
-                try {
-                    field.setAccessible(true);
-                    if (null == field.get(t)) {
-                        field.set(t, ++count);
-                    }
-                } catch (IllegalAccessException ignored) {
-                }
-                break;
-            }
-        }
-
         return jpaRepository.save(t);
     }
 
@@ -193,7 +174,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
 
 
     @Override
-    public void changeSort(BaseSortDTO baseSortDto) {
+    public void changeSort(BaseSortDTO<ID> baseSortDto) {
         try {
             Class<T> clazz = getTClass();
             Field[] fields = clazz.getDeclaredFields();
@@ -223,7 +204,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(ID id) {
         jpaRepository.deleteById(id);
         this.reconfirmIndex();
     }

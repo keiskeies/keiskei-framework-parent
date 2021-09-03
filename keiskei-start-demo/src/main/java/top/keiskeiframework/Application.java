@@ -17,7 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  */
 @SpringBootApplication
 @EnableCaching
-@EnableWebSecurity
+//@EnableWebSecurity
 @EnableScheduling
 @EnableJpaAuditing
 public class Application {

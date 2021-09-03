@@ -6,12 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.Version;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -35,7 +32,7 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "sys_scheduled_task")
 @ApiModel(value = "ScheduledTask", description = "定时任务")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class ScheduledTask extends BaseEntity {
+public class ScheduledTask extends BaseLongIdEntity {
 
     private static final long serialVersionUID = -2520015535285512159L;
 

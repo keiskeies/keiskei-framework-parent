@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
+import top.keiskeiframework.common.base.entity.TreeLongIdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,7 +32,7 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "sys_permission")
 @ApiModel(value = "Permission", description = "操作权限")
-public class Permission extends TreeEntity {
+public class Permission extends TreeLongIdEntity {
 
     private static final long serialVersionUID = -7872341210410988194L;
 

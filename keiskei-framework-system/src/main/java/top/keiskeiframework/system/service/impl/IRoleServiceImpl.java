@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IRoleServiceImpl extends ListServiceImpl<Role> implements IRoleService {
+public class IRoleServiceImpl extends ListServiceImpl<Role, Long> implements IRoleService {
 
     @Autowired
     private RoleRepository roleRepository;

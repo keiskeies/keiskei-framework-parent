@@ -11,8 +11,10 @@ import org.hibernate.collection.internal.PersistentBag;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
+import top.keiskeiframework.common.base.entity.TreeLongIdEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 @Entity
 @Table(name = "sys_dictionary")
 @ApiModel(value = "Dictionary", description = "数据字段")
-public class Dictionary extends TreeEntity {
+public class Dictionary extends TreeLongIdEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -57,5 +59,10 @@ public class Dictionary extends TreeEntity {
     @ApiModelProperty(value = "排序", dataType = "Long")
     @SortBy(desc = false)
     private Long sortBy;
+
+    @PreUpdate
+    public void onUpdate() {
+        sortBy = id;
+    }
 
 }

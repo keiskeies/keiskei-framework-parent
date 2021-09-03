@@ -14,7 +14,7 @@ import top.keiskeiframework.system.service.IDepartmentService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IDepartmentServiceImpl extends TreeServiceImpl<Department> implements IDepartmentService {
+public class IDepartmentServiceImpl extends TreeServiceImpl<Department, Long> implements IDepartmentService {
 
 
 

@@ -16,7 +16,7 @@ import top.keiskeiframework.generate.service.IModuleInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo> implements IModuleInfoService {
+public class IModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo, Long> implements IModuleInfoService {
 
     @Autowired
     private ModuleInfoRepository moduleInfoRepository;

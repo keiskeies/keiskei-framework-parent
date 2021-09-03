@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/v1/system/permission")
 @Api(tags = "系统设置 - 权限管理")
-public class PermissionController extends TreeController<Permission> {
+public class PermissionController extends TreeController<Permission, Long> {
 
 
 }

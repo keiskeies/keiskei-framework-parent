@@ -43,7 +43,7 @@ public class DashboardController {
     }
 
     @ApiOperation("详情")
-    @GetMapping("/{id:-?[\\d]+}")
+    @GetMapping("/{id}")
     public R<?> getOne(@PathVariable Long id) {
         return R.ok(dashboardService.getChartOption(id));
     }
@@ -63,12 +63,12 @@ public class DashboardController {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<Long> baseSortDto) {
         dashboardService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }
 
-    @DeleteMapping("/{id:-?[\\d]+}")
+    @DeleteMapping("/{id}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable Long id) {
         dashboardService.deleteById(id);

@@ -17,7 +17,7 @@ import top.keiskeiframework.log.entity.OperateLog;
 @RestController
 @RequestMapping("/admin/v1/log/operateLog")
 @Api(tags = "系统设置 - 操作日志")
-public class OperateLogController extends ListController<OperateLog> {
+public class OperateLogController extends ListController<OperateLog, Long> {
 
 
 }

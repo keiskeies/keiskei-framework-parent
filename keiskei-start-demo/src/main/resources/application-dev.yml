@@ -8,6 +8,7 @@ server:
 logging:
   level:
     top.keiskeiframework: debug
+    org.springframework: debug
 #    jdbc: error
   pattern:
     file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
@@ -24,11 +25,11 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
   datasource:
-    name: news_stand
+    name: test_demo
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:123456}
-    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo1}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
     timeout: 6000
     password: ${REDIS_PASSWORD:123456}
@@ -41,7 +42,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
