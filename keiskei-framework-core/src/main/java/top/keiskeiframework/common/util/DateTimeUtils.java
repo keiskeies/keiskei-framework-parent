@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.util;
 
-import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
+
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

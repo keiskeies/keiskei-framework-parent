@@ -60,7 +60,15 @@ public class HttpClientUtils {
         }
     }
 
-    // 发送GET请求
+    /**
+     * <p>
+     * 发送GET请求
+     * </p>
+     *
+     * @param path           请求路径
+     * @param parametersBody GET参数
+     * @return 。
+     */
     public static HttpResponse getRequestResponse(String path, List<NameValuePair> parametersBody) {
         try {
             URIBuilder uriBuilder = new URIBuilder(path);
@@ -80,19 +88,41 @@ public class HttpClientUtils {
         }
     }
 
-    // 发送POST请求（普通表单形式）
-    public static String postForm(String path, List<NameValuePair> parametersBody, List<NameValuePair> headers) {
-        HttpEntity entity = new UrlEncodedFormEntity(parametersBody, StandardCharsets.UTF_8);
+    /**
+     * 发送POST请求（普通表单形式）
+     *
+     * @param path     请求路径
+     * @param formData form表单数据
+     * @param headers  请求头
+     * @return ，
+     */
+    public static String postForm(String path, List<NameValuePair> formData, List<NameValuePair> headers) {
+        HttpEntity entity = new UrlEncodedFormEntity(formData, StandardCharsets.UTF_8);
         return postRequest(path, "application/x-www-form-urlencoded", entity, headers);
     }
 
-    // 发送POST请求（JSON形式）
+    /**
+     * 发送POST请求（JSON形式）
+     *
+     * @param path    。
+     * @param json    。
+     * @param headers 。
+     * @return 。
+     */
     public static String postJSON(String path, String json, List<NameValuePair> headers) {
         StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         return postRequest(path, "application/json", entity, headers);
     }
 
-    // 发送POST请求
+    /**
+     * 发送POST请求
+     *
+     * @param path      。
+     * @param mediaType 。
+     * @param entity    。
+     * @param headers   。
+     * @return 。
+     */
     public static String postRequest(String path, String mediaType, HttpEntity entity, List<NameValuePair> headers) {
         log.debug("[postRequest] resourceUrl: {}", path);
         HttpPost post = new HttpPost(path);

@@ -8,11 +8,12 @@ import com.aliyun.oss.event.ProgressListener;
 import com.aliyun.oss.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.cache.serivce.CacheStorageService;
+import top.keiskeiframework.common.cache.service.CacheStorageService;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.file.alioss.config.FileAliOssProperties;
@@ -45,8 +46,8 @@ public class AliOssFileStorageServiceImpl implements FileStorageService, Progres
     @Autowired
     private FileAliOssProperties fileAliOssProperties;
     @Autowired
+    @Qualifier("cacheStorageServiceFile")
     private CacheStorageService cacheStorageService;
-
     @Resource(name = "longOssClient")
     private OSS longOssClient;
 

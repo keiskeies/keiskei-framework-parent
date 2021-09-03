@@ -16,6 +16,11 @@
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.11</version>
+        </dependency>
     </dependencies>
 
 </project>

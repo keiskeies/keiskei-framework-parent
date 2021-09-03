@@ -16,9 +16,5 @@
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
         </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-lombok</artifactId>
-        </dependency>
     </dependencies>
 </project>
