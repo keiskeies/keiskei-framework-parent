@@ -6,11 +6,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.cache.serivce.CacheStorageService;
+import top.keiskeiframework.common.cache.service.CacheStorageService;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.file.dto.FileInfo;
@@ -43,8 +44,8 @@ public class JdOssFileStorageServiceImpl implements FileStorageService, Progress
     @Autowired
     private FileJdOssProperties fileJdOssProperties;
     @Autowired
+    @Qualifier("cacheStorageServiceFile")
     private CacheStorageService cacheStorageService;
-
     @Resource(name = "longOssClient")
     private AmazonS3 longOssClient;
 
