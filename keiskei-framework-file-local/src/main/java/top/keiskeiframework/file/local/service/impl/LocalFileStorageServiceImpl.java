@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.cache.service.CacheStorageService;
+import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.file.dto.FileInfo;

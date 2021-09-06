@@ -9,21 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>keiskei-framework-file</artifactId>
+    <artifactId>keiskei-framework-cache-redis</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.11</version>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-redis</artifactId>
         </dependency>
     </dependencies>
 

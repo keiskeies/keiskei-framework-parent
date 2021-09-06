@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:@environment@}
+  application:
+    name: demo_test
+
+
+
+

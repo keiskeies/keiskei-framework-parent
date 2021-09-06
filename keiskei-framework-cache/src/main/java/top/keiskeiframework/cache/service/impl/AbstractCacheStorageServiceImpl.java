@@ -1,7 +1,6 @@
-package top.keiskeiframework.file.service.impl;
+package top.keiskeiframework.cache.service.impl;
 
-import lombok.NoArgsConstructor;
-import top.keiskeiframework.common.cache.service.CacheStorageService;
+import top.keiskeiframework.cache.service.CacheStorageService;
 
 import java.util.Collection;
 import java.util.List;

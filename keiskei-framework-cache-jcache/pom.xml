@@ -9,21 +9,20 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>keiskei-framework-file</artifactId>
+    <artifactId>keiskei-framework-cache-jcache</artifactId>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
     <dependencies>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.11</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,41 @@
+server:
+  port: 10037
+#  servlet:
+#    session:
+#      timeout: P60D
+#      cookie:
+#        http-only: false
+logging:
+  level:
+    top.keiskeiframework: debug
+#    org.springframework: debug
+#    jdbc: error
+  pattern:
+    file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
+    console: "%d [%X{mdcTraceId}] [%thread] %-5level %logger{36} %line - %msg%n"
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  messages:
+    basename: i18n/messages
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: WEB-INF/**
+  freemarker:
+    cache: false
+  cache:
+    type: simple
+  metrics:
+    tags:
+      application: ${spring.application.name}
+keiskei:
+  cache-expired:
+    - FILE_MINUTE: 6000
+
+

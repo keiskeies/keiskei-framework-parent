@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.keiskeiframework.common.cache.service.CacheStorageService;
+import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.file.annotations.MergingChunks;
 import top.keiskeiframework.file.annotations.UploadPart;

@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.exception;
+package top.keiskeiframework.cache.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,7 +8,7 @@ import top.keiskeiframework.common.enums.exception.IErrorCode;
 
 /**
  * <p>
- * 全局业务异常
+ * 锁业务异常
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -16,7 +16,7 @@ import top.keiskeiframework.common.enums.exception.IErrorCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BizException extends RuntimeException {
+public class LockException extends RuntimeException {
 
     private static final long serialVersionUID = -7098200834996845904L;
 
@@ -30,18 +30,18 @@ public class BizException extends RuntimeException {
      */
     private String message;
 
-    public BizException(IErrorCode errorCode) {
+    public LockException(IErrorCode errorCode) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMsg();
     }
 
 
-    public BizException(String message) {
+    public LockException(String message) {
         this.code = ApiErrorCode.FAILED.getCode();
         this.message = message;
     }
 
-    public BizException(long code, String message) {
+    public LockException(long code, String message) {
         this.code = code;
         this.message = message;
     }

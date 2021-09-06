@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.cache.service;
+package top.keiskeiframework.cache.service;
 
 import java.util.Collection;
 import java.util.List;
