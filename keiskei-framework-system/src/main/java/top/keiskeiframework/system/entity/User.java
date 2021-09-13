@@ -63,14 +63,9 @@ public class User extends BaseEntity {
     private String email;
 
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
-//    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.DETACH)
-//    @JoinTable(name = "sys_user_role",
-//            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-//            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
-//    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Department department;
 
     /**

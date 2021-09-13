@@ -39,9 +39,5 @@ public class Role extends BaseEntity {
     @NotBlank(message = "角色名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
-//    @ManyToMany(targetEntity = Permission.class, cascade = CascadeType.MERGE)
-//    @JoinTable(name = "sys_role_permission",
-//            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
-//            inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
     private Set<Permission> permissions;
 }
