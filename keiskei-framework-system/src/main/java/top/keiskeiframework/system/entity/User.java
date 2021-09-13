@@ -63,10 +63,10 @@ public class User extends BaseEntity {
     private String email;
 
 //    @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
-//    private Set<Role> roles;
+    private Set<Role> roles;
 
 //    @ApiModelProperty(value = "用户部门", dataType = "Department")
-//    private Department department;
+    private Department department;
 
     /**
      * 最后登录时间
