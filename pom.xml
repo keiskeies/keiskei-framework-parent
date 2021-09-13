@@ -17,6 +17,8 @@
         <module>keiskei-framework-cache-redis</module>
         <module>keiskei-framework-cache-jcache</module>
         <module>keiskei-framework-cache-simple</module>
+        <module>keiskei-framework-notify</module>
+        <module>keiskei-framework-notify-email</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -123,6 +125,16 @@
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache-simple</artifactId>
                 <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-notify</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-notify-email</artifactId>
+                <version>1.0.0-Release</version>
             </dependency>
         </dependencies>
 
