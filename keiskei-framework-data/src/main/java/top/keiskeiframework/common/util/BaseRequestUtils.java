@@ -26,18 +26,19 @@ import java.util.stream.Collectors;
  * @since 2021/5/20 18:42
  */
 public class BaseRequestUtils {
-    protected static final String IGNORE_COLUMN = "serialVersionUID";
+    private static final String IGNORE_COLUMN = "serialVersionUID";
+    private static final int BT_SIZE = 2;
 
     /**
      * BaseEntity可显示字段
      * {@link BaseEntity}
      */
-    protected static final Set<String> BASE_ENTITY_FIELD_SET;
+    private static final Set<String> BASE_ENTITY_FIELD_SET;
     /**
      * TreeEntity可显示字段
      * {@link TreeEntity}
      */
-    protected static final Set<String> TREE_ENTITY_FIELD_SET;
+    private static final Set<String> TREE_ENTITY_FIELD_SET;
 
     /**
      * 比较关系
@@ -82,20 +83,9 @@ public class BaseRequestUtils {
     public static <T> Query getQuery(List<QueryConditionDTO> conditions, Class<T> tClass) {
         Set<String> fieldSet = getFieldSet(tClass);
         Query query = new Query();
-        confirmQuery(query, conditions, fieldSet);
-        return query;
-    }
 
 
-    /**
-     * 针对字段值拼装条件
-     *
-     * @param fields 实体类字段
-     * @param query  查询条件
-     * @param t      实体类
-     * @param <T>    实体类
-     */
-    private static <T> void confirmCriteriaQuery(Field[] fields, Query query, T t) {
+        Field[] fields = tClass.getFields();
         for (Field field : fields) {
             if (IGNORE_COLUMN.equals(field.getName())) {
                 continue;
@@ -109,19 +99,16 @@ public class BaseRequestUtils {
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
                 query.with(Sort.by(sortBy.desc() ? Sort.Direction.DESC : Sort.Direction.ASC, field.getName()));
+            } else {
+                query.with(Sort.by(Sort.Direction.DESC, "id"));
             }
-            field.setAccessible(true);
-            try {
-                Object value = field.get(t);
-                if (null != value) {
-                    query.addCriteria(Criteria.where(field.getName()).is(value));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
         }
+
+        confirmQuery(query, conditions, fieldSet);
+
+        return query;
     }
+
 
     /**
      * 获取Predicate
@@ -129,9 +116,8 @@ public class BaseRequestUtils {
      * @param query      query
      * @param conditions 查询条件
      * @param fieldSet   实体类字段
-     * @param <T>        实体类
      */
-    private static <T> void confirmQuery(Query query, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
+    private static void confirmQuery(Query query, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
         if (!CollectionUtils.isEmpty(conditions)) {
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
@@ -142,7 +128,6 @@ public class BaseRequestUtils {
                 if (CollectionUtils.isEmpty(values)) {
                     continue;
                 }
-
                 addCriteriaDefinition(query, condition);
             }
         }
@@ -155,9 +140,9 @@ public class BaseRequestUtils {
      * @param query     整条件
      * @param condition 当前条件
      */
-    public static void addCriteriaDefinition(Query query, QueryConditionDTO condition) {
+    private static void addCriteriaDefinition(Query query, QueryConditionDTO condition) {
         if (ConditionEnum.BT.equals(condition.getCondition())) {
-            if (condition.getValue().size() == 2) {
+            if (BT_SIZE == condition.getValue().size()) {
                 if (null != condition.getValue().get(0) && !StringUtils.isEmpty(condition.getValue().get(0).toString())) {
 
                     query.addCriteria(
@@ -234,21 +219,6 @@ public class BaseRequestUtils {
             }
         }
     }
-//
-//    /**
-//     * 添加部门条件
-//     *
-//     * @param query 总条件
-//     */
-//    public static void addDepartment(Query query) {
-//        TokenUser tokenUser = SecurityUtils.getSessionUser();
-//        if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
-//            Assert.hasText(tokenUser.getDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-//            query.addCriteria(
-//                    Criteria.where("p").regex(tokenUser.getDepartment() + ".*")
-//            );
-//        }
-//    }
 
     /**
      * 获取类字段

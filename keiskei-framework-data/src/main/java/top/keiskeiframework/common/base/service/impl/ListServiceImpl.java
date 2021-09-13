@@ -2,7 +2,6 @@ package top.keiskeiframework.common.base.service.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -52,7 +51,7 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
-    public T getById(ObjectId id) {
+    public T getById(String id) {
         return super.getById(id);
     }
 
@@ -86,13 +85,13 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
     @OperateNotify(type = OperateNotifyType.DELETE)
-    public void deleteByIdAndNotify(ObjectId id) {
+    public void deleteByIdAndNotify(String id) {
         super.deleteById(id);
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
-    public void deleteById(ObjectId id) {
+    public void deleteById(String id) {
         super.deleteById(id);
     }
 

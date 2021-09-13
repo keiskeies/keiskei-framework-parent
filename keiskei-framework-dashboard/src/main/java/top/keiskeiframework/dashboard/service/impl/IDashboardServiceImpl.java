@@ -2,7 +2,6 @@ package top.keiskeiframework.dashboard.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -63,14 +62,14 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id")
-    public void deleteById(ObjectId id) {
+    public void deleteById(String id) {
         super.deleteById(id);
     }
 
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
-    public ChartOptionVO getChartOption(ObjectId id) {
+    public ChartOptionVO getChartOption(String id) {
         Dashboard dashboard = super.getById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 

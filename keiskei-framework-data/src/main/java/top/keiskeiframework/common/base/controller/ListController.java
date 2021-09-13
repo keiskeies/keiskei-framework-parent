@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.controller;
 
 import io.swagger.annotations.ApiOperation;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +13,6 @@ import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.vo.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -46,7 +44,7 @@ public class ListController<T extends BaseEntity> {
 
     @GetMapping("/{id}")
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable ObjectId id) {
+    public R<T> getOne(@PathVariable String id) {
         return R.ok(baseService.getById(id));
     }
 
@@ -71,7 +69,7 @@ public class ListController<T extends BaseEntity> {
 
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable ObjectId id) {
+    public R<Boolean> delete(@PathVariable String id) {
         baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }

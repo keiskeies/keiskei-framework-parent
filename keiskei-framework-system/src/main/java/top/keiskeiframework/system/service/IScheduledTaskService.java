@@ -1,6 +1,5 @@
 package top.keiskeiframework.system.service;
 
-import org.bson.types.ObjectId;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.system.entity.ScheduledTask;
 
@@ -18,6 +17,6 @@ public interface IScheduledTaskService extends BaseService<ScheduledTask> {
      * 更改任务状态
      * @param id .
      */
-    void excute(ObjectId id);
+    void excute(String id);
 
 }

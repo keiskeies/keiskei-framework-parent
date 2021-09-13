@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.base.service;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,6 @@ import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +44,8 @@ public interface BaseService<T extends BaseEntity> {
      */
     List<T> findAll(Query q);
 
+    List<T> findAll(BaseRequest<T> request);
+
     List<T> findAll(Query q, Sort sort);
 
     List<T> findAll(Example<T> e);
@@ -73,7 +73,7 @@ public interface BaseService<T extends BaseEntity> {
      * @param id id
      * @return .
      */
-    T getById(ObjectId id);
+    T getById(String id);
 
     /**
      * 新增
@@ -127,14 +127,14 @@ public interface BaseService<T extends BaseEntity> {
      *
      * @param id id
      */
-    void deleteById(ObjectId id);
+    void deleteById(String id);
 
     /**
      * 删除并通知
      *
      * @param id 。
      */
-    void deleteByIdAndNotify(ObjectId id);
+    void deleteByIdAndNotify(String id);
 
 
     /**

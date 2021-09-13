@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.repository;
 
-import org.bson.types.ObjectId;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.Permission;
@@ -13,7 +13,8 @@ import top.keiskeiframework.system.entity.Permission;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-@Repository 
-public interface PermissionRepository extends MongoRepository<Permission, ObjectId> {
+@Repository
+@ConditionalOnProperty({"keiskei.system.use-permission"})
+public interface PermissionRepository extends MongoRepository<Permission, String> {
 
 }

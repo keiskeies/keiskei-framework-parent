@@ -35,9 +35,23 @@ spring:
     type:
   data:
     mongodb:
-      database: dw_aminer1
-      port: 27017
-      host: 127.0.0.1
+      database: ${MONGO_DATABASE:dw_aminer1}
+      port: ${MONGO_PORT:27017}
+      host: ${MONGO_HOST:127.0.0.1}
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+  datasource:
+    name: dw_aminer
+  mail:
+    host: ${EMAIL_HOST}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    port: ${EMAIL_PORT}
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
 keiskei:
   cache-expired:
     FILE_MINUTE:
@@ -45,10 +59,8 @@ keiskei:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
     cross: true
     maximum-sessions: 1
-  generate:
-    base-path: /Users/cjm/IdeaProjects/items/user/
-    base-admin-path: /Users/cjm/WebstormProjects/keiskei-admin-template/
-    base-front-path: /Users/cjm/IdeaProjects/items/front/
+    use-permission: ${KEISKEI_USE_PERMISSION:true}
+
 
 
 

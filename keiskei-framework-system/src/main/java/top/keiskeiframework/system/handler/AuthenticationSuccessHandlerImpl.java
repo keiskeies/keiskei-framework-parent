@@ -2,7 +2,6 @@ package top.keiskeiframework.system.handler;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Component;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
-import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.vo.user.TokenUser;
 import top.keiskeiframework.system.util.ResponseUtils;
+import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.system.vo.user.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +50,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
             OperateLogDTO operateLog = new OperateLogDTO();
             operateLog.setIp(SecurityUtils.getIpAddress(request));
             operateLog.setType(OperateTypeEnum.LOGIN.getType());
-            operateLog.setUserId(new ObjectId(tokenUser.getId()));
+            operateLog.setUserId(tokenUser.getId());
             operateLogService.saveLog(operateLog);
         }
     }

@@ -68,4 +68,8 @@ public class SystemProperties {
      * 密码错误锁定分钟数
      */
     private Long lockMinutes = 10L;
+    /**
+     * 使用权限控制
+     */
+    private Boolean usePermission = false;
 }

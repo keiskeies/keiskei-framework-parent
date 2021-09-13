@@ -2,7 +2,6 @@ package top.keiskeiframework.system.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -10,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.vo.user.TokenUser;
 import top.keiskeiframework.system.dto.UserDto;
 import top.keiskeiframework.system.dto.UserPasswordDto;
 import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.service.IUserService;
 import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.system.vo.user.TokenUser;
 
 /**
  * <p>
@@ -43,7 +42,7 @@ public class SelfController {
     @ApiOperation("修改")
     public R<UserDto> update(@RequestBody UserDto userDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.getById(new ObjectId(tokenUser.getId()));
+        User user = userService.getById(tokenUser.getId());
         BeanUtils.copyPropertiesIgnoreNull(userDto, user);
         userService.update(user);
         return R.ok(userDto);
@@ -53,14 +52,13 @@ public class SelfController {
     @ApiOperation("修改密码")
     public R<Boolean> update(@RequestBody @Validated UserPasswordDto userPasswordDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.getById(new ObjectId(tokenUser.getId()));
+        User user = userService.getById(tokenUser.getId());
         Assert.isTrue(userPasswordDto.match(user.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
 
         user.setPassword(userPasswordDto.getNewPassword());
         userService.update(user);
         return R.ok(Boolean.TRUE);
     }
-
 
 
 }

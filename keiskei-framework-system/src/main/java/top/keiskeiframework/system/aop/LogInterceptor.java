@@ -10,7 +10,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.bson.types.ObjectId;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,8 +19,8 @@ import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
-import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
+import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.user.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +56,7 @@ public class LogInterceptor {
 
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
-            operateLog.setUserId(new ObjectId(tokenUser.getId()));
+            operateLog.setUserId(tokenUser.getId());
             MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
 
 
@@ -103,9 +102,12 @@ public class LogInterceptor {
         } finally {
             try {
                 long end = System.currentTimeMillis();
-                if (result != null && !GET.equalsIgnoreCase(operateLog.getType())) {
-                    operateLog.setResponseParam(JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter));
-                    log.info("{} - end - result: {} - timer: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
+                if (null != result) {
+                    String responseParam = JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter);
+                    if (!GET.equalsIgnoreCase(operateLog.getType())) {
+                        operateLog.setResponseParam(responseParam);
+                    }
+                    log.info("{} - end - result: {} - timer: {}", operateLog.getName(), responseParam, end - start);
                 } else {
                     log.info("{} - end - timer: {}", operateLog.getName(), end - start);
                 }

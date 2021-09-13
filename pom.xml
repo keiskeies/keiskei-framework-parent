@@ -166,12 +166,17 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-data</artifactId>
-                <version>${keiskei.project.version}</version>
+                <artifactId>keiskei-framework-notify</artifactId>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-generate</artifactId>
+                <artifactId>keiskei-framework-notify-email</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-data</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>

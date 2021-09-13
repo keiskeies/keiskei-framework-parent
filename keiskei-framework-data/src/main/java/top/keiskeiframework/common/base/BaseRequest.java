@@ -11,12 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +33,7 @@ public class BaseRequest<T extends BaseEntity> {
     /**
      * 默认排序字段
      */
-    private static final String DEFAULT_ORDER_COLUMN = "createTime";
+    private static final String DEFAULT_ORDER_COLUMN = "id";
 
     @ApiModelProperty(value = "页码", dataType = "Integer", example = "1")
     private Integer page = 1;
@@ -49,7 +47,7 @@ public class BaseRequest<T extends BaseEntity> {
     @ApiModelProperty(value = "升序字段", dataType = "String", example = "id")
     private String asc;
 
-    @ApiModelProperty(value = "查询条件", dataType = "String", example = "{\"column\":\"id\", \"condition\": \"IN\", \"value\": [1001,1002] }")
+    @ApiModelProperty(value = "查询条件", dataType = "String", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
     private String conditions;
 
     /**
@@ -67,22 +65,14 @@ public class BaseRequest<T extends BaseEntity> {
             orders.add(Sort.Order.asc(asc));
         }
 
-        if (CollectionUtils.isEmpty(orders)) {
-            Field[] fields = tClass.getDeclaredFields();
-            for (Field field : fields) {
-                SortBy sortBy = field.getAnnotation(SortBy.class);
-                if (null != sortBy) {
-                    orders.add(new Sort.Order(sortBy.desc() ? Sort.Direction.DESC : Sort.Direction.ASC, field.getName()));
-                }
-            }
-            if (CollectionUtils.isEmpty(orders)) {
-                orders.add(Sort.Order.desc(DEFAULT_ORDER_COLUMN));
-            }
+        if (!CollectionUtils.isEmpty(orders)) {
+            Sort sort = Sort.by(orders);
+            return PageRequest.of(this.page - 1, this.size, sort);
+        } else {
+            return PageRequest.of(this.page - 1, this.size);
         }
 
-        Sort sort = Sort.by(orders);
 
-        return PageRequest.of(this.page - 1, this.size, sort);
     }
 
     /**

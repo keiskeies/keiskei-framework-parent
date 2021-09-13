@@ -1,10 +1,7 @@
 package top.keiskeiframework.system.vo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import lombok.Data;
-import org.bson.types.ObjectId;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -43,7 +40,7 @@ public class TokenUser implements UserDetails {
      * 所属部门
      */
     @JsonIgnore
-    private ObjectId departmentId;
+    private String departmentId;
     /**
      * 部门标识
      */

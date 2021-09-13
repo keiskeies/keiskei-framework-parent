@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.dto.log;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
 
 import java.io.Serializable;
 
@@ -21,7 +20,7 @@ public class OperateLogDTO implements Serializable {
     /**
      * 操作人员
      */
-    private ObjectId userId;
+    private String userId;
     /**
      * 操作IP
      */

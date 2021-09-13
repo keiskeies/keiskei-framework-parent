@@ -20,6 +20,6 @@ public class TokenGrantedAuthority implements GrantedAuthority {
 
     private static final long serialVersionUID = -7873909088341560213L;
 
-    private Object id;
+    private String id;
     private String authority;
 }

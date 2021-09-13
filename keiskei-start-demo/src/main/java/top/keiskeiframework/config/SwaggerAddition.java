@@ -2,6 +2,7 @@ package top.keiskeiframework.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Sets;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import java.util.List;
  * @since 2021/8/25 14:53
  */
 @Component
+@Profile({"dev"})
 public class SwaggerAddition implements ApiListingScannerPlugin {
 
     /**

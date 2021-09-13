@@ -2,7 +2,6 @@ package top.keiskeiframework.dashboard.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
@@ -43,7 +42,7 @@ public class DashboardController {
 
     @ApiOperation("详情")
     @GetMapping("/{id}")
-    public R<?> getOne(@PathVariable ObjectId id) {
+    public R<?> getOne(@PathVariable String id) {
         return R.ok(dashboardService.getChartOption(id));
     }
 
@@ -69,7 +68,7 @@ public class DashboardController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable ObjectId id) {
+    public R<Boolean> delete(@PathVariable String id) {
         dashboardService.deleteById(id);
         return R.ok(Boolean.TRUE);
     }

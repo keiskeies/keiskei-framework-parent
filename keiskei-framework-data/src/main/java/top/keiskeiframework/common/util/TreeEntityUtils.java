@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.util;
 
-import org.bson.types.ObjectId;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
@@ -38,7 +37,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public List<T> getTree(ObjectId id) {
+    public List<T> getTree(String id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -57,9 +56,9 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<ObjectId> getChildIds(ObjectId id) {
+    public Set<String> getChildIds(String id) {
         List<T> tempList = map.get(id);
-        Set<ObjectId> tempIds = new HashSet<>();
+        Set<String> tempIds = new HashSet<>();
         tempIds.add(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return tempIds;
@@ -77,7 +76,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<T> getChildren(ObjectId id) {
+    public Set<T> getChildren(String id) {
         List<T> tempList = map.get(id);
         Set<T> children = new HashSet<>();
         if (CollectionUtils.isEmpty(tempList)) {

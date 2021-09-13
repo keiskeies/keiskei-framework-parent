@@ -21,8 +21,7 @@ public class ResponseUtils {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH");
             response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers",
-                    "*");
+            response.setHeader("Access-Control-Allow-Headers", "*");
         }
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(message);

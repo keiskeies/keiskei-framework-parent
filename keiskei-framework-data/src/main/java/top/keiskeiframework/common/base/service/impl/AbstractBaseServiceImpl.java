@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.base.service.impl;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
 
     @Autowired
-    protected MongoRepository<T, ObjectId> mongoRepository;
+    protected MongoRepository<T, String> mongoRepository;
     @Autowired
     protected MongoTemplate mongoTemplate;
 
@@ -68,6 +67,14 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Override
     public List<T> findAll(Query q) {
         Class<T> tClass = getTClass();
+        return mongoTemplate.find(q, tClass);
+    }
+
+
+    @Override
+    public List<T> findAll(BaseRequest<T> request) {
+        Class<T> tClass = getTClass();
+        Query q = request.getQuery(tClass);
         return mongoTemplate.find(q, tClass);
     }
 
@@ -118,6 +125,8 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         return mongoRepository.findAll(Sort.by(orders));
     }
 
+
+
     @Override
     public List<T> options(T t) {
         Field[] fields = t.getClass().getDeclaredFields();
@@ -137,7 +146,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     }
 
     @Override
-    public T getById(ObjectId id) {
+    public T getById(String id) {
         return mongoRepository.findById(id).orElse(null);
     }
 
@@ -184,6 +193,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
             Field[] fields = clazz.getDeclaredFields();
             T t1 = clazz.newInstance();
             T t2 = clazz.newInstance();
+            boolean hasSortField = false;
             for (Field field : fields) {
                 if ("id".equals(field.getName())) {
                     field.setAccessible(true);
@@ -192,14 +202,17 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
                 } else {
                     SortBy sortBy = field.getAnnotation(SortBy.class);
                     if (null != sortBy) {
+                        hasSortField = true;
                         field.setAccessible(true);
                         field.set(t1, baseSortDto.getSortBy2());
                         field.set(t2, baseSortDto.getSortBy1());
                     }
                 }
             }
-            mongoRepository.save(t1);
-            mongoRepository.save(t2);
+            if (hasSortField) {
+                mongoRepository.save(t1);
+                mongoRepository.save(t2);
+            }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -208,7 +221,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     }
 
     @Override
-    public void deleteById(ObjectId id) {
+    public void deleteById(String id) {
         mongoRepository.deleteById(id);
     }
 

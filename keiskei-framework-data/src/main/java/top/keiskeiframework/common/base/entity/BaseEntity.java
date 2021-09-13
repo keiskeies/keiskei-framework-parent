@@ -1,16 +1,14 @@
 package top.keiskeiframework.common.base.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import top.keiskeiframework.common.util.data.ObjectIdSerializer;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 
@@ -30,9 +28,9 @@ import java.io.Serializable;
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
-    @Id
     @ApiModelProperty(value = "ID", dataType = "String")
-    protected ObjectId id;
+    @MongoId(FieldType.OBJECT_ID)
+    private String id;
 
     /**
      * 图表下标

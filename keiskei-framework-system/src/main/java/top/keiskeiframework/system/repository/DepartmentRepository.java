@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.repository;
 
-import org.bson.types.ObjectId;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import top.keiskeiframework.system.entity.Department;
@@ -14,6 +14,7 @@ import top.keiskeiframework.system.entity.Department;
  * @since 2020-12-16 13:36:30
  */
 @Repository
-public interface DepartmentRepository extends MongoRepository<Department, ObjectId> {
+@ConditionalOnProperty({"keiskei.system.use-department"})
+public interface DepartmentRepository extends MongoRepository<Department, String> {
 
 }

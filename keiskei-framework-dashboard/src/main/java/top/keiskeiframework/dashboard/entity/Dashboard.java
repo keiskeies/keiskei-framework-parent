@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
@@ -80,8 +81,6 @@ public class Dashboard extends BaseEntity {
     private TimeDeltaEnum fieldDelta;
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "dashboard_id")
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
     private List<DashboardDirection> directions;
 }

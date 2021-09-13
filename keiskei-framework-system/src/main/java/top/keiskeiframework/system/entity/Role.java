@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
@@ -39,5 +40,6 @@ public class Role extends BaseEntity {
     @NotBlank(message = "角色名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
+    @DBRef
     private Set<Permission> permissions;
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -62,10 +63,12 @@ public class User extends BaseEntity {
     @NotBlank(message = "用户邮箱不能为空", groups = {Insert.class})
     private String email;
 
-//    @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
+    @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
+    @DBRef
     private Set<Role> roles;
 
-//    @ApiModelProperty(value = "用户部门", dataType = "Department")
+    @ApiModelProperty(value = "用户部门", dataType = "Department")
+    @DBRef
     private Department department;
 
     /**

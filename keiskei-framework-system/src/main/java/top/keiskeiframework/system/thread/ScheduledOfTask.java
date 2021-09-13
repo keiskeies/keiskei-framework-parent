@@ -1,7 +1,6 @@
 package top.keiskeiframework.system.thread;
 
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.context.ApplicationContext;
 import top.keiskeiframework.common.util.SpringUtils;
 import top.keiskeiframework.system.entity.ScheduledTask;
@@ -14,11 +13,12 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
 @Setter
 public class ScheduledOfTask implements Runnable {
 
-    private ObjectId id;
+    private String id;
     protected ApplicationContext applicationContext;
 
     /**
      * 定时任务方法
+     *
      * @param scheduledTask 定时任务
      */
     public void execute(ScheduledTask scheduledTask) {
@@ -30,11 +30,14 @@ public class ScheduledOfTask implements Runnable {
      */
     @Override
     public void run() {
-        IScheduledTaskService scheduledTaskService = SpringUtils.getBean(IScheduledTaskService.class);
-        ScheduledTask scheduledTask = scheduledTaskService.getById(id);
-        if (null == scheduledTask || !scheduledTask.getEnable()) {
-            return;
+        try {
+            IScheduledTaskService scheduledTaskService = SpringUtils.getBean(IScheduledTaskService.class);
+            ScheduledTask scheduledTask = scheduledTaskService.getById(id);
+            if (null == scheduledTask || !scheduledTask.getEnable()) {
+                return;
+            }
+            execute(scheduledTask);
+        } catch (Exception ignored) {
         }
-        execute(scheduledTask);
     }
 }

@@ -20,8 +20,8 @@
             <artifactId>keiskei-framework-system</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-notify-email</artifactId>
         </dependency>
 
     </dependencies>
@@ -33,6 +33,12 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>
@@ -52,6 +58,10 @@
                     <artifactId>spring-boot-devtools</artifactId>
                     <optional>true</optional>
                     <scope>true</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-test</artifactId>
                 </dependency>
                 <dependency>
                     <groupId>com.github.xiaoymin</groupId>

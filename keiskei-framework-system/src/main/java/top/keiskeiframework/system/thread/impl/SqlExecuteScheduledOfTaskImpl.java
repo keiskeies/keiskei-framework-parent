@@ -1,6 +1,7 @@
 package top.keiskeiframework.system.thread.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import top.keiskeiframework.common.base.SqlService;
 import top.keiskeiframework.system.entity.ScheduledTask;
@@ -16,6 +17,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  */
 @Component
 @Slf4j
+@ConditionalOnProperty({"keiskei.system.use-scheduled-task"})
 public class SqlExecuteScheduledOfTaskImpl extends ScheduledOfTask {
 
 

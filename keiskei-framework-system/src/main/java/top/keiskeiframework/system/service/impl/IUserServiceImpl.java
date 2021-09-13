@@ -1,6 +1,5 @@
 package top.keiskeiframework.system.service.impl;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,9 +47,9 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
     private CacheStorageService cacheStorageService;
     @Autowired
     private SystemProperties systemProperties;
-    @Autowired
+    @Autowired(required = false)
     private IDepartmentService departmentService;
-    @Autowired
+    @Autowired(required = false)
     private IPermissionService permissionService;
 
 
@@ -66,13 +65,14 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         }
         TokenUser tokenUser = new TokenUser();
         BeanUtils.copyProperties(user, tokenUser);
-        tokenUser.setId(user.getId().toHexString());
+        tokenUser.setId(user.getId());
         if (!SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
 
-            Department department = departmentService.getById(tokenUser.getDepartmentId());
-            Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
-
-            tokenUser.setDepartment(department.getSign());
+            if (null != departmentService) {
+                Department department = departmentService.getById(tokenUser.getDepartmentId());
+                Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
+                tokenUser.setDepartment(department.getSign());
+            }
 
             LocalDateTime now = LocalDateTime.now();
             tokenUser.setAccountNonExpired(null != user.getAccountExpiredTime() && user.getAccountExpiredTime().isAfter(now));
@@ -113,12 +113,14 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         BeanUtils.copyProperties(tokenUser, userDto);
 
         if (SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
-            List<Permission> permissions = permissionService.options();
-            userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
+            if (null != permissionService) {
+                List<Permission> permissions = permissionService.options();
+                userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
+            }
             return userDto;
         }
 
-        User user = userRepository.findById(new ObjectId(tokenUser.getId())).get();
+        User user = userRepository.findById(tokenUser.getId()).get();
         Set<Permission> permissions = new HashSet<>();
 
         for (Role role : user.getRoles()) {

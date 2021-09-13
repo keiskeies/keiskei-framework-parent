@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,7 +13,6 @@ import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -104,18 +102,18 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.DELETE)
-    public void deleteByIdAndNotify(ObjectId id) {
-        Set<ObjectId> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
-        for (ObjectId cid : childIds) {
+    public void deleteByIdAndNotify(String id) {
+        Set<String> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        for (String cid : childIds) {
             mongoRepository.deleteById(cid);
         }
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
-    public void deleteById(ObjectId id) {
-        Set<ObjectId> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
-        for (ObjectId cid : childIds) {
+    public void deleteById(String id) {
+        Set<String> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        for (String cid : childIds) {
             mongoRepository.deleteById(cid);
         }
     }

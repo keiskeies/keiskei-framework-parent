@@ -20,7 +20,7 @@ public class BaseSortDTO implements Serializable {
      * id1
      */
     @NotNull
-    private Object id1;
+    private String id1;
 
     /**
      * sortby1 修改后的排序
@@ -31,7 +31,7 @@ public class BaseSortDTO implements Serializable {
      * ID2
      */
     @NotNull
-    private Object id2;
+    private String id2;
     /**
      * 修改后的排序
      */
