@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.service.impl;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -65,8 +66,8 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         }
         TokenUser tokenUser = new TokenUser();
         BeanUtils.copyProperties(user, tokenUser);
-        tokenUser.setId(user.getId());
-        if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
+        tokenUser.setId(user.getId().toHexString());
+        if (!SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
 
             Department department = departmentService.getById(tokenUser.getDepartmentId());
             Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
@@ -117,7 +118,7 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
             return userDto;
         }
 
-        User user = userRepository.findById(tokenUser.getId()).get();
+        User user = userRepository.findById(new ObjectId(tokenUser.getId())).get();
         Set<Permission> permissions = new HashSet<>();
 
         for (Role role : user.getRoles()) {

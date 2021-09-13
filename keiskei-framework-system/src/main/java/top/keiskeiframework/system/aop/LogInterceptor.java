@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.bson.types.ObjectId;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,7 +57,7 @@ public class LogInterceptor {
 
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
-            operateLog.setUserId(tokenUser.getId());
+            operateLog.setUserId(new ObjectId(tokenUser.getId()));
             MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
 
 

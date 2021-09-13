@@ -1,6 +1,8 @@
 package top.keiskeiframework.system.vo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,7 @@ public class TokenUser implements UserDetails {
 
     private static final long serialVersionUID = 6452938173658688276L;
 
-    private ObjectId id;
+    private String id;
     private String name;
     private String avatar;
     private String phone;

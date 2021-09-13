@@ -2,6 +2,7 @@ package top.keiskeiframework.common.enums;
 
 import org.bson.types.ObjectId;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ public class SystemEnum {
     /**
      * 超级管理员ID
      */
-    public final static ObjectId SUPER_ADMIN_ID = new ObjectId(new Date(1994, 10, 11));
+    public final static String SUPER_ADMIN_ID = "248c4100db5a343808736a58";
     /**
      * 用户密码错误次数key前缀
      */
