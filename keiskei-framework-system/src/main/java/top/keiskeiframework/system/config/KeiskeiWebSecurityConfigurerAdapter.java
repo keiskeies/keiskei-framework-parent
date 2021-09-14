@@ -2,7 +2,11 @@ package top.keiskeiframework.system.config;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
+import top.keiskeiframework.common.util.JwtTokenUtils;
+import top.keiskeiframework.system.filter.JwtAuthenticationTokenFilter;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
@@ -40,16 +44,18 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     @Autowired
     private LogoutHandlerImpl logoutHandlerImpl;
     @Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
     private SystemProperties systemProperties;
     @Autowired
     private IUserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().sessionManagement().maximumSessions(systemProperties.getMaximumSessions());
-        if (!systemProperties.getCross()) {
-            http.cors().disable();
-        }
+        //使用自定义权限认证失败处理 - 不使用重定向
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
+        // 由于使用的是JWT，我们这里不需要csrf , 并且关闭缓存
+        http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().defaultsDisabled().cacheControl();
         // 不进行拦截的路径
         http.authorizeRequests().antMatchers("/api/**").permitAll();
@@ -73,7 +79,11 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         }
 
         http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
-
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 禁用缓存
+        http.headers().cacheControl();
+        JwtTokenUtils.EXPIRES = systemProperties.getTokenMinutes();
+        JwtTokenUtils.SECRET = systemProperties.getTokenSecret();
     }
 
     @Override

@@ -20,6 +20,7 @@ public class TokenUser implements UserDetails {
     private static final long serialVersionUID = 6452938173658688276L;
 
     private String id;
+    private String token;
     private String name;
     private String avatar;
     private String phone;

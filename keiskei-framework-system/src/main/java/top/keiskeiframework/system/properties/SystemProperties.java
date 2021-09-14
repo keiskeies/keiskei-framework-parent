@@ -52,7 +52,11 @@ public class SystemProperties {
     /**
      * token有效时长
      */
-    private Long tokenMinutes = 2 * 60L;
+    private Integer tokenMinutes = 2 * 60;
+    /**
+     * token加密
+     */
+    private String tokenSecret = "secret";
 
     /**
      * 最大同时在线人数
@@ -72,4 +76,5 @@ public class SystemProperties {
      * 使用权限控制
      */
     private Boolean usePermission = false;
+
 }

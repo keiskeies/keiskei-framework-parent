@@ -1,10 +1,5 @@
 server:
   port: 10037
-  servlet:
-    session:
-      timeout: P60D
-      cookie:
-        http-only: false
 logging:
   level:
     top.keiskeiframework: debug
@@ -14,8 +9,6 @@ logging:
     file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
     console: "%d [%X{mdcTraceId}] [%thread] %-5level %logger{36} %line - %msg%n"
 spring:
-  session:
-    store-type: mongodb
   jackson:
     default-property-inclusion: non_null
   messages:
@@ -32,7 +25,7 @@ spring:
   freemarker:
     cache: false
   cache:
-    type:
+    type: simple
   data:
     mongodb:
       database: ${MONGO_DATABASE:dw_aminer1}

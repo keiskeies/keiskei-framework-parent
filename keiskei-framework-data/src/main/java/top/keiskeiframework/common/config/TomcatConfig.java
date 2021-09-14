@@ -18,7 +18,7 @@ public class TomcatConfig {
     @Bean
     public ConfigurableServletWebServerFactory webServerFactory() {
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
-        factory.addConnectorCustomizers((TomcatConnectorCustomizer) connector -> {
+        factory.addConnectorCustomizers(connector -> {
             //允许的特殊字符
             connector.setProperty("relaxedQueryChars", "[]");
         });
