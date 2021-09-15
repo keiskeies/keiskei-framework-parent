@@ -12,14 +12,19 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -52,6 +57,20 @@ public class SwaggerConfig implements WebMvcConfigurer {
                         .version("1.0.0")
                         .contact(new Contact("James Chen", "http://www.cjm.jx.cn", "right_way@foxmail.com"))
                         .build())
+                .securitySchemes(
+                        Collections.singletonList(
+                                new ApiKey("后台验证请求头", "Access-Token", "header")
+                        )
+                )
+                .securityContexts(
+                        Collections.singletonList(
+                                SecurityContext.builder()
+                                        .securityReferences(Collections.singletonList(new SecurityReference("Access-Token", new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))
+                                        .forPaths(PathSelectors.regex("^/admin.*$"))
+                                        .build()
+                        )
+
+                )
                 .directModelSubstitute(LocalDate.class, String.class)
                 .directModelSubstitute(ObjectId.class, String.class)
                 .directModelSubstitute(LocalTime.class, String.class)

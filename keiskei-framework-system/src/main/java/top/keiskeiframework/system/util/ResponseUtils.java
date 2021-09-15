@@ -29,7 +29,7 @@ public class ResponseUtils {
     public static void confirm(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH, PUT");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         if (cross) {
             response.setHeader("Access-Control-Allow-Headers", "*");
