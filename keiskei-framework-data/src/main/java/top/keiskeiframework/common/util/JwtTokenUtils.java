@@ -36,7 +36,7 @@ public class JwtTokenUtils {
         return Jwts.builder()
                 .setClaims(map)
                 .setSubject(UUID.randomUUID().toString())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRES * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRES * 1000L))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
     }

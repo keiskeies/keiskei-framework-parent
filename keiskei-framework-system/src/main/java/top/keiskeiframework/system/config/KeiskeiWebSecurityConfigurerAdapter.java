@@ -56,15 +56,12 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
         // 由于使用的是JWT，我们这里不需要csrf , 并且关闭缓存
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().defaultsDisabled().cacheControl();
         // 不进行拦截的路径
         http.authorizeRequests().antMatchers("/api/**").permitAll();
         http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
 
         http.formLogin().loginPage(systemProperties.getAuthWebLoginPath()).successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).permitAll();
         http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).addLogoutHandler(logoutHandlerImpl).logoutSuccessHandler(logoutSuccessHandler).permitAll();
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
-
 
         // 登陆后可访问的路径
         http.authorizeRequests().antMatchers("/admin/*/system/self/**").authenticated();
@@ -82,7 +79,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 禁用缓存
         http.headers().cacheControl();
-        JwtTokenUtils.EXPIRES = systemProperties.getTokenMinutes();
+        JwtTokenUtils.EXPIRES = systemProperties.getTokenMinutes() * 60;
         JwtTokenUtils.SECRET = systemProperties.getTokenSecret();
     }
 

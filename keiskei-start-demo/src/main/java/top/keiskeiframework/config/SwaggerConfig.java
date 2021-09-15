@@ -65,7 +65,9 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .securityContexts(
                         Collections.singletonList(
                                 SecurityContext.builder()
-                                        .securityReferences(Collections.singletonList(new SecurityReference("Access-Token", new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))
+                                        .securityReferences(Collections.singletonList(new SecurityReference(
+                                                "Access-Token",
+                                                new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))
                                         .forPaths(PathSelectors.regex("^/admin.*$"))
                                         .build()
                         )
