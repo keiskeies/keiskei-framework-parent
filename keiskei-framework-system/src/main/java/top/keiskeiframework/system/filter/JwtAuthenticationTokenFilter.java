@@ -41,7 +41,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //初始化请求头
 
         if (OPTIONS.equalsIgnoreCase(request.getMethod())) {
-            ResponseUtils.write(request, response, JSON.toJSONString(R.failed(BizExceptionEnum.AUTH_ERROR)));
+            ResponseUtils.write(request, response, JSON.toJSONString(R.ok(true)));
             return;
         }
         //获取请求token

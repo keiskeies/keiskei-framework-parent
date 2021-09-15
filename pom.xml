@@ -11,8 +11,6 @@
         <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log</module>
         <module>keiskei-framework-system</module>
-        <module>keiskei-framework-system-workflow</module>
-        <module>keiskei-framework-websocket</module>
         <module>keiskei-start-demo</module>
     </modules>
 
@@ -186,22 +184,12 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-system-workflow</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-log</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-dashboard</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-websocket</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
         </dependencies>
