@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -20,8 +19,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.redis.util.RedisLockRegistry;
-import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.cache.config.CacheExpiredProperties;
 import top.keiskeiframework.cache.config.HibernateCollectionMixIn;
 import top.keiskeiframework.cache.enums.CacheTimeEnum;
 
@@ -41,8 +38,28 @@ import java.util.Map;
 @Slf4j
 public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
 
-    @Autowired
-    private CacheExpiredProperties cacheExpiredProperties;
+
+    public final static String KEY_GENERATOR_BEAN = "top.keiskeiframework.common.keyGenerator";
+
+    /**
+     * key 生成器
+     * <p>
+     * 注意: 该方法只是声明了key的生成策略,还未被使用,需在@Cacheable注解中指定keyGenerator
+     * 如: @Cacheable(value = "key", keyGenerator = "cacheKeyGenerator")
+     *
+     * @return .
+     */
+    @Bean(name = KEY_GENERATOR_BEAN)
+    public KeyGenerator cacheKeyGenerator() {
+        return (target, method, params) -> {
+            StringBuilder sb = new StringBuilder(target.getClass().getName());
+            for (Object param : params) {
+                sb.append('.');
+                sb.append(JSON.toJSONString(param));
+            }
+            return sb.toString();
+        };
+    }
 
     @Bean
     public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
@@ -75,12 +92,6 @@ public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
      */
     private Map<String, RedisCacheConfiguration> getCacheConfigurations() {
         Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>(16);
-        if (!CollectionUtils.isEmpty(cacheExpiredProperties.getCacheExpired())) {
-            for (Map.Entry<String, Long> entry : cacheExpiredProperties.getCacheExpired().entrySet()) {
-                //缓存键,且3600*10秒后过期,3600*10秒后再次调用方法时需要重新缓存
-                configurationMap.put(entry.getKey(), this.getDefaultCacheConfiguration(entry.getValue()));
-            }
-        }
         configurationMap.put(CacheTimeEnum.M1, this.getDefaultCacheConfiguration(60));
         configurationMap.put(CacheTimeEnum.M5, this.getDefaultCacheConfiguration(5 * 60));
         configurationMap.put(CacheTimeEnum.M10, this.getDefaultCacheConfiguration(10 * 60));

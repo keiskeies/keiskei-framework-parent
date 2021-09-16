@@ -3,7 +3,6 @@ package top.keiskeiframework.file.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,6 @@ public class FileController {
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
-    @Qualifier("cacheStorageServiceFile")
     private CacheStorageService cacheStorageService;
 
     /**

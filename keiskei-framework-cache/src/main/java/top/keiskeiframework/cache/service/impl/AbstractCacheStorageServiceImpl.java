@@ -1,10 +1,12 @@
 package top.keiskeiframework.cache.service.impl;
 
+import org.springframework.stereotype.Component;
 import top.keiskeiframework.cache.service.CacheStorageService;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,13 +17,10 @@ import java.util.concurrent.TimeUnit;
  * @author v_chenjiamin
  * @since 2021/9/3 16:43
  */
+@Component
 public class AbstractCacheStorageServiceImpl implements CacheStorageService {
 
-    private static Map<String, Object> CACHE_MAP;
-
-    public AbstractCacheStorageServiceImpl(Map<String, Object> map) {
-        CACHE_MAP = map;
-    }
+    private static final Map<String, Object> CACHE_MAP = new ConcurrentHashMap<>();
 
     @Override
     public Map<String, Object> list() {

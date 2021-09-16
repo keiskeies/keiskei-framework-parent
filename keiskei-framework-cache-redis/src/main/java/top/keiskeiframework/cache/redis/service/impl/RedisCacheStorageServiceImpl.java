@@ -1,6 +1,7 @@
 package top.keiskeiframework.cache.redis.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * @since 2019/7/15 14:07
  */
 @Service
+@Primary
 public class RedisCacheStorageServiceImpl implements CacheStorageService {
 
     @Autowired

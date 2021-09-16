@@ -3,7 +3,6 @@ package top.keiskeiframework.file.local.service.impl;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -37,7 +36,6 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     @Autowired
     private FileLocalProperties fileLocalProperties;
     @Autowired
-    @Qualifier("cacheStorageServiceFile")
     private CacheStorageService cacheStorageService;
 
 
