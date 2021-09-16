@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -30,7 +31,14 @@ public class BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "ID", dataType = "String")
     @MongoId(FieldType.OBJECT_ID)
-    private String id;
+    protected String id;
+
+    /**
+     * 数据部门
+     */
+    @CreatedBy
+    private String p;
+
 
     /**
      * 图表下标

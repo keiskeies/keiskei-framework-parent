@@ -18,6 +18,6 @@ public class SystemEnum {
      * 用户密码错误次数key前缀
      */
     public final static String USER_ERROR_TIMES_SUFFIX = "USER_ERROR_TIMES:%s";
-    public final static String CACHE_SPLIT = ":";
+
 
 }

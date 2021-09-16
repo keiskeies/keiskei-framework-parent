@@ -45,7 +45,6 @@ public class TokenUser implements UserDetails {
     /**
      * 部门标识
      */
-    @JsonIgnore
     private String department;
     /**
      * 账号是否未过期
@@ -67,6 +66,5 @@ public class TokenUser implements UserDetails {
      */
     @JsonIgnore
     private boolean enabled = true;
-
 
 }

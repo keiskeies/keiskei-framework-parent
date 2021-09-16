@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-dashboard</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-notify-email</artifactId>
         </dependency>
 

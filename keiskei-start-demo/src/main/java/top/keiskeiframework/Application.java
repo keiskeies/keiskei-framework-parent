@@ -3,6 +3,7 @@ package top.keiskeiframework;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.EnableCaching;
  * @since 2020/11/22 22:26
  */
 @SpringBootApplication
+@EnableMongoAuditing
 //@EnableCaching
 public class Application {
     public static void main(String[] args) {

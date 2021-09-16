@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
@@ -13,13 +12,11 @@ import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.system.dto.UserDto;
-import top.keiskeiframework.system.entity.Department;
 import top.keiskeiframework.system.entity.Permission;
 import top.keiskeiframework.system.entity.Role;
 import top.keiskeiframework.system.entity.User;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.repository.UserRepository;
-import top.keiskeiframework.system.service.IDepartmentService;
 import top.keiskeiframework.system.service.IPermissionService;
 import top.keiskeiframework.system.service.IUserService;
 import top.keiskeiframework.system.util.SecurityUtils;
@@ -48,10 +45,7 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
     @Autowired
     private SystemProperties systemProperties;
     @Autowired(required = false)
-    private IDepartmentService departmentService;
-    @Autowired(required = false)
     private IPermissionService permissionService;
-
 
 
     @Override
@@ -66,13 +60,10 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         TokenUser tokenUser = new TokenUser();
         BeanUtils.copyProperties(user, tokenUser);
         tokenUser.setId(user.getId());
+        if (null != user.getDepartment()) {
+            tokenUser.setDepartment(user.getDepartment().getSign());
+        }
         if (!SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
-
-            if (null != departmentService) {
-                Department department = departmentService.getById(tokenUser.getDepartmentId());
-                Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
-                tokenUser.setDepartment(department.getSign());
-            }
 
             LocalDateTime now = LocalDateTime.now();
             tokenUser.setAccountNonExpired(null != user.getAccountExpiredTime() && user.getAccountExpiredTime().isAfter(now));

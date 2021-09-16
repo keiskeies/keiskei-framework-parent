@@ -53,6 +53,7 @@ keiskei:
     cross: true
     maximum-sessions: 1
     use-permission: ${KEISKEI_USE_PERMISSION:false}
+    use-department: ${KEISKEI_USE_DEPARTMENT:false}
 
 
 

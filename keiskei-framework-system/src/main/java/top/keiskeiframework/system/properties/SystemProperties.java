@@ -76,5 +76,9 @@ public class SystemProperties {
      * 使用权限控制
      */
     private Boolean usePermission = false;
+    /**
+     * 使用部门权限
+     */
+    private Boolean useDepartment = false;
 
 }

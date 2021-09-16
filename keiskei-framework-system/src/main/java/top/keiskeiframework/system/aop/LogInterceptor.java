@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.service.OperateLogService;
+import top.keiskeiframework.common.config.SpringSecurityAuditorAware;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.vo.R;
@@ -42,6 +43,7 @@ public class LogInterceptor {
     private OperateLogService operateLogService;
     private final static String LOG_NAME_FORMATTER = "[%s - %s]";
     private final static String MESSAGE_FORMATTER = "%s - %s";
+    public final static String LOG_USER_FLAG = "mdcTraceId";
     private final static String GET = "GET";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")
@@ -57,7 +59,8 @@ public class LogInterceptor {
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
             operateLog.setUserId(tokenUser.getId());
-            MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
+            MDC.put(LOG_USER_FLAG, tokenUser.getName() + " - " + tokenUser.getId());
+            SpringSecurityAuditorAware.CREATE_USER.set(tokenUser.getDepartment());
 
 
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -115,6 +118,7 @@ public class LogInterceptor {
                 log.error("log error!", e);
             } finally {
                 MDC.clear();
+                SpringSecurityAuditorAware.CREATE_USER.remove();
                 if (null != operateLogService){
                     operateLogService.saveLog(operateLog);
                 }
