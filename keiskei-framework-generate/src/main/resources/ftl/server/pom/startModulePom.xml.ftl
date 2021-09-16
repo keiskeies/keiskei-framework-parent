@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-core</artifactId>
+            <artifactId>keiskei-framework-data</artifactId>
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>

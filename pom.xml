@@ -7,17 +7,12 @@
     <artifactId>keiskei-framework-parent</artifactId>
     <version>1.1.0-jpa-Release</version>
     <modules>
-        <module>keiskei-framework-core</module>
+        <module>keiskei-framework-data</module>
         <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-system</module>
         <module>keiskei-framework-system-workflow</module>
-        <module>keiskei-framework-file-local</module>
-        <module>keiskei-framework-file-alioss</module>
-        <module>keiskei-framework-file</module>
-        <module>keiskei-framework-file-jdoss</module>
-        <module>keiskei-framework-websocket</module>
         <module>keiskei-start-demo</module>
     </modules>
 
@@ -175,28 +170,58 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-core</artifactId>
-                <version>${keiskei.project.version}</version>
+                <artifactId>keiskei-framework-data</artifactId>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-local</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-alioss</artifactId>
-                <version>1.1.0-jpa-Release</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-jdoss</artifactId>
-                <version>1.1.0-jpa-Release</version>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-cache</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-cache-redis</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-cache-simple</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-notify</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-notify-email</artifactId>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-data</artifactId>
+                <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
@@ -222,11 +247,6 @@
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-dashboard</artifactId>
                 <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-websocket</artifactId>
-                <version>1.1.0-jpa-Release</version>
             </dependency>
         </dependencies>
 
