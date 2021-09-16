@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.enums.SystemEnum;
+import top.keiskeiframework.system.enums.SystemEnum;
 import top.keiskeiframework.system.entity.Permission;
 import top.keiskeiframework.system.entity.Role;
 import top.keiskeiframework.system.service.IRoleService;

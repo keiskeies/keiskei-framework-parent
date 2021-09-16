@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.base.service.EntityFactory;
+import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;

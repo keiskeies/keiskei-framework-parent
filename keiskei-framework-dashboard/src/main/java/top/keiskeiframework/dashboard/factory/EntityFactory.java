@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.base.service;
+package top.keiskeiframework.dashboard.factory;
 
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;

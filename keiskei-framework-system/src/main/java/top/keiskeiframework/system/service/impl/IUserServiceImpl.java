@@ -5,29 +5,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
-import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.system.dto.UserDto;
 import top.keiskeiframework.system.entity.Permission;
 import top.keiskeiframework.system.entity.Role;
 import top.keiskeiframework.system.entity.User;
+import top.keiskeiframework.system.enums.SystemEnum;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.repository.UserRepository;
-import top.keiskeiframework.system.service.IPermissionService;
 import top.keiskeiframework.system.service.IUserService;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.user.TokenGrantedAuthority;
 import top.keiskeiframework.system.vo.user.TokenUser;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,8 +44,6 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
     private CacheStorageService cacheStorageService;
     @Autowired
     private SystemProperties systemProperties;
-    @Autowired(required = false)
-    private IPermissionService permissionService;
 
 
     @Override
@@ -103,22 +101,20 @@ public class IUserServiceImpl extends ListServiceImpl<User> implements IUserServ
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(tokenUser, userDto);
 
-        if (SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
-            if (null != permissionService) {
-                List<Permission> permissions = permissionService.options();
-                userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
+        if (!SystemEnum.SUPER_ADMIN_ID.equals(tokenUser.getId())) {
+            Optional<User> userOptional = userRepository.findById(tokenUser.getId());
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                if (!CollectionUtils.isEmpty(user.getRoles())) {
+                    List<Permission> permissions = user.getRoles().stream()
+                            .map(Role::getPermissions)
+                            .flatMap(Collection::stream)
+                            .distinct()
+                            .collect(Collectors.toList());
+                    userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
+                }
             }
-            return userDto;
         }
-
-        User user = userRepository.findById(tokenUser.getId()).get();
-        Set<Permission> permissions = new HashSet<>();
-
-        for (Role role : user.getRoles()) {
-            permissions.addAll(role.getPermissions());
-        }
-
-        userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
         return userDto;
     }
 }

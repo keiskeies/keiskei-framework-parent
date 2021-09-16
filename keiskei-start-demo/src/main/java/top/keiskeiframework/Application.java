@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
  * @since 2020/11/22 22:26
  */
 @SpringBootApplication
-@EnableMongoAuditing
+
 //@EnableCaching
 public class Application {
     public static void main(String[] args) {

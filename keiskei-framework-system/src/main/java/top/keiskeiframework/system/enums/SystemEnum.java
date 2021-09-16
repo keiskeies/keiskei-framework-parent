@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.enums;
+package top.keiskeiframework.system.enums;
 
 /**
  * <p>

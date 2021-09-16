@@ -80,5 +80,9 @@ public class SystemProperties {
      * 使用部门权限
      */
     private Boolean useDepartment = false;
+    /**
+     * 加载可配置定时任务
+     */
+    private Boolean useScheduledTask = false;
 
 }

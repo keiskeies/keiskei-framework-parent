@@ -22,10 +22,6 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-cache</artifactId>
         </dependency>
         <dependency>

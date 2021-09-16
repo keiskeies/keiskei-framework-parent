@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.service.EntityFactory;
+import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
@@ -27,7 +27,7 @@ import java.util.List;
  * @since 2020-12-16 13:36:30
  */
 @RestController
-@RequestMapping("/admin/v1/system/dashboard")
+@RequestMapping("/admin/v1/dashboard/charts")
 @Api(tags = "主页 - 图表")
 public class DashboardController {
 
