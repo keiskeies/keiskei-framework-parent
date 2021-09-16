@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.config;
 
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.service.IUserService;
@@ -20,6 +21,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  * @since 2019/7/15 13:43
  */
 @Configuration
+@EnableWebSecurity
 public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     @Autowired

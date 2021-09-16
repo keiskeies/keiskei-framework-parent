@@ -1,10 +1,10 @@
-package top.keiskeiframework.common.util;
+package top.keiskeiframework.system.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.vo.user.TokenUser;
+import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
 

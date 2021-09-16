@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.vo.user;
+package top.keiskeiframework.system.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

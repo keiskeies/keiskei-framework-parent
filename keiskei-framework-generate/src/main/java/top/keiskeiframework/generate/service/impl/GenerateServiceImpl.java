@@ -8,8 +8,7 @@ import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.util.SecurityUtils;
-import top.keiskeiframework.common.vo.user.TokenUser;
+import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.generate.config.GenerateProperties;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;
@@ -38,7 +37,7 @@ public class GenerateServiceImpl implements GenerateService {
 
     @Override
     @Async
-    @Lockable(key = "#itemId", message="代码构建中，请稍候~")
+    @Lockable(key = "#itemId", message = "代码构建中，请稍候~")
     public void build(Long itemId) {
 
         if (!BuildStatusEnum.NONE.equals(generateService.refreshStatus(itemId))) {
@@ -52,12 +51,10 @@ public class GenerateServiceImpl implements GenerateService {
     }
 
     private void buildProject(ProjectInfo project) {
-        TokenUser tokenUser = SecurityUtils.getSessionUser();
-
-        String basePath = generateProperties.getBasePath() + tokenUser.getId() + "/" + project.getId() + "/" + project.getName();
+        String basePath = generateProperties.getBasePath() + MdcUtils.getUserId() + "/" + project.getId() + "/" + project.getName();
 
         if (StringUtils.isEmpty(project.getAuthor())) {
-            project.setAuthor(tokenUser.getName() + " " + tokenUser.getEmail());
+            project.setAuthor(MdcUtils.getUserName());
         }
 
         // 创建项目目录

@@ -13,7 +13,6 @@ import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.vo.user.TokenUser;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
@@ -90,10 +89,9 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
     }
 
 
-
-
     /**
      * 获取Specification
+     *
      * @param conditions 查询条件
      * @param tClass     实体类
      * @param <T>        实体类
@@ -103,7 +101,8 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
         Set<String> fieldSet = getFieldSet(tClass);
         return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldSet).toArray(new Predicate[0]));
 
-     }
+    }
+
     /**
      * 获取Specification
      *
@@ -132,18 +131,17 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
         }
         Set<String> fieldSet = getFieldSet(tClass);
 
-        List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions,fieldSet);
+        List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions, fieldSet);
         return query.where(predicates.toArray(new Predicate[0]));
     }
-
 
 
     /**
      * 拼装query
      *
-     * @param t          实体类
-     * @param columns    查询部分字段
-     * @param <T>        实体类
+     * @param t       实体类
+     * @param columns 查询部分字段
+     * @param <T>     实体类
      * @return 。
      */
     public static <T extends BaseEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
@@ -330,16 +328,35 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
             }
 
             switch (condition.getCondition()) {
-                case EQ: predicates.add(builder.equal(expression, value)); break;
-                case NE: predicates.add(builder.notEqual(expression, value)); break;
-                case GT: predicates.add(builder.greaterThan(expression, (Comparable) value)); break;
-                case GE: predicates.add(builder.greaterThanOrEqualTo(expression, (Comparable) value)); break;
-                case LT: predicates.add(builder.lessThan(expression, (Comparable) value)); break;
-                case LE: predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) value)); break;
-                case LIKE: predicates.add(builder.like(expression, "%" + value + "%")); break;
-                case LL: predicates.add(builder.like(expression, value + "%")); break;
-                case LR: predicates.add(builder.like(expression, "%" + value)); break;
-                default: break;
+                case EQ:
+                    predicates.add(builder.equal(expression, value));
+                    break;
+                case NE:
+                    predicates.add(builder.notEqual(expression, value));
+                    break;
+                case GT:
+                    predicates.add(builder.greaterThan(expression, (Comparable) value));
+                    break;
+                case GE:
+                    predicates.add(builder.greaterThanOrEqualTo(expression, (Comparable) value));
+                    break;
+                case LT:
+                    predicates.add(builder.lessThan(expression, (Comparable) value));
+                    break;
+                case LE:
+                    predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) value));
+                    break;
+                case LIKE:
+                    predicates.add(builder.like(expression, "%" + value + "%"));
+                    break;
+                case LL:
+                    predicates.add(builder.like(expression, value + "%"));
+                    break;
+                case LR:
+                    predicates.add(builder.like(expression, "%" + value));
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -352,15 +369,15 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param root       实体
      */
     public static void addDepartment(List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
-        TokenUser tokenUser = SecurityUtils.getSessionUser();
-        if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
-            Assert.hasText(tokenUser.getDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            predicates.add(builder.like(root.get("p"), tokenUser.getDepartment() + "%"));
+        if ((SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
+            Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+            predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
         }
     }
 
     /**
      * 获取类字段
+     *
      * @param tClass 实体类
      * @param <T>    实体类
      * @return .

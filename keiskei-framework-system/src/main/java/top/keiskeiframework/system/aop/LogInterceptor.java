@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.aop;
+package top.keiskeiframework.system.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -19,9 +19,10 @@ import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
-import top.keiskeiframework.common.util.SecurityUtils;
+import top.keiskeiframework.common.util.MdcUtils;
+import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.common.vo.user.TokenUser;
+import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,7 +58,9 @@ public class LogInterceptor {
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
             operateLog.setUserId(tokenUser.getId());
-            MDC.put("mdcTraceId", tokenUser.getName() + " - " + tokenUser.getId());
+            MdcUtils.setUserId(tokenUser.getId() + "");
+            MdcUtils.setUserName(tokenUser.getName() + "");
+            MdcUtils.setUserDepartment(tokenUser.getDepartment() + "");
 
 
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -82,7 +85,7 @@ public class LogInterceptor {
 
             }
             operateLog.setRequestParam(sb.toString());
-            log.info("{} - start - params: {}", operateLog.getName(), operateLog.getRequestParam());
+            log.info("{} - start - params: \n{}", operateLog.getName(), operateLog.getRequestParam());
         } catch (Exception e) {
             log.error("log error!", e);
         }
@@ -102,9 +105,12 @@ public class LogInterceptor {
         } finally {
             try {
                 long end = System.currentTimeMillis();
-                if (result != null && !GET.equalsIgnoreCase(operateLog.getType())) {
-                    operateLog.setResponseParam(JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter));
-                    log.info("{} - end - result: {} - timer: {}", operateLog.getName(), operateLog.getResponseParam(), end - start);
+                if (null != result) {
+                    String responseParam = JSON.toJSONString(result, SerializerFeature.IgnoreErrorGetter);
+                    if (!GET.equalsIgnoreCase(operateLog.getType())) {
+                        operateLog.setResponseParam(responseParam);
+                    }
+                    log.info("{} - end - timer: {}- result: \n{}", operateLog.getName(), end - start, responseParam);
                 } else {
                     log.info("{} - end - timer: {}", operateLog.getName(), end - start);
                 }

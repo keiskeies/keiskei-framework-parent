@@ -8,11 +8,11 @@ server:
 logging:
   level:
     top.keiskeiframework: debug
-    org.springframework: debug
+#    org.springframework: debug
 #    jdbc: error
   pattern:
-    file: "%d [%X{mdcTraceId}] [%thread] %-5level - %msg%n"
-    console: "%d [%X{mdcTraceId}] [%thread] %-5level %logger{36} %line - %msg%n"
+    file: "%d [%X{userName}-%X{userId}] [%thread] %-5level - %msg%n"
+    console: "%d [%X{userName}-%X{userId}] [%thread] %-5level %logger{36} %line - %msg%n"
 spring:
   session:
     store-type: redis
@@ -34,7 +34,7 @@ spring:
     timeout: 6000
     password: ${REDIS_PASSWORD:123456}
     database: ${REDIS_DB:0}
-    port: ${REDIS_PORT:6379}
+    port: ${REDIS_PORT:16379}
     host: ${REDIS_HOST:localhost}
   jpa:
     database: mysql
@@ -66,8 +66,6 @@ management:
     tags:
       application: ${spring.application.name}
 keiskei:
-  cache-expired:
-    FILE_MINUTE:
   system:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
     cross: true

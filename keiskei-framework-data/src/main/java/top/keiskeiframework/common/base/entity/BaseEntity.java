@@ -16,7 +16,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.base.service.impl.AbstractAuditorAware;
-import top.keiskeiframework.common.util.SecurityUtils;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -67,7 +67,7 @@ public class BaseEntity<ID extends Serializable> implements Serializable {
 
     @PrePersist
     protected void onCreate() {
-        p = SecurityUtils.getDepartment();
+        p = MdcUtils.getUserDepartment();
     }
 
     /**
@@ -75,14 +75,14 @@ public class BaseEntity<ID extends Serializable> implements Serializable {
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @CreatedBy
-    protected ID createUserId;
+    protected Long createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @LastModifiedBy
-    protected ID updateUserId;
+    protected Long updateUserId;
 
     /**
      * 图表下标

@@ -8,13 +8,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.service.EntityFactory;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
-import top.keiskeiframework.common.util.SecurityUtils;
+import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.dashboard.entity.Dashboard;
+import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        Dashboard dashboard = Dashboard.builder().createUserId(SecurityUtils.getSessionUser().getId()).build();
+        Dashboard dashboard = Dashboard.builder().createUserId(Long.valueOf(MdcUtils.getUserId())).build();
         return R.ok(dashboardService.options(dashboard));
     }
 

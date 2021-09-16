@@ -1,23 +1,26 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import lombok.NonNull;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.lang.NonNull;
-import top.keiskeiframework.common.util.SecurityUtils;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import java.util.Optional;
 
 /**
+ * <p>
+ * 创建人信息
+ * </p>
+ *
  * @author cjm
  */
-public abstract class AbstractAuditorAware implements AuditorAware<Long> {
+@Configuration
+public class AbstractAuditorAware implements AuditorAware<Long> {
+
 
     @Override
     @NonNull
     public Optional<Long> getCurrentAuditor() {
-        try {
-            return Optional.of(SecurityUtils.getSessionUser().getId());
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return Optional.of(Long.valueOf(MdcUtils.getUserId()));
     }
 }

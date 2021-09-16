@@ -17,7 +17,7 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-file-local</artifactId>
+            <artifactId>keiskei-framework-cache-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
@@ -34,6 +34,10 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-system-workflow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
