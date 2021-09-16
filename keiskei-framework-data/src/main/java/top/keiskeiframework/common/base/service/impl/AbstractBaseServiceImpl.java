@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.SuperEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
-public abstract class AbstractBaseServiceImpl<T extends SuperEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
+public abstract class AbstractBaseServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     @Autowired
     protected JpaRepository<T, ID> jpaRepository;

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.lombok.Chartable;
 
 import javax.persistence.*;
@@ -32,7 +32,7 @@ import java.util.Set;
 @Table(name = "sys_user")
 @ApiModel(value = "User", description = "管理员")
 @Chartable
-public class User extends BaseLongIdEntity {
+public class User extends BaseEntity<Long> {
 
     private static final long serialVersionUID = -3821316560303369479L;
 

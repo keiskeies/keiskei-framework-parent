@@ -37,11 +37,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class SuperEntity<ID extends Serializable> implements Serializable {
+public class BaseEntity<ID extends Serializable> implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
-    @Transient
-    private ID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected ID id;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -74,14 +75,14 @@ public class SuperEntity<ID extends Serializable> implements Serializable {
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @CreatedBy
-    protected Long createUserId;
+    protected ID createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @LastModifiedBy
-    protected Long updateUserId;
+    protected ID updateUserId;
 
     /**
      * 图表下标

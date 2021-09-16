@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
@@ -38,7 +38,7 @@ import java.util.List;
 @Entity
 @Table(name = "dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
-public class Dashboard extends BaseLongIdEntity {
+public class Dashboard extends BaseEntity<Long> {
 
     private static final long serialVersionUID = -5855392143364324899L;
 

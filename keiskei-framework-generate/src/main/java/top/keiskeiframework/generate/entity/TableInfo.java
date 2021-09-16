@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
@@ -34,7 +34,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
-public class TableInfo extends BaseLongIdEntity {
+public class TableInfo extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 7715195221883078519L;
 

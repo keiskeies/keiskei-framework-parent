@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
 import javax.persistence.*;
@@ -28,7 +28,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_project_info")
 @ApiModel(value = "ProjectInfo", description = "项目信息")
-public class ProjectInfo extends BaseLongIdEntity {
+public class ProjectInfo extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 8549325611615861124L;
 

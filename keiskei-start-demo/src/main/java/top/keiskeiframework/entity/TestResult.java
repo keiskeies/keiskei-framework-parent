@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.base.entity.SuperEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 
 import javax.persistence.*;
 
@@ -24,7 +24,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "test_result")
 @ApiModel(value = "TestResult", description = "测试结果")
-public class TestResult extends SuperEntity<Long> {
+public class TestResult extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseLongIdEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
-public class DashboardDirection extends BaseLongIdEntity {
+public class DashboardDirection extends BaseEntity<Long> {
 
     private static final long serialVersionUID = -2719449560787668928L;
     @ApiModelProperty(value = "字段", dataType = "String")

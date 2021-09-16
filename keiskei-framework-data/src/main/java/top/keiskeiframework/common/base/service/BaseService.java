@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.SuperEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T extends SuperEntity<ID>, ID extends Serializable> {
+public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> {
 
     /**
      * 列表查询

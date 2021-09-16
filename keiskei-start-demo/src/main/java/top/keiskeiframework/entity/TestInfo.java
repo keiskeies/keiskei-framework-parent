@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.base.entity.BaseStringIdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

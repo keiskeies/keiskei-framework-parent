@@ -7,18 +7,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.collection.internal.PersistentBag;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.base.entity.TreeLongIdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -36,7 +32,7 @@ import java.util.List;
 @Entity
 @Table(name = "sys_dictionary")
 @ApiModel(value = "Dictionary", description = "数据字段")
-public class Dictionary extends TreeLongIdEntity {
+public class Dictionary extends TreeEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,7 +58,7 @@ public class Dictionary extends TreeLongIdEntity {
 
     @PreUpdate
     public void onUpdate() {
-        sortBy = id;
+        sortBy = Long.parseLong(id.toString());
     }
 
 }

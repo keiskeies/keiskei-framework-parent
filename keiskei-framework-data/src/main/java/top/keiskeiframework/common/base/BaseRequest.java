@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.base.entity.SuperEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
@@ -28,7 +28,7 @@ import java.util.Set;
  * </p>
  * @since 2020/11/24 23:08
  */
-public class BaseRequest<T extends SuperEntity<ID>, ID extends Serializable> {
+public class BaseRequest<T extends BaseEntity<ID>, ID extends Serializable> {
     /**
      * 默认排序字段
      */

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import org.reflections.Reflections;
 import org.springframework.lang.NonNull;
-import top.keiskeiframework.common.base.entity.SuperEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.lombok.Chartable;
 
@@ -37,8 +37,8 @@ public class EntityFactory {
         //获取该路径下所有类
         Reflections reflections = new Reflections("top.keiskeiframework");
         //获取继承了IAnimal的所有类
-        Set<Class<? extends SuperEntity>> classSet = reflections.getSubTypesOf(SuperEntity.class);
-        for (Class<? extends SuperEntity> clazz : classSet) {
+        Set<Class<? extends BaseEntity>> classSet = reflections.getSubTypesOf(BaseEntity.class);
+        for (Class<? extends BaseEntity> clazz : classSet) {
             System.out.println(clazz.getName());
             Chartable chartable = clazz.getDeclaredAnnotation(Chartable.class);
             if (null == chartable) {
