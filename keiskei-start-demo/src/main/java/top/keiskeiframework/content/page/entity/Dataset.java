@@ -44,9 +44,12 @@ public class Dataset extends BaseEntity {
     private String datasetId;
 
     @Transient
+    @ApiModelProperty(value = "benchmark", dataType = "Array[DatasetBenchmark]")
     private List<DatasetBenchmark> benchmarks;
     @Transient
+    @ApiModelProperty(value = "benchmark", dataType = "Array[DatasetLoader]")
     private List<DatasetLoader> loaders;
     @Transient
+    @ApiModelProperty(value = "benchmark", dataType = "Array[DatasetPaper]")
     private List<DatasetPaper> papers;
 }
