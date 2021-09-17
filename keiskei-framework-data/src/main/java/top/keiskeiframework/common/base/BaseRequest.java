@@ -47,6 +47,9 @@ public class BaseRequest<T extends BaseEntity> {
     @ApiModelProperty(value = "升序字段", dataType = "String", example = "id")
     private String asc;
 
+    @ApiModelProperty(value = "查询字段", dataType = "String", example = "id,name")
+    private String show;
+
     @ApiModelProperty(value = "查询条件", dataType = "String", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
     private String conditions;
 
@@ -81,7 +84,10 @@ public class BaseRequest<T extends BaseEntity> {
      * @return 。
      */
     public Query getQuery(@NonNull Class<T> tClass) {
-        return BaseRequestUtils.getQuery(JSON.parseArray(conditions, QueryConditionDTO.class), tClass);
+        return BaseRequestUtils.getQuery(
+                JSON.parseArray(conditions, QueryConditionDTO.class),
+                StringUtils.isEmpty(show) ? null : show.split(","),
+                tClass);
     }
 
 

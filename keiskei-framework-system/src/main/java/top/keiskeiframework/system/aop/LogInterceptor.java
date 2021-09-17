@@ -17,9 +17,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.service.OperateLogService;
-import top.keiskeiframework.common.config.SpringSecurityAuditorAware;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
+import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.user.TokenUser;
@@ -43,7 +43,6 @@ public class LogInterceptor {
     private OperateLogService operateLogService;
     private final static String LOG_NAME_FORMATTER = "[%s - %s]";
     private final static String MESSAGE_FORMATTER = "%s - %s";
-    public final static String LOG_USER_FLAG = "mdcTraceId";
     private final static String GET = "GET";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")
@@ -59,8 +58,9 @@ public class LogInterceptor {
         try {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
             operateLog.setUserId(tokenUser.getId());
-            MDC.put(LOG_USER_FLAG, tokenUser.getName() + " - " + tokenUser.getId());
-            SpringSecurityAuditorAware.CREATE_USER.set(tokenUser.getDepartment());
+            MdcUtils.setUserId(tokenUser.getId() + "");
+            MdcUtils.setUserName(tokenUser.getName() + "");
+            MdcUtils.setUserDepartment(tokenUser.getDepartment() + "");
 
 
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -85,7 +85,7 @@ public class LogInterceptor {
 
             }
             operateLog.setRequestParam(sb.toString());
-            log.info("{} - start - params: {}", operateLog.getName(), operateLog.getRequestParam());
+            log.info("{} - start - params: \n{}", operateLog.getName(), operateLog.getRequestParam());
         } catch (Exception e) {
             log.error("log error!", e);
         }
@@ -110,7 +110,7 @@ public class LogInterceptor {
                     if (!GET.equalsIgnoreCase(operateLog.getType())) {
                         operateLog.setResponseParam(responseParam);
                     }
-                    log.info("{} - end - result: {} - timer: {}", operateLog.getName(), responseParam, end - start);
+                    log.info("{} - end - timer: {}- result: \n{}", operateLog.getName(), end - start, responseParam);
                 } else {
                     log.info("{} - end - timer: {}", operateLog.getName(), end - start);
                 }
@@ -118,7 +118,6 @@ public class LogInterceptor {
                 log.error("log error!", e);
             } finally {
                 MDC.clear();
-                SpringSecurityAuditorAware.CREATE_USER.remove();
                 if (null != operateLogService){
                     operateLogService.saveLog(operateLog);
                 }

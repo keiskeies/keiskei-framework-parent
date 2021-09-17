@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-cache-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-dashboard</artifactId>
         </dependency>
         <dependency>

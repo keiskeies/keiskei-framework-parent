@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
+import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -32,6 +33,11 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
 
     @Autowired
     private TreeServiceImpl<T> baseService;
+
+    @Override
+    public List<T> findAll(BaseRequest<T> request) {
+        return baseService.options();
+    }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")

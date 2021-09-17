@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import java.io.Serializable;
 
@@ -36,8 +36,7 @@ public class BaseEntity implements Serializable {
     /**
      * 数据部门
      */
-    @CreatedBy
-    private String p;
+    private String p = MdcUtils.getUserDepartment();
 
 
     /**

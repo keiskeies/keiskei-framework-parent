@@ -29,7 +29,7 @@ public class TreeController<T extends TreeEntity> {
     private TreeServiceImpl<T> baseService;
 
 
-    @GetMapping(value = {"", "/options"})
+    @GetMapping
     @ApiOperation("列表")
     public R<List<T>> tree(
             @ApiParam(value = "查询条件", type="JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
@@ -39,6 +39,17 @@ public class TreeController<T extends TreeEntity> {
         baseRequest.setConditions(conditions);
         List<T> list = baseService.findAll(baseRequest);
         return R.ok(new TreeEntityUtils<>(list).getTree(null));
+    }
+    @GetMapping(value = "/options")
+    @ApiOperation("列表")
+    public R<List<T>> options(
+            @ApiParam(value = "查询条件", type="JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
+                    String conditions
+    ) {
+        BaseRequest<T> baseRequest = new BaseRequest<>();
+        baseRequest.setConditions(conditions);
+        List<T> list = baseService.findAll(baseRequest);
+        return R.ok(list);
     }
 
     @GetMapping("/{id}")

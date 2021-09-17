@@ -80,12 +80,10 @@ public class BaseRequestUtils {
                 .map(Field::getName).collect(Collectors.toSet());
     }
 
-    public static <T> Query getQuery(List<QueryConditionDTO> conditions, Class<T> tClass) {
+    public static <T> Query getQuery(List<QueryConditionDTO> conditions,String[] show, Class<T> tClass) {
         Set<String> fieldSet = getFieldSet(tClass);
         Query query = new Query();
-
-
-        Field[] fields = tClass.getFields();
+        Field[] fields = tClass.getDeclaredFields();
         for (Field field : fields) {
             if (IGNORE_COLUMN.equals(field.getName())) {
                 continue;
@@ -104,7 +102,11 @@ public class BaseRequestUtils {
             }
         }
 
-        confirmQuery(query, conditions, fieldSet);
+        confirmQuery(query, conditions, fieldSet, show);
+
+
+
+
 
         return query;
     }
@@ -117,7 +119,7 @@ public class BaseRequestUtils {
      * @param conditions 查询条件
      * @param fieldSet   实体类字段
      */
-    private static void confirmQuery(Query query, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
+    private static void confirmQuery(Query query, List<QueryConditionDTO> conditions, Set<String> fieldSet, String[] show) {
         if (!CollectionUtils.isEmpty(conditions)) {
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
@@ -130,6 +132,10 @@ public class BaseRequestUtils {
                 }
                 addCriteriaDefinition(query, condition);
             }
+        }
+        if (null != show) {
+            org.springframework.data.mongodb.core.query.Field findFields = query.fields();
+            Arrays.stream(show).filter(fieldSet::contains).forEach(findFields::include);
         }
     }
 

@@ -44,7 +44,7 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
     @Override
     public List<T> options(@NonNull T t) {
         Class<T> tClass = (Class<T>) t.getClass();
-        Query query = BaseRequestUtils.getQuery(null, t.getClass());
+        Query query = BaseRequestUtils.getQuery(null, null, t.getClass());
 
         return mongoTemplate.find(query, tClass);
     }
