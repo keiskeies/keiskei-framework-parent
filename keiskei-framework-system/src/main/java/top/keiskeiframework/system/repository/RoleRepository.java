@@ -14,7 +14,7 @@ import top.keiskeiframework.system.entity.Role;
  * @since 2020-12-10 14:11:30
  */
 @Repository
-@ConditionalOnProperty({"keiskei.system.use-permission"})
+@ConditionalOnProperty({"keiskei.use-permission"})
 public interface RoleRepository extends MongoRepository<Role, String> {
 
 }

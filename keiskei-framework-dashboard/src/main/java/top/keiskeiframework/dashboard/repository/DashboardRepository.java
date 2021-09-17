@@ -1,5 +1,6 @@
 package top.keiskeiframework.dashboard.repository;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import top.keiskeiframework.dashboard.entity.Dashboard;
@@ -13,6 +14,7 @@ import top.keiskeiframework.dashboard.entity.Dashboard;
  * @since 2020-12-16 13:36:30
  */
 @Repository
+@ConditionalOnProperty(value = {"keiskei.use-dashboard"})
 public interface DashboardRepository extends MongoRepository<Dashboard, String> {
 
 

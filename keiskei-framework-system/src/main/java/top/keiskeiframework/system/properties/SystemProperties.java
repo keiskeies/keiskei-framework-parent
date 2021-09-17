@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2019/8/10 13:59
  */
 @Component
-@ConfigurationProperties(prefix = "keiskei.system")
+@ConfigurationProperties(prefix = "keiskei")
 @Data
 public class SystemProperties {
 
@@ -72,17 +72,5 @@ public class SystemProperties {
      * 密码错误锁定分钟数
      */
     private Long lockMinutes = 10L;
-    /**
-     * 使用权限控制
-     */
-    private Boolean usePermission = false;
-    /**
-     * 使用部门权限
-     */
-    private Boolean useDepartment = false;
-    /**
-     * 加载可配置定时任务
-     */
-    private Boolean useScheduledTask = false;
 
 }

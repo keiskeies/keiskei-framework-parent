@@ -17,7 +17,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  */
 @Component
 @Slf4j
-@ConditionalOnProperty({"keiskei.system.use-scheduled-task"})
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class SqlExecuteScheduledOfTaskImpl extends ScheduledOfTask {
 
 

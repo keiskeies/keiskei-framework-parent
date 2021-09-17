@@ -18,7 +18,7 @@ import top.keiskeiframework.system.entity.Role;
 @RestController
 @RequestMapping("/admin/v1/system/role")
 @Api(tags = "系统设置 - 角色管理")
-@ConditionalOnProperty({"keiskei.system.use-permission"})
+@ConditionalOnProperty({"keiskei.use-permission"})
 public class RoleController extends ListController<Role> {
 
 

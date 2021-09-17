@@ -14,7 +14,7 @@ import top.keiskeiframework.system.entity.Department;
  * @since 2020-12-16 13:36:30
  */
 @Repository
-@ConditionalOnProperty({"keiskei.system.use-department"})
+@ConditionalOnProperty({"keiskei.use-department"})
 public interface DepartmentRepository extends MongoRepository<Department, String> {
 
 }

@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -49,6 +50,8 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     private SystemProperties systemProperties;
     @Autowired
     private IUserService userService;
+    @Value("keiskei.use-permission")
+    private Boolean usePermission;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -70,7 +73,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                 http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).authenticated();
             }
         }
-        if (systemProperties.getUsePermission()) {
+        if (usePermission) {
             //开启自定义连接拦截
             http.authorizeRequests().anyRequest().access("@rbacAuthorityService.hasPermission(request,authentication)");
         }

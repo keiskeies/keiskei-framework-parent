@@ -3,6 +3,7 @@ package top.keiskeiframework.dashboard.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/v1/dashboard/charts")
+@ConditionalOnProperty(value = {"keiskei.use-dashboard"})
 @Api(tags = "主页 - 图表")
 public class DashboardController {
 

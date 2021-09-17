@@ -21,7 +21,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  * @since 2020-12-10 14:11:30
  */
 @Service
-@ConditionalOnProperty({"keiskei.system.use-scheduled-task"})
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class IScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;

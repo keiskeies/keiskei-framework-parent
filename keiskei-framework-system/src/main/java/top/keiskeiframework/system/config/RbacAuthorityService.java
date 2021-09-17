@@ -24,7 +24,7 @@ import java.util.Collection;
  * @since 2019/7/15 14:25
  */
 @Service
-@ConditionalOnProperty(value = {"keiskei.system.use-permission"})
+@ConditionalOnProperty(value = {"keiskei.use-permission"})
 public class RbacAuthorityService {
 
     @Autowired

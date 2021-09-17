@@ -14,7 +14,7 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @since 2020-12-10 14:11:30
  */
 @Repository
-@ConditionalOnProperty({"keiskei.system.use-scheduled-task"})
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public interface ScheduledTaskRepository extends MongoRepository<ScheduledTask, String> {
     /**
      * 时间表达式查找

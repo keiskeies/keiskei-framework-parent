@@ -23,7 +23,7 @@ import java.util.concurrent.*;
  */
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty({"keiskei.system.use-scheduled-task"})
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class ScheduledTaskConfig implements SchedulingConfigurer {
     @Autowired
     private ApplicationContext applicationContext;

@@ -2,6 +2,7 @@ package top.keiskeiframework.dashboard.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
+@ConditionalOnProperty(value = {"keiskei.use-dashboard"})
 public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
     private static final String CACHE_NAME = CacheTimeEnum.M10;

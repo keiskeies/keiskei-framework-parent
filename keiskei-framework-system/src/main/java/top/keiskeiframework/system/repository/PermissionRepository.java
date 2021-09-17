@@ -14,7 +14,7 @@ import top.keiskeiframework.system.entity.Permission;
  * @since 2020-12-10 14:11:30
  */
 @Repository
-@ConditionalOnProperty({"keiskei.system.use-permission"})
+@ConditionalOnProperty({"keiskei.use-permission"})
 public interface PermissionRepository extends MongoRepository<Permission, String> {
 
 }
