@@ -1,9 +1,17 @@
 package top.keiskeiframework.system.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.util.JwtTokenUtils;
@@ -12,15 +20,6 @@ import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 /**
  * springSecurity配置中心
@@ -50,7 +49,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     private SystemProperties systemProperties;
     @Autowired
     private IUserService userService;
-    @Value("keiskei.use-permission")
+    @Value("${keiskei.use-permission:false}")
     private Boolean usePermission;
 
     @Override
@@ -61,7 +60,9 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // 不进行拦截的路径
         http.authorizeRequests().antMatchers("/api/**").permitAll();
-        http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
+        if (null != systemProperties.getPermitUri()) {
+            http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
+        }
 
         http.formLogin().loginPage(systemProperties.getAuthWebLoginPath()).successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).permitAll();
         http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).addLogoutHandler(logoutHandlerImpl).logoutSuccessHandler(logoutSuccessHandler).permitAll();

@@ -15,14 +15,14 @@ import java.util.List;
  * @since 2019/8/10 13:59
  */
 @Component
-@ConfigurationProperties(prefix = "keiskei")
+@ConfigurationProperties(prefix = "keiskei.system")
 @Data
 public class SystemProperties {
 
     /**
      * 不进行拦截路径
      */
-    private String[] permitUri;
+    private String[] permitUri = null;
 
     /**
      * 是否允许跨域
@@ -37,7 +37,7 @@ public class SystemProperties {
     /**
      * 登陆后可访问的路径
      */
-    private List<AuthenticateUrl> authenticatedUrls = new ArrayList<>();
+    private List<AuthenticateUrl> authenticatedUrls = null;
 
     /**
      * 管理员登录URL

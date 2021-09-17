@@ -50,11 +50,6 @@ keiskei:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
     cross: true
     maximum-sessions: 1
-  use-permission: ${KEISKEI_USE_PERMISSION:false}
-  use-department: ${KEISKEI_USE_DEPARTMENT:false}
-  use-scheduled-task: ${KEISKEI_USE_SCHEDULED_TASK:false}
-  use-dashboard: ${KEISKEI_USE_DASHBOARD:false}
-  use-operateLog: ${KEISKEI_USE_OPERAT_LOG:false}
 
 
 
