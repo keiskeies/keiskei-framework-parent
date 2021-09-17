@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.Conf;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/conf")
-@Api(tags = "内容管理 - 页面内容管理 - 会议")
+@Api(tags = "内容管理-页面-会议")
 public class ConfController extends ListController<Conf> {
 }

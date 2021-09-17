@@ -17,7 +17,7 @@ import top.keiskeiframework.system.entity.User;
  */
 @RestController
 @RequestMapping("/admin/v1/system/user")
-@Api(tags = "系统设置 - 管理员")
+@Api(tags = "系统设置-管理员")
 public class UserController extends ListController<User> {
 
 

@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.Dataset;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/dataset")
-@Api(tags = "内容管理 - 页面内容管理 - 数据集")
+@Api(tags = "内容管理-页面-数据集")
 public class DatasetController extends ListController<Dataset> {
 }

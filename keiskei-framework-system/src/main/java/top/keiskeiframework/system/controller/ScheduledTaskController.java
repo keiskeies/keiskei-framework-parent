@@ -23,7 +23,7 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
  */
 @RestController
 @RequestMapping("/admin/v1/system/scheduledTask")
-@Api(tags = "系统设置 - 定时任务")
+@Api(tags = "系统设置-定时任务")
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class ScheduledTaskController extends ListController<ScheduledTask> {
 

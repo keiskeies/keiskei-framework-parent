@@ -26,7 +26,7 @@ import top.keiskeiframework.system.vo.user.TokenUser;
  */
 @RestController
 @RequestMapping("/admin/v1/system/self")
-@Api(tags = "系统设置 - 个人中心")
+@Api(tags = "系统设置-个人中心")
 public class SelfController {
 
     @Autowired

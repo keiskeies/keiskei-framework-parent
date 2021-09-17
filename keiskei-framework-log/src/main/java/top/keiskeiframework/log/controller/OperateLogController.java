@@ -18,7 +18,7 @@ import top.keiskeiframework.log.entity.OperateLog;
 @RestController
 @RequestMapping("/admin/v1/log/operateLog")
 @ConditionalOnProperty(value = {"keiskei.use-operateLog"})
-@Api(tags = "系统设置 - 操作日志")
+@Api(tags = "系统设置-操作日志")
 public class OperateLogController extends ListController<OperateLog> {
 
 

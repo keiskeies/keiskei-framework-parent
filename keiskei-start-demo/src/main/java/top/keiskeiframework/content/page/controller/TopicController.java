@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.Topic;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/topic")
-@Api(tags = "内容管理 - 页面内容管理 - Topic")
+@Api(tags = "内容管理-页面-Topic")
 public class TopicController extends ListController<Topic> {
 }

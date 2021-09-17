@@ -16,6 +16,6 @@ import top.keiskeiframework.content.tag.entity.TagInfo;
  */
 @RestController
 @RequestMapping("/admin/v1/content/tagInfo")
-@Api(tags = "内容管理 - 标签管理")
+@Api(tags = "内容管理-标签管理")
 public class TagInfoController extends TreeController<TagInfo> {
 }

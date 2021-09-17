@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.Article;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/article")
-@Api(tags = "内容管理 - 页面内容管理 - 科技资讯")
+@Api(tags = "内容管理-页面-科技资讯")
 public class ArticleController extends ListController<Article> {
 }

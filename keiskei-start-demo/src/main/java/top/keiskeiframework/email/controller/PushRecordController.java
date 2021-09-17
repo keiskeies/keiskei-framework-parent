@@ -16,6 +16,6 @@ import top.keiskeiframework.email.entity.PushRecord;
  */
 @RestController
 @RequestMapping("/admin/v1/email/pushRecord")
-@Api(tags = "邮件推送 - 推送记录")
+@Api(tags = "邮件推送-推送记录")
 public class PushRecordController extends ListController<PushRecord> {
 }

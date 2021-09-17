@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.DatasetLoader;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/dataset/loader")
-@Api(tags = "内容管理 - 页面内容管理 - 数据集 - Loader")
+@Api(tags = "内容管理-页面-数据集-Loader")
 public class DatasetLoaderController extends ListController<DatasetLoader> {
 }

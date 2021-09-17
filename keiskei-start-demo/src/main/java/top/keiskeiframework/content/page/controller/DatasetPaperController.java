@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.DatasetPaper;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/dataset/paper")
-@Api(tags = "内容管理 - 页面内容管理 - 数据集 - paper")
+@Api(tags = "内容管理-页面-数据集-paper")
 public class DatasetPaperController extends ListController<DatasetPaper> {
 }

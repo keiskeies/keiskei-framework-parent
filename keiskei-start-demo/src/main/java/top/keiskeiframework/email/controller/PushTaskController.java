@@ -16,6 +16,6 @@ import top.keiskeiframework.email.entity.PushTask;
  */
 @RestController
 @RequestMapping("/admin/v1/email/pushTask")
-@Api(tags = "邮件推送 - 推送任务")
+@Api(tags = "邮件推送-推送任务")
 public class PushTaskController extends ListController<PushTask> {
 }

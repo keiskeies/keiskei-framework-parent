@@ -16,6 +16,6 @@ import top.keiskeiframework.content.page.entity.DatasetBenchmark;
  */
 @RestController
 @RequestMapping("/admin/v1/content/page/dataset/benchmark")
-@Api(tags = "内容管理 - 页面内容管理 - 数据集 - Benchmark")
+@Api(tags = "内容管理-页面-数据集-Benchmark")
 public class DatasetBenchmarkController extends ListController<DatasetBenchmark> {
 }
