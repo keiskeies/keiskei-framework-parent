@@ -4,6 +4,7 @@ import es.moki.ratelimitj.core.limiter.request.RequestLimitRule;
 import es.moki.ratelimitj.core.limiter.request.RequestRateLimiter;
 import es.moki.ratelimitj.inmemory.request.InMemorySlidingWindowRequestRateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.cache.config.LimitRequestProperties;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  * @since ：2019/12/9 17:43
  */
 @Service
+@Primary
 public class SimpleCacheStorageServiceImpl implements CacheStorageService {
 
     @Autowired

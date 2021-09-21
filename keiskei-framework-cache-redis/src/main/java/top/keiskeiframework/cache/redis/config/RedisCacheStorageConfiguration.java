@@ -39,27 +39,6 @@ import java.util.Map;
 public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
 
 
-    public final static String KEY_GENERATOR_BEAN = "top.keiskeiframework.common.keyGenerator";
-
-    /**
-     * key 生成器
-     * <p>
-     * 注意: 该方法只是声明了key的生成策略,还未被使用,需在@Cacheable注解中指定keyGenerator
-     * 如: @Cacheable(value = "key", keyGenerator = "cacheKeyGenerator")
-     *
-     * @return .
-     */
-    @Bean(name = KEY_GENERATOR_BEAN)
-    public KeyGenerator cacheKeyGenerator() {
-        return (target, method, params) -> {
-            StringBuilder sb = new StringBuilder(target.getClass().getName());
-            for (Object param : params) {
-                sb.append('.');
-                sb.append(JSON.toJSONString(param));
-            }
-            return sb.toString();
-        };
-    }
 
     @Bean
     public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {

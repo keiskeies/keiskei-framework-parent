@@ -42,7 +42,7 @@ public class EmailNotifyStorageServiceImpl implements NotifyStorageService {
             messageHelper.setFrom(mailProperties.getUsername());
             messageHelper.setTo(mailVo.getTo().split(SPLIT));
             messageHelper.setSubject(mailVo.getSubject());
-            messageHelper.setText(mailVo.getText());
+            messageHelper.setText(mailVo.getText(), mailVo.getHtml());
             if (!StringUtils.isEmpty(mailVo.getCc())) {
                 messageHelper.setCc(mailVo.getCc().split(SPLIT));
             }

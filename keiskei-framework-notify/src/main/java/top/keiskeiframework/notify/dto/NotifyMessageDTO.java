@@ -30,6 +30,8 @@ public class NotifyMessageDTO {
     private String subject;
     @ApiModelProperty(value = "内容", dataType = "String")
     private String text;
+    @ApiModelProperty(value = "是否Html", dataType = "Boolean")
+    private Boolean html;
     @ApiModelProperty(value = "发送时间", dataType = "String")
     private Date sentDate;
     @ApiModelProperty(value = "抄送", dataType = "String")
