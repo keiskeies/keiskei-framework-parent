@@ -1,20 +1,16 @@
 package top.keiskeiframework.common.base.service.impl;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.mongodb.core.query.Query;
 import top.keiskeiframework.cache.annotation.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.OperateNotifyType;
-import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.util.BaseRequestUtils;
-
-import java.util.List;
+import top.keiskeiframework.common.util.BeanUtils;
 
 /**
  * <p>
@@ -30,29 +26,13 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
 
 
     protected final static String CACHE_NAME = "CACHE:BASE";
-
-    @Override
-    public List<T> options() {
-        try {
-            return this.options(getTClass().newInstance());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BizException(e.getMessage());
-        }
-    }
-
-    @Override
-    public List<T> options(@NonNull T t) {
-        Class<T> tClass = (Class<T>) t.getClass();
-        Query query = BaseRequestUtils.getQuery(null, null, t.getClass());
-
-        return mongoTemplate.find(query, tClass);
-    }
+    @Autowired
+    protected ListServiceImpl<T> baseService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
-    public T getById(String id) {
-        return super.getById(id);
+    public T findById(String id) {
+        return super.findById(id);
     }
 
 
@@ -73,12 +53,16 @@ public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceIm
     @OperateNotify(type = OperateNotifyType.UPDATE)
     @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T updateAndNotify(T t) {
-        return mongoRepository.save(t);
+        T tOld = baseService.findById(t.getId());
+        BeanUtils.copyPropertiesIgnoreJson(t, tOld);
+        return mongoRepository.save(tOld);
     }
 
     @Override
     @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T update(T t) {
+        T tOld = baseService.findById(t.getId());
+        BeanUtils.copyPropertiesIgnoreJson(t, tOld);
         return mongoRepository.save(t);
     }
 

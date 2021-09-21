@@ -39,7 +39,7 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        return R.ok(dashboardService.options());
+        return R.ok(dashboardService.findAll());
     }
 
     @ApiOperation("详情")

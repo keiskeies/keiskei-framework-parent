@@ -1,13 +1,12 @@
-package top.keiskeiframework.system.util;
+package top.keiskeiframework.common.util;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * <p>
@@ -18,8 +17,16 @@ import java.util.Arrays;
  * @since 2021/1/29 16:04
  */
 @Slf4j
+@Component
 public class ResponseUtils {
-    public static boolean cross = false;
+    private static boolean cross = false;
+
+    @Value("${keiskei.cross:false}")
+    public void setCross(Boolean cross) {
+        ResponseUtils.cross = cross;
+    }
+
+
 
     public static void write(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
         confirm(request, response);
@@ -29,7 +36,7 @@ public class ResponseUtils {
     public static void confirm(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH, PUT");
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         if (cross) {
             response.setHeader("Access-Control-Allow-Headers", "*");

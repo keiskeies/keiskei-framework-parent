@@ -1,6 +1,8 @@
 package top.keiskeiframework.system.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,6 +16,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfigurerImpl implements WebMvcConfigurer {
 
+    @Value("${keiskei.cross:false}")
+    private Boolean cross;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -23,12 +28,14 @@ public class WebMvcConfigurerImpl implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
-                .maxAge(3600)
-                .allowedHeaders("*")
-                .allowCredentials(true);
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        if (cross) {
+            registry.addMapping("/**")
+                    .allowedOrigins("*")
+                    .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE", "PATCH")
+                    .maxAge(3600)
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
+        }
     }
 }

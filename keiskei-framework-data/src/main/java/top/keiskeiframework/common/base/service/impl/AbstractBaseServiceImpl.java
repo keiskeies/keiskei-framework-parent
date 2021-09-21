@@ -64,6 +64,27 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         return mongoRepository.findAll(e, p);
     }
 
+
+    @Override
+    public List<T> findAll() {
+        Class<T> clazz = getTClass();
+        Field[] fields = clazz.getDeclaredFields();
+
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (Field field : fields) {
+            SortBy sortBy = field.getAnnotation(SortBy.class);
+            if (null != sortBy) {
+                if (sortBy.desc()) {
+                    orders.add(Sort.Order.desc(field.getName()));
+                } else {
+                    orders.add(Sort.Order.asc(field.getName()));
+                }
+            }
+        }
+        return mongoRepository.findAll(Sort.by(orders));
+    }
+
     @Override
     public List<T> findAll(Query q) {
         Class<T> tClass = getTClass();
@@ -105,48 +126,10 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         return new PageImpl<>(tList, p, count);
     }
 
-    @Override
-    public List<T> options() {
-        Class<T> clazz = getTClass();
-        Field[] fields = clazz.getDeclaredFields();
-
-        List<Sort.Order> orders = new ArrayList<>();
-
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                if (sortBy.desc()) {
-                    orders.add(Sort.Order.desc(field.getName()));
-                } else {
-                    orders.add(Sort.Order.asc(field.getName()));
-                }
-            }
-        }
-        return mongoRepository.findAll(Sort.by(orders));
-    }
-
 
 
     @Override
-    public List<T> options(T t) {
-        Field[] fields = t.getClass().getDeclaredFields();
-        List<Sort.Order> orders = new ArrayList<>();
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                if (sortBy.desc()) {
-                    orders.add(Sort.Order.desc(field.getName()));
-                } else {
-                    orders.add(Sort.Order.asc(field.getName()));
-                }
-                break;
-            }
-        }
-        return mongoRepository.findAll(Example.of(t), Sort.by(orders));
-    }
-
-    @Override
-    public T getById(String id) {
+    public T findById(String id) {
         return mongoRepository.findById(id).orElse(null);
     }
 

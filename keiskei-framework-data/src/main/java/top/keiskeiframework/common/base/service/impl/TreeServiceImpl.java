@@ -12,6 +12,7 @@ import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 
 import java.util.List;
@@ -36,13 +37,13 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
 
     @Override
     public List<T> findAll(BaseRequest<T> request) {
-        return baseService.options();
+        return baseService.findAll();
     }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
-    public List<T> options() {
-        return super.options();
+    public List<T> findAll() {
+        return super.findAll();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public T save(T t) {
         if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
+            T parent = this.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
             t = mongoRepository.save(t);
             t.setSign(parent.getSign() + t.getId() + SPILT);
@@ -79,6 +80,8 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.UPDATE)
     public T updateAndNotify(T t) {
+        T tOld = baseService.findById(t.getId());
+        BeanUtils.copyPropertiesIgnoreJson(t, tOld);
         return this.update(t);
     }
 
@@ -86,8 +89,10 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public T update(T t) {
         Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+        T tOld = baseService.findById(t.getId());
+        BeanUtils.copyPropertiesIgnoreJson(t, tOld);
         if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
+            T parent = this.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
             t.setSign(parent.getSign() + t.getId() + SPILT);
         } else {
@@ -109,7 +114,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.DELETE)
     public void deleteByIdAndNotify(String id) {
-        Set<String> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        Set<String> childIds = new TreeEntityUtils<>(baseService.findAll()).getChildIds(id);
         for (String cid : childIds) {
             mongoRepository.deleteById(cid);
         }
@@ -118,7 +123,7 @@ public class TreeServiceImpl<T extends TreeEntity> extends AbstractBaseServiceIm
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void deleteById(String id) {
-        Set<String> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        Set<String> childIds = new TreeEntityUtils<>(baseService.findAll()).getChildIds(id);
         for (String cid : childIds) {
             mongoRepository.deleteById(cid);
         }

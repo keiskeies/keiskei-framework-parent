@@ -36,36 +36,18 @@ public interface BaseService<T extends BaseEntity> {
 
     Page<T> page(Example<T> s, Pageable p);
 
+
     /**
      * 查询全部
      *
-     * @param q 查询条件
      * @return 。
      */
+    List<T> findAll();
     List<T> findAll(Query q);
-
     List<T> findAll(BaseRequest<T> request);
-
     List<T> findAll(Query q, Sort sort);
-
     List<T> findAll(Example<T> e);
-
     List<T> findAll(Example<T> e, Sort sort);
-
-    /**
-     * 下拉框列表
-     *
-     * @return .
-     */
-    List<T> options();
-
-    /**
-     * 下拉框列表
-     *
-     * @param t 查询条件
-     * @return .
-     */
-    List<T> options(T t);
 
     /**
      * 根据id查询
@@ -73,7 +55,7 @@ public interface BaseService<T extends BaseEntity> {
      * @param id id
      * @return .
      */
-    T getById(String id);
+    T findById(String id);
 
     /**
      * 新增

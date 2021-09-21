@@ -1,6 +1,10 @@
 package top.keiskeiframework.content.page.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,8 +34,10 @@ import java.util.List;
 @ApiModel(value = "Conf", description = "会议")
 public class Conf extends BaseEntity {
     @ApiModelProperty(value = "创建时间", dataType = "String", example = "2021-09-01 00:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createdTime;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdTime;
 
     @ApiModelProperty(value = "创建人", dataType = "String", example = "10001")
     private String creator;
@@ -56,12 +62,16 @@ public class Conf extends BaseEntity {
     private String url;
 
     @ApiModelProperty(value = "会议开始日期", dataType = "String", example = "2021-09-01 00:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date beginDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime beginDate;
 
     @ApiModelProperty(value = "会议结束日期", dataType = "String", example = "2021-09-01 00:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endDate;
 
     @ApiModelProperty(value = "年份", dataType = "Integer", example = "2020")
     private Integer year;

@@ -28,9 +28,9 @@ public class DatasetServiceImpl extends ListServiceImpl<Dataset> implements IDat
     private DatasetPaperRepository datasetPaperRepository;
 
     @Override
-    public Dataset getById(String id) {
+    public Dataset findById(String id) {
 
-        Dataset dataset = super.getById(id);
+        Dataset dataset = super.findById(id);
         if (null == dataset) {
             return null;
         }

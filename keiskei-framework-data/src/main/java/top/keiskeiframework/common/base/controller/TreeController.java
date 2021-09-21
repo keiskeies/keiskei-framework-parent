@@ -32,22 +32,34 @@ public class TreeController<T extends TreeEntity> {
     @GetMapping
     @ApiOperation("列表")
     public R<List<T>> tree(
-            @ApiParam(value = "查询条件", type="JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
-            String conditions
+            @ApiParam(value = "查询条件", type = "JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
+            @RequestParam(required = false)
+            String conditions,
+
+            @ApiParam(value = "查询字段", type = "String", example = "id, name")
+            @RequestParam(required = false)
+            String show
     ) {
         BaseRequest<T> baseRequest = new BaseRequest<>();
         baseRequest.setConditions(conditions);
+        baseRequest.setShow(show);
         List<T> list = baseService.findAll(baseRequest);
         return R.ok(new TreeEntityUtils<>(list).getTree(null));
     }
     @GetMapping(value = "/options")
     @ApiOperation("列表")
     public R<List<T>> options(
-            @ApiParam(value = "查询条件", type="JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
-                    String conditions
+            @ApiParam(value = "查询条件", type = "JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
+            @RequestParam(required = false)
+            String conditions,
+
+            @ApiParam(value = "查询字段", type = "String", example = "id, name")
+            @RequestParam(required = false)
+            String show
     ) {
         BaseRequest<T> baseRequest = new BaseRequest<>();
         baseRequest.setConditions(conditions);
+        baseRequest.setShow(show);
         List<T> list = baseService.findAll(baseRequest);
         return R.ok(list);
     }
@@ -55,7 +67,7 @@ public class TreeController<T extends TreeEntity> {
     @GetMapping("/{id}")
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable String id) {
-        return R.ok(baseService.getById(id));
+        return R.ok(baseService.findById(id));
     }
 
     @PostMapping

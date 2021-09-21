@@ -48,8 +48,8 @@ spring:
 keiskei:
   system:
     permit-uri: /swagger-ui.html,/images/**,/webjars/**,/v2/**,/configuration/**,/csrf,/doc.html,/webjars/**,/swagger-resources/**,/favicon.ico
-    cross: true
     maximum-sessions: 1
+  cross: true
 
 
 

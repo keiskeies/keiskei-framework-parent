@@ -42,7 +42,7 @@ public class SelfController {
     @ApiOperation("修改")
     public R<UserDto> update(@RequestBody UserDto userDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.getById(tokenUser.getId());
+        User user = userService.findById(tokenUser.getId());
         BeanUtils.copyPropertiesIgnoreNull(userDto, user);
         userService.update(user);
         return R.ok(userDto);
@@ -52,7 +52,7 @@ public class SelfController {
     @ApiOperation("修改密码")
     public R<Boolean> update(@RequestBody @Validated UserPasswordDto userPasswordDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.getById(tokenUser.getId());
+        User user = userService.findById(tokenUser.getId());
         Assert.isTrue(userPasswordDto.match(user.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
 
         user.setPassword(userPasswordDto.getNewPassword());

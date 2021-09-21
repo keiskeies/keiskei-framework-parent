@@ -11,7 +11,7 @@ import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
 import top.keiskeiframework.common.util.JwtTokenUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.util.ResponseUtils;
+import top.keiskeiframework.common.util.ResponseUtils;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.user.TokenUser;
 

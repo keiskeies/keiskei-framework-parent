@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.controller;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -35,17 +36,26 @@ public class ListController<T extends BaseEntity> {
         return R.ok(baseService.page(request));
     }
 
-
     @GetMapping("/options")
     @ApiOperation("下拉框")
-    public R<List<T>> list() {
-        return R.ok(baseService.options());
+    public R<List<T>> list(
+            @ApiParam(value = "查询条件", type = "JSONSting", example = "{\"column\":\"id\", \"condition\": \"EQ|IN|GE|GT|LIKE|LL|LR|BT\", \"value\": [1001,1002] }")
+            @RequestParam(required = false)
+            String conditions,
+            @ApiParam(value = "查询字段", type = "String", example = "id, name")
+            @RequestParam(required = false)
+            String show
+    ) {
+        BaseRequest<T> baseRequest = new BaseRequest<>();
+        baseRequest.setConditions(conditions);
+        baseRequest.setShow(show);
+        return R.ok(baseService.findAll());
     }
 
     @GetMapping("/{id}")
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable String id) {
-        return R.ok(baseService.getById(id));
+        return R.ok(baseService.findById(id));
     }
 
     @PostMapping

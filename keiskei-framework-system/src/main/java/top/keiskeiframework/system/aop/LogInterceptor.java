@@ -41,8 +41,8 @@ public class LogInterceptor {
 
     @Autowired(required = false)
     private OperateLogService operateLogService;
-    private final static String LOG_NAME_FORMATTER = "[%s - %s]";
-    private final static String MESSAGE_FORMATTER = "%s - %s";
+    private final static String LOG_NAME_FORMATTER = "[%s-%s]";
+    private final static String MESSAGE_FORMATTER = "%s-%s";
     private final static String GET = "GET";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")

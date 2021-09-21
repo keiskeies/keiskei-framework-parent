@@ -1,6 +1,10 @@
 package top.keiskeiframework.content.page.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -57,8 +61,10 @@ public class Topic extends BaseEntity {
     private String oldtopic;
 
     @ApiModelProperty(value = "更新时间", dataType = "String", example = "2021-09-01 00:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date updateTime;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "是否发布", dataType = "Boolean", example = "false")
     @Field("is_public")
@@ -92,8 +98,10 @@ public class Topic extends BaseEntity {
     private Integer statsTotal;
 
     @ApiModelProperty(value = "统计时间", dataType = "String", example = "2021-09-01 00:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date statsUpdatedTime;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime statsUpdatedTime;
 
 
     @EqualsAndHashCode(callSuper = true)
@@ -105,8 +113,10 @@ public class Topic extends BaseEntity {
     public static class TopicLike extends BaseEntity {
 
         @ApiModelProperty(value = "更新时间", dataType = "String", example = "2021-09-01 00:00:00")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        private Date updateTime;
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime updateTime;
     }
 
     @EqualsAndHashCode(callSuper = true)

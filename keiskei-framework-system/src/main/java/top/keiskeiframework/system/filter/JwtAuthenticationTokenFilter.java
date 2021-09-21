@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.JwtTokenUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.util.ResponseUtils;
+import top.keiskeiframework.common.util.ResponseUtils;
 import top.keiskeiframework.system.vo.user.TokenUser;
 
 import javax.servlet.FilterChain;

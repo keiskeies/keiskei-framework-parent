@@ -3,9 +3,8 @@ package top.keiskeiframework.system.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import top.keiskeiframework.system.util.ResponseUtils;
+import top.keiskeiframework.common.util.ResponseUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,16 +24,6 @@ public class SystemProperties {
     private String[] permitUri = null;
 
     /**
-     * 是否允许跨域
-     */
-    private Boolean cross = Boolean.FALSE;
-
-    public void setCross(Boolean cross) {
-        this.cross = cross;
-        ResponseUtils.cross = cross;
-    }
-
-    /**
      * 登陆后可访问的路径
      */
     private List<AuthenticateUrl> authenticatedUrls = null;
@@ -52,7 +41,7 @@ public class SystemProperties {
     /**
      * token有效时长
      */
-    private Integer tokenMinutes = 2 * 60;
+    private Integer tokenMinutes = 5 * 60;
     /**
      * token加密
      */

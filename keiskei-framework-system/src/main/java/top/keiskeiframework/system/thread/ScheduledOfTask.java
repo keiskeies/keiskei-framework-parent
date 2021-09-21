@@ -32,7 +32,7 @@ public class ScheduledOfTask implements Runnable {
     public void run() {
         try {
             IScheduledTaskService scheduledTaskService = SpringUtils.getBean(IScheduledTaskService.class);
-            ScheduledTask scheduledTask = scheduledTaskService.getById(id);
+            ScheduledTask scheduledTask = scheduledTaskService.findById(id);
             if (null == scheduledTask || !scheduledTask.getEnable()) {
                 return;
             }

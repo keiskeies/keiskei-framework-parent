@@ -1,5 +1,10 @@
 package top.keiskeiframework.email.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.system.entity.User;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,7 +36,10 @@ import java.util.List;
 public class PushTask extends BaseEntity {
 
     @ApiModelProperty(value = "推送时间", dataType = "String")
-    private Date sentDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime sentDate;
     @ApiModelProperty(value = "推送主题", dataType = "String")
     private String subject;
     @ApiModelProperty(value = "接收人", dataType = "String")
@@ -50,10 +58,22 @@ public class PushTask extends BaseEntity {
     @ApiModelProperty(value = "推送类型", dataType = "String", notes = "FIXATION/DYNAMIC")
     private PushTaskTypeEnum type;
     @ApiModelProperty(value = "推送模版", dataType = "String")
-    private String template;
+    @DBRef
+    private PushTemplate template;
+    @ApiModelProperty(value = "推送状态", dataType = "String")
+    private PushTaskStatusEnum status;
 
 
-
+    public enum PushTaskStatusEnum{
+        //
+        NONE,
+        // 已开始
+        STARTING,
+        // 暂停
+        STOP,
+        // 结束
+        FINISH
+    }
 
     public enum PushTaskTypeEnum{
         // 固定
