@@ -61,7 +61,7 @@ public class Article extends BaseEntity {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
     @ApiModelProperty(value = "更新时间", dataType = "String", example = "2021-09-01 00:00:00")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
