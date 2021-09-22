@@ -135,6 +135,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
 
     @Override
     public T save(T t) {
+        t.setId(null);
         return mongoRepository.save(t);
     }
 
@@ -143,6 +144,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         if (CollectionUtils.isEmpty(ts)) {
             return ts;
         }
+        ts.forEach(e -> e.setId(null));
         Field[] fields = ts.get(0).getClass().getDeclaredFields();
         long count = mongoRepository.count();
         for (Field field : fields) {

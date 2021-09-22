@@ -84,7 +84,7 @@ public class Article extends BaseEntity {
     @ApiModelProperty(value = "微信链接", dataType = "String", example = "https://mp.weixin.qq.com/s/uPmVmkVIc7fQh-U9DgeC_w")
     private String wxlink;
 
-    @ApiModelProperty(value = "微信链接", dataType = "String", example = "https://mp.weixin.qq.com/s/uPmVmkVIc7fQh-U9DgeC_w")
+    @ApiModelProperty(value = "微信SHOW", dataType = "String")
     private String wxshow;
 
     @ApiModelProperty(value = "分类", dataType = "String", example = "资讯")
