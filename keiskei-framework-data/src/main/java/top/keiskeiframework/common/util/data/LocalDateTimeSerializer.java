@@ -3,7 +3,6 @@ package top.keiskeiframework.common.util.data;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
-import top.keiskeiframework.common.util.DateTimeUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -12,7 +11,8 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
- *
+ * 时间序列化
+ * LocalDateTime 转 String
  * </p>
  *
  * @author v_chenjiamin

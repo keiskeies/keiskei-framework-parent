@@ -56,6 +56,7 @@ public class BaseRequest<T extends BaseEntity> {
     /**
      * 获取分页条件
      *
+     * @param tClass class
      * @return 。
      */
     public Pageable getPageable(@NonNull Class<T> tClass) {
@@ -81,6 +82,7 @@ public class BaseRequest<T extends BaseEntity> {
     /**
      * 获取查询关系
      *
+     * @param tClass class
      * @return 。
      */
     public Query getQuery(@NonNull Class<T> tClass) {

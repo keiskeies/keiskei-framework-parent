@@ -55,9 +55,12 @@ public class EntityFactory {
         }
     }
 
-    private final static CacheDTO CREATE_TIME = new CacheDTO("createTime", "创建时间");
-    private final static CacheDTO UPDATE_TIME = new CacheDTO("updateTime", "更新时间");
-
+    /**
+     * 获取实体类中的字段
+     *
+     * @param entityClass 实体类全名
+     * @return 字段集合
+     */
     public static List<CacheDTO> getEntityInfo(@NonNull String entityClass) {
         List<CacheDTO> entityFields;
 
@@ -67,7 +70,7 @@ public class EntityFactory {
             entityFields = new ArrayList<>(fields.length);
             for (Field field : fields) {
                 Chartable chartable = field.getAnnotation(Chartable.class);
-                if (null != chartable && DATA_CLASS_SET.contains(field.getType())) {
+                if (null != chartable) {
                     ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
                     if (null != apiModelProperty) {
                         entityFields.add(new CacheDTO(field.getName(), apiModelProperty.value()));
@@ -80,11 +83,16 @@ public class EntityFactory {
             entityFields = new ArrayList<>();
             e.printStackTrace();
         }
-        entityFields.add(CREATE_TIME);
-        entityFields.add(UPDATE_TIME);
         return entityFields;
     }
 
+    /**
+     * 判断实体类中是否包含字段
+     *
+     * @param entityClass 实体类全名
+     * @param entityField 字段名称
+     * @return boolean
+     */
     public static boolean columnEntityContains(@NotBlank String entityClass, @NotBlank String entityField) {
         try {
             Class<?> clazz = Class.forName(entityClass);
@@ -103,10 +111,8 @@ public class EntityFactory {
     private static boolean columnEntityContains(@NotNull Class<?> clazz, @NotBlank String entityField) {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            if (DATA_CLASS_SET.contains(field.getType())) {
-                if (field.getName().equals(entityField)) {
-                    return true;
-                }
+            if (field.getName().equals(entityField)) {
+                return true;
             }
         }
         return false;

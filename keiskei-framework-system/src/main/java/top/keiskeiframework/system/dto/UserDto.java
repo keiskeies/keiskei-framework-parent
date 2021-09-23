@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import top.keiskeiframework.system.vo.user.TokenGrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.List;
  * @since 2020/12/21 16:39
  */
 @Data
+@ApiModel(value = "UserDto", description = "用户信息")
 public class UserDto {
 
     private Object id;

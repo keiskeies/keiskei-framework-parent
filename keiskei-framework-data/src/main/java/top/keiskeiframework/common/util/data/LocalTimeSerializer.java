@@ -12,7 +12,8 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
- *
+ * 时间序列化
+ * LocalTime 转 String
  * </p>
  *
  * @author v_chenjiamin

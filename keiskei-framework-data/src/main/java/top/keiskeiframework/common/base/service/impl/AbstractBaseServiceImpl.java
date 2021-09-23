@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.BaseEntity;
@@ -24,6 +25,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +44,8 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     protected MongoRepository<T, String> mongoRepository;
     @Autowired
     protected MongoTemplate mongoTemplate;
+    private final static String TIME_FIELD_DEFAULT = "createTime";
+    private final static String TIME_FIELD_UNDEFINED = "undefined";
 
     protected Class<T> getTClass() {
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
@@ -125,7 +129,6 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
 
         return new PageImpl<>(tList, p, count);
     }
-
 
 
     @Override
@@ -213,33 +216,60 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
     @Override
     public Map<String, Long> getChartOptions(ChartRequestDTO chartRequestDTO) {
 
+        if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
+            return getTimeChartOptions(chartRequestDTO);
+        } else {
+            return getFieldChartOptions(chartRequestDTO);
+        }
+    }
+
+    /**
+     * 时间格式数据图表
+     *
+     * @param chartRequestDTO 图表条件
+     * @return 。
+     */
+    public Map<String, Long> getTimeChartOptions(ChartRequestDTO chartRequestDTO) {
         Class<T> clazz = getTClass();
+
+        Field field;
+
+        List<T> tList;
+
         Query query = new Query();
 
+        // 是否指定新的创建时间字段
+        String timeField = chartRequestDTO.getTimeField();
+        if (StringUtils.isEmpty(timeField)) {
+            timeField = TIME_FIELD_DEFAULT;
+        } else if (TIME_FIELD_UNDEFINED.equals(timeField)) {
+            return Collections.emptyMap();
+        }
         // 基本时间条件
-        Criteria criteria = Criteria.where("createTime").gte(chartRequestDTO.getStart()).lte(chartRequestDTO.getEnd());
+        Criteria criteria = Criteria.where(timeField).gte(chartRequestDTO.getStart()).lte(chartRequestDTO.getEnd());
         query.addCriteria(criteria);
-        List<T> tList = mongoTemplate.find(query, clazz);
-        if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
-            tList.forEach(e -> {
-                try {
-                    e.setIndex(
-                            getColumnGroupValue((LocalDateTime) clazz.getField("createTime").get(e), chartRequestDTO.getTimeDelta())
-                    );
-                    e.setIndexNumber(1L);
-                } catch (IllegalAccessException | NoSuchFieldException ignored) {
+        org.springframework.data.mongodb.core.query.Field findFields = query.fields();
+        findFields.include("id");
+        findFields.include(TIME_FIELD_DEFAULT);
+        tList = mongoTemplate.find(query, clazz);
+
+        try {
+            field = clazz.getDeclaredField(timeField);
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            return Collections.emptyMap();
+        }
+        for (T t : tList) {
+            try {
+                Object obj = field.get(t);
+                if (null == obj) {
+                    continue;
                 }
-            });
-        } else {
-            tList.forEach(e -> {
-                try {
-                    e.setIndex(
-                            clazz.getField(chartRequestDTO.getColumn()).get(e).toString()
-                    );
-                    e.setIndexNumber(1L);
-                } catch (IllegalAccessException | NoSuchFieldException ignored) {
-                }
-            });
+                t.setIndex(getColumnGroupValue((LocalDateTime) obj, chartRequestDTO.getTimeDelta()));
+                t.setIndexNumber(1L);
+            } catch (IllegalAccessException error) {
+                error.printStackTrace();
+            }
         }
         return tList.stream().collect(Collectors.toMap(
                 T::getIndex,
@@ -248,6 +278,70 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         ));
     }
 
+    /**
+     * 字段格式数据图表
+     *
+     * @param chartRequestDTO 图表条件
+     * @return 。
+     */
+    public Map<String, Long> getFieldChartOptions(ChartRequestDTO chartRequestDTO) {
+        Class<T> clazz = getTClass();
+
+        Field field;
+
+        List<T> tList;
+
+        Query query = new Query();
+
+        // 是否指定新的创建时间字段
+        String timeField = chartRequestDTO.getTimeField();
+        if (StringUtils.isEmpty(timeField)) {
+            timeField = TIME_FIELD_DEFAULT;
+        }
+        if (!TIME_FIELD_UNDEFINED.equals(timeField)) {
+            // 基本时间条件
+            Criteria criteria = Criteria.where(timeField).gte(chartRequestDTO.getStart()).lte(chartRequestDTO.getEnd());
+            query.addCriteria(criteria);
+        }
+
+        org.springframework.data.mongodb.core.query.Field findFields = query.fields();
+        findFields.include("id");
+        findFields.include(chartRequestDTO.getColumn());
+        tList = mongoTemplate.find(query, clazz);
+        try {
+            field = clazz.getDeclaredField(chartRequestDTO.getColumn());
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            return Collections.emptyMap();
+        }
+        for (T t : tList) {
+            try {
+                Object obj = field.get(t);
+                if (null == obj) {
+                    continue;
+                }
+
+                t.setIndex(obj.toString());
+                t.setIndexNumber(1L);
+            } catch (IllegalAccessException error) {
+                error.printStackTrace();
+            }
+        }
+        return tList.stream().collect(Collectors.toMap(
+                T::getIndex,
+                T::getIndexNumber,
+                Long::sum
+        ));
+    }
+
+    /**
+     * 转换时间格式
+     * 获取星期/季度/小时等
+     *
+     * @param createTime 创建时间
+     * @param delta      时间跨度
+     * @return 。
+     */
     protected String getColumnGroupValue(LocalDateTime createTime, TimeDeltaEnum delta) {
         switch (delta) {
             case WEEK_DAY:

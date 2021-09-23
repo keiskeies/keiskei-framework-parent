@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ConditionalOnProperty({"keiskei.use-permission"})
-public class IRoleServiceImpl extends ListServiceImpl<Role> implements IRoleService {
+public class RoleServiceImpl extends ListServiceImpl<Role> implements IRoleService {
 
     @Autowired
     private RoleRepository roleRepository;

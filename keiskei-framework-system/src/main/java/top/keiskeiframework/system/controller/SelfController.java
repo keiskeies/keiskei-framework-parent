@@ -26,20 +26,18 @@ import top.keiskeiframework.system.vo.user.TokenUser;
  */
 @RestController
 @RequestMapping("/admin/v1/system/self")
-@Api(tags = "系统设置-个人中心")
+@Api(tags = "系统设置-个人中心", hidden = true)
 public class SelfController {
 
     @Autowired
     private IUserService userService;
 
     @GetMapping
-    @ApiOperation("详情")
     public R<UserDto> getSelfInfo() {
         return R.ok(userService.getSelfInfo());
     }
 
     @PutMapping
-    @ApiOperation("修改")
     public R<UserDto> update(@RequestBody UserDto userDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
         User user = userService.findById(tokenUser.getId());
@@ -49,7 +47,6 @@ public class SelfController {
     }
 
     @PatchMapping
-    @ApiOperation("修改密码")
     public R<Boolean> update(@RequestBody @Validated UserPasswordDto userPasswordDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
         User user = userService.findById(tokenUser.getId());

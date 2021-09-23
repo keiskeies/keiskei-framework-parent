@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -42,9 +44,10 @@ import java.util.stream.Collectors;
  * @since 2021/4/13 18:40
  */
 @Service
+@Order
 @Slf4j
 @ConditionalOnProperty(value = {"keiskei.use-dashboard"})
-public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
+public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
     private static final String CACHE_NAME = CacheTimeEnum.M10;
 
@@ -97,12 +100,13 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
                 break;
         }
 
-        ChartRequestDTO chartRequestDTO = new ChartRequestDTO(
-                dashboard.getType(),
-                dashboard.getFieldType(),
-                startAndEnd[0],
-                startAndEnd[1]
-        );
+        ChartRequestDTO chartRequestDTO = new ChartRequestDTO();
+        chartRequestDTO.setChartType(dashboard.getType());
+        chartRequestDTO.setColumnType(dashboard.getFieldType());
+        chartRequestDTO.setStart(startAndEnd[0]);
+        chartRequestDTO.setEnd(startAndEnd[1]);
+        chartRequestDTO.setTimeField(dashboard.getTimeField());
+
         if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
             chartRequestDTO.setTimeDelta(dashboard.getFieldDelta());
             return getTimeChartOption(chartRequestDTO, dashboard);
@@ -268,11 +272,17 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard> implements
         chartRequestDTO.setColumn(direction.getField());
         chartRequestDTO.setColumnType(dashboard.getFieldType());
         chartRequestDTO.setChartType(direction.getType());
-
-        String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "I");
-
-        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(className + "ServiceImpl");
+        String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
+        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
         return baseService.getChartOptions(chartRequestDTO);
+    }
+
+    private String lowCaseFirst(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return "";
+        }
+        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
+
     }
 
 

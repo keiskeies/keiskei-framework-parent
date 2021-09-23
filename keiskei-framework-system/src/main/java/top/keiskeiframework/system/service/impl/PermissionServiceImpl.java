@@ -18,7 +18,7 @@ import top.keiskeiframework.system.service.IPermissionService;
  */
 @Service
 @ConditionalOnProperty({"keiskei.use-permission"})
-public class IPermissionServiceImpl extends TreeServiceImpl<Permission> implements IPermissionService {
+public class PermissionServiceImpl extends TreeServiceImpl<Permission> implements IPermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;

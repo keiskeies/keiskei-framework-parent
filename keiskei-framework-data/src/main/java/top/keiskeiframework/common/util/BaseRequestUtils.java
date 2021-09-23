@@ -103,11 +103,6 @@ public class BaseRequestUtils {
         }
 
         confirmQuery(query, conditions, fieldSet, show);
-
-
-
-
-
         return query;
     }
 

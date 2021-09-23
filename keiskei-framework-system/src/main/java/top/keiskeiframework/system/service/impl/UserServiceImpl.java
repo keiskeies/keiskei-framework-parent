@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * @since 2020年12月10日11:41:05
  */
 @Service
-public class IUserServiceImpl extends ListServiceImpl<User> implements IUserService {
+public class UserServiceImpl extends ListServiceImpl<User> implements IUserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired

@@ -23,7 +23,7 @@ import top.keiskeiframework.log.service.IOperateLogService;
  */
 @Service
 @ConditionalOnProperty(value = {"keiskei.use-operateLog"})
-public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService, OperateLogService {
+public class OperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService, OperateLogService {
 
     @Autowired
     private OperateLogRepository operateLogRepository;
