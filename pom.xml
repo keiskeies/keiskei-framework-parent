@@ -193,11 +193,35 @@
         </dependencies>
 
     </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>cjm-nexus-central</id>
+            <name>cjm-nexus-central</name>
+            <url>http://nexus.cjm.jx.cn/repository/maven-central/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>cjm-nexus</id>
+            <name>cjm-nexus</name>
+            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/keiskeies/keiskei-framework-parent</url>
+            <id>cjm-nexus</id>
+            <name>nexus cjm</name>
+            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
         </repository>
     </distributionManagement>
     <build>
