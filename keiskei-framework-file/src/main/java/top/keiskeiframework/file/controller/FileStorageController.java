@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(tags = "文件管理")
 @Controller
 @RequestMapping
-public class FileController {
+public class FileStorageController {
 
     @Autowired
     private FileStorageService fileStorageService;
