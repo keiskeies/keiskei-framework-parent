@@ -44,7 +44,7 @@ public class GenerateServiceImpl implements IGenerateService {
             throw new BizException(BizExceptionEnum.ERROR);
         }
 
-        ProjectInfo project = projectInfoService.getById(itemId);
+        ProjectInfo project = projectInfoService.findById(itemId);
 
         buildProject(project);
 

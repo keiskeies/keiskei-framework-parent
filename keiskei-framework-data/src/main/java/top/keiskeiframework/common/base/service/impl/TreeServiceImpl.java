@@ -55,7 +55,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @Lockable(key = "#t.hashCode()")
     public T save(T t) {
         if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
+            T parent = this.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
             t = jpaRepository.save(t);
             t.setSign(parent.getSign() + t.getId() + SPILT);
@@ -85,7 +85,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     public T update(T t) {
         Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
         if (null != t.getParentId()) {
-            T parent = this.getById(t.getParentId());
+            T parent = this.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
             t.setSign(parent.getSign() + t.getId() + SPILT);
         } else {

@@ -46,7 +46,7 @@ public class ListController<T extends BaseEntity<ID>, ID extends Serializable> {
     @GetMapping("/{id}")
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable ID id) {
-        return R.ok(baseService.getById(id));
+        return R.ok(baseService.findById(id));
     }
 
     @PostMapping

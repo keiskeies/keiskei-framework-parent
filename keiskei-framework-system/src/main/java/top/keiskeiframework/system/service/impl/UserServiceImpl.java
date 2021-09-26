@@ -68,7 +68,7 @@ public class UserServiceImpl extends ListServiceImpl<User, Long> implements IUse
         tokenUser.setId(user.getId());
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
-            Department department = departmentService.getById(tokenUser.getDepartmentId());
+            Department department = departmentService.findById(tokenUser.getDepartmentId());
             Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
 
             tokenUser.setDepartment(department.getSign());

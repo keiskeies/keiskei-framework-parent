@@ -133,7 +133,7 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity<ID>, ID exten
     }
 
     @Override
-    public T getById(ID id) {
+    public T findById(ID id) {
         return jpaRepository.findById(id).orElse(null);
     }
 

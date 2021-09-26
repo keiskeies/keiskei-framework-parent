@@ -72,7 +72,7 @@ public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> 
      * @param id id
      * @return .
      */
-    T getById(ID id);
+    T findById(ID id);
 
     /**
      * 新增

@@ -1,7 +1,11 @@
 package top.keiskeiframework.system.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.system.handler.*;
+import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,8 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     private SystemProperties systemProperties;
     @Autowired
     private IUserService userService;
+    @Value("${keiskei.use-permission:false}")
+    private Boolean usePermission;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,17 +54,35 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
             http.cors().disable();
         }
         http.headers().defaultsDisabled().cacheControl();
-        http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
-
-        http.authorizeRequests().antMatchers("/admin/**").permitAll();
-//        if (!StringUtils.isEmpty(userTokenProperties.getAuthenticatedUrl())) {
-//            http.authorizeRequests().antMatchers(userTokenProperties.getAuthenticatedUrl().split(",")).authenticated();
-//        }
-
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
-        http.formLogin().loginPage(systemProperties.getAuthWebLoginPath()).successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).permitAll();
-        http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).addLogoutHandler(logoutHandlerImpl).logoutSuccessHandler(logoutSuccessHandler).permitAll();
+        http.formLogin().loginPage(systemProperties.getAuthWebLoginPath())
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .permitAll();
+        http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).
+                addLogoutHandler(logoutHandlerImpl)
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .permitAll();
+
+        // 不进行拦截的路径
+        http.authorizeRequests().antMatchers("/api/**").permitAll();
+        if (null != systemProperties.getPermitUri()) {
+            http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
+        }
+
+        // 登陆后可访问的路径
+        http.authorizeRequests().antMatchers("/admin/*/system/self/**").authenticated();
+        if (!CollectionUtils.isEmpty(systemProperties.getAuthenticatedUrls())) {
+            for (AuthenticateUrl authenticateUrl : systemProperties.getAuthenticatedUrls()) {
+                http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).authenticated();
+            }
+        }
+
+        if (usePermission) {
+            //开启自定义连接拦截
+            http.authorizeRequests().anyRequest().access("@rbacAuthorityService.hasPermission(request,authentication)");
+        }
         http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
         http.authorizeRequests().antMatchers("/**").authenticated();
 

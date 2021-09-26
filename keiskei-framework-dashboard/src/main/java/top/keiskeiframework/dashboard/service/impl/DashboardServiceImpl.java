@@ -70,7 +70,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Long id) {
-        Dashboard dashboard = super.getById(id);
+        Dashboard dashboard = super.findById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
         LocalDateTime[] startAndEnd;

@@ -55,15 +55,15 @@ public class ListServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> 
         List<T> result = new ArrayList<>(ids.size());
 
         for (Object id : ids) {
-            result.add(baseService.getById((ID) id));
+            result.add(baseService.findById((ID) id));
         }
         return result;
     }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
-    public T getById(ID id) {
-        return super.getById(id);
+    public T findById(ID id) {
+        return super.findById(id);
     }
 
 
