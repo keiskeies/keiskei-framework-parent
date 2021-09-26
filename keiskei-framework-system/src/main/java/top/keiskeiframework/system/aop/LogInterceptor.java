@@ -59,8 +59,8 @@ public class LogInterceptor {
             TokenUser tokenUser = SecurityUtils.getSessionUser();
             operateLog.setUserId(tokenUser.getId());
             MdcUtils.setUserId(tokenUser.getId() + "");
-            MdcUtils.setUserName(tokenUser.getName() + "");
-            MdcUtils.setUserDepartment(tokenUser.getDepartment() + "");
+            MdcUtils.setUserName(tokenUser.getName());
+            MdcUtils.setUserDepartment(tokenUser.getDepartment());
 
 
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();

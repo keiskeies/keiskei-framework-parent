@@ -3,6 +3,7 @@ package top.keiskeiframework.system.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/v1/system/permission")
 @Api(tags = "系统设置 - 权限管理")
+@ConditionalOnProperty({"keiskei.use-permission"})
 public class PermissionController extends TreeController<Permission, Long> {
 
 

@@ -1,10 +1,10 @@
 package top.keiskeiframework.dashboard.service.impl;
 
-import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.dashboard.factory.EntityFactory;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class IDashboardServiceImpl extends ListServiceImpl<Dashboard, Long> implements IDashboardService {
+public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> implements IDashboardService {
 
     private static final String CACHE_NAME = CacheTimeEnum.M10;
 
@@ -267,10 +267,18 @@ public class IDashboardServiceImpl extends ListServiceImpl<Dashboard, Long> impl
         chartRequestDTO.setColumnType(dashboard.getFieldType());
         chartRequestDTO.setChartType(direction.getType());
 
-        String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "I");
+        String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 
-        BaseService<?, ?> baseService = (BaseService<?, ?>) SpringUtils.getBean(className + "ServiceImpl");
+        BaseService<?, ?> baseService = (BaseService<?, ?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
         return baseService.getChartOptions(chartRequestDTO);
+    }
+
+    private String lowCaseFirst(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return "";
+        }
+        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
+
     }
 
 

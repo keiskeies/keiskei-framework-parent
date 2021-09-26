@@ -1,11 +1,10 @@
 package top.keiskeiframework.system.service.impl;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.system.entity.Role;
-import top.keiskeiframework.system.repository.RoleRepository;
 import top.keiskeiframework.system.service.IRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -16,9 +15,8 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-10 14:11:30
  */
 @Service
-public class IRoleServiceImpl extends ListServiceImpl<Role, Long> implements IRoleService {
+@ConditionalOnProperty({"keiskei.use-permission"})
+public class RoleServiceImpl extends ListServiceImpl<Role, Long> implements IRoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
 
 }

@@ -12,7 +12,7 @@ import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.generate.config.GenerateProperties;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;
-import top.keiskeiframework.generate.service.GenerateService;
+import top.keiskeiframework.generate.service.IGenerateService;
 import top.keiskeiframework.generate.service.IProjectInfoService;
 import top.keiskeiframework.generate.util.GenerateFileUtils;
 
@@ -24,13 +24,13 @@ import java.io.IOException;
  * @since 2020/12/23 15:53
  */
 @Service
-public class GenerateServiceImpl implements GenerateService {
+public class GenerateServiceImpl implements IGenerateService {
 
     @Autowired
     private IProjectInfoService projectInfoService;
     @Autowired
     @Lazy
-    private GenerateService generateService;
+    private IGenerateService generateService;
     @Autowired
     private GenerateProperties generateProperties;
 

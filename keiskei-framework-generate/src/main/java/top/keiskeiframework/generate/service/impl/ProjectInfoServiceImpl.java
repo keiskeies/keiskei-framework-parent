@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ProjectInfo;
-import top.keiskeiframework.generate.service.GenerateService;
+import top.keiskeiframework.generate.service.IGenerateService;
 import top.keiskeiframework.generate.service.IProjectInfoService;
 
 /**
@@ -16,9 +16,9 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Long> implements IProjectInfoService {
+public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Long> implements IProjectInfoService {
     @Autowired
-    private GenerateService generateService;
+    private IGenerateService generateService;
 
 
 

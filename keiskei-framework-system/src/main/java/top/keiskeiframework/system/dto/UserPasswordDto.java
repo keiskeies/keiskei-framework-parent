@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 16:39
  */
-
+@ApiModel(value = "UserPasswordDto", description = "用户密码相关")
 public class UserPasswordDto {
 
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();

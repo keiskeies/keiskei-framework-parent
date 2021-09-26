@@ -26,15 +26,6 @@ public class SecurityUtils {
         return (TokenUser) obj;
     }
 
-    public static String getDepartment() {
-        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (!(obj instanceof TokenUser)) {
-            return "";
-        }
-
-        return ((TokenUser) obj).getDepartment();
-    }
 
     private final static String UN_KNOWN = "unKnown";
 

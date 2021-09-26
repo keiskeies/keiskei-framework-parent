@@ -33,7 +33,6 @@ public class TokenUser implements UserDetails {
     /**
      * 密码
      */
-    @JsonIgnore
     private String password;
 
     /**

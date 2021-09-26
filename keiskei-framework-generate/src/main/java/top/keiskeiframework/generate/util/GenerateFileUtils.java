@@ -109,7 +109,7 @@ public class GenerateFileUtils {
                     go2Fly("server/controller.java", resultFilePath + "controller/" + table.getName() + "Controller.java", cfg);
                 }
                 go2Fly("server/service.java", resultFilePath + "service/I" + table.getName() + "Service.java", cfg);
-                go2Fly("server/impl/serviceImpl.java", resultFilePath + "service/impl/I" + table.getName() + "ServiceImpl.java", cfg);
+                go2Fly("server/impl/serviceImpl.java", resultFilePath + "service/impl/" + table.getName() + "ServiceImpl.java", cfg);
                 for (FieldInfo field : table.getFields()) {
                     if (FieldInfoTypeEnum.DICTIONARY.equals(field.getType()) && !CollectionUtils.isEmpty(field.getFieldEnums())) {
                         cfg.put("field", field);

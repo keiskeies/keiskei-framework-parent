@@ -2,8 +2,12 @@ package top.keiskeiframework.common.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NonNull;
+import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.query.criteria.internal.OrderImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -14,6 +18,7 @@ import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 import javax.persistence.criteria.*;
@@ -33,9 +38,21 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/5/20 18:42
  */
+@Component
 public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable> {
-    protected static final String IGNORE_COLUMN = "serialVersionUID";
-    protected static EntityManager entityManager;
+    private static final String IGNORE_COLUMN = "serialVersionUID";
+    private static EntityManager entityManager;
+    private static boolean useDepartment = false;
+
+    @Value("${keiskei.use-department:false}")
+    public void setUseDepartment(Boolean useDepartment) {
+        BaseRequestUtils.useDepartment = useDepartment;
+    }
+
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        BaseRequestUtils.entityManager = entityManager;
+    }
 
     /**
      * BaseEntity可显示字段
@@ -123,7 +140,6 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @return 。
      */
     public static <T extends BaseEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
-        getEntityManage();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(tClass);
         if (CollectionUtils.isEmpty(conditions)) {
@@ -145,9 +161,6 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @return 。
      */
     public static <T extends BaseEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
-
-        getEntityManage();
-
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         Class<T> clazz = (Class<T>) t.getClass();
 
@@ -369,9 +382,11 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param root       实体
      */
     public static void addDepartment(List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
-        if ((SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
-            Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
+        if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
+            if (useDepartment) {
+                Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+                predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
+            }
         }
     }
 
@@ -394,19 +409,6 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
         return fieldSet;
     }
 
-
-    /**
-     * 单例模式获取entityManage
-     */
-    private static void getEntityManage() {
-        if (null == entityManager) {
-            synchronized (BaseRequestUtils.class) {
-                if (null == entityManager) {
-                    entityManager = SpringUtils.getBean(EntityManager.class);
-                }
-            }
-        }
-    }
 
 
 }

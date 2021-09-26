@@ -14,7 +14,7 @@ import top.keiskeiframework.generate.service.IFieldEnumInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IFieldEnumInfoServiceImpl extends ListServiceImpl<FieldEnumInfo, Long> implements IFieldEnumInfoService {
+public class FieldEnumInfoServiceImpl extends ListServiceImpl<FieldEnumInfo, Long> implements IFieldEnumInfoService {
 
 
 }

@@ -8,7 +8,7 @@ import top.keiskeiframework.common.base.controller.ListController;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;
-import top.keiskeiframework.generate.service.GenerateService;
+import top.keiskeiframework.generate.service.IGenerateService;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -24,7 +24,7 @@ import top.keiskeiframework.generate.service.GenerateService;
 public class ProjectController extends ListController<ProjectInfo, Long> {
 
     @Autowired
-    private GenerateService generateService;
+    private IGenerateService generateService;
 
     @PostMapping("/{id}/build/")
     @ApiOperation("创建代码")

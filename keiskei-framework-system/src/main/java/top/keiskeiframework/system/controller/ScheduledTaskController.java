@@ -3,6 +3,7 @@ package top.keiskeiframework.system.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
 @RestController
 @RequestMapping("/admin/v1/system/scheduledTask")
 @Api(tags = "系统设置 - 定时任务")
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class ScheduledTaskController extends ListController<ScheduledTask, Long> {
 
     @Autowired

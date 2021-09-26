@@ -11,7 +11,7 @@ import top.keiskeiframework.generate.enums.BuildStatusEnum;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/23 15:44
  */
-public interface GenerateService {
+public interface IGenerateService {
 
     /**
      * 构建指定项目

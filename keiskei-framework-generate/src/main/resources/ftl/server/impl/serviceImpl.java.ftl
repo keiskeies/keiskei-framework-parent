@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @since ${since}
  */
 @Service
-public class I${table.name}ServiceImpl extends ${parentNam}ServiceImpl<${table.name}, ${table.idType.value}> implements I${table.name}Service {
+public class ${table.name}ServiceImpl extends ${parentNam}ServiceImpl<${table.name}, ${table.idType.value}> implements I${table.name}Service {
 
     @Autowired
     private ${table.name}Repository ${table.name?uncap_first}Repository;

@@ -2,6 +2,7 @@ package top.keiskeiframework.log.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
+import top.keiskeiframework.common.annotation.Lockable;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
@@ -21,12 +22,11 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> implements IOperateLogService, OperateLogService {
+public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> implements IOperateLogService, OperateLogService {
 
     @Autowired
-    private OperateLogRepository operateLogRepository;
+    private IOperateLogService operateLogService;
 
-    @Async
     @Override
     public void saveLog(OperateLogDTO log) {
         OperateLog operateLog = new OperateLog();
@@ -34,9 +34,17 @@ public class IOperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> im
         String type = OperateTypeEnum.getType(operateLog.getType());
         if (null != type) {
             try {
-                operateLogRepository.save(operateLog);
-            } catch (Exception ignored) {
+                operateLogService.save(operateLog);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    @Async
+    @Lockable(key = "#t.hashCode()")
+    public OperateLog save(OperateLog operateLog) {
+        return super.save(operateLog);
     }
 }

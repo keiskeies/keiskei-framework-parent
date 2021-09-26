@@ -2,9 +2,11 @@ package top.keiskeiframework.system.config;
 
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
@@ -20,6 +22,8 @@ import java.util.concurrent.*;
  * @since 2020/12/15 18:13
  */
 @Configuration
+@EnableScheduling
+@ConditionalOnProperty({"keiskei.use-scheduled-task"})
 public class ScheduledTaskConfig implements SchedulingConfigurer {
     @Autowired
     private ApplicationContext applicationContext;
