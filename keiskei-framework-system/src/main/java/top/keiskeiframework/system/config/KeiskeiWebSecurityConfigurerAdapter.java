@@ -1,22 +1,21 @@
 package top.keiskeiframework.system.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import top.keiskeiframework.system.handler.*;
-import top.keiskeiframework.system.properties.AuthenticateUrl;
-import top.keiskeiframework.system.properties.SystemProperties;
-import top.keiskeiframework.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.util.CollectionUtils;
+import top.keiskeiframework.system.handler.*;
+import top.keiskeiframework.system.properties.AuthenticateUrl;
+import top.keiskeiframework.system.properties.SystemProperties;
+import top.keiskeiframework.system.service.IUserService;
 
 /**
  * springSecurity配置中心
@@ -50,12 +49,11 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().sessionManagement().maximumSessions(systemProperties.getMaximumSessions());
-        if (systemProperties.getCross()) {
-            http.cors().disable();
-        }
+        //使用自定义权限认证失败处理 - 不使用重定向
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
+
         http.headers().defaultsDisabled().cacheControl();
 
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
         http.formLogin().loginPage(systemProperties.getAuthWebLoginPath())
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
@@ -81,11 +79,11 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         if (usePermission) {
             //开启自定义连接拦截
-            http.authorizeRequests().anyRequest().access("@rbacAuthorityService.hasPermission(request,authentication)");
+            http.authorizeRequests().anyRequest().access(
+                    "@rbacAuthorityService.hasPermission(request, authentication)"
+            );
         }
         http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
-        http.authorizeRequests().antMatchers("/**").authenticated();
-
     }
 
     @Override
