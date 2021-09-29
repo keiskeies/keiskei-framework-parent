@@ -13,7 +13,8 @@ public class SystemEnum {
     /**
      * 超级管理员ID
      */
-    public final static String SUPER_ADMIN_ID = "248c4100db5a343808736a58";
+    public final static String SUPER_ADMIN_ID = "000000000000000000000000";
+
     /**
      * 用户密码错误次数key前缀
      */
