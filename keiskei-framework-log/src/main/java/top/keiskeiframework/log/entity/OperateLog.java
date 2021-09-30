@@ -44,8 +44,8 @@ public class OperateLog extends BaseEntity {
 
     private static final long serialVersionUID = -1735705706625546610L;
 
-    @ApiModelProperty(value = "操作人员", dataType = "Long")
-    private Long userId;
+    @ApiModelProperty(value = "操作人员", dataType = "String")
+    private String userId;
 
     @ApiModelProperty(value = "操作IP", dataType = "String")
     @NotNull(message = "请选择操作IP", groups = {Insert.class})

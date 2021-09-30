@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 public class DashboardDirection extends BaseEntity {
 
     private static final long serialVersionUID = -2719449560787668928L;
+
     @ApiModelProperty(value = "字段", dataType = "String")
     private String field;
 

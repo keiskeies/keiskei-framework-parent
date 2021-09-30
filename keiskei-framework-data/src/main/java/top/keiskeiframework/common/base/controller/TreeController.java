@@ -55,13 +55,21 @@ public class TreeController<T extends TreeEntity> {
 
             @ApiParam(value = "查询字段", type = "String", example = "id, name")
             @RequestParam(required = false)
-            String show
+            String show,
+
+            @ApiParam(value = "查询字段", type = "String", example = "id, name")
+            @RequestParam(required = false)
+            Boolean tree
     ) {
         BaseRequest<T> baseRequest = new BaseRequest<>();
         baseRequest.setConditions(conditions);
         baseRequest.setShow(show);
         List<T> list = baseService.findAll(baseRequest);
-        return R.ok(list);
+        if (tree) {
+            return R.ok(new TreeEntityUtils<>(list).getTree(null));
+        } else {
+            return R.ok(list);
+        }
     }
 
     @GetMapping("/{id}")

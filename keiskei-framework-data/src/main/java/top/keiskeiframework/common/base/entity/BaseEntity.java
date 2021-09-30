@@ -30,13 +30,13 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
     @ApiModelProperty(value = "ID", dataType = "String")
-    @MongoId(FieldType.OBJECT_ID)
+    @MongoId(targetType = FieldType.OBJECT_ID)
     protected String id;
 
     /**
      * 数据部门
      */
-    private String p = MdcUtils.getUserDepartment();
+    protected String p = MdcUtils.getUserDepartment();
 
 
     /**

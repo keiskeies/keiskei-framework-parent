@@ -49,7 +49,7 @@ public class ListController<T extends BaseEntity> {
         BaseRequest<T> baseRequest = new BaseRequest<>();
         baseRequest.setConditions(conditions);
         baseRequest.setShow(show);
-        return R.ok(baseService.findAll());
+        return R.ok(baseService.findAll(baseRequest));
     }
 
     @GetMapping("/{id}")

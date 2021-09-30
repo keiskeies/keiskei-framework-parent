@@ -199,12 +199,12 @@ public class BaseRequestUtils {
                     break;
                 case LIKE:
                     query.addCriteria(
-                            Criteria.where(condition.getColumn()).regex(".*?" + condition.getValue().get(0) + ".*")
+                            Criteria.where(condition.getColumn()).regex(".*?" + condition.getValue().get(0) + ".*?")
                     );
                     break;
                 case LL:
                     query.addCriteria(
-                            Criteria.where(condition.getColumn()).regex(condition.getValue().get(0) + ".*")
+                            Criteria.where(condition.getColumn()).regex(condition.getValue().get(0) + ".*?")
                     );
                     break;
                 case LR:
