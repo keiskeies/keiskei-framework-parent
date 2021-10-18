@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDateTime;
@@ -109,7 +111,7 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     @JsonSerialize(converter = MoneySerializer.class)
         </#if>
     <#--        时间字段序列化-->
-        <#if field.type.value == "LocalDateTime" || field.type.value == "LocalDate" || field.type.value == "DateTime">
+        <#if field.type.value == "LocalDateTime" || field.type.value == "LocalDate" || field.type.value == "LocaTime">
     @JsonDeserialize(using = ${field.type.value}Deserializer.class)
     @JsonSerialize(using = ${field.type.value}Serializer.class)
     @JsonFormat(pattern = "<#if field.type.value == "LocalDateTime">yyyy-MM-dd HH:mm:ss<#elseif field.type.value == "LocalDate">yyyy-MM-dd<#else>HH:mm:ss</#if>")

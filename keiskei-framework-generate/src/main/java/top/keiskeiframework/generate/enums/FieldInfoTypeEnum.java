@@ -25,7 +25,7 @@ public enum FieldInfoTypeEnum {
     WORD("String"),
     LONG_WORD("String"),
     LONG_TEXT("String"),
-    TO_LONG_TEXT("String"),
+    HTML("String"),
     MIDDLE_ID(""),
     IMAGE("String"),
     VIDEO("String"),
