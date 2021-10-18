@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 <#assign parentName = table.type?lower_case?cap_first>
 import top.keiskeiframework.common.base.entity.*;
-import top.keiskeiframework.common.util.data*;
+import top.keiskeiframework.common.util.data.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ${module.packageName}.enums.*;
@@ -20,9 +20,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +44,7 @@ import java.util.List;
 @Entity
 @Table(name = "${table.tableName}")
 @ApiModel(value="${table.name}", description="${table.comment!}")
-public class ${table.name} extends ${parentName}${table.idType.value}Entity {
+public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 
     private static final long serialVersionUID = ${serialVersionUID}L;
 
@@ -56,8 +59,8 @@ public class ${table.name} extends ${parentName}${table.idType.value}Entity {
     </#if>
     <#if field.type == "TAG">
 <#--        标签字段-->
-    @JsonDeserialize(using = TagDeserializer.class)
-    @JsonSerialize(using = TagSerializer.class)
+    @JsonDeserialize(converter = TagDeserializer.class)
+    @JsonSerialize(converter = TagSerializer.class)
     private String ${field.name};
 
     <#elseif field.type == "DICTIONARY">
@@ -79,7 +82,7 @@ public class ${table.name} extends ${parentName}${table.idType.value}Entity {
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="${table.name?lower_case}_id")
-    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s;
+    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s = new ArrayList<>();
 
     <#--        多对多-->
         <#elseif field.relation == 'MANY_TO_MANY'>

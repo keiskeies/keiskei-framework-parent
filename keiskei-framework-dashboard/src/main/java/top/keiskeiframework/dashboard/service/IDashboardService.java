@@ -20,5 +20,11 @@ public interface IDashboardService extends BaseService<Dashboard, Long> {
      * @return 。
      */
     ChartOptionVO getChartOption(Long id);
+    /**
+     * 获取图表及结构
+     * @param id 图表ID
+     * @return 。
+     */
+    ChartOptionVO refreshChartOption(Long id);
 
 }

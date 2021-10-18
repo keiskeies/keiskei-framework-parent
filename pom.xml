@@ -161,7 +161,7 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-system-workflow</artifactId>
+                <artifactId>keiskei-framework-workflow</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>

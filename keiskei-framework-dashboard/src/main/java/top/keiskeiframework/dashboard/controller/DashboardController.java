@@ -48,6 +48,12 @@ public class DashboardController {
         return R.ok(dashboardService.getChartOption(id));
     }
 
+    @ApiOperation("详情")
+    @GetMapping("/{id}/refresh")
+    public R<?> refreshOne(@PathVariable Long id) {
+        return R.ok(dashboardService.refreshChartOption(id));
+    }
+
     @PostMapping
     @ApiOperation("新增")
     public R<Dashboard> save(@RequestBody @Validated({Insert.class}) Dashboard fieldInfo) {

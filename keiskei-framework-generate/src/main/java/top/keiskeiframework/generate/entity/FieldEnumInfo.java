@@ -8,13 +8,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
 import top.keiskeiframework.generate.enums.FieldEnumInfoTypeEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
-public class FieldEnumInfo extends BaseEntity<Long> {
+public class FieldEnumInfo extends ListEntity<Long> {
     private static final long serialVersionUID = -7401234718671320506L;
 
     @ApiModelProperty(value = "名称", dataType = "String")
@@ -55,6 +56,5 @@ public class FieldEnumInfo extends BaseEntity<Long> {
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_enum_id")
-    private List<FieldEnumAffectInfo> fieldEnumAffects;
-
+    private List<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
 }

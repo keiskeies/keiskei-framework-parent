@@ -2,7 +2,6 @@ package top.keiskeiframework.common.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NonNull;
-import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,13 +11,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 import javax.persistence.criteria.*;
@@ -39,7 +37,7 @@ import java.util.stream.Collectors;
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable> {
+public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
     private static final String IGNORE_COLUMN = "serialVersionUID";
     private static EntityManager entityManager;
     private static boolean useDepartment = false;
@@ -56,7 +54,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
 
     /**
      * BaseEntity可显示字段
-     * {@link BaseEntity}
+     * {@link ListEntity}
      */
     protected static final Set<String> BASE_ENTITY_FIELD_SET;
     /**
@@ -94,7 +92,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
     }
 
     static {
-        Field[] baseEntityFields = BaseEntity.class.getDeclaredFields();
+        Field[] baseEntityFields = ListEntity.class.getDeclaredFields();
         BASE_ENTITY_FIELD_SET = Arrays.stream(baseEntityFields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
                 .map(Field::getName).collect(Collectors.toSet());
@@ -114,7 +112,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    public static <T extends BaseEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
         Set<String> fieldSet = getFieldSet(tClass);
         return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldSet).toArray(new Predicate[0]));
 
@@ -127,7 +125,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return 。
      */
-    public static <T extends BaseEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions) {
         return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions).toArray(new Predicate[0]));
     }
 
@@ -139,7 +137,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>        。
      * @return 。
      */
-    public static <T extends BaseEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(tClass);
         if (CollectionUtils.isEmpty(conditions)) {
@@ -160,7 +158,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>     实体类
      * @return 。
      */
-    public static <T extends BaseEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         Class<T> clazz = (Class<T>) t.getClass();
 
@@ -171,7 +169,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
         List<Predicate> predicates = new ArrayList<>();
 
         confirmCriteriaQuery(clazz.getDeclaredFields(), orderList, predicates, root, builder, t);
-        confirmCriteriaQuery(BaseEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
+        confirmCriteriaQuery(ListEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
         if (clazz.getSuperclass() == TreeEntity.class) {
             confirmCriteriaQuery(TreeEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
         }
@@ -204,7 +202,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param t          实体类
      * @param <T>        实体类
      */
-    private static <T extends BaseEntity<ID>, ID extends Serializable> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
+    private static <T extends ListEntity<ID>, ID extends Serializable> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
         for (Field field : fields) {
             if (IGNORE_COLUMN.equals(field.getName())) {
                 continue;
@@ -245,7 +243,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    private static <T extends BaseEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
+    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
@@ -287,7 +285,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    private static <T extends BaseEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions) {
+    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
@@ -397,7 +395,7 @@ public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable>
      * @param <T>    实体类
      * @return .
      */
-    public static <T extends BaseEntity<ID>, ID extends Serializable> Set<String> getFieldSet(Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> Set<String> getFieldSet(Class<T> tClass) {
         Field[] fields = tClass.getDeclaredFields();
         Set<String> fieldSet = Arrays.stream(fields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)

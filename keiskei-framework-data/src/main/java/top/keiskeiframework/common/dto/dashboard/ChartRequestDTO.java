@@ -7,6 +7,8 @@ import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -56,6 +58,13 @@ public class ChartRequestDTO implements Serializable {
      */
     @NonNull
     private LocalDateTime end;
+
+    /**
+     * 查询条件
+     * key -> 字段
+     * value -> 范围
+     */
+    private Map<String, List<String>> conditions;
 
 
 }

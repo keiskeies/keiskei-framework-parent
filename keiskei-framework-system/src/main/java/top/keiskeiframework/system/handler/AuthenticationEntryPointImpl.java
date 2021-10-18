@@ -24,7 +24,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
-        ResponseUtils.write(request, response, JSON.toJSONString(R.failed(BizExceptionEnum.AUTH_FORBIDDEN)));
+        ResponseUtils.write(request, response, JSON.toJSONString(R.failed(BizExceptionEnum.AUTH_ERROR)));
     }
 
 }

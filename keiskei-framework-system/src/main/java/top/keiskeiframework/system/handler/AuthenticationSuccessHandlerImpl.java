@@ -49,7 +49,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         if (null != operateLogService) {
             OperateLogDTO operateLog = new OperateLogDTO();
             operateLog.setIp(SecurityUtils.getIpAddress(request));
-            operateLog.setType(OperateTypeEnum.LOGIN.getType());
+            operateLog.setType(OperateTypeEnum.LOGIN.getMethod());
             operateLog.setUserId(tokenUser.getId());
             operateLogService.saveLog(operateLog);
         }

@@ -26,7 +26,7 @@ public class ProjectController extends ListController<ProjectInfo, Long> {
     @Autowired
     private IGenerateService generateService;
 
-    @PostMapping("/{id}/build/")
+    @PostMapping("/{id}/build")
     @ApiOperation("创建代码")
     public R<Boolean> build(@PathVariable("id") Long id) {
         generateService.build(id);

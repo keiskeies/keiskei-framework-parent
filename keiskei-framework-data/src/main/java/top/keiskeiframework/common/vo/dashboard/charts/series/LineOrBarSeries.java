@@ -25,4 +25,10 @@ public class LineOrBarSeries extends Series implements Serializable {
      */
     @NonNull
     private Collection<Number> data;
+
+    /**
+     * 堆叠
+     */
+    @NonNull
+    private String stack;
 }

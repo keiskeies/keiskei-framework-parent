@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
@@ -16,6 +16,7 @@ import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
-public class TableInfo extends BaseEntity<Long> {
+public class TableInfo extends ListEntity<Long> {
 
     private static final long serialVersionUID = 7715195221883078519L;
 
@@ -58,13 +59,12 @@ public class TableInfo extends BaseEntity<Long> {
     private TableInfoTypeEnum type;
 
     @ApiModelProperty(value = "是否构建接口", dataType = "Boolean")
-    private Boolean buildController;
+    private Boolean buildController = Boolean.FALSE;
 
     @ApiModelProperty(value = "接口类型", dataType = "String")
     private TableInfoControllerTypeEnum controllerType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "table_id")
-    private List<FieldInfo> fields;
-
+    private List<FieldInfo> fields = new ArrayList<>();
 }

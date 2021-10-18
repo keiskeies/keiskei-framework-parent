@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
-public class DashboardDirection extends BaseEntity<Long> {
+public class DashboardDirection extends ListEntity<Long> {
 
     private static final long serialVersionUID = -2719449560787668928L;
     @ApiModelProperty(value = "字段", dataType = "String")
@@ -43,9 +43,14 @@ public class DashboardDirection extends BaseEntity<Long> {
     @NotBlank(message="实体类不能为空", groups = {Insert.class, Update.class})
     private String entityClass;
 
-    @ApiModelProperty(value = "实体类名称", dataType = "String")
-    @NotBlank(message="实体类名称不能为空", groups = {Insert.class, Update.class})
+    @ApiModelProperty(value = "显示名称", dataType = "String")
+    @NotBlank(message="显示名称不能为空", groups = {Insert.class, Update.class})
     private String entityName;
+
+    @ApiModelProperty(value = "查询条件")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "dashboard_direction_id")
+    private List<DashboardDirectionCondition> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotNull(message="图表类型不能为空", groups = {Insert.class, Update.class})

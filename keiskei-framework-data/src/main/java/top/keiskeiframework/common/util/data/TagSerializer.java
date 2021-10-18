@@ -20,6 +20,10 @@ public class TagSerializer extends StdConverter<String, List<String>> {
 
     @Override
     public List<String> convert(String val) {
+        return convertValue(val);
+    }
+
+    public static List<String> convertValue(String val) {
         if (StringUtils.isEmpty(val)) {
             return Collections.emptyList();
         }

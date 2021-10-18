@@ -8,12 +8,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 import top.keiskeiframework.generate.enums.FieldInfoRelationEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ import java.util.List;
 @Entity
 @Table(name = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
-public class FieldInfo extends BaseEntity<Long> {
+public class FieldInfo extends ListEntity<Long> {
 
     private static final long serialVersionUID = -6407989526318566170L;
 
@@ -86,6 +87,6 @@ public class FieldInfo extends BaseEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_id")
-    private List<FieldEnumInfo> fieldEnums;
+    private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
 
 }

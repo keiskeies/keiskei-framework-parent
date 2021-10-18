@@ -14,7 +14,6 @@ public enum OperateTypeEnum {
 
     //
     LOGIN("login","登录"),
-    LOGOUT("logout","登出"),
     SAVE("post","添加"),
     UPDATE("put","更新"),
     UPDATE_PART("patch","更新部分数据"),

@@ -75,7 +75,7 @@ public class GenerateFileUtils {
         cfg.put("tableModuleMap", tableModuleMap);
         cfg.put("treeTables", treeTables);
 
-        String serverPath = basePath + "/server/";
+        String serverPath = basePath + "/server";
 
 
         String startModuleName = item.getName() + "-start";
@@ -89,12 +89,12 @@ public class GenerateFileUtils {
         go2Fly("server/resources/application-prod.yml", startModulePath +"/src/main/resources/application-prod.yml", cfg);
 
 
-        go2Fly("server/pom/serverPom.xml", serverPath + "pom.xml", cfg);
-        go2Fly("server/build/build.sh", serverPath + "build.sh", cfg);
-        go2Fly("server/build/Dockerfile", serverPath + "Dockerfile", cfg);
+        go2Fly("server/pom/serverPom.xml", serverPath + "/pom.xml", cfg);
+        go2Fly("server/build/build.sh", serverPath + "/build.sh", cfg);
+        go2Fly("server/build/Dockerfile", serverPath + "/Dockerfile", cfg);
         for (ModuleInfo module : item.getModules()) {
-            cfg.put("module", module);
             String modulePath = serverPath + "/" + module.getName();
+            cfg.put("module", module);
             go2Fly("server/pom/modulePom.xml", modulePath + "/pom.xml", cfg);
             String resultFilePath = modulePath + "/src/main/java/" + module.getPackageName().replace(".", "/") + "/";
             for (TableInfo table : module.getTables()) {

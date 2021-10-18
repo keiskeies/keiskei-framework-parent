@@ -16,11 +16,11 @@ import lombok.Getter;
 public enum FieldEnumInfoTypeEnum {
 
     //
-    NONE,
-    SUCCESS,
-    INFO,
-    WARNING,
-    DANGER;
+    none,
+    success,
+    info,
+    warning,
+    danger;
 
 
 }

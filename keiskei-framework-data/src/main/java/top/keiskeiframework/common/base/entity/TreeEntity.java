@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class TreeEntity<ID extends Serializable> extends BaseEntity<ID> implements Serializable {
+public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
     protected ID parentId;

@@ -2,11 +2,16 @@ package top.keiskeiframework.dashboard.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.util.data.TagSerializer;
+import top.keiskeiframework.dashboard.entity.DashboardDirectionCondition;
 import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -44,7 +49,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> implements IDashboardService {
 
-    private static final String CACHE_NAME = CacheTimeEnum.M10;
 
 
     @Override
@@ -54,21 +58,27 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
     }
 
     @Override
-    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #dashboard.id")
+    @Caching(evict= {
+            @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
+            @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #dashboard.id")
+    })
     public Dashboard update(Dashboard dashboard) {
         validate(dashboard);
         return super.update(dashboard);
     }
 
     @Override
-    @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id")
+    @Caching(evict= {
+            @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id"),
+            @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
+    })
     public void deleteById(Long id) {
         super.deleteById(id);
     }
 
 
     @Override
-    @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Long id) {
         Dashboard dashboard = super.findById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
@@ -107,6 +117,12 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         } else {
             return getFieldChartOption(chartRequestDTO, dashboard);
         }
+    }
+
+    @Override
+    @CachePut(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
+    public ChartOptionVO refreshChartOption(Long id) {
+        return getChartOption(id);
     }
 
     /**
@@ -245,7 +261,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
                 for (String key : axisData) {
                     data.add(dataMap.getOrDefault(key, 0L));
                 }
-                series = new LineOrBarSeries(data);
+                series = new LineOrBarSeries(data, chartRequestDTO.getEntityName());
                 seriesList.add(series);
                 break;
         }
@@ -266,6 +282,14 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         chartRequestDTO.setColumn(direction.getField());
         chartRequestDTO.setColumnType(dashboard.getFieldType());
         chartRequestDTO.setChartType(direction.getType());
+
+        if (!CollectionUtils.isEmpty(direction.getConditions())) {
+            Map<String, List<String>> conditions = new HashMap<>();
+            for (DashboardDirectionCondition condition : direction.getConditions()) {
+                conditions.put(condition.getField(), TagSerializer.convertValue(condition.getRangeValue()));
+            }
+            chartRequestDTO.setConditions(conditions);
+        }
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 

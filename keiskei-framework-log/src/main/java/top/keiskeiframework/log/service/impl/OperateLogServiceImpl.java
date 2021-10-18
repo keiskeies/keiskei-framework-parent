@@ -34,6 +34,7 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
         String type = OperateTypeEnum.getType(operateLog.getType());
         if (null != type) {
             try {
+                operateLog.setType(type);
                 operateLogService.save(operateLog);
             } catch (Exception e) {
                 e.printStackTrace();

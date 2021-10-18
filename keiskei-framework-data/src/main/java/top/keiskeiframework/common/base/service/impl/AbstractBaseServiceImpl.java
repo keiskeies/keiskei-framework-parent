@@ -10,9 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
-public abstract class AbstractBaseServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
+public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     @Autowired
     protected JpaRepository<T, ID> jpaRepository;
@@ -222,10 +223,23 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity<ID>, ID exten
         CriteriaQuery<T> query = builder.createQuery(clazz);
         Root<T> root = query.from(clazz);
 
+
         // 基本时间条件
         List<Predicate> predicates = new ArrayList<>();
         Expression<LocalDateTime> expression = root.get("createTime");
         predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
+
+        if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
+            for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {
+
+                Object[] hasValueValues = entry.getValue().stream()
+                        .filter(e -> !StringUtils.isEmpty(e))
+                        .toArray();
+                if (hasValueValues.length > 0) {
+                    predicates.add(root.get(entry.getKey()).in(hasValueValues));
+                }
+            }
+        }
 
         query.where(predicates.toArray(new Predicate[0]));
 
