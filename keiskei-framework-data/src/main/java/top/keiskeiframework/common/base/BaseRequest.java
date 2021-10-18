@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
  * <p>
  * 统一请求封装
  * </p>
+ * @param <ID> .
+ * @param <T> .
  * @since 2020/11/24 23:08
  */
 public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
@@ -53,6 +55,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 查询条件
      */
     private List<QueryConditionDTO> conditions;
+
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionDTO.class);
@@ -60,6 +63,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     }
 
     private Set<String> show;
+
     public void setShow(String show) {
         if (!StringUtils.isEmpty(show)) {
             this.show = Arrays.stream(show.split(SHOW_SPLIT)).collect(Collectors.toSet());
@@ -68,6 +72,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
 
     /**
      * 获取分页条件
+     *
      * @return 。
      */
     public Pageable getPageable() {
@@ -87,8 +92,10 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
 
         return PageRequest.of(this.page - 1, this.size, sort);
     }
+
     /**
      * 获取分页条件
+     *
      * @return 。
      */
     public Pageable getPageable(@NonNull Class<T> tClass) {
@@ -121,6 +128,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
 
     /**
      * 获取查询关系
+     *
      * @return 。
      */
     public Specification<T> getSpecification(@NonNull Class<T> tClass) {
@@ -130,6 +138,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
 
     /**
      * 获取查询关系
+     *
      * @return 。
      */
     public Specification<T> getSpecification() {

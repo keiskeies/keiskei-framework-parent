@@ -18,7 +18,7 @@ import top.keiskeiframework.workflow.service.IIssueFieldValueService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v1/workflow/issueFieldValue")
+@RequestMapping("/admin/v2/workflow/issueFieldValue")
 @Api(tags = "工作流 - 卡片字段值")
 public class IssueFieldValueController extends ListController<IssueFieldValue, Long>{
 

@@ -47,9 +47,9 @@ public class UserServiceImpl extends ListServiceImpl<User, Long> implements IUse
     private CacheStorageService cacheStorageService;
     @Autowired
     private SystemProperties systemProperties;
-    @Autowired
+    @Autowired(required = false)
     private IDepartmentService departmentService;
-    @Autowired
+    @Autowired(required = false)
     private IPermissionService permissionService;
 
 
@@ -68,10 +68,12 @@ public class UserServiceImpl extends ListServiceImpl<User, Long> implements IUse
         tokenUser.setId(user.getId());
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
-            Department department = departmentService.findById(tokenUser.getDepartmentId());
-            Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
+            if (null != departmentService) {
+                Department department = departmentService.findById(tokenUser.getDepartmentId());
+                Assert.notNull(department, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
+                tokenUser.setDepartment(department.getSign());
+            }
 
-            tokenUser.setDepartment(department.getSign());
 
             LocalDateTime now = LocalDateTime.now();
             tokenUser.setAccountNonExpired(null != user.getAccountExpiredTime() && user.getAccountExpiredTime().isAfter(now));
@@ -112,9 +114,11 @@ public class UserServiceImpl extends ListServiceImpl<User, Long> implements IUse
         BeanUtils.copyProperties(tokenUser, userDto);
 
         if (SystemEnum.SUPER_ADMIN_ID == tokenUser.getId()) {
-            List<Permission> permissions = permissionService.options();
-            userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
-            return userDto;
+            if (null != permissionService) {
+                List<Permission> permissions = permissionService.options();
+                userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
+                return userDto;
+            }
         }
 
         User user = userRepository.getOne(tokenUser.getId());

@@ -11,6 +11,8 @@ import java.util.*;
  * 树形实体工具
  * </p>
  *
+ * @param <T>  .
+ * @param <ID> .
  * @author 陈加敏
  */
 public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> {
@@ -34,6 +36,7 @@ public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> 
 
     /**
      * 获取当前节点的节点树
+     *
      * @param id 当前节点id
      * @return .
      */
@@ -52,6 +55,7 @@ public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> 
 
     /**
      * 获取所有子节点id, 包括当前节点id
+     *
      * @param id 当前节点id
      * @return .
      */
@@ -71,6 +75,7 @@ public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> 
 
     /**
      * 获取所有子节点集合, 包括当前节点
+     *
      * @param id 当前节点id
      * @return .
      */

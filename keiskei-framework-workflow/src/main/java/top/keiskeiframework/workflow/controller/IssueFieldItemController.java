@@ -18,7 +18,7 @@ import top.keiskeiframework.workflow.service.IIssueFieldItemService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v1/workflow/issueFieldItem")
+@RequestMapping("/admin/v2/workflow/issueFieldItem")
 @Api(tags = "工作流 - 卡片字段选项")
 public class IssueFieldItemController extends TreeController<IssueFieldItem, Long>{
 

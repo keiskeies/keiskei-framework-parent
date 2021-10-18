@@ -19,7 +19,7 @@ import ${module.packageName}.service.I${table.name}Service;
  * @since ${since}
  */
 @RestController
-@RequestMapping("/admin/v1/${module.path?uncap_first}/${table.name?uncap_first}")
+@RequestMapping("/admin/v2/${module.path?uncap_first}/${table.name?uncap_first}")
 @Api(tags = "${module.comment!} - ${table.comment!}")
 public class ${table.name}Controller extends ${parentName}Controller<${table.name}, ${table.idType.value}>{
 

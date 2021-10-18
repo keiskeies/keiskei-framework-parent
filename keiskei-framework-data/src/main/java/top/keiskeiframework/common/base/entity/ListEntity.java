@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
  * <p>
  * 基础实体类
  * </p>
- *
+ * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */

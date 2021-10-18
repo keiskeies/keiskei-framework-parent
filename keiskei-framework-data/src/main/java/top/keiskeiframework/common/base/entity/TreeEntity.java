@@ -18,6 +18,7 @@ import java.util.List;
  *
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
+ * @param <ID> .
  */
 @EqualsAndHashCode(callSuper = false)
 @Data

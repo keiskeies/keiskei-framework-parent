@@ -3,19 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>keiskei-framework-parent</artifactId>
+        <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.1.0-jpa-Release</version>
+        <version>2.0.0-jpa-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>keiskei-framework-demo</artifactId>
-    <name>keiskei-framework-demo</name>
-    <version>1.1.0-jpa-Release</version>
     <dependencies>
         <dependency>
-            <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-data</artifactId>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+            <version>2.0.2</version>
         </dependency>
     </dependencies>
+
+    <artifactId>${name}-doc</artifactId>
+    <name>${name}-doc</name>
+    <version>2.0.0-jpa-Release</version>
 </project>

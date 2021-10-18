@@ -1,6 +1,5 @@
 package top.keiskeiframework.dashboard.factory;
 
-import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -30,7 +29,7 @@ import java.util.Set;
 public class EntityFactory {
 
     @Getter
-    private static final List<CacheDTO> BASE_ENTITY_LIST = Lists.newArrayList();
+    private static final List<CacheDTO> BASE_ENTITY_LIST = new ArrayList<>();
 
     static {
 

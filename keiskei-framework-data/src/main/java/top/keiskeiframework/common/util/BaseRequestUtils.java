@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
  * 请求处理工具
  * </p>
  *
+ * @param <T>  .
+ * @param <ID> .
  * @author v_chenjiamin
  * @since 2021/5/20 18:42
  */
@@ -394,7 +396,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> Map<String, Class<?>> getFieldMap(Class<T> tClass) {
         Field[] fields = tClass.getDeclaredFields();
-        Map<String, Class<?>> fieldMap  = Arrays.stream(fields)
+        Map<String, Class<?>> fieldMap = Arrays.stream(fields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
                 .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
         fieldMap.putAll(LIST_ENTITY_FIELD_MAP);
@@ -403,7 +405,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         }
         return fieldMap;
     }
-
 
 
 }

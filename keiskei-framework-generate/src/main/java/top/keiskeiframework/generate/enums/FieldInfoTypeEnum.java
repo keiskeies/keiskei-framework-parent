@@ -34,7 +34,7 @@ public enum FieldInfoTypeEnum {
     ENABLE("Boolean"),
     SORT("Long"),
     DICTIONARY(""),
-    TAG("String")
+    TAGS("String")
 
     ;
 

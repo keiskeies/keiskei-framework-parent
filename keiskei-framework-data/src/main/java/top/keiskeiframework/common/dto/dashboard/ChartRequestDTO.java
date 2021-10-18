@@ -61,8 +61,8 @@ public class ChartRequestDTO implements Serializable {
 
     /**
      * 查询条件
-     * key -> 字段
-     * value -> 范围
+     * key  字段
+     * value  范围
      */
     private Map<String, List<String>> conditions;
 

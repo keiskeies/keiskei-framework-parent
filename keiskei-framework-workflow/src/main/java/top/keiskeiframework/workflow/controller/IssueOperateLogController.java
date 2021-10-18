@@ -18,7 +18,7 @@ import top.keiskeiframework.workflow.service.IIssueOperateLogService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v1/workflow/issueOperateLog")
+@RequestMapping("/admin/v2/workflow/issueOperateLog")
 @Api(tags = "工作流 - 卡片操作记录")
 public class IssueOperateLogController extends ListController<IssueOperateLog, Long>{
 

@@ -16,7 +16,7 @@ import top.keiskeiframework.system.entity.Role;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/v1/system/role")
+@RequestMapping("/admin/v2/system/role")
 @Api(tags = "系统设置 - 角色管理")
 @ConditionalOnProperty({"keiskei.use-permission"})
 public class RoleController extends ListController<Role, Long> {

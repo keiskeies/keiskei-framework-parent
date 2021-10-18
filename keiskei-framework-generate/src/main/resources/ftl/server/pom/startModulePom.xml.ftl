@@ -5,13 +5,13 @@
     <parent>
         <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.1.0-jpa-Release</version>
+        <version>2.0.0-jpa-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>${name}-start</artifactId>
     <name>${name}-start</name>
-    <version>1.1.0-jpa-Release</version>
+    <version>2.0.0-jpa-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
@@ -28,20 +28,20 @@
 <#if item.sqlLog>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-system-log</artifactId>
+            <artifactId>keiskei-framework-log</artifactId>
         </dependency>
 </#if>
 <#if item.workflow>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-system-workflow</artifactId>
+            <artifactId>keiskei-framework-workflow</artifactId>
         </dependency>
 </#if>
 <#list modules as module>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>${module.name}</artifactId>
-            <version>1.1.0-jpa-Release</version>
+            <version>2.0.0-jpa-Release</version>
         </dependency>
 </#list>
     </dependencies>
@@ -92,9 +92,9 @@
                     <artifactId>micrometer-registry-prometheus</artifactId>
                 </dependency>
                 <dependency>
-                    <groupId>com.github.xiaoymin</groupId>
-                    <artifactId>knife4j-micro-spring-boot-starter</artifactId>
-                    <version>2.0.2</version>
+                    <artifactId>${name}-doc</artifactId>
+                    <groupId>top.keiskeiframework</groupId>
+                    <version>2.0.0-jpa-Release</version>
                 </dependency>
             </dependencies>
         </profile>

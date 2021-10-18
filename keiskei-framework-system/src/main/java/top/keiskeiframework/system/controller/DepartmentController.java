@@ -16,7 +16,7 @@ import top.keiskeiframework.system.entity.Department;
  * @since 2020-12-16 13:36:30
  */
 @RestController
-@RequestMapping("/admin/v1/system/department")
+@RequestMapping("/admin/v2/system/department")
 @Api(tags = "系统设置 - 部门管理")
 @ConditionalOnProperty({"keiskei.use-department"})
 public class DepartmentController extends TreeController<Department, Long> {

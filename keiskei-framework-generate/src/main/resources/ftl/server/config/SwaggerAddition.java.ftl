@@ -94,10 +94,10 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                 .build();
 
 
-        ApiDescription loginApiDescription = new ApiDescription("登陆/退出", "/admin/v1/system/login", "登录接口",
+        ApiDescription loginApiDescription = new ApiDescription("登陆/退出", "/admin/v2/system/login", "登录接口",
                 Collections.singletonList(loginOperation), false);
 
-        ApiDescription loginOutApiDescription = new ApiDescription("登陆/退出", "/admin/v1/system/logout", "退出登录",
+        ApiDescription loginOutApiDescription = new ApiDescription("登陆/退出", "/admin/v2/system/logout", "退出登录",
                 Collections.singletonList(loginOutOperation), false);
 
         return Arrays.asList(loginApiDescription, loginOutApiDescription);

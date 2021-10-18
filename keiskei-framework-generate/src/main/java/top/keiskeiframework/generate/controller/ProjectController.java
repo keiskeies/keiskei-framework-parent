@@ -19,7 +19,7 @@ import top.keiskeiframework.generate.service.IGenerateService;
  * @since 2020/12/27 22:58
  */
 @RestController
-@RequestMapping("/admin/v1/generate/project")
+@RequestMapping("/admin/v2/generate/project")
 @Api(tags = "文件生成 - 项目管理")
 public class ProjectController extends ListController<ProjectInfo, Long> {
 

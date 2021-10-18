@@ -52,14 +52,14 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket createRestApi() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .pathMapping("/admin/v1")
+                .pathMapping("/admin/v2")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("top.keiskeiframework"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(new ApiInfoBuilder()
                         .title("接口文档")
-                        .version("v1")
+                        .version("v2")
                         .description("aminer管理平台接口文档")
                         .contact(new Contact("James Chen", "http://www.keisksi.top", "right_way@foxmail.com"))
                         .build())
@@ -68,7 +68,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                                 new ApiKey("后台验证请求头", "Access-Token", "header")
                         )
                 )
-                .groupName("v1")
+                .groupName("v2")
                 .securityContexts(
                         Collections.singletonList(
                                 SecurityContext.builder()

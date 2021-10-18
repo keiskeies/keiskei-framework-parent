@@ -26,8 +26,10 @@ import java.util.*;
 public class GenerateFileUtils {
 
     public static void copyDir(String oldPath, String newPath) throws IOException {
+        File file = new File(newPath);
+        file.mkdirs();
 
-        String[] cmds = {"cp", "-f", oldPath + "/.*", newPath};
+        String[] cmds = {"cp", "-rf", oldPath + "/.*", newPath};
         Process p = Runtime.getRuntime().exec(cmds);
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String s = "";
@@ -40,6 +42,7 @@ public class GenerateFileUtils {
     public static void copyFile(String oldPath, String newPath) throws IOException {
         File oldFile = new File(oldPath);
         File file = new File(newPath);
+        file.mkdirs();
         FileInputStream in = new FileInputStream(oldFile);
         FileOutputStream out = new FileOutputStream(file);
 
@@ -80,16 +83,23 @@ public class GenerateFileUtils {
 
         String startModuleName = item.getName() + "-start";
         String startModulePath = serverPath + "/" + startModuleName;
+
+
         go2Fly("server/pom/startModulePom.xml", startModulePath + "/pom.xml", cfg);
         go2Fly("server/application.java", startModulePath +"/src/main/java/top/keiskeiframework/Application.java", cfg);
-        go2Fly("server/conf/SwaggerAddition.java", startModulePath +"/src/main/java/top/keiskeiframework/conf/SwaggerAddition.java", cfg);
-        go2Fly("server/conf/SwaggerConfig.java", startModulePath +"/src/main/java/top/keiskeiframework/conf/SwaggerConfig.java", cfg);
         go2Fly("server/resources/application.yml", startModulePath +"/src/main/resources/application.yml", cfg);
         go2Fly("server/resources/application-dev.yml", startModulePath +"/src/main/resources/application-dev.yml", cfg);
         go2Fly("server/resources/application-prod.yml", startModulePath +"/src/main/resources/application-prod.yml", cfg);
 
+        String docModuleName = item.getName() + "-doc";
+        String docModulePath = serverPath + "/" + docModuleName;
+
+        go2Fly("server/pom/docModulePom.xml", docModulePath + "/pom.xml", cfg);
+        go2Fly("server/config/SwaggerAddition.java", docModulePath +"/src/main/java/top/keiskeiframework/config/SwaggerAddition.java", cfg);
+        go2Fly("server/config/SwaggerConfig.java", docModulePath +"/src/main/java/top/keiskeiframework/config/SwaggerConfig.java", cfg);
 
         go2Fly("server/pom/serverPom.xml", serverPath + "/pom.xml", cfg);
+        go2Fly("server/pom/.gitignore", serverPath + "/.gitignore", cfg);
         go2Fly("server/build/build.sh", serverPath + "/build.sh", cfg);
         go2Fly("server/build/Dockerfile", serverPath + "/Dockerfile", cfg);
         for (ModuleInfo module : item.getModules()) {

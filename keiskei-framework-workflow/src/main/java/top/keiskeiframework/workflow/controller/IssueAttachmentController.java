@@ -18,7 +18,7 @@ import top.keiskeiframework.workflow.service.IIssueAttachmentService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v1/workflow/issueAttachment")
+@RequestMapping("/admin/v2/workflow/issueAttachment")
 @Api(tags = "工作流 - 卡片附件")
 public class IssueAttachmentController extends ListController<IssueAttachment, Long>{
 

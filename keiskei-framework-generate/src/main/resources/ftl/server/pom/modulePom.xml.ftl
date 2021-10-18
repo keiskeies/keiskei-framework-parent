@@ -5,11 +5,11 @@
     <parent>
         <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.1.0-jpa-Release</version>
+        <version>2.0.0-jpa-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>${module.name}</artifactId>
     <name>${module.name}</name>
-    <version>1.1.0-jpa-Release</version>
+    <version>2.0.0-jpa-Release</version>
 </project>

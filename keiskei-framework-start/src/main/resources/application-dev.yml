@@ -33,7 +33,7 @@ spring:
     timeout: 60000
     password: ${REDIS_PASSWORD:123456}
     database: ${REDIS_DB:0}
-    port: ${REDIS_PORT:16379}
+    port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}
   jpa:
     database: mysql
@@ -68,8 +68,9 @@ keiskei:
     cross: true
     maximum-sessions: 1
   generate:
-    base-path: /Users/cjm/IdeaProjects/items/user/
-    base-admin-path: /Users/cjm/WebstormProjects/keiskei-admin-template/
+    base-path: C:/tmp/file/item/
+    base-admin-path: C:/Users/chenj/WebstormProjects/keiskei-admin-template/
     base-front-path: /Users/cjm/IdeaProjects/items/front/
-
-
+  file:
+    local:
+      url-suffix: http://127.0.0.1:7999/admin/v2/common/file/show/
