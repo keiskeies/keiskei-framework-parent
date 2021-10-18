@@ -22,10 +22,7 @@ import javax.persistence.Transient;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,12 +53,12 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * BaseEntity可显示字段
      * {@link ListEntity}
      */
-    protected static final Set<String> BASE_ENTITY_FIELD_SET;
+    protected static final Map<String, Class<?>> LIST_ENTITY_FIELD_MAP;
     /**
      * TreeEntity可显示字段
      * {@link TreeEntity}
      */
-    protected static final Set<String> TREE_ENTITY_FIELD_SET;
+    protected static final Map<String, Class<?>> TREE_ENTITY_FIELD_MAP;
 
     /**
      * 比较关系
@@ -93,14 +90,14 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
 
     static {
         Field[] baseEntityFields = ListEntity.class.getDeclaredFields();
-        BASE_ENTITY_FIELD_SET = Arrays.stream(baseEntityFields)
+        LIST_ENTITY_FIELD_MAP = Arrays.stream(baseEntityFields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .map(Field::getName).collect(Collectors.toSet());
+                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
 
         Field[] treeEntityFields = TreeEntity.class.getDeclaredFields();
-        TREE_ENTITY_FIELD_SET = Arrays.stream(treeEntityFields)
+        TREE_ENTITY_FIELD_MAP = Arrays.stream(treeEntityFields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .map(Field::getName).collect(Collectors.toSet());
+                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
     }
 
 
@@ -112,10 +109,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
-        Set<String> fieldSet = getFieldSet(tClass);
-        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldSet).toArray(new Predicate[0]));
-
+    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass, Set<String> show) {
+        Map<String, Class<?>> fieldMap = getFieldMap(tClass);
+        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
     }
 
     /**
@@ -143,9 +139,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         if (CollectionUtils.isEmpty(conditions)) {
             return query;
         }
-        Set<String> fieldSet = getFieldSet(tClass);
+        Map<String, Class<?>> fieldMap = getFieldMap(tClass);
 
-        List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions, fieldSet);
+        List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions, fieldMap);
         return query.where(predicates.toArray(new Predicate[0]));
     }
 
@@ -239,21 +235,22 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param root       root
      * @param builder    builder
      * @param conditions 查询条件
-     * @param fieldSet   实体类字段
+     * @param fieldMap   实体类字段
      * @param <T>        实体类
      * @return .
      */
-    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Set<String> fieldSet) {
+    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Map<String, Class<?>> fieldMap) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
         addDepartment(predicates, builder, root);
 
+
         if (!CollectionUtils.isEmpty(conditions)) {
-            Expression expression;
+            Expression<?> expression;
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
-                if (!fieldSet.contains(column)) {
+                if (!fieldMap.containsKey(column)) {
                     continue;
                 }
                 List<Object> values = condition.getValue();
@@ -263,7 +260,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                 // 若为关联表 , 则使用左连接
                 if (column.contains(".")) {
                     String[] columns = column.split("\\.");
-                    Join join = root.join(columns[0], JoinType.LEFT);
+                    Join<?, ?> join = root.join(columns[0], JoinType.LEFT);
                     expression = join.get(columns[1]);
                 } else {
                     expression = root.get(column);
@@ -292,7 +289,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         addDepartment(predicates, builder, root);
         if (!CollectionUtils.isEmpty(conditions)) {
 
-            Expression expression;
+            Expression<?> expression;
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
 
@@ -395,16 +392,16 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>    实体类
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> Set<String> getFieldSet(Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> Map<String, Class<?>> getFieldMap(Class<T> tClass) {
         Field[] fields = tClass.getDeclaredFields();
-        Set<String> fieldSet = Arrays.stream(fields)
+        Map<String, Class<?>> fieldMap  = Arrays.stream(fields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .map(Field::getName).collect(Collectors.toSet());
-        fieldSet.addAll(BASE_ENTITY_FIELD_SET);
+                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
+        fieldMap.putAll(LIST_ENTITY_FIELD_MAP);
         if (tClass.getSuperclass() == TreeEntity.class) {
-            fieldSet.addAll(TREE_ENTITY_FIELD_SET);
+            fieldMap.putAll(TREE_ENTITY_FIELD_MAP);
         }
-        return fieldSet;
+        return fieldMap;
     }
 
 

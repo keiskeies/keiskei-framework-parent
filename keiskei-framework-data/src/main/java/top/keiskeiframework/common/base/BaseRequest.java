@@ -16,9 +16,8 @@ import top.keiskeiframework.common.util.BaseRequestUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -33,6 +32,10 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 默认排序字段
      */
     private static final String DEFAULT_ORDER_COLUMN = "createTime";
+    /**
+     * 展示字段分割符
+     */
+    private static final String SHOW_SPLIT = ",";
 
     /**
      * 分页参数
@@ -45,6 +48,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     @Setter
     private String desc, asc;
 
+
     /**
      * 查询条件
      */
@@ -52,6 +56,13 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionDTO.class);
+        }
+    }
+
+    private Set<String> show;
+    public void setShow(String show) {
+        if (!StringUtils.isEmpty(show)) {
+            this.show = Arrays.stream(show.split(SHOW_SPLIT)).collect(Collectors.toSet());
         }
     }
 
@@ -81,12 +92,12 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * @return 。
      */
     public Pageable getPageable(@NonNull Class<T> tClass) {
-        Set<String> fieldSet = BaseRequestUtils.getFieldSet(tClass);
+        Map<String, Class<?>> fieldSet = BaseRequestUtils.getFieldMap(tClass);
         List<Sort.Order> orders = new ArrayList<>();
-        if (!StringUtils.isEmpty(desc) && fieldSet.contains(desc)) {
+        if (!StringUtils.isEmpty(desc) && fieldSet.containsKey(desc)) {
             orders.add(Sort.Order.desc(desc));
         }
-        if (!StringUtils.isEmpty(asc) && fieldSet.contains(desc)) {
+        if (!StringUtils.isEmpty(asc) && fieldSet.containsKey(desc)) {
             orders.add(Sort.Order.asc(asc));
         }
 
@@ -113,7 +124,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * @return 。
      */
     public Specification<T> getSpecification(@NonNull Class<T> tClass) {
-        return BaseRequestUtils.getSpecification(conditions, tClass);
+        return BaseRequestUtils.getSpecification(conditions, tClass, show);
     }
 
 

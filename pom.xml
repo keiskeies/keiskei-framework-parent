@@ -15,6 +15,7 @@
         <module>keiskei-framework-workflow</module>
         <module>keiskei-framework-start</module>
         <module>keiskei-framework-doc</module>
+        <module>keiskei-framework-demo</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -172,6 +173,11 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-dashboard</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-demo</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
         </dependencies>

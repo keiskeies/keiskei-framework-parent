@@ -56,6 +56,10 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-demo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-doc</artifactId>
             <version>1.1.0-jpa-Release</version>
         </dependency>

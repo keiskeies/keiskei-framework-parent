@@ -64,7 +64,6 @@ public class ListEntity<ID extends Serializable> implements Serializable {
      */
     protected String p;
 
-
     @PrePersist
     protected void onCreate() {
         p = MdcUtils.getUserDepartment();
