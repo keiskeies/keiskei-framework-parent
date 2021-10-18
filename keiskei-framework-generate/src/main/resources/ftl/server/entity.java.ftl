@@ -53,13 +53,13 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 <#list table.fields as field>
 <#--        必填校验-->
     <#if field.createRequire || field.updateRequire>
-    <#if field.type.value == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+        <#if field.type.value == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
     </#if>
 <#--        JsonIgnore-->
     <#if field.jsonIgnore>
     @JsonIgnore
     </#if>
-    <#if field.type == "TAG">
+    <#if field.type == "TAGS">
 <#--        标签字段-->
     @JsonDeserialize(converter = TagDeserializer.class)
     @JsonSerialize(converter = TagSerializer.class)
@@ -105,6 +105,15 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     <#else>
 <#--        普通字段-->
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.value}")
+        <#if field.type == 'LONG_WORD'>
+    @Column(columnDefinition = "text")
+        </#if>
+        <#if field.type == 'LONG_TEXT'>
+    @Column(columnDefinition = "mediumtext")
+        </#if>
+        <#if field.type == 'HTML'>
+    @Column(columnDefinition = "longtext")
+        </#if>
     <#--        金钱-->
         <#if field.type == 'MONEY'>
     @JsonDeserialize(converter = MoneyDeserializer.class)

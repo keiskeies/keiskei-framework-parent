@@ -24,6 +24,7 @@ import top.keiskeiframework.common.util.data.MoneySerializer;
 import top.keiskeiframework.common.util.data.TagDeserializer;
 import top.keiskeiframework.common.util.data.TagSerializer;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -84,12 +85,15 @@ public class Demo extends ListEntity<Long> {
     @ApiModelProperty(value = "文字", dataType="String")
     private String wenzi;
 
+    @Column(columnDefinition = "text")
     @ApiModelProperty(value = "段落", dataType="String")
     private String duanluo;
 
+    @Column(columnDefinition = "mediumtext")
     @ApiModelProperty(value = "文章", dataType="String")
     private String wenzhang;
 
+    @Column(columnDefinition = "longtext")
     @ApiModelProperty(value = "大型文章", dataType="String")
     private String daxingwenzhang;
 

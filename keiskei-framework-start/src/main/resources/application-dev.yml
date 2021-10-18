@@ -71,5 +71,6 @@ keiskei:
     base-path: /Users/cjm/IdeaProjects/items/user/
     base-admin-path: /Users/cjm/WebstormProjects/keiskei-admin-template/
     base-front-path: /Users/cjm/IdeaProjects/items/front/
-
-
+  file:
+    local:
+      url-suffix: http://127.0.0.1:7999/admin/v1/common/file/show/
