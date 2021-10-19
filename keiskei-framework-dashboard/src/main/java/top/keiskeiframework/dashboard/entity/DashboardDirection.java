@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
@@ -48,9 +49,21 @@ public class DashboardDirection extends BaseEntity {
     private String entityName;
 
     @ApiModelProperty(value = "查询条件")
-    private List<String> conditions;
+    private List<DashboardDirectionCondition> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotNull(message = "图表类型不能为空", groups = {Insert.class, Update.class})
     private ChartType type;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DashboardDirectionCondition {
+
+        @ApiModelProperty(value = "条件字段", dataType = "String")
+        private String field;
+
+        @ApiModelProperty(value = "字段范围")
+        private List<String> rangeValue;
+    }
 }

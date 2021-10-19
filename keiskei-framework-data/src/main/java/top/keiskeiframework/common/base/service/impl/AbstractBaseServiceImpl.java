@@ -248,6 +248,21 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
         // 基本时间条件
         Criteria criteria = Criteria.where(timeField).gte(chartRequestDTO.getStart()).lte(chartRequestDTO.getEnd());
         query.addCriteria(criteria);
+        if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
+            for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {
+                if (StringUtils.isEmpty(entry.getKey()) || CollectionUtils.isEmpty(entry.getValue())) {
+                    continue;
+                }
+
+                Object[] hasValueValues = entry.getValue().stream()
+                        .filter(e -> !StringUtils.isEmpty(e))
+                        .toArray();
+                if (hasValueValues.length > 0) {
+                    Criteria criteriaC = Criteria.where(entry.getKey()).in(hasValueValues);
+                    query.addCriteria(criteriaC);
+                }
+            }
+        }
         org.springframework.data.mongodb.core.query.Field findFields = query.fields();
         findFields.include("id");
         findFields.include(TIME_FIELD_DEFAULT);
@@ -302,6 +317,21 @@ public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements B
             // 基本时间条件
             Criteria criteria = Criteria.where(timeField).gte(chartRequestDTO.getStart()).lte(chartRequestDTO.getEnd());
             query.addCriteria(criteria);
+        }
+        if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
+            for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {
+                if (StringUtils.isEmpty(entry.getKey()) || CollectionUtils.isEmpty(entry.getValue())) {
+                    continue;
+                }
+
+                Object[] hasValueValues = entry.getValue().stream()
+                        .filter(e -> !StringUtils.isEmpty(e))
+                        .toArray();
+                if (hasValueValues.length > 0) {
+                    Criteria criteria = Criteria.where(entry.getKey()).in(hasValueValues);
+                    query.addCriteria(criteria);
+                }
+            }
         }
 
         org.springframework.data.mongodb.core.query.Field findFields = query.fields();

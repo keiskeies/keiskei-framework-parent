@@ -1,12 +1,14 @@
 package top.keiskeiframework.common.dto.dashboard;
 
-import lombok.Data;
+import lombok.*;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -54,6 +56,13 @@ public class ChartRequestDTO implements Serializable {
      * 结束时间
      */
     private LocalDateTime end;
+
+    /**
+     * 查询条件
+     * key - 字段
+     * value - 范围
+     */
+    private Map<String, List<String>> conditions;
 
 
 }

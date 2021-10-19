@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.util.BeanUtils;
@@ -272,6 +273,18 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
         chartRequestDTO.setColumn(direction.getField());
         chartRequestDTO.setColumnType(dashboard.getFieldType());
         chartRequestDTO.setChartType(direction.getType());
+
+        if (!CollectionUtils.isEmpty(direction.getConditions())) {
+            Map<String, List<String>> conditions = new HashMap<>();
+            for (DashboardDirection.DashboardDirectionCondition condition : direction.getConditions()) {
+                if (StringUtils.isEmpty(condition.getField()) || CollectionUtils.isEmpty(condition.getRangeValue())) {
+                    continue;
+                }
+                conditions.put(condition.getField(), condition.getRangeValue());
+            }
+            chartRequestDTO.setConditions(conditions);
+        }
+
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
         BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
         return baseService.getChartOptions(chartRequestDTO);
