@@ -15,6 +15,7 @@ import top.keiskeiframework.common.enums.dashboard.ChartType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>
@@ -42,9 +43,12 @@ public class DashboardDirection extends BaseEntity {
     @NotBlank(message = "实体类不能为空", groups = {Insert.class, Update.class})
     private String entityClass;
 
-    @ApiModelProperty(value = "实体类名称", dataType = "String")
+    @ApiModelProperty(value = "显示名称", dataType = "String")
     @NotBlank(message = "实体类名称不能为空", groups = {Insert.class, Update.class})
     private String entityName;
+
+    @ApiModelProperty(value = "查询条件")
+    private List<String> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotNull(message = "图表类型不能为空", groups = {Insert.class, Update.class})
