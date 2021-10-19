@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.base.controller;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +56,8 @@ public class TreeController<T extends TreeEntity> {
             @RequestParam(required = false)
             String show,
 
-            @ApiParam(value = "查询字段", type = "String", example = "id, name")
-            @RequestParam(required = false)
+            @ApiParam(value = "是否树", type = "Boolean", example = "true")
+            @RequestParam(required = false, defaultValue = "false")
             Boolean tree
     ) {
         BaseRequest<T> baseRequest = new BaseRequest<>();
