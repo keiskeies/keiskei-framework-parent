@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2018年10月12日 上午10:02:09
  */
 public class SecurityUtils {
+    /**
+     * 获取当前登陆用户
+     * @return 。
+     */
     public static TokenUser getSessionUser() {
         Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -26,18 +30,13 @@ public class SecurityUtils {
         return (TokenUser) obj;
     }
 
-    public static String getDepartment() {
-        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (!(obj instanceof TokenUser)) {
-            return "";
-        }
-
-        return ((TokenUser) obj).getDepartment();
-    }
-
     private final static String UN_KNOWN = "unKnown";
 
+    /**
+     * 获取请求真实IP
+     * @param request 。
+     * @return 。
+     */
     public static String getIpAddress(HttpServletRequest request) {
         String xip = request.getHeader("X-Real-IP");
         String xFor = request.getHeader("X-Forwarded-For");
