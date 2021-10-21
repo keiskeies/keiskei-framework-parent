@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
+import top.keiskeiframework.common.util.JwtTokenUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.dto.UserDto;
 import top.keiskeiframework.system.dto.UserPasswordDto;
@@ -35,6 +36,17 @@ public class SelfController {
     @GetMapping
     public R<UserDto> getSelfInfo() {
         return R.ok(userService.getSelfInfo());
+    }
+
+    @GetMapping("/refresh")
+    public R<TokenUser> refreshSelfInfo() {
+        TokenUser tokenUser = SecurityUtils.getSessionUser();
+        tokenUser = (TokenUser) userService.loadUserByUsername(tokenUser.getUsername());
+        String token = JwtTokenUtils.getJwtString(tokenUser);
+        //对前端隐藏密码
+        tokenUser.setPassword(null);
+        tokenUser.setToken(token);
+        return R.ok(tokenUser);
     }
 
     @PutMapping
