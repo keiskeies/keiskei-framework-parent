@@ -19,6 +19,7 @@
         <module>keiskei-framework-cache-simple</module>
         <module>keiskei-framework-notify</module>
         <module>keiskei-framework-notify-email</module>
+        <module>keiskei-framework-file-minio</module>
     </modules>
 
     <packaging>pom</packaging>

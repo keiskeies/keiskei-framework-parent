@@ -42,7 +42,6 @@ public class FileStorageController {
      * @param file 文件信息
      * @return .
      */
-    @ApiOperation("普通上传")
     @PostMapping("/admin/v1/common/file/upload")
     @ResponseBody
     public R<FileInfo> upload(MultipartFile file) {
@@ -56,7 +55,6 @@ public class FileStorageController {
      * @param fileInfo 文件信息
      * @return .
      */
-    @ApiOperation("带进度条上传")
     @PostMapping("/admin/v1/common/file/uploadWithProgress")
     @ResponseBody
     public R<FileInfo> uploadWithProgress(@Validated({UploadWithProgress.class}) MultiFileInfo fileInfo) {
@@ -69,7 +67,6 @@ public class FileStorageController {
      * @param fileInfo 文件分片信息
      * @return .
      */
-    @ApiOperation("上传文件分片")
     @ResponseBody
     @PostMapping("/admin/v1/common/file/uploadPart")
     public R<Boolean> uploadPart(@Validated({UploadPart.class}) MultiFileInfo fileInfo) {
@@ -83,7 +80,6 @@ public class FileStorageController {
      * @param fileInfo 文件信息
      * @return .
      */
-    @ApiOperation("合并文件分片")
     @ResponseBody
     @PostMapping("/admin/v1/common/file/mergingChunks")
     public R<FileInfo> mergingChunks(@Validated({MergingChunks.class}) MultiFileInfo fileInfo) {
@@ -96,7 +92,6 @@ public class FileStorageController {
      * @param fileSign 文件标识
      * @return .
      */
-    @ApiOperation("获取文件上传进度")
     @GetMapping("/admin/v1/common/file/progress")
     @ResponseBody
     public R<Integer> progress(@RequestParam("fileSign") String fileSign) {
@@ -116,7 +111,6 @@ public class FileStorageController {
      * @param fileName 文件名
      * @return .
      */
-    @ApiOperation("判断文件是否存在")
     @GetMapping("/admin/v1/common/file/exist/{fileName:.+}")
     @ResponseBody
     public R<FileInfo> exist(@PathVariable("fileName") String fileName) {
@@ -130,7 +124,6 @@ public class FileStorageController {
      * @param response 相应
      * @param process  文件处理参数
      */
-    @ApiOperation("图片展示")
     @GetMapping("/{api:api|admin}/v1/common/file/show/{fileName:.+}")
     public void show(@PathVariable("fileName") String fileName, HttpServletResponse response, @RequestParam(value = "x-oss-process", required = false) String process, @PathVariable String api) {
         try {
@@ -145,7 +138,6 @@ public class FileStorageController {
      * @param fileName 文件名称
      * @param response 响应
      */
-    @ApiOperation("文件下载")
     @GetMapping("/{api:api|admin}/v1/common/file/download/{fileName:.+}")
     public void download(@PathVariable("fileName") String fileName,
                          HttpServletResponse response, @PathVariable String api) {
