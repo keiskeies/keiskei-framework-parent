@@ -22,7 +22,9 @@ public enum FileStorageExceptionEnum implements IErrorCode {
     FILE_ARGS_ILL(710L,"文件上传参数不合法"),
     FILE_UPLOAD_FAIL(711L,"文件上传失败"),
     FILE_DOWN_FAIL(711L,"文件下载失败"),
-    FILE_NOT_FOUND(713L,"文件不存在");
+    FILE_NOT_FOUND(713L,"文件不存在"),
+
+    FILE_DELETE_FAIL(721L, "文件删除失败")
 
     ;
     private final long code;

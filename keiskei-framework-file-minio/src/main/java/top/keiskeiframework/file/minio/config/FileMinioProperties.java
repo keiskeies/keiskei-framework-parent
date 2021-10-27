@@ -19,14 +19,23 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "keiskei.file.minio")
 public class FileMinioProperties {
 
-    private String url;
     private String accessKey;
     private String secretKey;
     private String bucket;
 
-    @Bean
-    public MinioClient minioClient() {
+    /**
+     * 域名
+     */
+    private String endpoint;
 
-    }
+    /**
+     *  是否开启外网访问
+     */
+    private Boolean outsideNet = false;
+    private String ulrSuffix;
+    /**
+     * 协议方式 http:// | https:// | //
+     */
+    private String protocol = "//";
 
 }

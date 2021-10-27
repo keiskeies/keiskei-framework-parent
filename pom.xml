@@ -8,10 +8,11 @@
     <version>1.0.0-Release</version>
     <modules>
         <module>keiskei-framework-core</module>
+        <module>keiskei-framework-file</module>
         <module>keiskei-framework-file-local</module>
         <module>keiskei-framework-file-alioss</module>
-        <module>keiskei-framework-file</module>
         <module>keiskei-framework-file-jdoss</module>
+        <module>keiskei-framework-file-minio</module>
         <module>keiskei-framework-lombok</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-cache-redis</module>
@@ -19,7 +20,6 @@
         <module>keiskei-framework-cache-simple</module>
         <module>keiskei-framework-notify</module>
         <module>keiskei-framework-notify-email</module>
-        <module>keiskei-framework-file-minio</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -30,7 +30,6 @@
     </parent>
     <properties>
         <java.version>1.8</java.version>
-        <keiskei.project.version>1.0.0-Release</keiskei.project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -58,13 +57,13 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.5.20</version>
+            <version>1.6.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.59</version>
+            <version>1.2.78</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -81,52 +80,57 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-lombok</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-core</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-local</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-alioss</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file-jdoss</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-file-minio</artifactId>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache-redis</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache-jcache</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache-simple</artifactId>
-                <version>${keiskei.project.version}</version>
+                <version>1.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
