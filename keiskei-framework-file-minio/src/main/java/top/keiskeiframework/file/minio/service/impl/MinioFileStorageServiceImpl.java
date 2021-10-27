@@ -1,7 +1,9 @@
 package top.keiskeiframework.file.minio.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.org.apache.xml.internal.utils.ObjectStack;
 import io.minio.*;
+import io.minio.errors.*;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +70,7 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
      * oss 路径通配
      */
     private final static String URL_FORMAT = "%s.%s/%s";
+    private final static String UPLOAD_PART_FORMAT = "UPLOAD_PART:%s%s";
 
     @Override
     public FileInfo upload(MultiFileInfo fileInfo) {
@@ -72,9 +78,12 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
         try {
             this.currentFileName = FileStorageUtils.getFileName(fileInfo);
             is = fileInfo.getFile().getInputStream();
+            String fileName = FileStorageUtils.getFileName(fileInfo);
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(fileMinioProperties.getBucket())
-                    .stream(fileInfo.getFile().getInputStream(), fileInfo.getSize(), -1)
+                    .object(fileName)
+                    .stream(is, fileInfo.getFile().getSize(), -1)
+                    .contentType(fileInfo.getFile().getContentType())
                     .build()
             );
             return this.getFileInfo(this.currentFileName);
@@ -96,21 +105,20 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
     public FileInfo uploadWithProgress(MultiFileInfo fileInfo) {
 
         this.fileSign = fileInfo.getId();
-        cacheStorageService.save(String.format(UPLOAD_PROGRESS_FORMAT, fileSign), -1);
+        cacheStorageService.save(String.format(UPLOAD_PROGRESS_FORMAT, fileSign), 0);
         InputStream is;
         try {
             this.currentFileName = FileStorageUtils.getFileName(fileInfo);
             is = fileInfo.getFile().getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
-        }
-        try {
+            String fileName = FileStorageUtils.getFileName(fileInfo);
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(fileMinioProperties.getBucket())
-                    .stream(is, fileInfo.getSize(), 1)
+                    .object(fileName)
+                    .stream(is, fileInfo.getFile().getSize(), -1)
+                    .contentType(fileInfo.getFile().getContentType())
                     .build()
             );
+            return this.getFileInfo(this.currentFileName);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -119,51 +127,62 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
         return this.getFileInfo(this.currentFileName);
     }
 
-    /**
-     * 获取alioss上传id
-     * 返回uploadId，它是分片上传事件的唯一标识，您可以根据这个ID来发起相关的操作，如取消分片上传、查询分片上传等。
-     *
-     * @param fileName 文件名
-     * @return .
-     */
-    private String getUploadId(String fileName) {
-        String uploadId;
-        String key = String.format(UPLOAD_ID_FORMAT, fileName);
-        if (cacheStorageService.exist(key)) {
-            uploadId = String.valueOf(cacheStorageService.get(key));
-        } else {
-            uploadId = Base64.encodeBase64String((fileMinioProperties.getBucket() + fileName).getBytes(StandardCharsets.UTF_8));
-            cacheStorageService.save(key, uploadId);
-        }
-        return uploadId;
-    }
 
     @Override
     public void uploadPart(MultiFileInfo fileInfo) {
 
-        this.fileSign = fileInfo.getId();
-        cacheStorageService.save(String.format(UPLOAD_PROGRESS_FORMAT, fileSign), 0);
         InputStream is;
         try {
             this.currentFileName = FileStorageUtils.getFileName(fileInfo);
             is = fileInfo.getFile().getInputStream();
+            String fileName = fileInfo.getId() + "/" + fileInfo.getChunk();
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(fileMinioProperties.getBucket())
-                    .stream(is, fileInfo.getSize(), -1)
+                    .object(fileName)
+                    .stream(is, fileInfo.getFile().getSize(), -1)
                     .build()
             );
         } catch (Exception e) {
             e.printStackTrace();
             throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
-        } finally {
-            cacheStorageService.save(String.format(UPLOAD_PROGRESS_FORMAT, fileSign), 100);
         }
 
     }
 
     @Override
     public FileInfo mergingChunks(MultiFileInfo fileInfo) {
-        return this.getFileInfo(fileInfo.getName());
+        try {
+            String fileName = FileStorageUtils.getFileName(fileInfo);
+            List<ComposeSource> sourceObjectList = new ArrayList<>();
+            for (int i = 0; i < fileInfo.getChunks(); i++) {
+                sourceObjectList.add(
+                    ComposeSource.builder()
+                            .bucket(fileMinioProperties.getBucket())
+                            .object(fileInfo.getId() + "/" + i)
+                            .build()
+                );
+            }
+            minioClient.composeObject(
+                    ComposeObjectArgs.builder()
+                            .bucket(fileMinioProperties.getBucket())
+                            .object(fileName)
+                            .sources(sourceObjectList)
+                            .build());
+
+            return this.getFileInfo(fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
+        } finally {
+            for (int i = 0; i < fileInfo.getChunks(); i++) {
+                try {
+                    delete(fileInfo.getId() + "/" + i);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
@@ -178,36 +197,27 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
         if (fileMinioProperties.getOutsideNet()) {
             return fileInfo.setUrl(fileMinioProperties.getProtocol() + String.format(URL_FORMAT, fileMinioProperties.getBucket(), fileMinioProperties.getEndpoint(), fileName));
         } else {
-            return fileInfo.setUrl(fileMinioProperties.getUlrSuffix() + fileName);
+            return fileInfo.setUrl(fileMinioProperties.getUrlSuffix() + fileName);
         }
     }
 
 
     @Override
     public FileInfo exist(String fileName) {
-        GetObjectResponse getObjectResponse = null;
         try {
-            getObjectResponse = minioClient.getObject(
-                    GetObjectArgs.builder()
+            StatObjectResponse statObjectResponse = minioClient.statObject(
+                    StatObjectArgs.builder()
                             .bucket(fileMinioProperties.getBucket())
                             .object(fileName)
                             .build()
             );
-            if (null == getObjectResponse) {
+            if (null == statObjectResponse) {
                 return null;
             } else {
                 return getFileInfo(fileName);
             }
         } catch (Exception e) {
             return null;
-        } finally {
-            if (null != getObjectResponse) {
-                try {
-                    getObjectResponse.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

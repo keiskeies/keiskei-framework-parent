@@ -32,7 +32,7 @@ public class FileMinioProperties {
      *  是否开启外网访问
      */
     private Boolean outsideNet = false;
-    private String ulrSuffix;
+    private String urlSuffix;
     /**
      * 协议方式 http:// | https:// | //
      */
