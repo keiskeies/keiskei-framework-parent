@@ -24,6 +24,7 @@ import top.keiskeiframework.file.util.FileStorageUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -300,7 +301,7 @@ public class AliOssFileStorageServiceImpl implements FileStorageService, Progres
     }
 
     @Override
-    public void show(String fileName, String process, HttpServletResponse response) {
+    public void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(fileAliOssProperties.getBucket(), fileName);
         if (!StringUtils.isEmpty(process)) {
             getObjectRequest.setProcess(process);

@@ -3,6 +3,7 @@ package top.keiskeiframework.file.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import top.keiskeiframework.file.dto.FileInfo;
 import top.keiskeiframework.file.dto.MultiFileInfo;
 import top.keiskeiframework.file.service.FileStorageService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -121,13 +123,18 @@ public class FileStorageController {
      * 获取图片
      *
      * @param fileName 文件类型
-     * @param response 相应
+     * @param request request
+     * @param response response
      * @param process  文件处理参数
      */
     @GetMapping("/{api:api|admin}/v1/common/file/show/{fileName:.+}")
-    public void show(@PathVariable("fileName") String fileName, HttpServletResponse response, @RequestParam(value = "x-oss-process", required = false) String process, @PathVariable String api) {
+    public void show(@PathVariable("fileName") String fileName,
+                     HttpServletRequest request,
+                     HttpServletResponse response,
+                     @RequestParam(value = "x-oss-process", required = false) String process,
+                     @PathVariable String api) {
         try {
-            fileStorageService.show(fileName, process, response);
+            fileStorageService.show(fileName, process, request,response);
         } catch (Exception ignored) {
         }
     }
@@ -140,7 +147,9 @@ public class FileStorageController {
      */
     @GetMapping("/{api:api|admin}/v1/common/file/download/{fileName:.+}")
     public void download(@PathVariable("fileName") String fileName,
-                         HttpServletResponse response, @PathVariable String api) {
-        fileStorageService.show(fileName, null, response);
+                         HttpServletRequest request,
+                         HttpServletResponse response,
+                         @PathVariable String api) {
+        fileStorageService.show(fileName, null, request, response);
     }
 }

@@ -22,6 +22,7 @@ import top.keiskeiframework.file.util.FileStorageUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,7 +302,7 @@ public class JdOssFileStorageServiceImpl implements FileStorageService, Progress
 
 
     @Override
-    public void show(String fileName, String process, HttpServletResponse response) {
+    public void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(fileJdOssProperties.getBucket(), fileName);
         S3Object ossObject = longOssClient.getObject(getObjectRequest);
         String contentType = ossObject.getObjectMetadata().getContentType();

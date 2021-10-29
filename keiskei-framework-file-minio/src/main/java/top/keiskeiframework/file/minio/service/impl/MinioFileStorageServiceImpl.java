@@ -21,6 +21,7 @@ import top.keiskeiframework.file.service.FileStorageService;
 import top.keiskeiframework.file.util.FileStorageUtils;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -268,7 +269,7 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void show(String fileName, String process, HttpServletResponse response) {
+    public void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response) {
         ServletOutputStream os = null;
         GetObjectResponse getObjectResponse = null;
         try {

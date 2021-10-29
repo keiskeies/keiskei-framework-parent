@@ -4,6 +4,7 @@ package top.keiskeiframework.file.service;
 import top.keiskeiframework.file.dto.FileInfo;
 import top.keiskeiframework.file.dto.MultiFileInfo;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.List;
@@ -88,8 +89,9 @@ public interface FileStorageService {
      *
      * @param fileName 文件名
      * @param process  预览条件
-     * @param response  返回
+     * @param request  request
+     * @param response  response
      */
-    void show(String fileName, String process, HttpServletResponse response);
+    void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response);
 
 }

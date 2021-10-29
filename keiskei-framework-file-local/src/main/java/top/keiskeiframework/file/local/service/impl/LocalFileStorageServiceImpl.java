@@ -18,6 +18,7 @@ import top.keiskeiframework.file.local.util.MultiFileUtils;
 import top.keiskeiframework.file.service.FileStorageService;
 import top.keiskeiframework.file.util.FileStorageUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
@@ -137,13 +138,13 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void show(String fileName, String process, HttpServletResponse response) {
+    public void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response) {
 
         try {
             if (null == exist(fileName)) {
                 throw new RuntimeException(FileStorageExceptionEnum.FILE_DOWN_FAIL.getMsg());
             }
-            FileShowUtils.show(fileLocalProperties.getPath() + fileName, process, response);
+            FileShowUtils.show(fileLocalProperties.getPath() + fileName, process, request, response);
         } catch (IOException e) {
             e.printStackTrace();
             response.reset();
