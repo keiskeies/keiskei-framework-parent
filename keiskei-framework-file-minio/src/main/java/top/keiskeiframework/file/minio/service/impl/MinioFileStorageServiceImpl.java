@@ -1,12 +1,12 @@
 package top.keiskeiframework.file.minio.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xml.internal.utils.ObjectStack;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
+import okhttp3.Headers;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -20,16 +20,20 @@ import top.keiskeiframework.file.minio.config.FileMinioProperties;
 import top.keiskeiframework.file.service.FileStorageService;
 import top.keiskeiframework.file.util.FileStorageUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +51,7 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
     private FileMinioProperties fileMinioProperties;
     @Autowired
     private CacheStorageService cacheStorageService;
-    @Autowired
+    @Resource(name = "minioClient")
     private MinioClient minioClient;
 
 
@@ -270,6 +274,45 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
 
     @Override
     public void show(String fileName, String process, HttpServletRequest request, HttpServletResponse response) {
+
+
+        String range = request.getHeader("Range");
+        log.info("current request rang:" + range);
+        //开始下载位置
+        long startByte = 0;
+        //结束下载位置
+        long endByte = - 1;
+
+
+        //有range的话
+        if (range != null && range.contains("bytes=") && range.contains("-")) {
+            range = range.substring(range.lastIndexOf("=") + 1).trim();
+            String[] ranges = range.split("-");
+            try {
+                //判断range的类型
+                if (ranges.length == 1) {
+                    //类型一：bytes=-2343
+                    if (range.startsWith("-")) {
+                        endByte = Long.parseLong(ranges[0]);
+                    }
+                    //类型二：bytes=2343-
+                    else if (range.endsWith("-")) {
+                        startByte = Long.parseLong(ranges[0]);
+                    }
+                }
+                //类型三：bytes=22-2343
+                else if (ranges.length == 2) {
+                    startByte = Long.parseLong(ranges[0]);
+                    endByte = Long.parseLong(ranges[1]);
+                }
+
+            } catch (NumberFormatException e) {
+                startByte = 0;
+                log.error("Range Occur Error,Message:{}",e.getLocalizedMessage());
+            }
+        }
+
+
         ServletOutputStream os = null;
         GetObjectResponse getObjectResponse = null;
         try {
@@ -277,21 +320,64 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
                     GetObjectArgs.builder()
                             .bucket(fileMinioProperties.getBucket())
                             .object(fileName)
+                            .offset(startByte)
                             .build()
             );
             if (null == getObjectResponse) {
                 throw new RuntimeException(FileStorageExceptionEnum.FILE_NOT_FOUND.getMsg());
             }
-            response.setContentType(getObjectResponse.headers().get("ContentType"));
+            Headers headers = getObjectResponse.headers();
+            String contentType = getObjectResponse.headers().get("ContentType");
+            long fileTempLength = Long.parseLong(Objects.requireNonNull(headers.get("Content-Length")));
+            long fileLength = fileTempLength + startByte;
+            if (endByte == -1) {
+                endByte += fileLength;
+            }
+
+            log.info("文件开始位置：{}，文件结束位置：{}，文件总长度：{}", startByte, endByte, fileLength);
+
+            //要下载的长度
+            long contentLength = endByte - startByte + 1;
+
+            // 解决下载文件时文件名乱码问题
+            byte[] fileNameBytes = fileName.getBytes(StandardCharsets.UTF_8);
+            fileName = new String(fileNameBytes, 0, fileNameBytes.length, StandardCharsets.ISO_8859_1);
+
+            //各种响应头设置
+            //支持断点续传，获取部分字节内容：
+            response.setHeader("Accept-Ranges", "bytes");
+            //http状态码要为206：表示获取部分内容
+            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+            response.setContentType(contentType);
+            response.setHeader("Content-Type", contentType);
+            //inline表示浏览器直接使用，attachment表示下载，fileName表示下载的文件名
+            response.setHeader("Content-Disposition", "inline;filename=" + fileName);
+            response.setHeader("Content-Length", String.valueOf(contentLength));
+            // Content-Range，格式为：[要下载的开始位置]-[结束位置]/[文件总大小]
+            response.setHeader("Content-Range", "bytes " + startByte + "-" + endByte + "/" + fileLength);
+            //已传送数据大小
+            int transmitted = 0;
+
 
 
             os = response.getOutputStream();
-            int bufferLength;
-            byte[] buffer = new byte[StreamUtils.BUFFER_SIZE];
-            while ((bufferLength = getObjectResponse.read(buffer)) != -1) {
-                os.write(buffer, 0, bufferLength);
+            int len = 0;
+            byte[] buff = new byte[4096];
+
+            while ((len = getObjectResponse.read(buff)) != -1) {
+                os.write(buff, 0, len);
             }
-        } catch (Exception e) {
+
+            os.flush();
+            response.flushBuffer();
+            getObjectResponse.close();
+            log.info("下载完毕：" + startByte + "-" + endByte + "：" + transmitted);
+        } catch (ClientAbortException e) {
+            log.warn("用户停止下载：" + range);
+            //捕获此异常表示拥护停止下载
+        } catch (IOException e) {
+            log.error("用户下载IO异常，Message：{}", e.getLocalizedMessage());
+        } catch (ServerException | InsufficientDataException | ErrorResponseException | NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | XmlParserException | InternalException e) {
             e.printStackTrace();
             response.reset();
             response.setContentType("application/json;charset=utf-8");

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class MinioClientConfiguration {
 
 
-    @Bean
+    @Bean("minioClient")
     public MinioClient minioClient(FileMinioProperties fileMinioProperties) {
         return MinioClient.builder()
                 .endpoint(fileMinioProperties.getEndpoint())
