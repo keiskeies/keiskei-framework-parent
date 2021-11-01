@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.util;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import org.apache.poi.hssf.usermodel.*;
@@ -23,7 +24,8 @@ import java.util.*;
  */
 public class ExcelUtils {
 
-    private final static String FILE_SUFFIX = ".xls";
+    private final static String XLS_SUFFIX = ".xls";
+    private final static String XLSX_SUFFIX = ".xlsx";
 
     /**
      * 导出
@@ -50,9 +52,9 @@ public class ExcelUtils {
 
         // 设置工作表的标题 ,设置生成的文件名字
         if (!StringUtils.isEmpty(fileName)) {
-            fileName = fileName.replace(FILE_SUFFIX, "") + "-" + DateTimeUtils.timeToString(LocalDateTime.now()) + FILE_SUFFIX;
+            fileName = fileName.replace(XLS_SUFFIX, "") + "-" + DateTimeUtils.timeToString(LocalDateTime.now()) + XLS_SUFFIX;
         } else {
-            fileName = DateTimeUtils.timeToString(LocalDateTime.now()) + FILE_SUFFIX;
+            fileName = DateTimeUtils.timeToString(LocalDateTime.now()) + XLS_SUFFIX;
         }
         response.setHeader("File-Name", fileName);
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -108,7 +110,7 @@ public class ExcelUtils {
         InputStream is;
         try {
             is = new FileInputStream(file);
-            Workbook wb = getWorkbook(is);
+            Workbook wb = getWorkbook(file.getName(), is);
             return readExcel(wb, sheetNum, headerRowNum);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -116,8 +118,8 @@ public class ExcelUtils {
         }
     }
 
-    public static List<Map<String, Object>> readExcel(InputStream is, int sheetNum, int headerRowNum) {
-        Workbook wb = getWorkbook(is);
+    public static List<Map<String, Object>> readExcel(String fileName, InputStream is, int sheetNum, int headerRowNum) {
+        Workbook wb = getWorkbook(fileName, is);
         return readExcel(wb, sheetNum, headerRowNum);
     }
 
@@ -186,10 +188,16 @@ public class ExcelUtils {
 
     }
 
-    private static Workbook getWorkbook(InputStream is) {
+    private static Workbook getWorkbook(String fileName, InputStream is) {
         Workbook wb;
         try {
-            wb = new HSSFWorkbook(is);
+            if (fileName.toLowerCase(Locale.ROOT).endsWith(XLS_SUFFIX)) {
+                wb = new HSSFWorkbook(is);
+            } else if (fileName.toLowerCase(Locale.ROOT).endsWith(XLSX_SUFFIX)) {
+                wb = new XSSFWorkbook(is);
+            } else {
+                throw new BizException(BizExceptionEnum.ERROR.getCode(), "文件读取失败");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new BizException(BizExceptionEnum.ERROR.getCode(), "文件读取失败");
