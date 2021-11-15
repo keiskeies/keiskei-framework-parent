@@ -7,6 +7,7 @@ import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Headers;
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -24,10 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -145,6 +143,28 @@ public class MinioFileStorageServiceImpl implements FileStorageService {
                     .bucket(fileMinioProperties.getBucket())
                     .object(fileName)
                     .stream(is, fileInfo.getFile().getSize(), -1)
+                    .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
+        }
+
+    }
+
+    @Override
+    public void uploadBlobPart(MultiFileInfo fileInfo) {
+
+        InputStream is;
+        try {
+            byte[] blobs = Base64.decodeBase64(fileInfo.getBlobBase64());
+            this.currentFileName = FileStorageUtils.getFileName(fileInfo);
+            is = new ByteArrayInputStream(blobs);
+            String fileName = fileInfo.getId() + "/" + fileInfo.getChunk();
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(fileMinioProperties.getBucket())
+                    .object(fileName)
+                    .stream(is, blobs.length, -1)
                     .build()
             );
         } catch (Exception e) {

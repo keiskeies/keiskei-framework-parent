@@ -45,6 +45,12 @@ public interface FileStorageService {
      * @param fileInfo 文件分片信息
      */
     void uploadPart(MultiFileInfo fileInfo);
+    /**
+     * 上传单个分片
+     *
+     * @param fileInfo 文件分片信息
+     */
+    void uploadBlobPart(MultiFileInfo fileInfo);
 
     /**
      * 合并文件分片

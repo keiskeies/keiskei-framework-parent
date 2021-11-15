@@ -1,7 +1,9 @@
 package top.keiskeiframework.file.local.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.web.multipart.MultipartFile;
+import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.file.dto.MultiFileInfo;
 
 import java.io.*;
@@ -82,16 +84,15 @@ public class MultiFileUtils {
     }
 
 
-    public static synchronized void savePartFile(MultiFileInfo fileInfo, String tmpPath) throws Exception {
-        String fileDirName = getTmpName(fileInfo, tmpPath);
+    public static synchronized void savePartFile(MultiFileInfo fileInfo, String path) throws Exception {
         //禁用FileInfo.exists()类, 防止缓存导致并发问题
-        File tempFile = new File(fileDirName);
-        if (!(tempFile.exists() && tempFile.isFile())) {
+        File file = new File(path, FileStorageUtils.getFileName(fileInfo));
+        if (!(file.exists() && file.isFile())) {
             //上锁
             REENTRANT_LOCK.lock();
             try {
-                if (!(tempFile.exists() && tempFile.isFile())) {
-                    MultiFileUtils.readySpaceFile(fileInfo, tempFile);
+                if (!(file.exists() && file.isFile())) {
+                    MultiFileUtils.readySpaceFile(fileInfo, file);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -101,8 +102,32 @@ public class MultiFileUtils {
             //释放锁
 
         }
-        tempFile = new File(fileDirName);
-        MultiFileUtils.spaceFileWriter(tempFile, fileInfo);
+        MultiFileUtils.spaceFileWriter(file, fileInfo);
+    }
+
+
+    public static synchronized void saveBlobPartFile(MultiFileInfo fileInfo, String path)  throws Exception{
+
+        File targetFile = new File(path, FileStorageUtils.getFileName(fileInfo));
+        REENTRANT_LOCK.lock();
+        //上锁
+
+        try (
+                RandomAccessFile targetSpaceFile = new RandomAccessFile(targetFile, "rws");
+        ) {
+            byte[] blobs = Base64.decodeBase64(fileInfo.getBlobBase64());
+            if (!(targetFile.exists() && targetFile.isFile())) {
+                targetSpaceFile.setLength(fileInfo.getSize());
+            }
+            targetSpaceFile.seek(getBlobFileWriterStartPointer(blobs.length, fileInfo));
+            targetSpaceFile.write(blobs, 0, blobs.length);
+        } catch (IOException e) {
+            e.printStackTrace();
+            targetFile.deleteOnExit();
+            throw new RuntimeException("file upload fail!");
+        }
+        //释放锁
+        REENTRANT_LOCK.unlock();
     }
 
 
@@ -110,48 +135,18 @@ public class MultiFileUtils {
      * 合并分片文件
      *
      * @param fileInfo 文件信息
-     * @param tmpPath  临时路径
      * @param path     真实路径
      * @return .
      */
-    public static String mergingParts(MultiFileInfo fileInfo, String tmpPath, String path) {
-        File tempFile = null;
+    public static String mergingParts(MultiFileInfo fileInfo, String path) {
         try {
-            String fileDirName = getTmpName(fileInfo, tmpPath);
-            tempFile = new File(fileDirName);
-            if (tempFile.exists() && tempFile.isFile()) {
-                String targetDirName = FileStorageUtils.getFileName(fileInfo);
-                File targetFile = new File(path, targetDirName);
-                if (tempFile.renameTo(targetFile)) {
-                    return targetDirName;
-                }
-            }
+            return FileStorageUtils.getFileName(fileInfo);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (null != tempFile) {
-                if (tempFile.delete()) {
-                    log.info("temp file {} delete success", tempFile.getName());
-                }
-            }
+            return null;
         }
-        return null;
     }
 
-
-    /**
-     * 获取文件临时名称
-     *
-     * @param fileInfo 文件分片信息
-     * @param tmpPath  临时目录
-     * @return .
-     */
-    private static String getTmpName(MultiFileInfo fileInfo, String tmpPath) throws IOException {
-
-        String id = fileInfo.getId();
-        String fileMd5Name = FileStorageUtils.getFileName(fileInfo);
-        return tmpPath + id + "_" + fileMd5Name + ".temp";
-    }
 
     /**
      * 创建空目标文件
@@ -167,18 +162,20 @@ public class MultiFileUtils {
     /**
      * 向空文件写入二进制数据
      */
-    private static void spaceFileWriter(File tempFile, MultiFileInfo fileInfo) {
+    private static void spaceFileWriter(File file, MultiFileInfo fileInfo) {
         long startPointer = getFileWriterStartPointer(fileInfo.getFile(), fileInfo);
 
         try (
                 FileChannel inChannel = ((FileInputStream) fileInfo.getFile().getInputStream()).getChannel();
-                FileOutputStream out = new FileOutputStream(tempFile, true);
+                FileOutputStream out = new FileOutputStream(file, true);
                 FileChannel outChannel = out.getChannel()
         ) {
 
             outChannel.transferFrom(inChannel, startPointer, fileInfo.getFile().getSize());
         } catch (IOException e) {
             e.printStackTrace();
+            file.deleteOnExit();
+            throw new BizException("file part upload error!");
         }
 
     }
@@ -194,6 +191,25 @@ public class MultiFileUtils {
         Integer currChunk = fileInfo.getChunk();
         Integer allChunks = fileInfo.getChunks();
         Long allSize = fileInfo.getSize();
+        if (currChunk < (allChunks - 1)) {
+            return chunkSize * currChunk;
+        } else if (currChunk == (allChunks - 1)) {
+            return allSize - chunkSize;
+        } else {
+            throw new RuntimeException("file part error!");
+        }
+    }
+
+
+    /**
+     * 计算指针开始位置
+     *
+     * @param fileInfo:分片实体类
+     */
+    private synchronized static Long getBlobFileWriterStartPointer(long chunkSize, MultiFileInfo fileInfo) {
+        int currChunk = fileInfo.getChunk();
+        int allChunks = fileInfo.getChunks();
+        long allSize = fileInfo.getSize();
         if (currChunk < (allChunks - 1)) {
             return chunkSize * currChunk;
         } else if (currChunk == (allChunks - 1)) {

@@ -6,11 +6,11 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>1.0.0-Release</version>
+        <version>2.0.0-Release</version>
     </parent>
 
     <artifactId>keiskei-framework-lombok</artifactId>
-    <version>1.0.0-Release</version>
+    <version>2.0.0-Release</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

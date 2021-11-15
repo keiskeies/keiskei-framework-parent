@@ -83,7 +83,18 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     public void uploadPart(MultiFileInfo fileInfo) {
         try {
             //切片上传
-            MultiFileUtils.savePartFile(fileInfo, fileLocalProperties.getTempPath());
+            MultiFileUtils.savePartFile(fileInfo, fileLocalProperties.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
+        }
+    }
+
+    @Override
+    public void uploadBlobPart(MultiFileInfo fileInfo) {
+        try {
+            //切片上传
+            MultiFileUtils.saveBlobPartFile(fileInfo, fileLocalProperties.getPath());
         } catch (Exception e) {
             e.printStackTrace();
             throw new BizException(FileStorageExceptionEnum.FILE_UPLOAD_FAIL);
@@ -92,7 +103,7 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
 
     @Override
     public FileInfo mergingChunks(MultiFileInfo fileInfo) {
-        String fileName = MultiFileUtils.mergingParts(fileInfo, fileLocalProperties.getTempPath(), fileLocalProperties.getPath());
+        String fileName = MultiFileUtils.mergingParts(fileInfo, fileLocalProperties.getPath());
         return getFileInfo(fileName);
     }
 

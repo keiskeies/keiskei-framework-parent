@@ -22,11 +22,6 @@ public class FileLocalProperties {
     private String path = "/tmp/file/";
 
     /**
-     * 文件临时路径
-     */
-    private String tempPath = "/tmp/file/temp/";
-
-    /**
      * 返回文件名是否带路径
      */
     private String urlSuffix = "";

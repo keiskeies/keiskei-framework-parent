@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MultiFileInfo {
 
-    @NotBlank(groups = {UploadPart.class, MergingChunks.class, UploadWithProgress.class})
+    @NotBlank(groups = {UploadPart.class, MergingChunks.class, UploadWithProgress.class, UploadBlobPart.class})
     private String id;
     /**
      * 文件md5
@@ -28,7 +28,7 @@ public class MultiFileInfo {
     /**
      * 文件名称
      */
-    @NotBlank(groups = {UploadPart.class, MergingChunks.class})
+    @NotBlank(groups = {UploadPart.class, MergingChunks.class, UploadBlobPart.class})
     private String name;
 
     /**
@@ -38,20 +38,27 @@ public class MultiFileInfo {
     /**
      * 文件大小
      */
-    @NotNull(groups = {UploadPart.class})
+    @NotNull(groups = {UploadPart.class, UploadBlobPart.class})
     private Long size;
     /**
      * 当前分片下标
      */
-    @NotNull(groups = {UploadPart.class})
-    @Min(value = 0,groups = {UploadPart.class})
+    @NotNull(groups = {UploadPart.class, UploadBlobPart.class})
+    @Min(value = 0,groups = {UploadPart.class, UploadBlobPart.class})
     private Integer chunk;
     /**
      * 总分片数
      */
-    @NotNull(groups = {UploadPart.class})
-    @Min(value = 1,groups = {UploadPart.class})
+    @NotNull(groups = {UploadPart.class, UploadBlobPart.class})
+    @Min(value = 1,groups = {UploadPart.class, UploadBlobPart.class})
     private Integer chunks;
+
+
+    /**
+     * 当前文件分片byte 的 base64 String
+     */
+    @NotNull(groups = {UploadBlobPart.class})
+    private String blobBase64;
     /**
      * 当前文件分片
      */
