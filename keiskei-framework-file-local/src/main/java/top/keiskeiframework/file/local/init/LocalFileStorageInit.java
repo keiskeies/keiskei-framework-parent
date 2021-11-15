@@ -21,8 +21,7 @@ public class LocalFileStorageInit implements CommandLineRunner {
     private FileLocalProperties fileLocalProperties;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         MultiFileUtils.checkDir(fileLocalProperties.getPath());
-        MultiFileUtils.checkDir(fileLocalProperties.getTempPath());
     }
 }
