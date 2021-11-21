@@ -68,8 +68,8 @@ keiskei:
     cross: true
     maximum-sessions: 1
   generate:
-    base-path: C:/tmp/file/item/
-    base-admin-path: C:/Users/chenj/WebstormProjects/keiskei-admin-template/
+    base-path: D:/tmp/file/item/
+    base-admin-path: C:/Users/CJM/item/keiskei-admin-template/
     base-front-path: /Users/cjm/IdeaProjects/items/front/
   file:
     local:

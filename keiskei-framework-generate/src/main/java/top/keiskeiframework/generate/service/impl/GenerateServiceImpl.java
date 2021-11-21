@@ -63,12 +63,12 @@ public class GenerateServiceImpl implements IGenerateService {
             throw new BizException(BizExceptionEnum.ERROR);
         }
         // 拷贝前端基础文件
-//        try {
-//            GenerateFileUtils.copyDir(generateProperties.getBaseAdminPath(), basePath + "/admin/");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            GenerateFileUtils.copyDir(generateProperties.getBaseAdminPath(), basePath + "/admin/");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // 生成文件
         GenerateFileUtils.go2Fly(project, basePath);
         // 文件打包

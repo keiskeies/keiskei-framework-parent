@@ -12,6 +12,8 @@ import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
 import java.io.*;
+import java.net.BindException;
+import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,31 +27,47 @@ import java.util.*;
  */
 public class GenerateFileUtils {
 
-    public static void copyDir(String oldPath, String newPath) throws IOException {
-        File file = new File(newPath);
-        file.mkdirs();
-
-        String[] cmds = {"cp", "-rf", oldPath + "/.*", newPath};
-        Process p = Runtime.getRuntime().exec(cmds);
-        BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String s = "";
-        while((s=in.readLine()) != null){
-            System.out.println(s);
+    public static void copyDir(String resource, String target) throws IOException {
+        if (!resource.endsWith("/")) {
+            resource += "/";
         }
-        System.out.println("finished...");
-    }
+        if (!target.endsWith("/")) {
+            target += "/";
+        }
+        File resourceDir = new File(resource);
+        if (!resourceDir.exists()) {
+            return;
+        }
+        File targetDir = new File(target);
+        if (!targetDir.exists()) {
+            if (!targetDir.mkdirs()) {
+                throw new BindException("存放的目标路径：[" + target + "] 创建失败...");
+            }
+        }
+        File[] resourceFiles = resourceDir.listFiles();
+        if (null == resourceFiles || resourceFiles.length == 0) {
+            return;
+        }
 
-    public static void copyFile(String oldPath, String newPath) throws IOException {
-        File oldFile = new File(oldPath);
-        File file = new File(newPath);
-        file.mkdirs();
-        FileInputStream in = new FileInputStream(oldFile);
-        FileOutputStream out = new FileOutputStream(file);
-
-        byte[] buffer = new byte[2048];
-
-        while ((in.read(buffer)) != -1) {
-            out.write(buffer);
+        for (File childResourceFile : resourceFiles) {
+            if (childResourceFile.isFile()) {
+                File childTargetFile = new File(target + childResourceFile.getName());
+                try (
+                        FileChannel inc = new FileInputStream(childResourceFile).getChannel();
+                        FileChannel ouc = new FileOutputStream(childTargetFile).getChannel();
+                ) {
+                    ouc.transferFrom(inc, 0, childResourceFile.length());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (childResourceFile.isDirectory()) {
+                if (childResourceFile.getName().startsWith(".")) {
+                    continue;
+                }
+                String dir1 = resource + childResourceFile.getName();
+                String dir2 = target + childResourceFile.getName();
+                copyDir(dir1, dir2);
+            }
         }
     }
 
@@ -86,20 +104,20 @@ public class GenerateFileUtils {
 
 
         go2Fly("server/pom/startModulePom.xml", startModulePath + "/pom.xml", cfg);
-        go2Fly("server/application.java", startModulePath +"/src/main/java/top/keiskeiframework/Application.java", cfg);
-        go2Fly("server/resources/application.yml", startModulePath +"/src/main/resources/application.yml", cfg);
-        go2Fly("server/resources/application-dev.yml", startModulePath +"/src/main/resources/application-dev.yml", cfg);
-        go2Fly("server/resources/application-prod.yml", startModulePath +"/src/main/resources/application-prod.yml", cfg);
+        go2Fly("server/application.java", startModulePath + "/src/main/java/top/keiskeiframework/Application.java", cfg);
+        go2Fly("server/resources/application.yml", startModulePath + "/src/main/resources/application.yml", cfg);
+        go2Fly("server/resources/application-dev.yml", startModulePath + "/src/main/resources/application-dev.yml", cfg);
+        go2Fly("server/resources/application-prod.yml", startModulePath + "/src/main/resources/application-prod.yml", cfg);
 
         String docModuleName = item.getName() + "-doc";
         String docModulePath = serverPath + "/" + docModuleName;
 
         go2Fly("server/pom/docModulePom.xml", docModulePath + "/pom.xml", cfg);
-        go2Fly("server/config/SwaggerAddition.java", docModulePath +"/src/main/java/top/keiskeiframework/config/SwaggerAddition.java", cfg);
-        go2Fly("server/config/SwaggerConfig.java", docModulePath +"/src/main/java/top/keiskeiframework/config/SwaggerConfig.java", cfg);
+        go2Fly("server/config/SwaggerAddition.java", docModulePath + "/src/main/java/top/keiskeiframework/doc/config/SwaggerAddition.java.ftl", cfg);
+        go2Fly("server/config/SwaggerConfig.java", docModulePath + "/src/main/java/top/keiskeiframework/doc/config/SwaggerConfig.java", cfg);
 
         go2Fly("server/pom/serverPom.xml", serverPath + "/pom.xml", cfg);
-        go2Fly("server/pom/.gitignore", serverPath + "/.gitignore", cfg);
+        go2Fly("server/.gitignore", serverPath + "/.gitignore", cfg);
         go2Fly("server/build/build.sh", serverPath + "/build.sh", cfg);
         go2Fly("server/build/Dockerfile", serverPath + "/Dockerfile", cfg);
         for (ModuleInfo module : item.getModules()) {
@@ -111,7 +129,7 @@ public class GenerateFileUtils {
                 table.setTableName(camelToUnderline(module.getPath() + table.getName()));
 
                 cfg.put("table", table);
-                cfg.put("serialVersionUID",getSerialVersionUID());
+                cfg.put("serialVersionUID", getSerialVersionUID());
 
                 go2Fly("server/entity.java", resultFilePath + "entity/" + table.getName() + ".java", cfg);
                 go2Fly("server/repository.java", resultFilePath + "repository/" + table.getName() + "Repository.java", cfg);
@@ -139,7 +157,7 @@ public class GenerateFileUtils {
                 String tablePath = adminPath + "src/views/" + unpFirst(module.getPath()) + "/" + unpFirst(table.getName());
                 go2Fly("pages/page.vue", tablePath + "/index.vue", cfg);
             }
-            go2Fly("pages/router.js", routerPath + "/modules/" + unpFirst(module.getPath()) + "/" + unpFirst(module.getPath()) + ".js", cfg);
+            go2Fly("pages/router.js", routerPath + "/modules/" + unpFirst(module.getPath()) + ".js", cfg);
         }
         go2Fly("pages/routerIndex.js", routerPath + "/index.js", cfg);
     }
@@ -169,10 +187,11 @@ public class GenerateFileUtils {
     }
 
     public static String upFirst(String str) {
-        return str.substring(0,1).toUpperCase(Locale.ROOT) + str.substring(1);
+        return str.substring(0, 1).toUpperCase(Locale.ROOT) + str.substring(1);
     }
+
     public static String unpFirst(String str) {
-        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
+        return str.substring(0, 1).toLowerCase(Locale.ROOT) + str.substring(1);
     }
 
 

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
@@ -87,6 +88,10 @@ public class FieldInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_id")
+    @OrderBy("sortBy")
     private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
+
+    @ApiModelProperty(value = "排序", dataType = "Integer")
+    private Integer sortBy;
 
 }

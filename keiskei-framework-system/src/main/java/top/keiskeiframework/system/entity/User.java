@@ -31,7 +31,6 @@ import java.util.Set;
 @Entity
 @Table(name = "sys_user")
 @ApiModel(value = "User", description = "管理员")
-@Chartable
 public class User extends ListEntity<Long> {
 
     private static final long serialVersionUID = -3821316560303369479L;

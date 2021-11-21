@@ -56,5 +56,9 @@ public class FieldEnumInfo extends ListEntity<Long> {
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_enum_id")
+    @OrderBy("sortBy")
     private List<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
+
+    @ApiModelProperty(value = "排序", dataType = "Integer")
+    private Integer sortBy;
 }

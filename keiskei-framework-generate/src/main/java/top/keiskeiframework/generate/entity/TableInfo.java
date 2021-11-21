@@ -66,5 +66,9 @@ public class TableInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "table_id")
+    @OrderBy("sortBy")
     private List<FieldInfo> fields = new ArrayList<>();
+
+    @ApiModelProperty(value = "排序", dataType = "Integer")
+    private Integer sortBy;
 }

@@ -1,9 +1,11 @@
-package top.keiskeiframework.config;
+package top.keiskeiframework.doc.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Sets;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.OperationBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -20,15 +22,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  * <p>
- * 登陆退出接口
+ * 接口文档添加用户登陆文档
  * </p>
  *
  * @author ${author}
  * @since ${since}
  */
 @Component
+@Profile({"dev"})
 public class SwaggerAddition implements ApiListingScannerPlugin {
 
     /**
@@ -41,15 +47,24 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
      */
     @Override
     public List<ApiDescription> apply(DocumentationContext context) {
+        return Arrays.asList(getSelfApiDescription(), getLoginApiDescription());
+    }
+
+    /**
+     * 登陆相关接口
+     *
+     * @return 。
+     */
+    private ApiDescription getLoginApiDescription() {
         Operation loginOperation = new OperationBuilder(new CachingOperationNameGenerator())
                 .method(HttpMethod.POST)
                 .summary("用户名密码登录")
                 .notes("username/password登录")
                 // 接收参数格式
-                .consumes(Sets.newHashSet(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                .consumes(Sets.newHashSet(APPLICATION_FORM_URLENCODED_VALUE))
                 // 返回参数格式
-                .produces(Sets.newHashSet(MediaType.APPLICATION_JSON_VALUE))
-                .tags(Sets.newHashSet("登录/退出"))
+                .produces(Sets.newHashSet(APPLICATION_JSON_VALUE))
+                .tags(Sets.newHashSet("登录"))
                 .parameters(Arrays.asList(
                         new ParameterBuilder()
                                 .description("用户名")
@@ -74,33 +89,82 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                 ))
                 .responseMessages(Collections.singleton(
                         new ResponseMessageBuilder().code(200).message("请求成功")
-                                .responseModel(new ModelRef(
-                                        "top.keiskeiframework.common.vo.R")
-                                ).build()))
+                                .responseModel(new ModelRef("TokenUser")).build()))
                 .build();
 
-        Operation loginOutOperation = new OperationBuilder(new CachingOperationNameGenerator())
-                .method(HttpMethod.POST)
-                .summary("退出登录")
-                .notes("退出登录")
-                // 返回参数格式
+        return new ApiDescription("登录", "/admin/v2/system/login",
+                "",
+                "登录接口",
+                Collections.singletonList(loginOperation), false);
+    }
+
+    /**
+     * 用户中心相关接口
+     *
+     * @return 。
+     */
+    private ApiDescription getSelfApiDescription() {
+        Operation detailOperation = new OperationBuilder(new CachingOperationNameGenerator())
+                .method(HttpMethod.GET)
+                .summary("详情")
+                .notes("个人信息详情")
+                .tags(Sets.newHashSet("系统设置-个人中心"))
                 .produces(Sets.newHashSet(MediaType.APPLICATION_JSON_VALUE))
-                .tags(Sets.newHashSet("登录/退出"))
                 .responseMessages(Collections.singleton(
                         new ResponseMessageBuilder().code(200).message("请求成功")
-                                .responseModel(new ModelRef(
-                                        "top.keiskeiframework.common.vo.R")
-                                ).build()))
+                                .responseModel(new ModelRef("UserDto")).build()
+                ))
+                .build();
+        Operation editOperation = new OperationBuilder(new CachingOperationNameGenerator())
+                .method(HttpMethod.PUT)
+                .summary("修改")
+                .notes("修改个人信息")
+                .tags(Sets.newHashSet("系统设置-个人中心"))
+                .produces(Sets.newHashSet(APPLICATION_JSON_VALUE))
+                .parameters(Collections.singletonList(
+                        new ParameterBuilder()
+                                .parameterType("body")
+                                .modelRef(new ModelRef("UserDto"))
+                                .description("用户信息")
+                                .name("userDto")
+                                .required(true)
+                                .build()
+                ))
+                .responseMessages(Collections.singleton(
+                        new ResponseMessageBuilder().code(200).message("请求成功")
+                                .responseModel(new ModelRef("R")).build()
+                ))
                 .build();
 
+        Operation editPasswordOperation = new OperationBuilder(new CachingOperationNameGenerator())
+                .method(HttpMethod.PATCH)
+                .summary("修改密码")
+                .notes("修改个人密码")
+                .tags(Sets.newHashSet("系统设置-个人中心"))
+                .produces(Sets.newHashSet(APPLICATION_JSON_VALUE))
+                .parameters(Collections.singletonList(
+                        new ParameterBuilder()
+                                .parameterType("body")
+                                .modelRef(new ModelRef("UserPasswordDto"))
+                                .description("用户密码信息")
+                                .name("userPasswordDto")
+                                .required(true)
+                                .build()
+                ))
+                .responseMessages(Collections.singleton(
+                        new ResponseMessageBuilder()
+                                .code(200)
+                                .message("请求成功")
+                                .responseModel(new ModelRef("R<<Boolean>>"))
+                                .build()
+                ))
+                .build();
 
-        ApiDescription loginApiDescription = new ApiDescription("登陆/退出", "/admin/v2/system/login", "登录接口",
-                Collections.singletonList(loginOperation), false);
-
-        ApiDescription loginOutApiDescription = new ApiDescription("登陆/退出", "/admin/v2/system/logout", "退出登录",
-                Collections.singletonList(loginOutOperation), false);
-
-        return Arrays.asList(loginApiDescription, loginOutApiDescription);
+        return new ApiDescription("系统设置-个人中心", "/admin/v2/system/self",
+                ""
+                ,
+                "个人中心",
+                Arrays.asList(editOperation, editPasswordOperation, detailOperation), false);
     }
 
     /**
@@ -110,7 +174,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
      * @return true 启用
      */
     @Override
-    public boolean supports(DocumentationType documentationType) {
+    public boolean supports(@NonNull DocumentationType documentationType) {
         return DocumentationType.SWAGGER_2.equals(documentationType);
     }
 }

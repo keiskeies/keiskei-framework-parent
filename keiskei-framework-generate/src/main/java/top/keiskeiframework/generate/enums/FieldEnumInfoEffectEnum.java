@@ -17,7 +17,8 @@ public enum FieldEnumInfoEffectEnum {
 
     //
     dark,
-    plain
+    plain,
+    light
     ;
 
 

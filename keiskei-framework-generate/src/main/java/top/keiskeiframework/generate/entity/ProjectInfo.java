@@ -67,5 +67,6 @@ public class ProjectInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
+    @OrderBy("sortBy")
     private List<ModuleInfo> modules = new ArrayList<>();
 }

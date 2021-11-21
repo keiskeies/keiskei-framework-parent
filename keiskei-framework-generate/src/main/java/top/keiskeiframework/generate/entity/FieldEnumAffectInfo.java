@@ -45,4 +45,7 @@ public class FieldEnumAffectInfo extends ListEntity<Long> {
 
     @ApiModelProperty(value = "禁用字段", dataType = "Boolean")
     private Boolean disableEdit;
+
+    @ApiModelProperty(value = "排序", dataType = "Integer")
+    private Integer sortBy;
 }

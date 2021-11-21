@@ -53,5 +53,9 @@ public class ModuleInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "module_id")
+    @OrderBy("sortBy")
     private List<TableInfo> tables = new ArrayList<>();
+
+    @ApiModelProperty(value = "排序", dataType = "Integer")
+    private Integer sortBy;
 }
