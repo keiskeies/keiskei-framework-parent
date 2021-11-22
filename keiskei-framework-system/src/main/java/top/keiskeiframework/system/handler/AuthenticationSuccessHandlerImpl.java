@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
-import top.keiskeiframework.common.util.JwtTokenUtils;
-import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.common.util.ResponseUtils;
+import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.user.TokenUser;
 
@@ -43,17 +42,14 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         log.info("用户 {} - {} 登入系统!", tokenUser.getUsername(), tokenUser.getName());
 
 
-        String token = JwtTokenUtils.getJwtString(tokenUser);
         //对前端隐藏密码
         tokenUser.setPassword(null);
-        tokenUser.setToken(token);
-
         ResponseUtils.write(request, response, JSON.toJSONString(R.ok(tokenUser)));
 
         if (null != operateLogService) {
             OperateLogDTO operateLog = new OperateLogDTO();
             operateLog.setIp(SecurityUtils.getIpAddress(request));
-            operateLog.setType(OperateTypeEnum.LOGIN.getType());
+            operateLog.setType(OperateTypeEnum.LOGIN.getMethod());
             operateLog.setUserId(tokenUser.getId());
             operateLogService.saveLog(operateLog);
         }

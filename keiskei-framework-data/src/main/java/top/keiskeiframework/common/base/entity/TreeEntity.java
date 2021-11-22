@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeEntity extends BaseEntity implements Serializable {
+public class TreeEntity extends ListEntity implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
     protected String parentId;

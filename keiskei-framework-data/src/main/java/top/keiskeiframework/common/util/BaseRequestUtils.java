@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 
@@ -31,7 +31,7 @@ public class BaseRequestUtils {
 
     /**
      * BaseEntity可显示字段
-     * {@link BaseEntity}
+     * {@link ListEntity}
      */
     private static final Set<String> BASE_ENTITY_FIELD_SET;
     /**
@@ -69,7 +69,7 @@ public class BaseRequestUtils {
     }
 
     static {
-        Field[] baseEntityFields = BaseEntity.class.getDeclaredFields();
+        Field[] baseEntityFields = ListEntity.class.getDeclaredFields();
         BASE_ENTITY_FIELD_SET = Arrays.stream(baseEntityFields)
                 .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
                 .map(Field::getName).collect(Collectors.toSet());

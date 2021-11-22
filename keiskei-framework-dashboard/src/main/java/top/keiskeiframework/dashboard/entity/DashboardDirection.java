@@ -7,11 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
 import javax.validation.constraints.NotBlank;
@@ -33,7 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @Document("dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
-public class DashboardDirection extends BaseEntity {
+public class DashboardDirection extends ListEntity {
 
     private static final long serialVersionUID = -2719449560787668928L;
 

@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
@@ -38,7 +38,7 @@ import java.util.List;
 @AllArgsConstructor
 @Document("dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
-public class Dashboard extends BaseEntity {
+public class Dashboard extends ListEntity {
 
     private static final long serialVersionUID = -5855392143364324899L;
 
@@ -85,5 +85,6 @@ public class Dashboard extends BaseEntity {
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
+    @DBRef
     private List<DashboardDirection> directions;
 }

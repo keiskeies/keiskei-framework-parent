@@ -1,17 +1,15 @@
 package top.keiskeiframework.dashboard.service.impl;
 
-import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.util.BeanUtils;
-import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
@@ -29,6 +27,7 @@ import top.keiskeiframework.common.vo.dashboard.charts.series.RadarSeries;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.entity.DashboardDirection;
 import top.keiskeiframework.dashboard.enums.DashboardExceptionEnum;
+import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
 import java.time.LocalDateTime;
@@ -294,7 +293,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
         if (StringUtils.isEmpty(str)) {
             return "";
         }
-        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
+        return str.substring(0, 1).toLowerCase(Locale.ROOT) + str.substring(1);
 
     }
 

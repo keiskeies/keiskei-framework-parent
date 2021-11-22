@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021/9/16 16:35
  */
 @RestController
-@RequestMapping("/admin/v1/setting/conf")
+@RequestMapping("/admin/v2/setting/conf")
 public class SettingConfigController {
 }

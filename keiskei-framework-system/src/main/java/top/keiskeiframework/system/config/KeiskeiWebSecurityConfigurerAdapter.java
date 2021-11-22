@@ -9,13 +9,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.util.JwtTokenUtils;
-import top.keiskeiframework.system.filter.JwtAuthenticationTokenFilter;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
@@ -23,6 +19,7 @@ import top.keiskeiframework.system.service.IUserService;
 
 /**
  * springSecurity配置中心
+ * `
  *
  * @author 陈加敏
  * @since 2019/7/15 13:43
@@ -44,8 +41,6 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     @Autowired
     private LogoutHandlerImpl logoutHandlerImpl;
     @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-    @Autowired
     private SystemProperties systemProperties;
     @Autowired
     private IUserService userService;
@@ -54,18 +49,26 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().sessionManagement().maximumSessions(systemProperties.getMaximumSessions());
         //使用自定义权限认证失败处理 - 不使用重定向
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
-        // 由于使用的是JWT，我们这里不需要csrf , 并且关闭缓存
-        http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.headers().defaultsDisabled().cacheControl();
+
+        http.formLogin().loginPage(systemProperties.getAuthWebLoginPath())
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .permitAll();
+        http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).
+                addLogoutHandler(logoutHandlerImpl)
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .permitAll();
+
         // 不进行拦截的路径
         http.authorizeRequests().antMatchers("/api/**").permitAll();
         if (null != systemProperties.getPermitUri()) {
             http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
         }
-
-        http.formLogin().loginPage(systemProperties.getAuthWebLoginPath()).successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).permitAll();
-        http.logout().logoutUrl(systemProperties.getAuthWebLogoutPath()).addLogoutHandler(logoutHandlerImpl).logoutSuccessHandler(logoutSuccessHandler).permitAll();
 
         // 登陆后可访问的路径
         http.authorizeRequests().antMatchers("/admin/*/system/self/**").authenticated();
@@ -74,17 +77,14 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                 http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).authenticated();
             }
         }
+
         if (usePermission) {
             //开启自定义连接拦截
-            http.authorizeRequests().anyRequest().access("@rbacAuthorityService.hasPermission(request,authentication)");
+            http.authorizeRequests().anyRequest().access(
+                    "@rbacAuthorityService.hasPermission(request, authentication)"
+            );
         }
-
         http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        // 禁用缓存
-        http.headers().cacheControl();
-        JwtTokenUtils.EXPIRES = systemProperties.getTokenMinutes() * 60;
-        JwtTokenUtils.SECRET = systemProperties.getTokenSecret();
     }
 
     @Override

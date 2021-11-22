@@ -11,7 +11,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.BaseRequest;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
-public abstract class AbstractBaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
+public abstract class AbstractBaseServiceImpl<T extends ListEntity> implements BaseService<T> {
 
     @Autowired
     protected MongoRepository<T, String> mongoRepository;

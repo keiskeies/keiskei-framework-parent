@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:@environment@}
+  application:
+    name: ${APPLICATION_NAME:keiskei-jpa-start}
+keiskei:
+  use-permission: ${KEISKEI_USE_PERMISSION:false}
+  use-department: ${KEISKEI_USE_DEPARTMENT:false}
+  use-scheduled-task: ${KEISKEI_USE_SCHEDULED_TASK:false}
+  use-dashboard: ${KEISKEI_USE_DASHBOARD:false}
+  use-operateLog: ${KEISKEI_USE_OPERAT_LOG:false}
+  use-dictionary: ${KEISKEI_USE_DICTIONARY:false}
+
+
+
+

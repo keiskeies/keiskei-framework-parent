@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
@@ -29,7 +29,7 @@ import java.util.Set;
  */
 @Data
 @ApiModel(value = "BaseRequest", description = "查询条件")
-public class BaseRequest<T extends BaseEntity> {
+public class BaseRequest<T extends ListEntity> {
     /**
      * 默认排序字段
      */

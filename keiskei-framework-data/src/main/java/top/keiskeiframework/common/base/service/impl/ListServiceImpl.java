@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import top.keiskeiframework.cache.annotation.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.util.BeanUtils;
@@ -22,7 +22,7 @@ import top.keiskeiframework.common.util.BeanUtils;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends BaseEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
+public class ListServiceImpl<T extends ListEntity> extends AbstractBaseServiceImpl<T> implements BaseService<T> {
 
 
     protected final static String CACHE_NAME = "CACHE:BASE";

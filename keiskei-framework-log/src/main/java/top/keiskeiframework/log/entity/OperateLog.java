@@ -12,12 +12,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.lombok.Chartable;
 
 import javax.validation.constraints.NotBlank;
@@ -40,7 +39,7 @@ import java.time.LocalDateTime;
 @Document("log_operate_log")
 @ApiModel(value = "OperateLog", description = "操作日志")
 @Chartable
-public class OperateLog extends BaseEntity {
+public class OperateLog extends ListEntity {
 
     private static final long serialVersionUID = -1735705706625546610L;
 

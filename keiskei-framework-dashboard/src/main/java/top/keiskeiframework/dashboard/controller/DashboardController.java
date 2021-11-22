@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2020-12-16 13:36:30
  */
 @RestController
-@RequestMapping("/admin/v1/dashboard/charts")
+@RequestMapping("/admin/v2/dashboard/charts")
 @ConditionalOnProperty(value = {"keiskei.use-dashboard"})
 @Api(tags = "主页-图表")
 public class DashboardController {

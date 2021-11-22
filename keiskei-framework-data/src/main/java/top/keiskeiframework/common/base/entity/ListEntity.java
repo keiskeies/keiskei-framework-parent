@@ -1,17 +1,23 @@
 package top.keiskeiframework.common.base.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Transient;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -26,7 +32,7 @@ import java.io.Serializable;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseEntity implements Serializable {
+public class ListEntity implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
     @ApiModelProperty(value = "ID", dataType = "String")
@@ -37,6 +43,26 @@ public class BaseEntity implements Serializable {
      * 数据部门
      */
     protected String p = MdcUtils.getUserDepartment();
+    /**
+     * 创建人ID
+     */
+    @CreatedBy
+    protected String createUserId;
+
+    @LastModifiedBy
+    protected String updateUserId;
+
+    @CreatedDate
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime createTime;
+
+    @LastModifiedDate
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime updateTime;
 
 
     /**

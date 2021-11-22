@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.lombok.Chartable;
 
 import javax.validation.constraints.NotBlank;
@@ -37,7 +37,7 @@ import java.util.Set;
 @Document("sys_user")
 @ApiModel(value = "User", description = "管理员")
 @Chartable
-public class User extends BaseEntity {
+public class User extends ListEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
 

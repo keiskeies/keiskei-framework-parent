@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import top.keiskeiframework.common.base.entity.BaseEntity;
+import top.keiskeiframework.common.base.entity.ListEntity;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -74,9 +74,9 @@ public class BeanUtils {
     }
 
     public static void main(String[] args) {
-        BaseEntity baseEntity = new BaseEntity();
-        BaseEntity baseEntity1 = new BaseEntity();
-        BeanUtils.copyPropertiesIgnoreJson(baseEntity, baseEntity1);
+        ListEntity listEntity = new ListEntity();
+        ListEntity listEntity1 = new ListEntity();
+        BeanUtils.copyPropertiesIgnoreJson(listEntity, listEntity1);
     }
 
     /**
