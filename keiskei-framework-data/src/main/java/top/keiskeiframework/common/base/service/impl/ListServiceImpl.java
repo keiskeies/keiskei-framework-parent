@@ -33,14 +33,14 @@ import java.util.List;
 public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable> extends AbstractBaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
 
-    protected final static String CACHE_NAME = "CACHE:BASE";
+    protected final static String CACHE_NAME = "CACHE:LIST";
     @Autowired
-    private ListServiceImpl<T, ID> baseService;
+    private ListServiceImpl<T, ID> listService;
 
     @Override
     public List<T> options() {
         try {
-            return this.options(getTClass().newInstance());
+            return super.options(super.getTClass().newInstance());
         } catch (Exception e) {
             e.printStackTrace();
             throw new BizException(e.getMessage());
@@ -51,11 +51,11 @@ public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable> 
     public List<T> options(@NonNull T t) {
         CriteriaQuery<T> query = BaseRequestUtils.getCriteriaQuery(t, Collections.singletonList("id"));
 
-        List<?> ids = entityManager.createQuery(query).getResultList();
+        List<?> ids = super.entityManager.createQuery(query).getResultList();
         List<T> result = new ArrayList<>(ids.size());
 
         for (Object id : ids) {
-            result.add(baseService.findById((ID) id));
+            result.add(listService.findById((ID) id));
         }
         return result;
     }
@@ -84,13 +84,13 @@ public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable> 
     @OperateNotify(type = OperateNotifyType.UPDATE)
     @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T updateAndNotify(T t) {
-        return jpaRepository.save(t);
+        return super.save(t);
     }
 
     @Override
     @CachePut(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #t.id")
     public T update(T t) {
-        return jpaRepository.save(t);
+        return super.save(t);
     }
 
     @Override

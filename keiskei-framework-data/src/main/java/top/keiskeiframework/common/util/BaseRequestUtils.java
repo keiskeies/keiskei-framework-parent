@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -19,6 +20,8 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -38,6 +41,10 @@ import java.util.stream.Collectors;
 @Component
 public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
     private static final String IGNORE_COLUMN = "serialVersionUID";
+    /**
+     * 默认排序字段
+     */
+    private static final String DEFAULT_ORDER_COLUMN = "createTime";
     private static EntityManager entityManager;
     private static boolean useDepartment = false;
 
@@ -113,7 +120,16 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass, Set<String> show) {
         Map<String, Class<?>> fieldMap = getFieldMap(tClass);
-        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
+        return (root, query, builder) -> {
+            if (!CollectionUtils.isEmpty(show)) {
+                List<Selection<?>> selections = new ArrayList<>(show.size());
+                for (String showColumn : show) {
+                    selections.add(root.get(showColumn));
+                }
+                query.multiselect(selections);
+            }
+            return builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
+        };
     }
 
     /**
@@ -135,14 +151,42 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        。
      * @return 。
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<Tuple> getCriteriaQuery(
+            List<QueryConditionDTO> conditions,
+            @NonNull Class<T> tClass,
+            Set<String> show,
+            String asc,
+            String desc
+    ) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(tClass);
+        CriteriaQuery<Tuple> query = builder.createTupleQuery();
+        Root<T> root = query.from(tClass);
+        if (!CollectionUtils.isEmpty(show)) {
+            List<Selection<?>> selections = new ArrayList<>(show.size());
+            for (String showColumn : show) {
+                selections.add(root.get(showColumn));
+            }
+            query.multiselect(selections);
+        }
+
+        List<Order> orders = new ArrayList<>();
+
+        if (!StringUtils.isEmpty(desc)) {
+            orders.add(new OrderImpl(root.get(desc), false));
+        }
+        if (!StringUtils.isEmpty(asc)) {
+            orders.add(new OrderImpl(root.get(asc), true));
+        }
+
+        if (CollectionUtils.isEmpty(orders)) {
+            orders.add(new OrderImpl(root.get(DEFAULT_ORDER_COLUMN), false));
+        }
+        query.orderBy(orders);
+
         if (CollectionUtils.isEmpty(conditions)) {
             return query;
         }
         Map<String, Class<?>> fieldMap = getFieldMap(tClass);
-
         List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions, fieldMap);
         return query.where(predicates.toArray(new Predicate[0]));
     }

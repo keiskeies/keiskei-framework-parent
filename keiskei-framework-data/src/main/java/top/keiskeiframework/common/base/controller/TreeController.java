@@ -24,45 +24,45 @@ import java.util.List;
 public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
 
     @Autowired
-    private TreeServiceImpl<T, ID> baseService;
+    private TreeServiceImpl<T, ID> treeService;
 
 
     @GetMapping(value = {"", "/options"})
     @ApiOperation("列表")
     public R<List<T>> tree() {
-        List<T> list = baseService.options();
+        List<T> list = treeService.options();
         return R.ok(new TreeEntityUtils<>(list).getTree(null));
     }
 
     @GetMapping("/{id}")
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable ID id) {
-        return R.ok(baseService.findById(id));
+        return R.ok(treeService.findById(id));
     }
 
     @PostMapping
     @ApiOperation("新增")
     public R<T> save(@RequestBody T fieldInfo) {
-        return R.ok(baseService.saveAndNotify(fieldInfo));
+        return R.ok(treeService.saveAndNotify(fieldInfo));
     }
 
     @PutMapping
     @ApiOperation("更新")
     public R<T> update(@RequestBody T fieldInfo) {
-        return R.ok(baseService.updateAndNotify(fieldInfo));
+        return R.ok(treeService.updateAndNotify(fieldInfo));
     }
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
     public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
-        baseService.changeSort(baseSortDto);
+        treeService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable ID id) {
-        baseService.deleteByIdAndNotify(id);
+        treeService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 }

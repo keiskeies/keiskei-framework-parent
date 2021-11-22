@@ -1,6 +1,8 @@
 package top.keiskeiframework.common.base;
 
 import com.alibaba.fastjson.JSON;
+import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,8 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.util.BaseRequestUtils;
 
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -43,6 +47,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 分页参数
      */
     @Setter
+    @Getter
     private Integer page = 1, size = 20;
     /**
      * 排序方式
@@ -133,6 +138,11 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      */
     public Specification<T> getSpecification(@NonNull Class<T> tClass) {
         return BaseRequestUtils.getSpecification(conditions, tClass, show);
+    }
+
+    public CriteriaQuery<Tuple> getCriteriaQuery(@NonNull Class<T> tClass) {
+        return BaseRequestUtils.getCriteriaQuery(conditions, tClass, show, asc, desc);
+
     }
 
 

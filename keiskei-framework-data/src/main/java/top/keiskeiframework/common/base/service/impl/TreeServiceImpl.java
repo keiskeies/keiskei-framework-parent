@@ -33,7 +33,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     protected final static String CACHE_NAME = "CACHE:TREE";
 
     @Autowired
-    private TreeServiceImpl<T, ID> baseService;
+    private TreeServiceImpl<T, ID> treeService;
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
@@ -46,7 +46,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @OperateNotify(type = OperateNotifyType.SAVE)
     @Lockable(key = "#t.hashCode()")
     public T saveAndNotify(T t) {
-        return this.save(t);
+        return super.save(t);
     }
 
 
@@ -55,13 +55,13 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @Lockable(key = "#t.hashCode()")
     public T save(T t) {
         if (null != t.getParentId()) {
-            T parent = this.findById(t.getParentId());
+            T parent = treeService.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            t = jpaRepository.save(t);
+            t = super.save(t);
             t.setSign(parent.getSign() + t.getId() + SPILT);
 
         } else {
-            t = jpaRepository.save(t);
+            t = super.save(t);
             t.setSign(t.getId() + SPILT);
         }
         return super.save(t);
@@ -77,7 +77,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.UPDATE)
     public T updateAndNotify(T t) {
-        return this.update(t);
+        return super.update(t);
     }
 
     @Override
@@ -85,14 +85,14 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     public T update(T t) {
         Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
         if (null != t.getParentId()) {
-            T parent = this.findById(t.getParentId());
+            T parent = treeService.findById(t.getParentId());
             Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
             t.setSign(parent.getSign() + t.getId() + SPILT);
         } else {
             t.setSign(t.getId() + SPILT);
         }
 
-        t = jpaRepository.save(t);
+        t = super.save(t);
         return t;
     }
 
@@ -107,18 +107,18 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.DELETE)
     public void deleteByIdAndNotify(ID id) {
-        Set<ID> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        Set<ID> childIds = new TreeEntityUtils<>(treeService.options()).getChildIds(id);
         for (ID cid : childIds) {
-            jpaRepository.deleteById(cid);
+            super.deleteById(cid);
         }
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void deleteById(ID id) {
-        Set<ID> childIds = new TreeEntityUtils<>(baseService.options()).getChildIds(id);
+        Set<ID> childIds = new TreeEntityUtils<>(treeService.options()).getChildIds(id);
         for (ID cid : childIds) {
-            jpaRepository.deleteById(cid);
+            super.deleteById(cid);
         }
     }
 

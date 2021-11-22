@@ -1,5 +1,14 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.loader.criteria.CriteriaJoinWalker;
+import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.hibernate.persister.entity.OuterJoinLoadable;
+import org.hibernate.query.criteria.internal.CriteriaQueryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -23,11 +32,14 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
@@ -56,6 +68,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
         Type[] types = parameterizedType.getActualTypeArguments();
         return (Class<T>) types[0];
+    }
+    protected Class<T> getIDClass() {
+        ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
+        Type[] types = parameterizedType.getActualTypeArguments();
+        return (Class<T>) types[1];
     }
 
 
@@ -92,6 +109,17 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public Page<T> page(BaseRequest<T, ID> request) {
         Class<T> tClass = getTClass();
+
+        CriteriaQuery<Tuple> criteriaQuery = request.getCriteriaQuery(tClass);
+
+        TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(criteriaQuery);
+        tTypedQuery.setFirstResult((request.getPage() - 1) * request.getSize());
+        tTypedQuery.setMaxResults(request.getSize());
+
+        List<Tuple> tList = tTypedQuery.getResultList();
+        int a =  tTypedQuery.getMaxResults();
+        Tuple t = tTypedQuery.getSingleResult();
+
         return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), request.getPageable(tClass));
     }
 

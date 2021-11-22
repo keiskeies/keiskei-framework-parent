@@ -73,4 +73,4 @@ keiskei:
     base-front-path: /Users/cjm/IdeaProjects/items/front/
   file:
     local:
-      url-suffix: http://127.0.0.1:7999/admin/v2/common/file/show/
+      url-suffix: /api/v2/common/file/show/
