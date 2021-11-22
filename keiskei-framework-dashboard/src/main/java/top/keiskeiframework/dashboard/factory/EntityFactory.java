@@ -1,6 +1,5 @@
 package top.keiskeiframework.dashboard.factory;
 
-import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -8,7 +7,7 @@ import org.reflections.Reflections;
 import org.springframework.lang.NonNull;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
-import top.keiskeiframework.lombok.Chartable;
+import top.keiskeiframework.common.lombok.Chartable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,7 +29,7 @@ import java.util.Set;
 public class EntityFactory {
 
     @Getter
-    private static final List<CacheDTO> BASE_ENTITY_LIST = Lists.newArrayList();
+    private static final List<CacheDTO> BASE_ENTITY_LIST = new ArrayList<>();
 
     static {
 

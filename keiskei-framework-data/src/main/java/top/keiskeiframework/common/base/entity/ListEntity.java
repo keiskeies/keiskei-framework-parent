@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -37,7 +38,7 @@ public class ListEntity implements Serializable {
 
     @ApiModelProperty(value = "ID", dataType = "String")
     @MongoId(targetType = FieldType.OBJECT_ID)
-    protected String id;
+    protected String id = ObjectId.get().toString();
 
     /**
      * 数据部门

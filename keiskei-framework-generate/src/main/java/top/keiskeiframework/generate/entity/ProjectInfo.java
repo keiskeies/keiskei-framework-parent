@@ -2,7 +2,10 @@ package top.keiskeiframework.generate.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +13,6 @@ import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +68,6 @@ public class ProjectInfo extends ListEntity {
     @ApiModelProperty(value = "构建工作流", dataType = "Boolean")
     private Boolean workflow = false;
 
-    @DBRef
-    private List<ModuleInfo> modules = new ArrayList<>();
+    @DBRef(lazy = true)
+    private List<ModuleInfo> modules;
 }

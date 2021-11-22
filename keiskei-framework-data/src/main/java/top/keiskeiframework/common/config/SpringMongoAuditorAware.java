@@ -1,6 +1,8 @@
 package top.keiskeiframework.common.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import java.util.Optional;
 
@@ -12,9 +14,10 @@ import java.util.Optional;
  * @author CJM right_way@foxmail.com
  * @since 2021/11/21 18:23
  */
+@Configuration
 public class SpringMongoAuditorAware implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.empty();
+        return Optional.of(MdcUtils.getUserId());
     }
 }

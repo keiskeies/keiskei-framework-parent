@@ -33,25 +33,28 @@ public class OperateNotifyInterceptor {
 
 
         Object result = point.proceed();
-        try {
-            MethodSignature signature = (MethodSignature) point.getSignature();
-            Method method = signature.getMethod();
-            OperateNotify operate = method.getAnnotation(OperateNotify.class);
-            switch (operate.type()) {
-                case SAVE:
-                    operateNotifyService.save(result, point.getTarget());
-                    break;
-                case UPDATE:
-                    operateNotifyService.update(result, point.getTarget());
-                    break;
-                case DELETE:
-                    operateNotifyService.delete(result, point.getTarget());
-                    break;
-                default:
-                    break;
+        if (null != operateNotifyService) {
+            try {
+                MethodSignature signature = (MethodSignature) point.getSignature();
+                Method method = signature.getMethod();
+                OperateNotify operate = method.getAnnotation(OperateNotify.class);
+                switch (operate.type()) {
+                    case SAVE:
+                        operateNotifyService.save(result, point.getTarget());
+                        break;
+                    case UPDATE:
+                        operateNotifyService.update(result, point.getTarget());
+                        break;
+                    case DELETE:
+                        operateNotifyService.delete(result, point.getTarget());
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception ignored) {
             }
-        } catch (Exception ignored) {
         }
+
         return result;
     }
 }

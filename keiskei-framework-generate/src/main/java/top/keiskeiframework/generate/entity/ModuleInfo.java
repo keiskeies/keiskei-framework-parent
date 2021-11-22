@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class ModuleInfo extends ListEntity {
     @NotBlank(message = "模块包名不能为空", groups = {Insert.class})
     private String packageName;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<TableInfo> tables;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")

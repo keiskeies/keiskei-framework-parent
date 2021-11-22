@@ -54,8 +54,8 @@ public class FieldEnumInfo extends ListEntity {
     private FieldEnumInfoEffectEnum effect;
 
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
-    @DBRef
-    private List<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
+    @DBRef(lazy = true)
+    private List<FieldEnumAffectInfo> fieldEnumAffects;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     private Integer sortBy;

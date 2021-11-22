@@ -85,8 +85,8 @@ public class FieldInfo extends ListEntity {
     @ApiModelProperty(value = "表格宽度", dataType = "Long")
     private Integer tableWidth = 200;
 
-    @DBRef
-    private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
+    @DBRef(lazy = true)
+    private List<FieldEnumInfo> fieldEnums;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     private Integer sortBy;

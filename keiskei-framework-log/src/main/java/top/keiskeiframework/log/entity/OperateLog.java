@@ -73,18 +73,4 @@ public class OperateLog extends ListEntity {
     @NotBlank(message = "返回结果不能为空", groups = {Insert.class})
     private String responseParam;
 
-    @ApiModelProperty(value = "创建时间", dataType = "String")
-    @CreatedDate
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    public LocalDateTime createTime;
-
-    @ApiModelProperty(value = "更新时间", dataType = "String")
-    @LastModifiedDate
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    public LocalDateTime updateTime;
-
 }

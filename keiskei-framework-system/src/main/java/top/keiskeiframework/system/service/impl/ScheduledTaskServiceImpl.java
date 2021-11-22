@@ -1,11 +1,11 @@
 package top.keiskeiframework.system.service.impl;
 
-import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.system.entity.ScheduledTask;

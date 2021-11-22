@@ -65,8 +65,8 @@ public class TableInfo extends ListEntity {
     @ApiModelProperty(value = "接口类型", dataType = "String")
     private TableInfoControllerTypeEnum controllerType;
 
-    @DBRef
-    private List<FieldInfo> fields = new ArrayList<>();
+    @DBRef(lazy = true)
+    private List<FieldInfo> fields;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     private Integer sortBy;

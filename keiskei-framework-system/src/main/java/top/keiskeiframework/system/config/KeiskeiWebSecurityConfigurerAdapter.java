@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
+import top.keiskeiframework.system.filter.MdcAuthenticationTokenFilter;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
@@ -27,7 +29,8 @@ import top.keiskeiframework.system.service.IUserService;
 @Configuration
 @EnableWebSecurity
 public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
+    @Autowired
+    private MdcAuthenticationTokenFilter mdcAuthenticationTokenFilter;
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
     @Autowired
@@ -84,6 +87,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                     "@rbacAuthorityService.hasPermission(request, authentication)"
             );
         }
+        http.addFilterAfter(mdcAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
     }
 

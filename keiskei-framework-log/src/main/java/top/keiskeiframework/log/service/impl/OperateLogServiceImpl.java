@@ -37,7 +37,8 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog> implement
         if (null != type) {
             try {
                 operateLogRepository.save(operateLog);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
