@@ -92,6 +92,13 @@ public class FieldInfo extends ListEntity<Long> {
     private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    private Integer sortBy;
+    @SortBy(desc = false)
+    private Long sortBy;
+
+
+    @PostPersist
+    private void postPersist() {
+        this.sortBy = super.getId();
+    }
 
 }

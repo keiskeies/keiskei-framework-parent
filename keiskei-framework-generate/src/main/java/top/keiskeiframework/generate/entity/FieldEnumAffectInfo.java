@@ -7,10 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -47,5 +49,12 @@ public class FieldEnumAffectInfo extends ListEntity<Long> {
     private Boolean disableEdit;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    private Integer sortBy;
+    @SortBy(desc = false)
+    private Long sortBy;
+
+
+    @PostPersist
+    private void postPersist() {
+        this.sortBy = super.getId();
+    }
 }

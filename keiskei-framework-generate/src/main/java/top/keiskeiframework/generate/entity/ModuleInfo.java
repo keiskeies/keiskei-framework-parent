@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
@@ -57,5 +58,12 @@ public class ModuleInfo extends ListEntity<Long> {
     private List<TableInfo> tables = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    private Integer sortBy;
+    @SortBy(desc = false)
+    private Long sortBy;
+
+
+    @PostPersist
+    private void postPersist() {
+        this.sortBy = super.getId();
+    }
 }

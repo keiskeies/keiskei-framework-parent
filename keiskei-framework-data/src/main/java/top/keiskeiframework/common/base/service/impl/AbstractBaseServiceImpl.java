@@ -134,6 +134,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         Class<T> tClass = getTClass();
         return jpaRepository.findAll(Example.of(t), BaseRequestUtils.getSort(tClass));
     }
+
     @Override
     public List<T> optionsSome(List<String> show) {
         Class<T> tClass = getTClass();
@@ -146,7 +147,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
 
-
     @Override
     public T findById(ID id) {
         return jpaRepository.findById(id).orElse(null);
@@ -154,7 +154,19 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public T save(T t) {
-        return jpaRepository.save(t);
+        t = jpaRepository.save(t);
+        for (Field field : t.getClass().getDeclaredFields()) {
+            SortBy sortBy = field.getAnnotation(SortBy.class);
+            if (null != sortBy) {
+                field.setAccessible(true);
+                try {
+                    field.set(t, t.getId());
+                } catch (IllegalAccessException ignored) {
+                }
+                return jpaRepository.save(t);
+            }
+        }
+        return t;
     }
 
     @Override
@@ -162,22 +174,22 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         if (CollectionUtils.isEmpty(ts)) {
             return ts;
         }
+        ts = jpaRepository.saveAll(ts);
         Field[] fields = ts.get(0).getClass().getDeclaredFields();
-        long count = jpaRepository.count();
         for (Field field : fields) {
             SortBy sortBy = field.getAnnotation(SortBy.class);
             if (null != sortBy) {
                 field.setAccessible(true);
                 for (T t : ts) {
                     try {
-                        field.set(t, ++count);
+                        field.set(t, t.getId());
                     } catch (IllegalAccessException ignored) {
                     }
                 }
-                break;
+                return jpaRepository.saveAll(ts);
             }
         }
-        return jpaRepository.saveAll(ts);
+        return ts;
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.NoArgsConstructor;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -70,5 +71,11 @@ public class TableInfo extends ListEntity<Long> {
     private List<FieldInfo> fields = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    private Integer sortBy;
+    @SortBy(desc = false)
+    private Long sortBy;
+
+    @PostPersist
+    private void postPersist() {
+        this.sortBy = super.getId();
+    }
 }
