@@ -53,12 +53,14 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 排序方式
      */
     @Setter
+    @Getter
     private String desc, asc;
 
 
     /**
      * 查询条件
      */
+    @Getter
     private List<QueryConditionDTO> conditions;
 
     public void setConditions(String conditions) {
@@ -67,11 +69,15 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
         }
     }
 
-    private Set<String> show;
+    @Getter
+    private List<String> show;
 
     public void setShow(String show) {
         if (!StringUtils.isEmpty(show)) {
-            this.show = Arrays.stream(show.split(SHOW_SPLIT)).collect(Collectors.toSet());
+            this.show = Arrays.stream(show.split(SHOW_SPLIT)).collect(Collectors.toList());
+            if (!this.show.contains("id")) {
+                this.show.add(0, "id");
+            }
         }
     }
 
@@ -137,9 +143,10 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * @return 。
      */
     public Specification<T> getSpecification(@NonNull Class<T> tClass) {
-        return BaseRequestUtils.getSpecification(conditions, tClass, show);
+        return BaseRequestUtils.getSpecification(conditions, tClass);
     }
 
+    @Deprecated
     public CriteriaQuery<Tuple> getCriteriaQuery(@NonNull Class<T> tClass) {
         return BaseRequestUtils.getCriteriaQuery(conditions, tClass, show, asc, desc);
 

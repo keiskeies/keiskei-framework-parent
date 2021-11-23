@@ -37,28 +37,28 @@ public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable> 
     @Autowired
     private ListServiceImpl<T, ID> listService;
 
-    @Override
-    public List<T> options() {
-        try {
-            return super.options(super.getTClass().newInstance());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BizException(e.getMessage());
-        }
-    }
-
-    @Override
-    public List<T> options(@NonNull T t) {
-        CriteriaQuery<T> query = BaseRequestUtils.getCriteriaQuery(t, Collections.singletonList("id"));
-
-        List<?> ids = super.entityManager.createQuery(query).getResultList();
-        List<T> result = new ArrayList<>(ids.size());
-
-        for (Object id : ids) {
-            result.add(listService.findById((ID) id));
-        }
-        return result;
-    }
+//    @Override
+//    public List<T> options() {
+//        try {
+//            return super.options(super.getTClass().newInstance());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new BizException(e.getMessage());
+//        }
+//    }
+//
+//    @Override
+//    public List<T> options(@NonNull T t) {
+//        CriteriaQuery<T> query = BaseRequestUtils.getCriteriaQuery(t, Collections.singletonList("id"));
+//
+//        List<?> ids = super.entityManager.createQuery(query).getResultList();
+//        List<T> result = new ArrayList<>(ids.size());
+//
+//        for (Object id : ids) {
+//            result.add(listService.findById((ID) id));
+//        }
+//        return super.options(t);
+//    }
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")

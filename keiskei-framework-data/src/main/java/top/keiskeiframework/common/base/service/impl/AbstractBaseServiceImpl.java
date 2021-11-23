@@ -1,5 +1,7 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -9,11 +11,9 @@ import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.hibernate.persister.entity.OuterJoinLoadable;
 import org.hibernate.query.criteria.internal.CriteriaQueryImpl;
+import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -29,10 +29,12 @@ import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.util.BaseRequestUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
@@ -43,6 +45,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,6 +58,7 @@ import java.util.stream.Collectors;
  * @author v_chenjiamin
  * @since 2021/4/21 11:46
  */
+@Slf4j
 public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     @Autowired
@@ -109,19 +113,77 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public Page<T> page(BaseRequest<T, ID> request) {
         Class<T> tClass = getTClass();
+        Pageable pageable = request.getPageable(tClass);
 
-        CriteriaQuery<Tuple> criteriaQuery = request.getCriteriaQuery(tClass);
+        if (CollectionUtils.isEmpty(request.getShow())) {
+            return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), pageable);
+        } else {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Tuple> query = builder.createTupleQuery();
+            Root<T> root = query.from(tClass);
 
-        TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(criteriaQuery);
-        tTypedQuery.setFirstResult((request.getPage() - 1) * request.getSize());
-        tTypedQuery.setMaxResults(request.getSize());
 
-        List<Tuple> tList = tTypedQuery.getResultList();
-        int a =  tTypedQuery.getMaxResults();
-        Tuple t = tTypedQuery.getSingleResult();
+            if (!CollectionUtils.isEmpty(request.getConditions())) {
+                Map<String, Class<?>> fieldMap = BaseRequestUtils.getFieldMap(tClass);
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(query.from(tClass), builder, request.getConditions(), fieldMap);
+                query.where(predicates.toArray(new Predicate[0]));
+            }
 
-        return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), request.getPageable(tClass));
+            List<Selection<?>> selections = new ArrayList<>(request.getShow().size());
+            for (String showColumn : request.getShow()) {
+                selections.add(root.get(showColumn));
+            }
+            query.multiselect(selections);
+            List<Order> orders = new ArrayList<>();
+
+            if (!StringUtils.isEmpty(request.getDesc())) {
+                orders.add(new OrderImpl(root.get(request.getDesc()), false));
+            }
+            if (!StringUtils.isEmpty(request.getAsc())) {
+                orders.add(new OrderImpl(root.get(request.getAsc()), true));
+            }
+
+            if (CollectionUtils.isEmpty(orders)) {
+                orders.add(new OrderImpl(root.get("createTime"), false));
+            }
+            query.orderBy(orders);
+
+
+            TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(query);
+            tTypedQuery.setFirstResult((request.getPage() - 1) * request.getSize());
+            tTypedQuery.setMaxResults(request.getSize());
+
+            List<Tuple> tList = tTypedQuery.getResultList();
+            if (CollectionUtils.isEmpty(tList)) {
+                return new PageImpl<T>(Collections.emptyList(), pageable, 0);
+            }
+            List<T> contents = new ArrayList<>(tList.size());
+            for (Tuple tuple : tList) {
+                List<TupleElement<?>> tupleElements = tuple.getElements();
+                T t = null;
+                try {
+                    t = tClass.newInstance();
+                    for (int i = 0; i < tupleElements.size(); i++) {
+                        TupleElement<?> tupleElement = tupleElements.get(i);
+                        Field field = null;
+                        try {
+                            field = tClass.getDeclaredField(request.getShow().get(i));
+                        } catch (NoSuchFieldException | SecurityException e) {
+                            field = tClass.getSuperclass().getDeclaredField(request.getShow().get(i));
+                        }
+                        field.setAccessible(true);
+                        field.set(t, tuple.get(i));
+                        log.info("alias: {}, type: {}, value: {}",tupleElement.getAlias(), tupleElement.getJavaType().getName(), tuple.get(i).toString());
+                    }
+                } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+                contents.add(t);
+            }
+            return new PageImpl<T>(contents, pageable, 300);
+        }
     }
+
 
     @Override
     public List<T> options() {

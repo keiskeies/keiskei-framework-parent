@@ -118,18 +118,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass, Set<String> show) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
         Map<String, Class<?>> fieldMap = getFieldMap(tClass);
-        return (root, query, builder) -> {
-            if (!CollectionUtils.isEmpty(show)) {
-                List<Selection<?>> selections = new ArrayList<>(show.size());
-                for (String showColumn : show) {
-                    selections.add(root.get(showColumn));
-                }
-                query.multiselect(selections);
-            }
-            return builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
-        };
+        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
     }
 
     /**
@@ -139,6 +130,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return 。
      */
+    @Deprecated
     public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions) {
         return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions).toArray(new Predicate[0]));
     }
@@ -151,10 +143,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        。
      * @return 。
      */
+    @Deprecated
     public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<Tuple> getCriteriaQuery(
             List<QueryConditionDTO> conditions,
             @NonNull Class<T> tClass,
-            Set<String> show,
+            List<String> show,
             String asc,
             String desc
     ) {
@@ -200,38 +193,38 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>     实体类
      * @return 。
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        Class<T> clazz = (Class<T>) t.getClass();
-
-        CriteriaQuery<T> query = builder.createQuery(clazz);
-        Root<T> root = query.from(clazz);
-
-        List<OrderImpl> orderList = new ArrayList<>();
-        List<Predicate> predicates = new ArrayList<>();
-
-        confirmCriteriaQuery(clazz.getDeclaredFields(), orderList, predicates, root, builder, t);
-        confirmCriteriaQuery(ListEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
-        if (clazz.getSuperclass() == TreeEntity.class) {
-            confirmCriteriaQuery(TreeEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
-        }
-
-
-        if (!CollectionUtils.isEmpty(orderList)) {
-            query.orderBy(orderList.toArray(new Order[0]));
-        }
-        if (!CollectionUtils.isEmpty(predicates)) {
-            query.where(predicates.toArray(new Predicate[0]));
-        }
-        if (!CollectionUtils.isEmpty(columns)) {
-            if (columns.size() > 1) {
-                query.multiselect(columns.stream().map(root::get).collect(Collectors.toList()));
-            } else {
-                query.select(root.get(columns.get(0)));
-            }
-        }
-        return query;
-    }
+//    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
+//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//        Class<T> clazz = (Class<T>) t.getClass();
+//
+//        CriteriaQuery<T> query = builder.createQuery(clazz);
+//        Root<T> root = query.from(clazz);
+//
+//        List<OrderImpl> orderList = new ArrayList<>();
+//        List<Predicate> predicates = new ArrayList<>();
+//
+//        confirmCriteriaQuery(clazz.getDeclaredFields(), orderList, predicates, root, builder, t);
+//        confirmCriteriaQuery(ListEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
+//        if (clazz.getSuperclass() == TreeEntity.class) {
+//            confirmCriteriaQuery(TreeEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
+//        }
+//
+//
+//        if (!CollectionUtils.isEmpty(orderList)) {
+//            query.orderBy(orderList.toArray(new Order[0]));
+//        }
+//        if (!CollectionUtils.isEmpty(predicates)) {
+//            query.where(predicates.toArray(new Predicate[0]));
+//        }
+//        if (!CollectionUtils.isEmpty(columns)) {
+//            if (columns.size() > 1) {
+//                query.multiselect(columns.stream().map(root::get).collect(Collectors.toList()));
+//            } else {
+//                query.select(root.get(columns.get(0)));
+//            }
+//        }
+//        return query;
+//    }
 
     /**
      * 针对字段值拼装条件
@@ -244,36 +237,36 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param t          实体类
      * @param <T>        实体类
      */
-    private static <T extends ListEntity<ID>, ID extends Serializable> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
-        for (Field field : fields) {
-            if (IGNORE_COLUMN.equals(field.getName())) {
-                continue;
-            }
-            if (field.getAnnotation(JsonIgnore.class) != null) {
-                continue;
-            }
-            if (field.getAnnotation(Transient.class) != null) {
-                continue;
-            }
-            if (field.getType().isInterface()) {
-                continue;
-            }
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                orderList.add(new OrderImpl(root.get(field.getName()), !sortBy.desc()));
-            }
-            field.setAccessible(true);
-            try {
-                Object value = field.get(t);
-                if (null != value) {
-                    predicates.add(builder.and(builder.equal(root.get(field.getName()), value)));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+//    private static <T extends ListEntity<ID>, ID extends Serializable> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
+//        for (Field field : fields) {
+//            if (IGNORE_COLUMN.equals(field.getName())) {
+//                continue;
+//            }
+//            if (field.getAnnotation(JsonIgnore.class) != null) {
+//                continue;
+//            }
+//            if (field.getAnnotation(Transient.class) != null) {
+//                continue;
+//            }
+//            if (field.getType().isInterface()) {
+//                continue;
+//            }
+//            SortBy sortBy = field.getAnnotation(SortBy.class);
+//            if (null != sortBy) {
+//                orderList.add(new OrderImpl(root.get(field.getName()), !sortBy.desc()));
+//            }
+//            field.setAccessible(true);
+//            try {
+//                Object value = field.get(t);
+//                if (null != value) {
+//                    predicates.add(builder.and(builder.equal(root.get(field.getName()), value)));
+//                }
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     /**
      * 获取Predicate
@@ -285,7 +278,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Map<String, Class<?>> fieldMap) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Map<String, Class<?>> fieldMap) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
@@ -328,7 +321,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    private static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
@@ -358,7 +351,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param expression 字段
      * @param builder    组装工具
      */
-    public static void addPredicate(List<Predicate> predicates, QueryConditionDTO condition, Expression expression, CriteriaBuilder builder) {
+    private static void addPredicate(List<Predicate> predicates, QueryConditionDTO condition, Expression expression, CriteriaBuilder builder) {
         if (ConditionEnum.BT.equals(condition.getCondition())) {
             if (condition.getValue().size() == 2) {
                 if (null != condition.getValue().get(0) && !StringUtils.isEmpty(condition.getValue().get(0).toString())) {
@@ -422,7 +415,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param builder    组装工具
      * @param root       实体
      */
-    public static void addDepartment(List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+    private static void addDepartment(List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
         if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
             if (useDepartment) {
                 Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());

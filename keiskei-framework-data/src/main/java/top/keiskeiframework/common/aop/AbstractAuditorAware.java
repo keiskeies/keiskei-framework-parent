@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.base.service.impl;
+package top.keiskeiframework.common.aop;
 
 import lombok.NonNull;
 import org.springframework.context.annotation.Configuration;
