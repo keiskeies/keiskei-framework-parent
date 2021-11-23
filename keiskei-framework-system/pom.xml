@@ -13,10 +13,6 @@
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-data</artifactId>
         </dependency>
         <dependency>

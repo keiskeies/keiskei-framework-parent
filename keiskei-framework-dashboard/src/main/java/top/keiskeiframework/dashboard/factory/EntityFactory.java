@@ -7,7 +7,7 @@ import org.reflections.Reflections;
 import org.springframework.lang.NonNull;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
-import top.keiskeiframework.lombok.Chartable;
+import top.keiskeiframework.common.annotation.dashboard.Chartable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

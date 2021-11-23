@@ -1,12 +1,10 @@
-package top.keiskeiframework.common.util;
+package top.keiskeiframework.common.base.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.NonNull;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -17,10 +15,11 @@ import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Transient;
 import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
@@ -40,14 +39,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
-    private static final String IGNORE_COLUMN = "serialVersionUID";
-    /**
-     * 默认排序字段
-     */
-    private static final String DEFAULT_ORDER_COLUMN = "createTime";
-    private static EntityManager entityManager;
-    private static boolean useDepartment = false;
-
     @Value("${keiskei.use-department:false}")
     public void setUseDepartment(Boolean useDepartment) {
         BaseRequestUtils.useDepartment = useDepartment;
@@ -57,6 +48,20 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     public void setEntityManager(EntityManager entityManager) {
         BaseRequestUtils.entityManager = entityManager;
     }
+    /**
+     * 默认排序字段
+     */
+    private static final String DEFAULT_ORDER_COLUMN = "createTime";
+    /**
+     * 数据查询工具
+     */
+    private static EntityManager entityManager;
+    /**
+     * 是否启用部门权限
+     */
+    private static boolean useDepartment = false;
+
+
 
     /**
      * BaseEntity可显示字段
@@ -109,59 +114,35 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                 .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
     }
 
-
     /**
-     * 获取Specification
+     * 获取查询的指定字段
      *
-     * @param conditions 查询条件
-     * @param tClass     实体类
-     * @param <T>        实体类
+     * @param root root
+     * @param show show
+     * @param <T>  T
+     * @param <ID> ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions, @NonNull Class<T> tClass) {
-        Map<String, Class<?>> fieldMap = getFieldMap(tClass);
-        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions, fieldMap).toArray(new Predicate[0]));
-    }
-
-    /**
-     * 获取Specification
-     *
-     * @param conditions 查询条件
-     * @param <T>        实体类
-     * @return 。
-     */
-    @Deprecated
-    public static <T extends ListEntity<ID>, ID extends Serializable> Specification<T> getSpecification(List<QueryConditionDTO> conditions) {
-        return (root, query, builder) -> builder.and(getPredicates(root, builder, conditions).toArray(new Predicate[0]));
-    }
-
-    /**
-     * 获取CriteriaQuery
-     *
-     * @param conditions 。
-     * @param tClass     。
-     * @param <T>        。
-     * @return 。
-     */
-    @Deprecated
-    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<Tuple> getCriteriaQuery(
-            List<QueryConditionDTO> conditions,
-            @NonNull Class<T> tClass,
-            List<String> show,
-            String asc,
-            String desc
-    ) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tuple> query = builder.createTupleQuery();
-        Root<T> root = query.from(tClass);
-        if (!CollectionUtils.isEmpty(show)) {
-            List<Selection<?>> selections = new ArrayList<>(show.size());
-            for (String showColumn : show) {
-                selections.add(root.get(showColumn));
-            }
-            query.multiselect(selections);
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show) {
+        List<Selection<?>> selections = new ArrayList<>(show.size());
+        for (String showColumn : show) {
+            selections.add(root.get(showColumn));
         }
+        return selections;
+    }
 
+    /**
+     * 获取排序
+     *
+     * @param root   root
+     * @param tClass tClass
+     * @param asc    asc
+     * @param desc   desc
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc) {
         List<Order> orders = new ArrayList<>();
 
         if (!StringUtils.isEmpty(desc)) {
@@ -170,145 +151,172 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         if (!StringUtils.isEmpty(asc)) {
             orders.add(new OrderImpl(root.get(asc), true));
         }
+        return getOrders(root, tClass, orders);
+    }
+
+    /**
+     * 获取排序条件
+     *
+     * @param root   root
+     * @param tClass tClass
+     * @param orders orders
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    private static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, List<Order> orders) {
+        if (null == orders) {
+            orders = new ArrayList<>();
+        }
+        Field[] fields = tClass.getDeclaredFields();
+        for (Field field : fields) {
+            SortBy sortBy = field.getAnnotation(SortBy.class);
+            if (null != sortBy) {
+                orders.add(new OrderImpl(root.get(field.getName()), !sortBy.desc()));
+            }
+        }
 
         if (CollectionUtils.isEmpty(orders)) {
             orders.add(new OrderImpl(root.get(DEFAULT_ORDER_COLUMN), false));
         }
-        query.orderBy(orders);
-
-        if (CollectionUtils.isEmpty(conditions)) {
-            return query;
-        }
-        Map<String, Class<?>> fieldMap = getFieldMap(tClass);
-        List<Predicate> predicates = getPredicates(query.from(tClass), builder, conditions, fieldMap);
-        return query.where(predicates.toArray(new Predicate[0]));
+        return orders;
     }
 
-
     /**
-     * 拼装query
+     * 获取排序条件
      *
-     * @param t       实体类
-     * @param columns 查询部分字段
-     * @param <T>     实体类
-     * @return 。
-     */
-//    public static <T extends ListEntity<ID>, ID extends Serializable> CriteriaQuery<T> getCriteriaQuery(@NonNull T t, List<String> columns) {
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        Class<T> clazz = (Class<T>) t.getClass();
-//
-//        CriteriaQuery<T> query = builder.createQuery(clazz);
-//        Root<T> root = query.from(clazz);
-//
-//        List<OrderImpl> orderList = new ArrayList<>();
-//        List<Predicate> predicates = new ArrayList<>();
-//
-//        confirmCriteriaQuery(clazz.getDeclaredFields(), orderList, predicates, root, builder, t);
-//        confirmCriteriaQuery(ListEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
-//        if (clazz.getSuperclass() == TreeEntity.class) {
-//            confirmCriteriaQuery(TreeEntity.class.getDeclaredFields(), orderList, predicates, root, builder, t);
-//        }
-//
-//
-//        if (!CollectionUtils.isEmpty(orderList)) {
-//            query.orderBy(orderList.toArray(new Order[0]));
-//        }
-//        if (!CollectionUtils.isEmpty(predicates)) {
-//            query.where(predicates.toArray(new Predicate[0]));
-//        }
-//        if (!CollectionUtils.isEmpty(columns)) {
-//            if (columns.size() > 1) {
-//                query.multiselect(columns.stream().map(root::get).collect(Collectors.toList()));
-//            } else {
-//                query.select(root.get(columns.get(0)));
-//            }
-//        }
-//        return query;
-//    }
-
-    /**
-     * 针对字段值拼装条件
-     *
-     * @param fields     实体类字段
-     * @param orderList  排序集合
-     * @param predicates 条件集合
-     * @param root       实体类
-     * @param builder    builder
-     * @param t          实体类
-     * @param <T>        实体类
-     */
-//    private static <T extends ListEntity<ID>, ID extends Serializable> void confirmCriteriaQuery(Field[] fields, List<OrderImpl> orderList, List<Predicate> predicates, Root<T> root, CriteriaBuilder builder, T t) {
-//        for (Field field : fields) {
-//            if (IGNORE_COLUMN.equals(field.getName())) {
-//                continue;
-//            }
-//            if (field.getAnnotation(JsonIgnore.class) != null) {
-//                continue;
-//            }
-//            if (field.getAnnotation(Transient.class) != null) {
-//                continue;
-//            }
-//            if (field.getType().isInterface()) {
-//                continue;
-//            }
-//            SortBy sortBy = field.getAnnotation(SortBy.class);
-//            if (null != sortBy) {
-//                orderList.add(new OrderImpl(root.get(field.getName()), !sortBy.desc()));
-//            }
-//            field.setAccessible(true);
-//            try {
-//                Object value = field.get(t);
-//                if (null != value) {
-//                    predicates.add(builder.and(builder.equal(root.get(field.getName()), value)));
-//                }
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
-
-    /**
-     * 获取Predicate
-     *
-     * @param root       root
-     * @param builder    builder
-     * @param conditions 查询条件
-     * @param fieldMap   实体类字段
-     * @param <T>        实体类
+     * @param root   root
+     * @param tClass tClass
+     * @param <T>    T
+     * @param <ID>   ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions, Map<String, Class<?>> fieldMap) {
-        List<Predicate> predicates = new ArrayList<>();
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass) {
+        return getOrders(root, tClass, null);
+    }
 
-        // 组装用户部门数据
-        addDepartment(predicates, builder, root);
+    /**
+     * 获取Pageable的排序条件
+     *
+     * @param tClass tClass
+     * @param asc    asc
+     * @param desc   desc
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> Sort getSort(Class<T> tClass, String asc, String desc) {
+        List<Sort.Order> orders = new ArrayList<>();
 
+        if (!StringUtils.isEmpty(desc)) {
+            orders.add(Sort.Order.desc(desc));
+        }
+        if (!StringUtils.isEmpty(asc)) {
+            orders.add(Sort.Order.asc(asc));
+        }
+        return getSort(tClass, orders);
+    }
 
-        if (!CollectionUtils.isEmpty(conditions)) {
-            Expression<?> expression;
-            for (QueryConditionDTO condition : conditions) {
-                String column = condition.getColumn();
-                if (!fieldMap.containsKey(column)) {
-                    continue;
-                }
-                List<Object> values = condition.getValue();
-                if (CollectionUtils.isEmpty(values)) {
-                    continue;
-                }
-                // 若为关联表 , 则使用左连接
-                if (column.contains(".")) {
-                    String[] columns = column.split("\\.");
-                    Join<?, ?> join = root.join(columns[0], JoinType.LEFT);
-                    expression = join.get(columns[1]);
+    /**
+     * 获取Pageable的排序条件
+     *
+     * @param tClass tClass
+     * @param orders orders
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    private static <T extends ListEntity<ID>, ID extends Serializable> Sort getSort(Class<T> tClass, List<Sort.Order> orders) {
+        if (null == orders) {
+            orders = new ArrayList<>();
+        }
+        for (Field field : tClass.getDeclaredFields()) {
+            SortBy sortBy = field.getAnnotation(SortBy.class);
+            if (null != sortBy) {
+                if (sortBy.desc()) {
+                    orders.add(Sort.Order.desc(field.getName()));
                 } else {
-                    expression = root.get(column);
+                    orders.add(Sort.Order.asc(field.getName()));
                 }
-
-                addPredicate(predicates, condition, expression, builder);
             }
         }
-        return predicates;
+        if (CollectionUtils.isEmpty(orders)) {
+            orders.add(Sort.Order.desc(DEFAULT_ORDER_COLUMN));
+        }
+        return Sort.by(orders);
+    }
+
+    /**
+     * 获取Pageable的排序条件
+     *
+     * @param tClass tClass
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> Sort getSort(Class<T> tClass) {
+        return getSort(tClass, null);
+    }
+
+    /**
+     * 查询数据
+     *
+     * @param query  query
+     * @param show   show
+     * @param tClass tClass
+     * @param <T>    t
+     * @param <ID>   id
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, List<String> show, Class<T> tClass) {
+        return queryDataList(query, null, null, show, tClass);
+    }
+
+    /**
+     * 查询数据
+     *
+     * @param query  query
+     * @param page   page
+     * @param size   size
+     * @param show   show
+     * @param tClass tClass
+     * @param <T>    t
+     * @param <ID>   id
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, Integer page, Integer size, List<String> show, Class<T> tClass) {
+        TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(query);
+        if (null != page && null != size) {
+            tTypedQuery.setFirstResult((page - 1) * size);
+            tTypedQuery.setMaxResults(size);
+        }
+
+        List<Tuple> tList = tTypedQuery.getResultList();
+        if (CollectionUtils.isEmpty(tList)) {
+            return Collections.emptyList();
+        }
+        List<T> contents = new ArrayList<>(tList.size());
+        for (Tuple tuple : tList) {
+            List<TupleElement<?>> tupleElements = tuple.getElements();
+            T t = null;
+            try {
+                t = tClass.newInstance();
+                for (int i = 0; i < tupleElements.size(); i++) {
+                    Field field;
+                    try {
+                        field = tClass.getDeclaredField(show.get(i));
+                    } catch (NoSuchFieldException | SecurityException e) {
+                        field = tClass.getSuperclass().getDeclaredField(show.get(i));
+                    }
+                    field.setAccessible(true);
+                    field.set(t, tuple.get(i));
+                }
+            } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            contents.add(t);
+        }
+        return contents;
     }
 
 
@@ -336,7 +344,14 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                 if (CollectionUtils.isEmpty(values)) {
                     continue;
                 }
-                expression = root.get(column);
+                // 若为关联表
+                if (column.contains(".")) {
+                    String[] columns = column.split("\\.");
+                    Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                    expression = join.get(columns[1]);
+                } else {
+                    expression = root.get(column);
+                }
                 addPredicate(predicates, condition, expression, builder);
             }
         }

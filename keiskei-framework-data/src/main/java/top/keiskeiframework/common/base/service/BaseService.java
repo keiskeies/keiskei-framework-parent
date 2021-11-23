@@ -33,23 +33,13 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      */
     Page<T> page(BaseRequest<T, ID> request);
 
-    Page<T> page(Specification<T> s, Pageable p);
-
-    Page<T> page(Example<T> s, Pageable p);
-
     /**
      * 查询全部
      *
-     * @param s 查询条件
+     * @param request 查询条件
      * @return 。
      */
-    List<T> findAll(Specification<T> s);
-
-    List<T> findAll(Specification<T> s, Sort sort);
-
-    List<T> findAll(Example<T> e);
-
-    List<T> findAll(Example<T> e, Sort sort);
+    List<T> findAll(BaseRequest<T, ID> request);
 
     /**
      * 下拉框列表
@@ -65,6 +55,13 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @return .
      */
     List<T> options(T t);
+
+    /**
+     * 下拉框列表
+     * @param show 展示字段
+     * @return 。
+     */
+    List<T> optionsSome(List<String> show);
 
     /**
      * 根据id查询
@@ -142,6 +139,6 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param chartRequestDTO 图表条件
      * @return 。
      */
-    Map<String, Long> getChartOptions(ChartRequestDTO chartRequestDTO);
+    Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

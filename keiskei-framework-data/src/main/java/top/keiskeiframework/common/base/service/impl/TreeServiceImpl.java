@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
-import top.keiskeiframework.common.annotation.Lockable;
+import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;

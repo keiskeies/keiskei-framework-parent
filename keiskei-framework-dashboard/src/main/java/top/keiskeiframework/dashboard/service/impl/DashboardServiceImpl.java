@@ -143,7 +143,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         Series series = null;
         for (DashboardDirection direction : yFields) {
             chartRequestDTO.setEntityName(direction.getEntityName());
-            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
+            Map<String, Double> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
             series = confirmSeries(chartRequestDTO, dataMap, axisData, max, seriesList, series);
             legendData.add(direction.getEntityName());
         }
@@ -162,10 +162,10 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         ChartOptionVO result = new ChartOptionVO();
         List<DashboardDirection> yFields = dashboard.getDirections();
         Set<String> axisDataSet = new HashSet<>();
-        Map<DashboardDirection, Map<String, Long>> dataList = new HashMap<>(yFields.size());
+        Map<DashboardDirection, Map<String, Double>> dataList = new HashMap<>(yFields.size());
         List<String> legendData = new ArrayList<>(yFields.size());
         for (DashboardDirection direction : yFields) {
-            Map<String, Long> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
+            Map<String, Double> dataMap = getDataMap(chartRequestDTO, dashboard, direction);
             axisDataSet.addAll(dataMap.keySet());
             dataList.put(direction, dataMap);
         }
@@ -173,9 +173,9 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         List<Series> seriesList = new ArrayList<>(yFields.size());
         AtomicInteger max = new AtomicInteger(0);
         Series series = null;
-        for (Map.Entry<DashboardDirection, Map<String, Long>> entry : dataList.entrySet()) {
+        for (Map.Entry<DashboardDirection, Map<String, Double>> entry : dataList.entrySet()) {
             DashboardDirection direction = entry.getKey();
-            Map<String, Long> dataMap = entry.getValue();
+            Map<String, Double> dataMap = entry.getValue();
             chartRequestDTO.setEntityName(direction.getEntityName());
             series = confirmSeries(chartRequestDTO, dataMap, axisData, max, seriesList, series);
             legendData.add(direction.getEntityName());
@@ -228,12 +228,12 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
      * @param series          图表数据结果
      * @return .
      */
-    public Series confirmSeries(ChartRequestDTO chartRequestDTO, Map<String, Long> dataMap, List<String> axisData, AtomicInteger max, List<Series> seriesList, Series series) {
+    public Series confirmSeries(ChartRequestDTO chartRequestDTO, Map<String, Double> dataMap, List<String> axisData, AtomicInteger max, List<Series> seriesList, Series series) {
         switch (chartRequestDTO.getChartType()) {
             case RADAR:
                 List<Number> data = new ArrayList<>(dataMap.size());
                 for (String key : axisData) {
-                    Long value = dataMap.getOrDefault(key, 0L);
+                    Double value = dataMap.getOrDefault(key, 0D);
                     data.add(value);
                     max.set(Math.max(max.intValue(), value.intValue()));
                 }
@@ -244,7 +244,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
                 break;
             case PIE:
                 List<PieSeries.PieSeriesData> pieSeriesDataList = new ArrayList<>(axisData.size());
-                for (Map.Entry<String, Long> dataEntry : dataMap.entrySet()) {
+                for (Map.Entry<String, Double> dataEntry : dataMap.entrySet()) {
                     pieSeriesDataList.add(new PieSeries.PieSeriesData(dataEntry.getKey(), dataEntry.getValue()));
                 }
                 if (null == series) {
@@ -259,7 +259,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
             default:
                 data = new ArrayList<>(dataMap.size());
                 for (String key : axisData) {
-                    data.add(dataMap.getOrDefault(key, 0L));
+                    data.add(dataMap.getOrDefault(key, 0D));
                 }
                 series = new LineOrBarSeries(data, chartRequestDTO.getEntityName());
                 seriesList.add(series);
@@ -278,7 +278,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
      * @param direction       。
      * @return 。
      */
-    public Map<String, Long> getDataMap(ChartRequestDTO chartRequestDTO, Dashboard dashboard, DashboardDirection direction) {
+    public Map<String, Double> getDataMap(ChartRequestDTO chartRequestDTO, Dashboard dashboard, DashboardDirection direction) {
         chartRequestDTO.setColumn(direction.getField());
         chartRequestDTO.setColumnType(dashboard.getFieldType());
         chartRequestDTO.setChartType(direction.getType());

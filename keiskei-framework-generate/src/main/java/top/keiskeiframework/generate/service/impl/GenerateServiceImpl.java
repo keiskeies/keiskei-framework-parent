@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.annotation.Lockable;
+import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.MdcUtils;

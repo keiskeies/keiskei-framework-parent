@@ -63,7 +63,7 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO baseSortDto) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
         listService.changeSort(baseSortDto);
         return R.ok(Boolean.TRUE);
     }

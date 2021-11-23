@@ -91,11 +91,6 @@
         <dependencies>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-lombok</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file</artifactId>
                 <version>2.0.0-Release</version>
             </dependency>

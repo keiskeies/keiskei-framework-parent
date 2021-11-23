@@ -44,20 +44,6 @@ public class ListEntity<ID extends Serializable> implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected ID id;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreationTimestamp
-    @Column(updatable = false)
-    @ApiModelProperty(value = "创建时间", dataType = "LocalDateTime")
-    protected LocalDateTime createTime;
-
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
-    protected LocalDateTime updateTime;
 
     /**
      * 数据所属部门
@@ -83,17 +69,21 @@ public class ListEntity<ID extends Serializable> implements Serializable {
     @LastModifiedBy
     protected Long updateUserId;
 
-    /**
-     * 图表下标
-     */
-    @Transient
-    protected String index;
 
-    /**
-     * 图表下标数量
-     */
-    @Transient
-    protected Long indexNumber;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreationTimestamp
+    @Column(updatable = false)
+    @ApiModelProperty(value = "创建时间", dataType = "LocalDateTime")
+    protected LocalDateTime createTime;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @UpdateTimestamp
+    @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
+    protected LocalDateTime updateTime;
 
 
 }

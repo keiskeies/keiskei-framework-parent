@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.annotation;
+package top.keiskeiframework.common.annotation.log;
 
 import org.springframework.lang.Nullable;
 

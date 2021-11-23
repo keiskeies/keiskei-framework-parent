@@ -1,17 +1,6 @@
 package top.keiskeiframework.common.base.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.internal.CriteriaImpl;
-import org.hibernate.loader.criteria.CriteriaJoinWalker;
-import org.hibernate.loader.criteria.CriteriaQueryTranslator;
-import org.hibernate.persister.entity.OuterJoinLoadable;
-import org.hibernate.query.criteria.internal.CriteriaQueryImpl;
-import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,29 +15,27 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.util.BaseRequestUtils;
+import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
-import javax.persistence.TupleElement;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>
@@ -73,155 +60,92 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         Type[] types = parameterizedType.getActualTypeArguments();
         return (Class<T>) types[0];
     }
+
     protected Class<T> getIDClass() {
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
         Type[] types = parameterizedType.getActualTypeArguments();
         return (Class<T>) types[1];
     }
 
-
-    @Override
-    public Page<T> page(Specification<T> s, Pageable p) {
-        return jpaSpecificationExecutor.findAll(s, p);
-    }
-
-    @Override
-    public Page<T> page(Example<T> e, Pageable p) {
-        return jpaRepository.findAll(e, p);
-    }
-
-    @Override
-    public List<T> findAll(Specification<T> s) {
-        return jpaSpecificationExecutor.findAll(s);
-    }
-
-    @Override
-    public List<T> findAll(Specification<T> s, Sort sort) {
-        return jpaSpecificationExecutor.findAll(s, sort);
-    }
-
-    @Override
-    public List<T> findAll(Example<T> e) {
-        return jpaRepository.findAll(e);
-    }
-
-    @Override
-    public List<T> findAll(Example<T> e, Sort sort) {
-        return jpaRepository.findAll(e, sort);
-    }
-
     @Override
     public Page<T> page(BaseRequest<T, ID> request) {
         Class<T> tClass = getTClass();
         Pageable pageable = request.getPageable(tClass);
+        Specification<T> specification;
 
         if (CollectionUtils.isEmpty(request.getShow())) {
-            return jpaSpecificationExecutor.findAll(request.getSpecification(tClass), pageable);
+            specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            };
+            return jpaSpecificationExecutor.findAll(specification, pageable);
         } else {
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tuple> query = builder.createTupleQuery();
+            AtomicReference<CriteriaQuery<Tuple>> criteriaQueryAtomicReference = new AtomicReference<>();
+            AtomicReference<Predicate[]> predicatesAtomicReference = new AtomicReference<>();
+
+            specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                predicatesAtomicReference.set(predicates.toArray(new Predicate[0]));
+                criteriaQueryAtomicReference.set(criteriaBuilder.createTupleQuery());
+                return criteriaBuilder.and(predicatesAtomicReference.get());
+            };
+            long total = jpaSpecificationExecutor.count(specification);
+            CriteriaQuery<Tuple> query = criteriaQueryAtomicReference.get();
             Root<T> root = query.from(tClass);
-
-
-            if (!CollectionUtils.isEmpty(request.getConditions())) {
-                Map<String, Class<?>> fieldMap = BaseRequestUtils.getFieldMap(tClass);
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(query.from(tClass), builder, request.getConditions(), fieldMap);
-                query.where(predicates.toArray(new Predicate[0]));
-            }
-
-            List<Selection<?>> selections = new ArrayList<>(request.getShow().size());
-            for (String showColumn : request.getShow()) {
-                selections.add(root.get(showColumn));
-            }
-            query.multiselect(selections);
-            List<Order> orders = new ArrayList<>();
-
-            if (!StringUtils.isEmpty(request.getDesc())) {
-                orders.add(new OrderImpl(root.get(request.getDesc()), false));
-            }
-            if (!StringUtils.isEmpty(request.getAsc())) {
-                orders.add(new OrderImpl(root.get(request.getAsc()), true));
-            }
-
-            if (CollectionUtils.isEmpty(orders)) {
-                orders.add(new OrderImpl(root.get("createTime"), false));
-            }
-            query.orderBy(orders);
-
-
-            TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(query);
-            tTypedQuery.setFirstResult((request.getPage() - 1) * request.getSize());
-            tTypedQuery.setMaxResults(request.getSize());
-
-            List<Tuple> tList = tTypedQuery.getResultList();
-            if (CollectionUtils.isEmpty(tList)) {
-                return new PageImpl<T>(Collections.emptyList(), pageable, 0);
-            }
-            List<T> contents = new ArrayList<>(tList.size());
-            for (Tuple tuple : tList) {
-                List<TupleElement<?>> tupleElements = tuple.getElements();
-                T t = null;
-                try {
-                    t = tClass.newInstance();
-                    for (int i = 0; i < tupleElements.size(); i++) {
-                        TupleElement<?> tupleElement = tupleElements.get(i);
-                        Field field = null;
-                        try {
-                            field = tClass.getDeclaredField(request.getShow().get(i));
-                        } catch (NoSuchFieldException | SecurityException e) {
-                            field = tClass.getSuperclass().getDeclaredField(request.getShow().get(i));
-                        }
-                        field.setAccessible(true);
-                        field.set(t, tuple.get(i));
-                        log.info("alias: {}, type: {}, value: {}",tupleElement.getAlias(), tupleElement.getJavaType().getName(), tuple.get(i).toString());
-                    }
-                } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-                contents.add(t);
-            }
-            return new PageImpl<T>(contents, pageable, 300);
+            query.where(predicatesAtomicReference.get());
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass, request.getAsc(), request.getDesc()));
+            List<T> contents = BaseRequestUtils.queryDataList(query, request.getPage(), request.getSize(), request.getShow(), tClass);
+            return new PageImpl<T>(contents, pageable, total);
         }
     }
 
+    @Override
+    public List<T> findAll(BaseRequest<T, ID> request) {
+        Class<T> tClass = getTClass();
+        Specification<T> specification;
+
+        if (CollectionUtils.isEmpty(request.getShow())) {
+            specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            };
+            return jpaSpecificationExecutor.findAll(specification);
+        } else {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
+            Root<T> root = query.from(tClass);
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            query.where(predicates.toArray(new Predicate[0]));
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass));
+            return BaseRequestUtils.queryDataList(query, request.getShow(), tClass);
+        }
+    }
 
     @Override
     public List<T> options() {
-        Class<T> clazz = getTClass();
-        Field[] fields = clazz.getDeclaredFields();
-
-        List<Sort.Order> orders = new ArrayList<>();
-
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                if (sortBy.desc()) {
-                    orders.add(Sort.Order.desc(field.getName()));
-                } else {
-                    orders.add(Sort.Order.asc(field.getName()));
-                }
-            }
-        }
-        return jpaRepository.findAll(Sort.by(orders));
+        Class<T> tClass = getTClass();
+        return jpaRepository.findAll(BaseRequestUtils.getSort(tClass));
     }
 
     @Override
     public List<T> options(T t) {
-        Field[] fields = t.getClass().getDeclaredFields();
-        List<Sort.Order> orders = new ArrayList<>();
-        for (Field field : fields) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                if (sortBy.desc()) {
-                    orders.add(Sort.Order.desc(field.getName()));
-                } else {
-                    orders.add(Sort.Order.asc(field.getName()));
-                }
-                break;
-            }
-        }
-        return jpaRepository.findAll(Example.of(t), Sort.by(orders));
+        Class<T> tClass = getTClass();
+        return jpaRepository.findAll(Example.of(t), BaseRequestUtils.getSort(tClass));
     }
+    @Override
+    public List<T> optionsSome(List<String> show) {
+        Class<T> tClass = getTClass();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
+        Root<T> root = query.from(tClass);
+        query.multiselect(BaseRequestUtils.getSelections(root, show));
+        query.orderBy(BaseRequestUtils.getOrders(root, tClass));
+        return BaseRequestUtils.queryDataList(query, show, tClass);
+    }
+
+
 
     @Override
     public T findById(ID id) {
@@ -306,11 +230,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public Map<String, Long> getChartOptions(ChartRequestDTO chartRequestDTO) {
+    public Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO) {
 
         Class<T> clazz = getTClass();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(clazz);
+        CriteriaQuery<Tuple> query = builder.createTupleQuery();
         Root<T> root = query.from(clazz);
 
 
@@ -333,7 +257,8 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
         query.where(predicates.toArray(new Predicate[0]));
 
-        List<T> list;
+        Map<String, Double> result = new HashMap<>();
+        List<Tuple> list;
         if (ColumnType.TIME.equals(chartRequestDTO.getColumnType())) {
             Expression<String> index = getTimeIndex(builder, root, chartRequestDTO.getColumn(), chartRequestDTO.getTimeDelta());
 
@@ -344,21 +269,47 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             query.groupBy(index);
             list = entityManager.createQuery(query).getResultList();
             if (TimeDeltaEnum.WEEK_DAY.equals(chartRequestDTO.getTimeDelta())) {
-                list.forEach(e -> e.setIndex(DateTimeUtils.WEEK_RANGE.get(Integer.parseInt(e.getIndex()))));
+                list.forEach(e -> {
+                    result.put(
+                            DateTimeUtils.WEEK_RANGE.get(Integer.parseInt(e.get(0, String.class))),
+                            e.get(1, Long.class).doubleValue()
+                    );
+                });
+                return result;
             }
         } else {
-
             Expression<String> index = root.get(chartRequestDTO.getColumn()).as(String.class);
-
+            Expression<?> indexNumber;
+            if (chartRequestDTO.getCalcType() == CalcType.SUM) {
+                indexNumber = builder.sum(root.get(chartRequestDTO.getColumn()));
+            } else {
+                indexNumber = builder.count(root.get(chartRequestDTO.getColumn()));
+            }
             query.multiselect(
                     index.alias("index"),
-                    builder.count(root.get(chartRequestDTO.getColumn())).alias("indexNumber")
+                    indexNumber.alias("indexNumber")
             );
 
             query.groupBy(index);
             list = entityManager.createQuery(query).getResultList();
         }
-        return list.stream().collect(Collectors.toMap(T::getIndex, T::getIndexNumber));
+        if (chartRequestDTO.getCalcType() == CalcType.SUM) {
+            list.forEach(e -> {
+                result.put(
+                        e.get(0, String.class),
+                        e.get(1, Double.class)
+                );
+            });
+        } else {
+            list.forEach(e -> {
+                result.put(
+                        e.get(0, String.class),
+                        e.get(1, Long.class).doubleValue()
+                );
+            });
+        }
+
+        return result;
     }
 
 

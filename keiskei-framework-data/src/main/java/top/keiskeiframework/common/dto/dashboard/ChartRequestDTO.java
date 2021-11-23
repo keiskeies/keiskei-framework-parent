@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.dto.dashboard;
 
 import lombok.*;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
@@ -58,6 +59,11 @@ public class ChartRequestDTO implements Serializable {
      */
     @NonNull
     private LocalDateTime end;
+
+    /**
+     * 计算方式
+     */
+    private CalcType calcType = CalcType.COUNT;
 
     /**
      * 查询条件

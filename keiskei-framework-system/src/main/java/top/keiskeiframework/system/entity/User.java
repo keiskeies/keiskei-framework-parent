@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.lombok.Chartable;
+import top.keiskeiframework.common.annotation.dashboard.Chartable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

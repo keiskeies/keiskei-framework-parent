@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import top.keiskeiframework.common.util.BaseRequestUtils;
+import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
 import java.util.List;
 
