@@ -46,6 +46,11 @@ public class Dashboard extends ListEntity<Long> {
     @SortBy(desc = false)
     private Long sortBy;
 
+    @PostPersist
+    private void postPersist() {
+        this.sortBy = super.getId();
+    }
+
     @ApiModelProperty(value = "图表名称", dataType = "String")
     @NotBlank(message = "图表名称不能为空", groups = {Insert.class, Update.class})
     private String name;
@@ -72,6 +77,9 @@ public class Dashboard extends ListEntity<Long> {
 
     @ApiModelProperty(value = "x坐标名称", dataType = "String")
     private String fieldName;
+
+    @ApiModelProperty(value = "创建时间字段", dataType = "String")
+    private String timeField;
 
     @ApiModelProperty(value = "x坐标类型", dataType = "Integer")
     @NotNull(message = "x坐标类型不能为空", groups = {Insert.class, Update.class})

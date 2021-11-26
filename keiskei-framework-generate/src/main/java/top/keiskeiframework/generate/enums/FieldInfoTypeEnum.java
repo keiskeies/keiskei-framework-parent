@@ -32,7 +32,7 @@ public enum FieldInfoTypeEnum {
     FILE("String"),
     VISIT_TIMES("Integer"),
     ENABLE("Boolean"),
-    SORT("Long"),
+    SORT("ID"),
     DICTIONARY(""),
     TAGS("String")
 

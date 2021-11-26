@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 import top.keiskeiframework.generate.enums.FieldInfoRelationEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,18 +41,19 @@ public class FieldInfo extends ListEntity<Long> {
     private static final long serialVersionUID = -6407989526318566170L;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
-    @NotBlank(message = "字段名称不能为空", groups = {Insert.class})
+    @NotBlank(message = "字段名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
     @ApiModelProperty(value = "字段注释", dataType = "String")
-    @NotBlank(message = "字段注释不能为空", groups = {Insert.class})
+    @NotBlank(message = "字段注释不能为空", groups = {Insert.class, Update.class})
     private String comment;
 
     @ApiModelProperty(value = "字段解释", dataType = "String")
-    @NotBlank(message = "字段解释不能为空", groups = {Insert.class})
+    @NotBlank(message = "字段解释不能为空", groups = {Insert.class, Update.class})
     private String tooltip;
 
     @ApiModelProperty(value = "字段类型", dataType = "String")
+    @NotNull(message = "字段类型不能为空", groups = {Insert.class, Update.class})
     private FieldInfoTypeEnum type;
 
     @ApiModelProperty(value = "新增必填", dataType = "Boolean")
@@ -91,7 +94,7 @@ public class FieldInfo extends ListEntity<Long> {
     @OrderBy("sortBy")
     private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
 
-    @ApiModelProperty(value = "排序", dataType = "Integer")
+    @ApiModelProperty(value = "排序", dataType = "ID")
     @SortBy(desc = false)
     private Long sortBy;
 

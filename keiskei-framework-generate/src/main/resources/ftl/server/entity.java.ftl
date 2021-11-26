@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import top.keiskeiframework.common.annotation.validate.*;
+import top.keiskeiframework.common.annotation.data.*;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -102,6 +103,16 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     private ${field.relationEntity} ${field.relationEntity?uncap_first};
 
         </#if>
+    <#elseif field.type == 'SORT'>
+    @ApiModelProperty(value = "排序", dataType = "ID")
+    @SortBy(desc = false)
+    private table.idType.value ${field.relationEntity?uncap_first};
+
+    @PostPersist
+    private void postPersist() {
+        this.${field.relationEntity?uncap_first} = super.getId();
+    }
+
     <#else>
 <#--        普通字段-->
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.value}")

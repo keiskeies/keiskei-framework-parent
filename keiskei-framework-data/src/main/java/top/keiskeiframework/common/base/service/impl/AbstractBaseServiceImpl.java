@@ -31,10 +31,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -54,6 +51,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     protected JpaSpecificationExecutor<T> jpaSpecificationExecutor;
     @Autowired
     protected EntityManager entityManager;
+    @Autowired
+    protected BaseService<T, ID> baseService;
+
+    private final static String TIME_FIELD_DEFAULT = "createTime";
+    private final static String TIME_FIELD_UNDEFINED = "undefined";
 
     protected Class<T> getTClass() {
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
@@ -143,19 +145,8 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public T save(T t) {
-        t = jpaRepository.save(t);
-        for (Field field : t.getClass().getDeclaredFields()) {
-            SortBy sortBy = field.getAnnotation(SortBy.class);
-            if (null != sortBy) {
-                field.setAccessible(true);
-                try {
-                    field.set(t, t.getId());
-                } catch (IllegalAccessException ignored) {
-                }
-                return jpaRepository.save(t);
-            }
-        }
-        return t;
+        baseService.validate(t);
+        return jpaRepository.save(t);
     }
 
     @Override
@@ -163,6 +154,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         if (CollectionUtils.isEmpty(ts)) {
             return ts;
         }
+        ts.forEach(baseService::validate);
         ts = jpaRepository.saveAll(ts);
         Field[] fields = ts.get(0).getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -184,6 +176,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public T update(T t) {
         Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+        baseService.validate(t);
         t = jpaRepository.save(t);
         return t;
     }
@@ -196,6 +189,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             Field[] fields = clazz.getDeclaredFields();
             T t1 = clazz.newInstance();
             T t2 = clazz.newInstance();
+            boolean hasSort = false;
             for (Field field : fields) {
                 if ("id".equals(field.getName())) {
                     field.setAccessible(true);
@@ -204,14 +198,17 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
                 } else {
                     SortBy sortBy = field.getAnnotation(SortBy.class);
                     if (null != sortBy) {
+                        hasSort = true;
                         field.setAccessible(true);
                         field.set(t1, baseSortDto.getSortBy2());
                         field.set(t2, baseSortDto.getSortBy1());
                     }
                 }
             }
-            jpaRepository.save(t1);
-            jpaRepository.save(t2);
+            if (hasSort) {
+                jpaRepository.save(t1);
+                jpaRepository.save(t2);
+            }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -221,6 +218,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     public void deleteById(ID id) {
         jpaRepository.deleteById(id);
         this.reconfirmIndex();
+    }
+
+    @Override
+    public void validate(T t) {
+        log.info("validate from parent : {}", this.getTClass().getSimpleName());
     }
 
     public void reconfirmIndex() {
@@ -238,7 +240,13 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
         // 基本时间条件
         List<Predicate> predicates = new ArrayList<>();
-        Expression<LocalDateTime> expression = root.get("createTime");
+        // 是否指定新的创建时间字段
+        String timeField = chartRequestDTO.getTimeField();
+        if (StringUtils.isEmpty(timeField) && TIME_FIELD_UNDEFINED.equals(timeField)) {
+            timeField = TIME_FIELD_DEFAULT;
+        }
+
+        Expression<LocalDateTime> expression = root.get(timeField);
         predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
 
         if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {

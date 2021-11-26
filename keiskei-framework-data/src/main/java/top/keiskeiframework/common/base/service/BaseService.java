@@ -121,6 +121,13 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      */
     void deleteByIdAndNotify(ID id);
 
+    /**
+     * 校验数据
+     *
+     * @param t .
+     */
+    void validate(T t);
+
 
     /**
      * 数据图表

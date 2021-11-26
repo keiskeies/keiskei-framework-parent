@@ -30,6 +30,11 @@ public class ChartRequestDTO implements Serializable {
      * 字段
      */
     private String column;
+
+    /**
+     * 创建时间字段
+     */
+    private String timeField;
     /**
      * 实体类名称
      */

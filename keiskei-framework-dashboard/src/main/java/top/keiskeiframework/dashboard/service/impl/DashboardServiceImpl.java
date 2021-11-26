@@ -52,18 +52,11 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
 
 
     @Override
-    public Dashboard save(Dashboard dashboard) {
-        validate(dashboard);
-        return super.save(dashboard);
-    }
-
-    @Override
     @Caching(evict= {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
             @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #dashboard.id")
     })
     public Dashboard update(Dashboard dashboard) {
-        validate(dashboard);
         return super.update(dashboard);
     }
 
@@ -311,7 +304,8 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
      *
      * @param dashboard 。
      */
-    private void validate(Dashboard dashboard) {
+    @Override
+    public void validate(Dashboard dashboard) {
         if (ColumnType.TIME.equals(dashboard.getFieldType()) && StringUtils.isEmpty(dashboard.getFieldDelta())) {
             throw new BizException(DashboardExceptionEnum.TYPE_EMPTY);
         }
