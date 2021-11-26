@@ -39,7 +39,7 @@ public class DashboardController {
     @GetMapping
     public R<List<Dashboard>> list() {
         Dashboard dashboard = Dashboard.builder().createUserId(Long.valueOf(MdcUtils.getUserId())).build();
-        return R.ok(dashboardService.options(dashboard));
+        return R.ok(dashboardService.findAll(dashboard));
     }
 
     @ApiOperation("详情")

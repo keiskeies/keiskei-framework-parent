@@ -100,6 +100,19 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         }
     }
 
+
+    @Override
+    public List<T> findAll() {
+        Class<T> tClass = getTClass();
+        return jpaRepository.findAll(BaseRequestUtils.getSort(tClass));
+    }
+
+    @Override
+    public List<T> findAll(T t) {
+        Class<T> tClass = getTClass();
+        return jpaRepository.findAll(Example.of(t), BaseRequestUtils.getSort(tClass));
+    }
+
     @Override
     public List<T> findAll(BaseRequest<T, ID> request) {
         Class<T> tClass = getTClass();
@@ -122,30 +135,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             return BaseRequestUtils.queryDataList(query, request.getShow(), tClass);
         }
     }
-
-    @Override
-    public List<T> options() {
-        Class<T> tClass = getTClass();
-        return jpaRepository.findAll(BaseRequestUtils.getSort(tClass));
-    }
-
-    @Override
-    public List<T> options(T t) {
-        Class<T> tClass = getTClass();
-        return jpaRepository.findAll(Example.of(t), BaseRequestUtils.getSort(tClass));
-    }
-
-    @Override
-    public List<T> optionsSome(List<String> show) {
-        Class<T> tClass = getTClass();
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
-        Root<T> root = query.from(tClass);
-        query.multiselect(BaseRequestUtils.getSelections(root, show));
-        query.orderBy(BaseRequestUtils.getOrders(root, tClass));
-        return BaseRequestUtils.queryDataList(query, show, tClass);
-    }
-
 
     @Override
     public T findById(ID id) {
@@ -226,8 +215,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -238,7 +225,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     public void reconfirmIndex() {
         entityManager.createNativeQuery("alter table " + getTClass() + " engine=InnoDB;");
-        entityManager.close();
     }
 
     @Override

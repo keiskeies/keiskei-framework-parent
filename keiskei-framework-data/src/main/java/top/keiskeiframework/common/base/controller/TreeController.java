@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -29,8 +30,8 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
 
     @GetMapping(value = {"", "/options"})
     @ApiOperation("列表")
-    public R<List<T>> tree() {
-        List<T> list = treeService.options();
+    public R<List<T>> tree(BaseRequest<T, ID> request) {
+        List<T> list = treeService.findAll(request);
         return R.ok(new TreeEntityUtils<>(list).getTree(null));
     }
 

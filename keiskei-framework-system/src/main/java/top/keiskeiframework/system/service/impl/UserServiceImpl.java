@@ -115,7 +115,7 @@ public class UserServiceImpl extends ListServiceImpl<User, Long> implements IUse
 
         if (SystemEnum.SUPER_ADMIN_ID == tokenUser.getId()) {
             if (null != permissionService) {
-                List<Permission> permissions = permissionService.options();
+                List<Permission> permissions = permissionService.findAll();
                 userDto.setPermissions(permissions.stream().map(Permission::getPermission).collect(Collectors.toList()));
                 return userDto;
             }

@@ -1,10 +1,6 @@
 package top.keiskeiframework.common.base.service;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -46,7 +42,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      *
      * @return .
      */
-    List<T> options();
+    List<T> findAll();
 
     /**
      * 下拉框列表
@@ -54,14 +50,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param t 查询条件
      * @return .
      */
-    List<T> options(T t);
-
-    /**
-     * 下拉框列表
-     * @param show 展示字段
-     * @return 。
-     */
-    List<T> optionsSome(List<String> show);
+    List<T> findAll(T t);
 
     /**
      * 根据id查询

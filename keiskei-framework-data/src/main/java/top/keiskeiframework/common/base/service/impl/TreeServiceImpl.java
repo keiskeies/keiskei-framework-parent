@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
+import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -37,8 +38,8 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
 
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
-    public List<T> options() {
-        return super.options();
+    public List<T> findAll(BaseRequest<T, ID> request) {
+        return super.findAll(request);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.DELETE)
     public void deleteByIdAndNotify(ID id) {
-        Set<ID> childIds = new TreeEntityUtils<>(treeService.options()).getChildIds(id);
+        Set<ID> childIds = new TreeEntityUtils<>(treeService.findAll()).getChildIds(id);
         for (ID cid : childIds) {
             super.deleteById(cid);
         }
@@ -116,7 +117,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     public void deleteById(ID id) {
-        Set<ID> childIds = new TreeEntityUtils<>(treeService.options()).getChildIds(id);
+        Set<ID> childIds = new TreeEntityUtils<>(treeService.findAll()).getChildIds(id);
         for (ID cid : childIds) {
             super.deleteById(cid);
         }

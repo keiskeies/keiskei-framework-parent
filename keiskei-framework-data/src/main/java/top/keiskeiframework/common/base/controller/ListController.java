@@ -39,8 +39,8 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
 
     @GetMapping("/options")
     @ApiOperation("下拉框")
-    public R<List<T>> list() {
-        return R.ok(listService.options());
+    public R<List<T>> options(BaseRequest<T, ID> request) {
+        return R.ok(listService.findAll(request));
     }
 
     @GetMapping("/{id}")
