@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.*;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,23 +35,23 @@ public class ProjectInfo extends ListEntity<Long> {
     private static final long serialVersionUID = 8549325611615861124L;
 
     @ApiModelProperty(value = "项目名称", dataType = "String")
-    @NotBlank(message = "项目名称不能为空", groups = {Insert.class})
+    @NotBlank(message = "项目名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
     @ApiModelProperty(value = "项目注释", dataType = "String")
-    @NotBlank(message = "项目注释不能为空", groups = {Insert.class})
+    @NotBlank(message = "项目注释不能为空", groups = {Insert.class, Update.class})
     private String comment;
 
     @ApiModelProperty(value = "项目版本", dataType = "String")
-    @NotBlank(message = "项目版本不能为空", groups = {Insert.class})
+    @NotBlank(message = "项目版本不能为空", groups = {Insert.class, Update.class})
     private String version;
 
     @ApiModelProperty(value = "favicon", dataType = "String")
-    @NotBlank(message = "请输入favicon", groups = {Insert.class})
+    @NotBlank(message = "请输入favicon", groups = {Insert.class, Update.class})
     private String favicon;
 
     @ApiModelProperty(value = "LOGO", dataType = "String")
-    @NotBlank(message = "请输入LOGO", groups = {Insert.class})
+    @NotBlank(message = "请输入LOGO", groups = {Insert.class, Update.class})
     private String logo;
 
     @ApiModelProperty(value = "作者", dataType = "String")
@@ -67,6 +68,7 @@ public class ProjectInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
+    @Valid
     @OrderBy("sortBy")
     private List<ModuleInfo> modules = new ArrayList<>();
 }

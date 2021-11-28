@@ -61,7 +61,7 @@ public class GenerateFileUtils {
                     e.printStackTrace();
                 }
             } else if (childResourceFile.isDirectory()) {
-                if (childResourceFile.getName().startsWith(".")) {
+                if (childResourceFile.getName().startsWith(".") || childResourceFile.getName().endsWith("node_modules")) {
                     continue;
                 }
                 String dir1 = resource + childResourceFile.getName();

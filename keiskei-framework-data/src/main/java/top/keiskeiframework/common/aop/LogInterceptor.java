@@ -1,4 +1,4 @@
-package top.keiskeiframework.system.aop;
+package top.keiskeiframework.common.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -13,6 +13,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.BaseRequest;
@@ -20,9 +21,8 @@ import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.util.MdcUtils;
-import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.common.util.UserInfoUtils;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,8 +41,8 @@ public class LogInterceptor {
 
     @Autowired(required = false)
     private OperateLogService operateLogService;
-    private final static String LOG_NAME_FORMATTER = "[%s - %s]";
-    private final static String MESSAGE_FORMATTER = "%s - %s";
+    private final static String LOG_NAME_FORMATTER = "[%s-%s]";
+    private final static String MESSAGE_FORMATTER = "%s-%s";
     private final static String GET = "GET";
 
     @Pointcut("@annotation(io.swagger.annotations.ApiOperation)")
@@ -52,20 +52,15 @@ public class LogInterceptor {
     @Around("pointCut()")
     public Object recordSysLog(ProceedingJoinPoint point) throws Throwable {
         long start = System.currentTimeMillis();
-
         OperateLogDTO operateLog = new OperateLogDTO();
-
         try {
-            TokenUser tokenUser = SecurityUtils.getSessionUser();
-            operateLog.setUserId(tokenUser.getId());
-            MdcUtils.setUserId(tokenUser.getId() + "");
-            MdcUtils.setUserName(tokenUser.getName());
-            MdcUtils.setUserDepartment(tokenUser.getDepartment());
-
-
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            String userId = MdcUtils.getUserId();
+            if (!StringUtils.isEmpty(userId)) {
+                operateLog.setUserId(Long.valueOf(MdcUtils.getUserId()));
+            }
             operateLog.setType(request.getMethod());
-            operateLog.setIp(SecurityUtils.getIpAddress(request));
+            operateLog.setIp(UserInfoUtils.getIpAddress(request));
             operateLog.setUrl(request.getRequestURI());
 
             MethodSignature ms = (MethodSignature) point.getSignature();
@@ -82,7 +77,6 @@ public class LogInterceptor {
                 } else if (!(param instanceof HttpServletRequest) && !(param instanceof HttpServletResponse)) {
                     sb.append(JSON.toJSONString(param, SerializerFeature.IgnoreErrorGetter));
                 }
-
             }
             operateLog.setRequestParam(sb.toString());
             log.info("{} - start - params: \n{}", operateLog.getName(), operateLog.getRequestParam());
@@ -118,7 +112,7 @@ public class LogInterceptor {
                 log.error("log error!", e);
             } finally {
                 MDC.clear();
-                if (null != operateLogService){
+                if (null != operateLogService) {
                     operateLogService.saveLog(operateLog);
                 }
             }

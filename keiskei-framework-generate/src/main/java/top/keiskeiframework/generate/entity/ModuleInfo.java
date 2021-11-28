@@ -8,10 +8,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.*;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,24 +38,25 @@ public class ModuleInfo extends ListEntity<Long> {
     private static final long serialVersionUID = 754302484437506602L;
 
     @ApiModelProperty(value = "模块名称", dataType = "String")
-    @NotBlank(message = "模块名称不能为空", groups = {Insert.class})
+    @NotBlank(message = "模块名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
     @ApiModelProperty(value = "模块路径", dataType = "String")
-    @NotBlank(message = "模块路径不能为空", groups = {Insert.class})
+    @NotBlank(message = "模块路径不能为空", groups = {Insert.class, Update.class})
     private String path;
 
     @ApiModelProperty(value = "模块注释", dataType = "String")
-    @NotBlank(message = "模块注释不能为空", groups = {Insert.class})
+    @NotBlank(message = "模块注释不能为空", groups = {Insert.class, Update.class})
     private String comment;
 
     @ApiModelProperty(value = "模块包名", dataType = "String")
-    @NotBlank(message = "模块包名不能为空", groups = {Insert.class})
+    @NotBlank(message = "模块包名不能为空", groups = {Insert.class, Update.class})
     private String packageName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "module_id")
     @OrderBy("sortBy")
+    @Valid
     private List<TableInfo> tables = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")

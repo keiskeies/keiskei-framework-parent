@@ -27,12 +27,12 @@ spring:
   datasource:
     name: news_stand
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
-    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
     timeout: 6000
-    password: ${REDIS_PASSWORD}
+    password: ${REDIS_PASSWORD:123456}
     database: ${REDIS_DB:0}
     port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}

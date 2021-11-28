@@ -242,7 +242,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         List<Predicate> predicates = new ArrayList<>();
         // 是否指定新的创建时间字段
         String timeField = chartRequestDTO.getTimeField();
-        if (StringUtils.isEmpty(timeField) && TIME_FIELD_UNDEFINED.equals(timeField)) {
+        if (StringUtils.isEmpty(timeField)) {
             timeField = TIME_FIELD_DEFAULT;
         }
 

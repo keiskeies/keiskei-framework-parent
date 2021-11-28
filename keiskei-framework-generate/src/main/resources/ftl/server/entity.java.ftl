@@ -1,7 +1,6 @@
 package ${module.packageName}.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 <#assign parentName = table.type?lower_case?cap_first>
 import top.keiskeiframework.common.base.entity.*;
 import top.keiskeiframework.common.util.data.*;
@@ -9,27 +8,20 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ${module.packageName}.enums.*;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.*;
 
 import javax.persistence.*;
+import javax.validation.*;
 import javax.validation.constraints.*;
+import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.*;
 import top.keiskeiframework.common.annotation.data.*;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.annotation.*;
+import com.fasterxml.jackson.datatype.jsr310.deser.*;
+import com.fasterxml.jackson.datatype.jsr310.ser.*;
+import java.time.*;
+import java.util.*;
 
 /**
  * <p>
@@ -54,7 +46,10 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 <#list table.fields as field>
 <#--        必填校验-->
     <#if field.createRequire || field.updateRequire>
-        <#if field.type.value == "String">@NotBlank<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+    <#if field.type.value == "String">@NotBlank<#elseif field.type == "MIDDLE_ID">@NotEmpty<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+    </#if>
+    <#if field.validate??>
+    @Pattern(regexp = "${field.validate}", message = "${field.comment?trim?replace("\"","'")}格式错误", groups = {Insert.class, Update.class})
     </#if>
 <#--        JsonIgnore-->
     <#if field.jsonIgnore>
@@ -73,19 +68,20 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 
     <#elseif field.type == "MIDDLE_ID">
 <#--        关系字段-->
+    @Valid
     <#--        一对一-->
         <#if field.relation == 'ONE_TO_ONE'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "${field.relationEntity?uncap_first}_id")
-    private ${field.relationEntity} ${field.relationEntity?uncap_first};
+    private ${field.relationEntity} ${field.name};
 
     <#--        一对多-->
         <#elseif field.relation == 'ONE_TO_MANY'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="${table.name?lower_case}_id")
-    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s = new ArrayList<>();
+    private List<${field.relationEntity}> ${field.name} = new ArrayList<>();
 
     <#--        多对多-->
         <#elseif field.relation == 'MANY_TO_MANY'>
@@ -94,23 +90,23 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     @JoinTable(name = "${module.path?lower_case}_${table.name?lower_case}_${field.relationEntity?lower_case}",
         joinColumns = {@JoinColumn(name = "${table.name?lower_case}_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "${field.relationEntity?lower_case}_id", referencedColumnName = "id")})
-    private List<${field.relationEntity}> ${field.relationEntity?uncap_first}s;
+    private List<${field.relationEntity}> ${field.name};
 
     <#--        多对一-->
         <#elseif field.relation == 'MANY_TO_ONE'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    private ${field.relationEntity} ${field.relationEntity?uncap_first};
+    private ${field.relationEntity} ${field.name};
 
         </#if>
     <#elseif field.type == 'SORT'>
     @ApiModelProperty(value = "排序", dataType = "ID")
     @SortBy(desc = false)
-    private table.idType.value ${field.relationEntity?uncap_first};
+    private ${table.idType.value} ${field.name};
 
     @PostPersist
     private void postPersist() {
-        this.${field.relationEntity?uncap_first} = super.getId();
+        this.${field.name} = super.getId();
     }
 
     <#else>

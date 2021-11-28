@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
+import top.keiskeiframework.system.filter.MdcUserFilter;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
@@ -26,7 +28,6 @@ import top.keiskeiframework.system.service.IUserService;
 @Configuration
 @EnableWebSecurity
 public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
     @Autowired
@@ -76,6 +77,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                 http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).authenticated();
             }
         }
+        http.addFilterAfter(new MdcUserFilter(), BasicAuthenticationFilter.class);
 
         if (usePermission) {
             //开启自定义连接拦截

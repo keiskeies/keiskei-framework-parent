@@ -1,43 +1,26 @@
-package top.keiskeiframework.system.util;
+package top.keiskeiframework.common.util;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- * security工具类
+ *
  * </p>
  *
- * @author James Chen right_way@foxmail.com
- * @since 2018年10月12日 上午10:02:09
+ * @author v_chenjiamin
+ * @since 2021/11/22 13:48
  */
-public class SecurityUtils {
-    public static TokenUser getSessionUser() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (null != securityContext) {
-            Authentication authentication = securityContext.getAuthentication();
-            if (null != authentication) {
-                Object obj = authentication.getPrincipal();
-                if (obj instanceof TokenUser) {
-                    return (TokenUser) obj;
-                }
-
-            }
-        }
-
-        throw new BizException(BizExceptionEnum.AUTH_ERROR);
-    }
-
-
+public class UserInfoUtils {
     private final static String UN_KNOWN = "unKnown";
 
+    /**
+     * 获取请求真实IP
+     *
+     * @param request 。
+     * @return 。
+     */
     public static String getIpAddress(HttpServletRequest request) {
         String xip = request.getHeader("X-Real-IP");
         String xFor = request.getHeader("X-Forwarded-For");
@@ -72,5 +55,4 @@ public class SecurityUtils {
         }
         return xFor;
     }
-
 }

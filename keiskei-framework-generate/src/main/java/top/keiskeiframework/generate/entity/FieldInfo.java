@@ -49,7 +49,6 @@ public class FieldInfo extends ListEntity<Long> {
     private String comment;
 
     @ApiModelProperty(value = "字段解释", dataType = "String")
-    @NotBlank(message = "字段解释不能为空", groups = {Insert.class, Update.class})
     private String tooltip;
 
     @ApiModelProperty(value = "字段类型", dataType = "String")
@@ -61,9 +60,6 @@ public class FieldInfo extends ListEntity<Long> {
 
     @ApiModelProperty(value = "更新必填", dataType = "Boolean")
     private Boolean updateRequire = Boolean.TRUE;
-
-    @ApiModelProperty(value = "字段校验", dataType = "String")
-    private String validate;
 
     @ApiModelProperty(value = "字段关系", dataType = "String")
     private FieldInfoRelationEnum relation;
@@ -88,6 +84,9 @@ public class FieldInfo extends ListEntity<Long> {
 
     @ApiModelProperty(value = "表格宽度", dataType = "Long")
     private Integer tableWidth = 200;
+
+    @ApiModelProperty(value = "字段校验", dataType = "String")
+    private String validate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_id")

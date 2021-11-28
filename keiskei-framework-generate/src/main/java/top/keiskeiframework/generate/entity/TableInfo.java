@@ -1,22 +1,16 @@
 package top.keiskeiframework.generate.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
-import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
-import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
+import top.keiskeiframework.common.annotation.validate.*;
+import top.keiskeiframework.common.base.entity.*;
+import top.keiskeiframework.generate.enums.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,18 +35,18 @@ public class TableInfo extends ListEntity<Long> {
     private static final long serialVersionUID = 7715195221883078519L;
 
     @ApiModelProperty(value = "实体类名", dataType = "String")
-    @NotBlank(message = "实体类名不能为空", groups = {Insert.class})
+    @NotBlank(message = "实体类名不能为空", groups = {Insert.class, Update.class})
+    @Pattern(regexp = "[A-Z][a-z|A-Z]+", message = "实体类名称格式错误", groups = {Insert.class, Update.class})
     private String name;
 
     @ApiModelProperty(value = "表注释", dataType = "String")
-    @NotBlank(message = "表注释不能为空", groups = {Insert.class})
+    @NotBlank(message = "表注释不能为空", groups = {Insert.class, Update.class})
     private String comment;
 
     @ApiModelProperty(value = "主键类型", dataType = "String")
     private TableInfoIdTypeEnum idType = TableInfoIdTypeEnum.LONG;
 
     @ApiModelProperty(value = "表名称", dataType = "String")
-    @NotBlank(message = "表名称不能为空", groups = {Insert.class})
     private String tableName;
 
     @ApiModelProperty(value = "表类型", dataType = "String")
@@ -68,6 +62,7 @@ public class TableInfo extends ListEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "table_id")
     @OrderBy("sortBy")
+    @Valid
     private List<FieldInfo> fields = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
