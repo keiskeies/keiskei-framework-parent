@@ -113,7 +113,7 @@ public class GenerateFileUtils {
         String docModulePath = serverPath + "/" + docModuleName;
 
         go2Fly("server/pom/docModulePom.xml", docModulePath + "/pom.xml", cfg);
-        go2Fly("server/config/SwaggerAddition.java", docModulePath + "/src/main/java/top/keiskeiframework/doc/config/SwaggerAddition.java.ftl", cfg);
+        go2Fly("server/config/SwaggerAddition.java", docModulePath + "/src/main/java/top/keiskeiframework/doc/config/SwaggerAddition.java", cfg);
         go2Fly("server/config/SwaggerConfig.java", docModulePath + "/src/main/java/top/keiskeiframework/doc/config/SwaggerConfig.java", cfg);
 
         go2Fly("server/pom/serverPom.xml", serverPath + "/pom.xml", cfg);

@@ -12,7 +12,7 @@
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-micro-spring-boot-starter</artifactId>
-            <version>2.0.2</version>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
 

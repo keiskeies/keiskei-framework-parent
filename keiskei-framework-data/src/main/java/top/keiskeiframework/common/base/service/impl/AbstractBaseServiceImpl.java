@@ -75,31 +75,31 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         Pageable pageable = request.getPageable(tClass);
         Specification<T> specification;
 
-        if (CollectionUtils.isEmpty(request.getShow())) {
+//        if (CollectionUtils.isEmpty(request.getShow())) {
             specification = (root, query, criteriaBuilder) -> {
                 List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             };
             return jpaSpecificationExecutor.findAll(specification, pageable);
-        } else {
-            AtomicReference<CriteriaQuery<Tuple>> criteriaQueryAtomicReference = new AtomicReference<>();
-            AtomicReference<Predicate[]> predicatesAtomicReference = new AtomicReference<>();
-
-            specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
-                predicatesAtomicReference.set(predicates.toArray(new Predicate[0]));
-                criteriaQueryAtomicReference.set(criteriaBuilder.createTupleQuery());
-                return criteriaBuilder.and(predicatesAtomicReference.get());
-            };
-            long total = jpaSpecificationExecutor.count(specification);
-            CriteriaQuery<Tuple> query = criteriaQueryAtomicReference.get();
-            Root<T> root = query.from(tClass);
-            query.where(predicatesAtomicReference.get());
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass, request.getAsc(), request.getDesc()));
-            List<T> contents = BaseRequestUtils.queryDataList(query, request.getPage(), request.getSize(), request.getShow(), tClass);
-            return new PageImpl<T>(contents, pageable, total);
-        }
+//        } else {
+//            AtomicReference<CriteriaQuery<Tuple>> criteriaQueryAtomicReference = new AtomicReference<>();
+//            AtomicReference<Predicate[]> predicatesAtomicReference = new AtomicReference<>();
+//
+//            specification = (root, query, criteriaBuilder) -> {
+//                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+//                predicatesAtomicReference.set(predicates.toArray(new Predicate[0]));
+//                criteriaQueryAtomicReference.set(criteriaBuilder.createTupleQuery());
+//                return criteriaBuilder.and(predicatesAtomicReference.get());
+//            };
+//            long total = jpaSpecificationExecutor.count(specification);
+//            CriteriaQuery<Tuple> query = criteriaQueryAtomicReference.get();
+//            Root<T> root = query.from(tClass);
+//            query.where(predicatesAtomicReference.get());
+//            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
+//            query.orderBy(BaseRequestUtils.getOrders(root, tClass, request.getAsc(), request.getDesc()));
+//            List<T> contents = BaseRequestUtils.queryDataList(query, request.getPage(), request.getSize(), request.getShow(), tClass);
+//            return new PageImpl<T>(contents, pageable, total);
+//        }
     }
 
 

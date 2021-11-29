@@ -46,7 +46,7 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 <#list table.fields as field>
 <#--        必填校验-->
     <#if field.createRequire || field.updateRequire>
-    <#if field.type.value == "String">@NotBlank<#elseif field.type == "MIDDLE_ID">@NotEmpty<#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
+    <#if field.type.value == "String">@NotBlank<#elseif field.type == "MIDDLE_ID"><#if field.relation == 'ONE_TO_ONE' || field.relation == 'MANY_TO_ONE'>@NotEmpty<#else>@NotNull</#if><#else>@NotNull</#if>(message = "${field.comment?trim?replace("\"","'")}不能为空", groups = {<#if field.createRequire && field.updateRequire>Insert.class, Update.class<#elseif field.createRequire>Insert.class<#else>Update.class</#if>})
     </#if>
     <#if field.validate??>
     @Pattern(regexp = "${field.validate}", message = "${field.comment?trim?replace("\"","'")}格式错误", groups = {Insert.class, Update.class})

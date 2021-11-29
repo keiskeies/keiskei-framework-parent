@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
@@ -31,6 +32,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 默认ID字段
      */
     private static final String ID_COLUMN = "id";
+    private static final String PARENT_ID_COLUMN = "parentId";
     /**
      * 展示字段分割符
      */
@@ -71,6 +73,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
             if (!this.show.contains(ID_COLUMN)) {
                 this.show.add(0, ID_COLUMN);
             }
+
         }
     }
 
