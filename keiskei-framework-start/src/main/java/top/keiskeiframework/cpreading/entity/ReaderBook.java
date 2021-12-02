@@ -55,7 +55,6 @@ public class ReaderBook extends ListEntity<Long> {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull(message = "阅读结束不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "阅读结束", dataType="LocalDate")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)

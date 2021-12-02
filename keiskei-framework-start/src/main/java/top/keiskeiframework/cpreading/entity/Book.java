@@ -75,4 +75,9 @@ public class Book extends ListEntity<Long> {
     @ApiModelProperty(value = "出版社", dataType="String")
     private String publication;
 
+
+    @ApiModelProperty(value = "简介", dataType="String")
+    @Column(columnDefinition = "text")
+    private String description;
+
 }

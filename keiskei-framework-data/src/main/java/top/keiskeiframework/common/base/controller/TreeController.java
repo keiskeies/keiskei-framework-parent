@@ -30,9 +30,16 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
 
     @GetMapping(value = {"", "/options"})
     @ApiOperation("列表")
-    public R<List<T>> tree(BaseRequest<T, ID> request) {
+    public R<List<T>> tree(
+            BaseRequest<T, ID> request,
+            @RequestParam(required = false) ID id,
+            @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list = treeService.findAll(request);
-        return R.ok(new TreeEntityUtils<>(list).getTree(null));
+        if (tree) {
+            return R.ok(new TreeEntityUtils<>(list).getTree(id));
+        } else {
+            return R.ok(list);
+        }
     }
 
     @GetMapping("/{id}")

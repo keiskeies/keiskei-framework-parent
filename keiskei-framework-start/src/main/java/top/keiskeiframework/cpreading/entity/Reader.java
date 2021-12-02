@@ -64,11 +64,11 @@ public class Reader extends ListEntity<Long> {
 
     @NotBlank(message = "微信公众号OPENID不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "微信公众号OPENID", dataType="String")
-    private String wechatＷebOpenid;
+    private String wechatWebOpenid;
 
     @NotBlank(message = "微信小程序OPENID不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "微信小程序OPENID", dataType="String")
-    private String ｗechatMiniOpenId;
+    private String wechatMiniOpenId;
 
     @NotBlank(message = "抖音OPENID不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "抖音OPENID", dataType="String")
