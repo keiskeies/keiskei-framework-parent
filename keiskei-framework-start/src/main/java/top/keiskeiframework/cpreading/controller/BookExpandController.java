@@ -20,7 +20,7 @@ import top.keiskeiframework.cpreading.service.IBookExpandService;
 @RestController
 @RequestMapping("/{api:api|admin}/v2/cpreading/bookExpand")
 @Api(tags = "碎片阅读 - 图书拓展")
-public class BookExpandController extends TreeController<BookExpand, Long>{
+public class BookExpandController extends ListController<BookExpand, Long>{
 
     @Autowired
     private IBookExpandService bookExpandService;

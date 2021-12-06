@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.BasePage;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
@@ -32,8 +33,8 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequest<T, ID> request) {
-        return R.ok(listService.page(request));
+    public R<Page<T>> list(BaseRequest<T, ID> request, BasePage<T, ID> page) {
+        return R.ok(listService.page(request, page));
     }
 
 

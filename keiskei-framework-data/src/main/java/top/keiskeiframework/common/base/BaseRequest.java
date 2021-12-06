@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
@@ -13,8 +14,11 @@ import top.keiskeiframework.common.dto.base.QueryConditionDTO;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -37,58 +41,95 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
      * 展示字段分割符
      */
     private static final String SHOW_SPLIT = ",";
+    private Set<String> fields;
 
-    /**
-     * 分页参数
-     */
-    @Setter
-    @Getter
-    private Integer page = 1, size = 20;
-    /**
-     * 排序方式
-     */
-    @Setter
-    @Getter
-    private String desc, asc;
-
+    private Set<String> getFields(Class<T> tClass) {
+        if (CollectionUtils.isEmpty(fields)) {
+            fields = new HashSet<>();
+            for (Field field : tClass.getDeclaredFields()) {
+                fields.add(field.getName());
+            }
+            for (Field field : tClass.getSuperclass().getDeclaredFields()) {
+                fields.add(field.getName());
+            }
+            if (tClass.getSuperclass().equals(TreeEntity.class)) {
+                for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
+                    fields.add(field.getName());
+                }
+            }
+        }
+        return fields;
+    }
 
     /**
      * 查询条件
      */
-    @Getter
     private List<QueryConditionDTO> conditions;
-
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionDTO.class);
         }
     }
-
-    @Getter
-    private List<String> show;
-
-    public void setShow(String show) {
-        if (!StringUtils.isEmpty(show)) {
-            this.show = Arrays.stream(show.split(SHOW_SPLIT)).collect(Collectors.toList());
-            if (!this.show.contains(ID_COLUMN)) {
-                this.show.add(0, ID_COLUMN);
-            }
-
+    public List<QueryConditionDTO> getConditions(Class<T> tClass) {
+        if (!conditionEmpty()) {
+            Set<String> fields = this.getFields(tClass);
+            this.conditions.removeIf(e -> {
+                if (e.getColumn().contains(".")) {
+                    return !fields.contains(e.getColumn().substring(0, e.getColumn().lastIndexOf(".")));
+                } else {
+                    return !fields.contains(e.getColumn());
+                }
+            });
         }
+        return this.conditions;
+    }
+    public boolean conditionEmpty() {
+        return CollectionUtils.isEmpty(conditions);
     }
 
     /**
-     * 获取分页条件
-     *
-     * @return 。
+     * 显示字段
      */
-    public Pageable getPageable(@NonNull Class<T> tClass) {
-        return PageRequest.of(this.page - 1, this.size, BaseRequestUtils.getSort(tClass, asc, desc));
+    private List<String> show;
+    public void setShow(String show) {
+        if (!StringUtils.isEmpty(show)) {
+            this.show = Arrays.stream(show.split(SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
+            if (!this.show.contains(ID_COLUMN)) {
+                this.show.add(0, ID_COLUMN);
+            }
+        }
     }
 
 
+    public List<String> getShow(Class<T> tClass) {
+        if (!showEmpty()) {
+            if (tClass.getSuperclass().equals(TreeEntity.class)) {
+                if (!this.show.contains(PARENT_ID_COLUMN)) {
+                    this.show.add(1, PARENT_ID_COLUMN);
+                }
+            }
+        }
+        if (!showEmpty()) {
+            Set<String> fields = this.getFields(tClass);
+            this.show.removeIf(e ->  !fields.contains(e));
+        }
+        return this.show;
+    }
+
+    public boolean showEmpty() {
+        return CollectionUtils.isEmpty(show);
+    }
+
+
+    public boolean requestEmpty() {
+        return CollectionUtils.isEmpty(conditions) && CollectionUtils.isEmpty(show);
+    }
+
     @Override
     public String toString() {
-        return "BaseRequest{pageNumber=" + page + ", pageSize=" + size + ", desc='" + desc + ", asc='" + asc + ", conditions='" + conditions + '}';
+        return "BaseRequest{" +
+                "conditions=" + conditions +
+                ", show=" + show +
+                '}';
     }
 }

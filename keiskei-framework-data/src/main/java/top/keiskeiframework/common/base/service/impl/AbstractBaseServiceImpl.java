@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
+import top.keiskeiframework.common.base.BasePage;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
@@ -70,14 +71,14 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public Page<T> page(BaseRequest<T, ID> request) {
+    public Page<T> page(BaseRequest<T, ID> request, BasePage<T, ID> page) {
         Class<T> tClass = getTClass();
-        Pageable pageable = request.getPageable(tClass);
+        Pageable pageable = page.getPageable(tClass);
         Specification<T> specification;
 
-        if (CollectionUtils.isEmpty(request.getShow())) {
+        if (request.showEmpty()) {
             specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             };
             return jpaSpecificationExecutor.findAll(specification, pageable);
@@ -86,7 +87,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             AtomicReference<Predicate[]> predicatesAtomicReference = new AtomicReference<>();
 
             specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
                 predicatesAtomicReference.set(predicates.toArray(new Predicate[0]));
                 criteriaQueryAtomicReference.set(criteriaBuilder.createTupleQuery());
                 return criteriaBuilder.and(predicatesAtomicReference.get());
@@ -95,9 +96,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             CriteriaQuery<Tuple> query = criteriaQueryAtomicReference.get();
             Root<T> root = query.from(tClass);
             query.where(predicatesAtomicReference.get());
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass, request.getAsc(), request.getDesc()));
-            List<T> contents = BaseRequestUtils.queryDataList(query, request.getPage(), request.getSize(), request.getShow(), tClass);
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass)));
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc()));
+            List<T> contents = BaseRequestUtils.queryDataList(query, page.getPage(), page.getSize(), request.getShow(tClass), tClass);
             return new PageImpl<T>(contents, pageable, total);
         }
     }
@@ -120,9 +121,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         Class<T> tClass = getTClass();
         Specification<T> specification;
 
-        if (CollectionUtils.isEmpty(request.getShow())) {
+        if (request.showEmpty()) {
             specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             };
             return jpaSpecificationExecutor.findAll(specification);
@@ -130,11 +131,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
             Root<T> root = query.from(tClass);
-            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
             query.where(predicates.toArray(new Predicate[0]));
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow()));
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass)));
             query.orderBy(BaseRequestUtils.getOrders(root, tClass));
-            return BaseRequestUtils.queryDataList(query, request.getShow(), tClass);
+            return BaseRequestUtils.queryDataList(query, request.getShow(tClass), tClass);
         }
     }
 

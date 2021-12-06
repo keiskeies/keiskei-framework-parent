@@ -36,8 +36,15 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @Autowired
     private TreeServiceImpl<T, ID> treeService;
 
+
     @Override
     @Cacheable(cacheNames = CACHE_NAME, key = "targetClass.name", unless = "#result==null")
+    public List<T> findAll() {
+        return super.findAll();
+    }
+
+
+    @Override
     public List<T> findAll(BaseRequest<T, ID> request) {
         return super.findAll(request);
     }

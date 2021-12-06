@@ -34,7 +34,7 @@ spring:
     password: ${REDIS_PASSWORD:123456}
     database: ${REDIS_DB:0}
     port: ${REDIS_PORT:6379}
-    host: ${REDIS_HOST:localhost}
+    host: ${REDIS_HOST:127.0.0.1}
   jpa:
     database: mysql
     show-sql: true

@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.service;
 
 import org.springframework.data.domain.Page;
+import top.keiskeiframework.common.base.BasePage;
 import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.base.BaseSortDTO;
@@ -27,7 +28,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param request 列表条件
      * @return .
      */
-    Page<T> page(BaseRequest<T, ID> request);
+    Page<T> page(BaseRequest<T, ID> request, BasePage<T, ID> page);
 
     /**
      * 查询全部

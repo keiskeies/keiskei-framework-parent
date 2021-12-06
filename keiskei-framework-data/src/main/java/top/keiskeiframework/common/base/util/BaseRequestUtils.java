@@ -61,19 +61,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     private static boolean useDepartment = false;
 
-
-
-    /**
-     * BaseEntity可显示字段
-     * {@link ListEntity}
-     */
-    protected static final Map<String, Class<?>> LIST_ENTITY_FIELD_MAP;
-    /**
-     * TreeEntity可显示字段
-     * {@link TreeEntity}
-     */
-    protected static final Map<String, Class<?>> TREE_ENTITY_FIELD_MAP;
-
     /**
      * 比较关系
      */
@@ -102,18 +89,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         IN,
     }
 
-    static {
-        Field[] baseEntityFields = ListEntity.class.getDeclaredFields();
-        LIST_ENTITY_FIELD_MAP = Arrays.stream(baseEntityFields)
-                .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
-
-        Field[] treeEntityFields = TreeEntity.class.getDeclaredFields();
-        TREE_ENTITY_FIELD_MAP = Arrays.stream(treeEntityFields)
-                .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
-    }
-
     /**
      * 获取查询的指定字段
      *
@@ -126,7 +101,13 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show) {
         List<Selection<?>> selections = new ArrayList<>(show.size());
         for (String showColumn : show) {
-            selections.add(root.get(showColumn));
+            if (showColumn.contains(".")) {
+                String[] columns = showColumn.split("\\.");
+                Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                selections.add(join.get(columns[1]));
+            } else {
+                selections.add(root.get(showColumn));
+            }
         }
         return selections;
     }
@@ -144,6 +125,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc) {
         List<Order> orders = new ArrayList<>();
+        if (tClass.getSuperclass().equals(TreeEntity.class)) {
+            orders.add(new OrderImpl(root.get("parentId"), true));
+        }
 
         if (!StringUtils.isEmpty(desc)) {
             orders.add(new OrderImpl(root.get(desc), false));
@@ -207,6 +191,10 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> Sort getSort(Class<T> tClass, String asc, String desc) {
         List<Sort.Order> orders = new ArrayList<>();
+
+        if (tClass.getSuperclass().equals(TreeEntity.class)) {
+            orders.add(Sort.Order.asc("parentId"));
+        }
 
         if (!StringUtils.isEmpty(desc)) {
             orders.add(Sort.Order.desc(desc));
@@ -306,7 +294,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                     try {
                         field = tClass.getDeclaredField(show.get(i));
                     } catch (NoSuchFieldException | SecurityException e) {
-                        field = tClass.getSuperclass().getDeclaredField(show.get(i));
+                        try {
+                            field = tClass.getSuperclass().getDeclaredField(show.get(i));
+                        } catch (NoSuchFieldException | SecurityException noSuchFieldException) {
+                            field = tClass.getSuperclass().getSuperclass().getDeclaredField(show.get(i));
+                        }
                     }
                     field.setAccessible(true);
                     field.set(t, tuple.get(i));
@@ -438,25 +430,5 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             }
         }
     }
-
-    /**
-     * 获取类字段
-     *
-     * @param tClass 实体类
-     * @param <T>    实体类
-     * @return .
-     */
-    public static <T extends ListEntity<ID>, ID extends Serializable> Map<String, Class<?>> getFieldMap(Class<T> tClass) {
-        Field[] fields = tClass.getDeclaredFields();
-        Map<String, Class<?>> fieldMap = Arrays.stream(fields)
-                .filter(e -> e.getAnnotation(JsonIgnore.class) == null)
-                .collect(Collectors.toMap(Field::getName, Field::getType, (e1, e2) -> e2));
-        fieldMap.putAll(LIST_ENTITY_FIELD_MAP);
-        if (tClass.getSuperclass() == TreeEntity.class) {
-            fieldMap.putAll(TREE_ENTITY_FIELD_MAP);
-        }
-        return fieldMap;
-    }
-
 
 }

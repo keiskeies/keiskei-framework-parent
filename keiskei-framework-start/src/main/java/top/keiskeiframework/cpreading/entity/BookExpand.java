@@ -1,26 +1,25 @@
 package top.keiskeiframework.cpreading.entity;
 
-import com.fasterxml.jackson.annotation.*;
-import top.keiskeiframework.common.base.entity.*;
-import top.keiskeiframework.common.util.data.*;
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.cpreading.enums.*;
-
-import io.swagger.annotations.*;
-
-import javax.persistence.*;
-import javax.validation.*;
-import javax.validation.constraints.*;
-import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.annotation.validate.*;
-import top.keiskeiframework.common.annotation.data.*;
-
-import com.fasterxml.jackson.databind.annotation.*;
-import com.fasterxml.jackson.datatype.jsr310.deser.*;
-import com.fasterxml.jackson.datatype.jsr310.ser.*;
-import java.time.*;
-import java.util.*;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.TreeEntity;
 
 /**
  * <p>
@@ -37,23 +36,27 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "cpreading_book_expand")
-@ApiModel(value="BookExpand", description="图书拓展")
-public class BookExpand extends TreeEntity<Long> {
+@ApiModel(value = "BookExpand", description = "图书拓展")
+public class BookExpand extends ListEntity<Long> {
 
     private static final long serialVersionUID = -6769552817545368272L;
 
-    @NotNull(message = "图书不能为空", groups = {Insert.class, Update.class})
+    @NotNull(message = "关联图书不能为空", groups = { Insert.class, Update.class })
     @Valid
-    @ApiModelProperty(value = "图书", dataType="Book")
+    @ApiModelProperty(value = "关联图书", dataType = "Book")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private Book parentBook;
+
+    @NotNull(message = "图书不能为空", groups = { Insert.class, Update.class })
+    @Valid
+    @ApiModelProperty(value = "图书", dataType = "Book")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Book book;
 
-    @NotBlank(message = "图书章节不能为空", groups = {Insert.class, Update.class})
-    @ApiModelProperty(value = "图书章节", dataType="String")
-    private String bookSection;
-
-    @NotNull(message = "图书章节编号不能为空", groups = {Insert.class, Update.class})
-    @ApiModelProperty(value = "图书章节编号", dataType="Integer")
-    private Integer bookSectionNumber;
+    @NotNull(message = "图书章节不能为空", groups = { Insert.class, Update.class })
+    @Valid
+    @ApiModelProperty(value = "图书章节", dataType = "BookSection")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private BookSection bookSection;
 
 }

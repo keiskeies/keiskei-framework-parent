@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<keiskei-framework-start>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "top.keiskeiframework.Application",
+            "projectName": "keiskei-framework-start",
+            "vmArgs": ["-DMYSQL_PASSWORD=Cjm@12070817"]
+        }
+    ]
+}

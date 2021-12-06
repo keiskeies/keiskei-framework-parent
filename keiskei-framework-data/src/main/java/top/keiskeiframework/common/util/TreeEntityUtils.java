@@ -18,7 +18,7 @@ import java.util.*;
 public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> {
 
 
-    private final Map<ID, List<T>> map;
+    private final LinkedHashMap<ID, List<T>> map;
 
     public TreeEntityUtils(List<T> list) {
         map = new LinkedHashMap<>();
@@ -49,6 +49,44 @@ public class TreeEntityUtils<T extends TreeEntity<ID>, ID extends Serializable> 
         for (T t : tempList) {
             t.setChildren(getTree(t.getId()));
             responses.add(t);
+        }
+        return responses;
+    }
+    public List<T> getTreeAll(ID id) {
+        List<T> tempList = map.get(id);
+        if (CollectionUtils.isEmpty(tempList)) {
+            return null;
+        } else {
+            List<T> responses = new ArrayList<>();
+            for (T t : tempList) {
+                t.setChildren(getTreeAll(t.getId()));
+                responses.add(t);
+            }
+            map.remove(id);
+            return responses;
+        }
+    }
+
+    public List<T> getTreeAll() {
+        List<T> responses = getTreeAll(null);
+        if (CollectionUtils.isEmpty(responses)) {
+            responses = new ArrayList<>();
+            Set<ID> keySet = new HashSet<>(map.keySet());
+            for (ID key : keySet) {
+                List<T> tempList = getTreeAll(key);
+                if (!CollectionUtils.isEmpty(tempList)) {
+                    responses.addAll(tempList);
+                }
+            }
+        }
+        if (!map.isEmpty()) {
+            Set<ID> keySet = new HashSet<>(map.keySet());
+            for (ID key : keySet) {
+                List<T> tempList = getTreeAll(key);
+                if (!CollectionUtils.isEmpty(tempList)) {
+                    responses.addAll(tempList);
+                }
+            }
         }
         return responses;
     }

@@ -73,7 +73,7 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
         <#if field.relation == 'ONE_TO_ONE'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "${field.relationEntity?uncap_first}_id")
+    @JoinColumn(name = "${field.name}_${field.relationEntity?uncap_first}_id")
     private ${field.relationEntity} ${field.name};
 
     <#--        一对多-->
@@ -89,7 +89,7 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     @ManyToMany(targetEntity = ${field.relationEntity}.class, cascade = CascadeType.DETACH)
     @JoinTable(name = "${module.path?lower_case}_${table.name?lower_case}_${field.relationEntity?lower_case}",
         joinColumns = {@JoinColumn(name = "${table.name?lower_case}_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "${field.relationEntity?lower_case}_id", referencedColumnName = "id")})
+        inverseJoinColumns = {@JoinColumn(name = "${field.name}_${field.relationEntity?lower_case}_id", referencedColumnName = "id")})
     private List<${field.relationEntity}> ${field.name};
 
     <#--        多对一-->

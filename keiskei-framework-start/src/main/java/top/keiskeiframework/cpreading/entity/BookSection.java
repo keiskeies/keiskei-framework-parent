@@ -50,7 +50,6 @@ public class BookSection extends ListEntity<Long> {
     @ApiModelProperty(value = "章节编号", dataType="Integer")
     private Integer number;
 
-    @NotNull(message = "排序不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "排序", dataType = "ID")
     @SortBy(desc = false)
     private Long sortBy;
@@ -60,7 +59,6 @@ public class BookSection extends ListEntity<Long> {
         this.sortBy = super.getId();
     }
 
-    @NotBlank(message = "章节内容不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "章节内容", dataType="String")
     @Column(columnDefinition = "longtext")
     private String content;
