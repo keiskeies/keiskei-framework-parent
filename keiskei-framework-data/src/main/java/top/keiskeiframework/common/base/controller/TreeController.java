@@ -3,15 +3,14 @@ package top.keiskeiframework.common.base.controller;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.base.BasePage;
-import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.dto.BasePageDto;
+import top.keiskeiframework.common.base.dto.BaseRequestDto;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
-import top.keiskeiframework.common.dto.base.BaseSortDTO;
-import top.keiskeiframework.common.dto.base.TreePageImpl;
+import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.TreePageImpl;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.vo.R;
 
@@ -33,8 +32,8 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
     @GetMapping
     @ApiOperation("列表")
     public R<Page<T>> treeList(
-            BaseRequest<T, ID> request,
-            BasePage<T, ID> page,
+            BaseRequestDto<T, ID> request,
+            BasePageDto<T, ID> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         Page<T> pageList = treeService.page(request, page);
         if (tree) {
@@ -50,7 +49,7 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
     @GetMapping("/options")
     @ApiOperation("下拉框")
     public R<List<T>> tree(
-            BaseRequest<T, ID> request,
+            BaseRequestDto<T, ID> request,
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list;

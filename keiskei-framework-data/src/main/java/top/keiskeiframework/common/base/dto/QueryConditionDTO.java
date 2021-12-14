@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.dto.base;
+package top.keiskeiframework.common.base.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class QueryConditionDTO {
     private String column;
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    private BaseRequestUtils.ConditionEnum condition;
+    private ConditionEnum condition;
 
     @ApiModelProperty(value = "字段值", dataType = "String")
     private List<Object> value;

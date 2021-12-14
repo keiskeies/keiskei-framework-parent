@@ -41,12 +41,6 @@ public class BookExpand extends ListEntity<Long> {
 
     private static final long serialVersionUID = -6769552817545368272L;
 
-    @NotNull(message = "关联图书不能为空", groups = { Insert.class, Update.class })
-    @Valid
-    @ApiModelProperty(value = "关联图书", dataType = "Book")
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    private Book parentBook;
-
     @NotNull(message = "图书不能为空", groups = { Insert.class, Update.class })
     @Valid
     @ApiModelProperty(value = "图书", dataType = "Book")
@@ -59,4 +53,9 @@ public class BookExpand extends ListEntity<Long> {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private BookSection bookSection;
 
+    @NotNull(message = "关联图书不能为空", groups = { Insert.class, Update.class })
+    @Valid
+    @ApiModelProperty(value = "关联图书", dataType = "Book")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private Book expendBook;
 }

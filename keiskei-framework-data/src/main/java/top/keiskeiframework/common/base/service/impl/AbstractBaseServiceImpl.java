@@ -10,11 +10,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.base.BasePage;
-import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.dto.BasePageDto;
+import top.keiskeiframework.common.base.dto.BaseRequestDto;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.dto.base.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -71,7 +71,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public Page<T> page(BaseRequest<T, ID> request, BasePage<T, ID> page) {
+    public Page<T> page(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
         Class<T> tClass = getTClass();
         Pageable pageable = page.getPageable(tClass);
         Specification<T> specification;
@@ -117,7 +117,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findAll(BaseRequest<T, ID> request) {
+    public List<T> findAll(BaseRequestDto<T, ID> request) {
         Class<T> tClass = getTClass();
         Specification<T> specification;
 

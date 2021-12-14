@@ -1,10 +1,10 @@
 package top.keiskeiframework.common.base.service;
 
 import org.springframework.data.domain.Page;
-import top.keiskeiframework.common.base.BasePage;
-import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.dto.BasePageDto;
+import top.keiskeiframework.common.base.dto.BaseRequestDto;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.dto.base.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.io.Serializable;
@@ -28,7 +28,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param request 列表条件
      * @return .
      */
-    Page<T> page(BaseRequest<T, ID> request, BasePage<T, ID> page);
+    Page<T> page(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
 
     /**
      * 查询全部
@@ -36,7 +36,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param request 查询条件
      * @return 。
      */
-    List<T> findAll(BaseRequest<T, ID> request);
+    List<T> findAll(BaseRequestDto<T, ID> request);
 
     /**
      * 下拉框列表

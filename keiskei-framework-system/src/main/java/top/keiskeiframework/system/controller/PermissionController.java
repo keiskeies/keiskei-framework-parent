@@ -1,21 +1,10 @@
 package top.keiskeiframework.system.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.BaseRequest;
 import top.keiskeiframework.common.base.controller.TreeController;
-import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.entity.Permission;
-import top.keiskeiframework.system.service.IPermissionService;
-
-import java.util.List;
 
 /**
  * <p>

@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.dto.base.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortDTO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.util.MdcUtils;

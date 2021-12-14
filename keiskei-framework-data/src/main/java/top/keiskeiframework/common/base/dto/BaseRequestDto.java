@@ -1,24 +1,17 @@
-package top.keiskeiframework.common.base;
+package top.keiskeiframework.common.base.dto;
 
 import com.alibaba.fastjson.JSON;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.base.constants.BaseConstants;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
-import top.keiskeiframework.common.base.util.BaseRequestUtils;
+import top.keiskeiframework.common.base.dto.QueryConditionDTO;
 
+import javax.persistence.criteria.Join;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,19 +24,13 @@ import java.util.stream.Collectors;
  * </p>
  * @since 2020/11/24 23:08
  */
-public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
-    /**
-     * 默认ID字段
-     */
-    private static final String ID_COLUMN = "id";
-    private static final String PARENT_ID_COLUMN = "parentId";
-    /**
-     * 展示字段分割符
-     */
-    private static final String SHOW_SPLIT = ",";
-    private Set<String> fields;
+public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
 
-    private Set<String> getFields(Class<T> tClass) {
+    protected Map<String, Join<?, ?>> joinMap;
+
+    protected Set<String> fields;
+
+    protected Set<String> getFields(Class<T> tClass) {
         if (CollectionUtils.isEmpty(fields)) {
             fields = new HashSet<>();
             for (Field field : tClass.getDeclaredFields()) {
@@ -64,7 +51,7 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     /**
      * 查询条件
      */
-    private List<QueryConditionDTO> conditions;
+    protected List<QueryConditionDTO> conditions;
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionDTO.class);
@@ -90,12 +77,12 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     /**
      * 显示字段
      */
-    private List<String> show;
+    protected List<String> show;
     public void setShow(String show) {
         if (!StringUtils.isEmpty(show)) {
-            this.show = Arrays.stream(show.split(SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
-            if (!this.show.contains(ID_COLUMN)) {
-                this.show.add(0, ID_COLUMN);
+            this.show = Arrays.stream(show.split(BaseConstants.SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
+            if (!this.show.contains(BaseConstants.ID_COLUMN)) {
+                this.show.add(0, BaseConstants.ID_COLUMN);
             }
         }
     }
@@ -104,14 +91,20 @@ public class BaseRequest<T extends ListEntity<ID>, ID extends Serializable> {
     public List<String> getShow(Class<T> tClass) {
         if (!showEmpty()) {
             if (tClass.getSuperclass().equals(TreeEntity.class)) {
-                if (!this.show.contains(PARENT_ID_COLUMN)) {
-                    this.show.add(1, PARENT_ID_COLUMN);
+                if (!this.show.contains(BaseConstants.PARENT_ID_COLUMN)) {
+                    this.show.add(1, BaseConstants.PARENT_ID_COLUMN);
                 }
             }
         }
         if (!showEmpty()) {
             Set<String> fields = this.getFields(tClass);
-            this.show.removeIf(e ->  !fields.contains(e));
+            this.show.removeIf(e -> {
+                if (e.contains(".")) {
+                    return !fields.contains(e.substring(0, e.lastIndexOf(".")));
+                } else {
+                    return !fields.contains(e);
+                }
+            });
         }
         return this.show;
     }

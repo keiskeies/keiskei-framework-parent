@@ -43,18 +43,14 @@ public class BookFeeling extends ListEntity<Long> {
     private static final long serialVersionUID = -3275305891050571851L;
 
     @NotNull(message = "图书不能为空", groups = {Insert.class, Update.class})
-    @Valid
     @ApiModelProperty(value = "图书", dataType="Book")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Book book;
 
-    @NotBlank(message = "图书章节不能为空", groups = {Insert.class, Update.class})
-    @ApiModelProperty(value = "图书章节", dataType="String")
-    private String bookSection;
-
-    @NotNull(message = "图书章节编号不能为空", groups = {Insert.class, Update.class})
-    @ApiModelProperty(value = "图书章节编号", dataType="Integer")
-    private Integer bookSectionNumber;
+    @NotNull(message = "图书章节不能为空", groups = { Insert.class, Update.class })
+    @ApiModelProperty(value = "图书章节", dataType = "BookSection")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private BookSection bookSection;
 
     @NotBlank(message = "内容不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "内容", dataType="String")

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.keiskeiframework.common.base.BaseRequest;
+import top.keiskeiframework.common.base.dto.BaseRequestDto;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
@@ -72,7 +72,7 @@ public class LogInterceptor {
 
             StringBuilder sb = new StringBuilder();
             for (Object param : params) {
-                if (param instanceof BaseRequest) {
+                if (param instanceof BaseRequestDto) {
                     sb.append(param);
                 } else if (!(param instanceof HttpServletRequest) && !(param instanceof HttpServletResponse)) {
                     sb.append(JSON.toJSONString(param, SerializerFeature.IgnoreErrorGetter));

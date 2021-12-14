@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.dto.base;
+package top.keiskeiframework.common.base.dto;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.base.util;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.alibaba.fastjson.JSONObject;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +10,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
+import top.keiskeiframework.common.base.constants.BaseConstants;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.dto.base.QueryConditionDTO;
+import top.keiskeiframework.common.base.dto.QueryConditionDTO;
+import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.MdcUtils;
@@ -25,7 +27,6 @@ import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
+public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>  {
     @Value("${keiskei.use-department:false}")
     public void setUseDepartment(Boolean useDepartment) {
         BaseRequestUtils.useDepartment = useDepartment;
@@ -48,10 +49,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     public void setEntityManager(EntityManager entityManager) {
         BaseRequestUtils.entityManager = entityManager;
     }
-    /**
-     * 默认排序字段
-     */
-    private static final String DEFAULT_ORDER_COLUMN = "createTime";
+
     /**
      * 数据查询工具
      */
@@ -60,34 +58,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * 是否启用部门权限
      */
     private static boolean useDepartment = false;
-
-    /**
-     * 比较关系
-     */
-    public enum ConditionEnum {
-        // =
-        EQ,
-        // !=
-        NE,
-        // >=
-        GE,
-        // >
-        GT,
-        // <=
-        LE,
-        // <
-        LT,
-        // between
-        BT,
-        // like
-        LIKE,
-        // like _%
-        LL,
-        // like %_
-        LR,
-        // in
-        IN,
-    }
 
     /**
      * 获取查询的指定字段
@@ -100,15 +70,21 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show) {
         List<Selection<?>> selections = new ArrayList<>(show.size());
+        Map<String, Join<?, ?>> joinMap = new HashMap<>(show.size());
         for (String showColumn : show) {
             if (showColumn.contains(".")) {
                 String[] columns = showColumn.split("\\.");
-                Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                Join<?, ?> join = joinMap.get(columns[0]);
+                if (null == join) {
+                    join = root.join(columns[0], JoinType.LEFT);
+                    joinMap.put(columns[0], join);
+                }
                 selections.add(join.get(columns[1]));
             } else {
                 selections.add(root.get(showColumn));
             }
         }
+        joinMap.clear();
         return selections;
     }
 
@@ -161,7 +137,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         }
 
         if (CollectionUtils.isEmpty(orders)) {
-            orders.add(new OrderImpl(root.get(DEFAULT_ORDER_COLUMN), false));
+            orders.add(new OrderImpl(root.get(BaseConstants.DEFAULT_ORDER_COLUMN), false));
         }
         return orders;
     }
@@ -229,7 +205,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             }
         }
         if (CollectionUtils.isEmpty(orders)) {
-            orders.add(Sort.Order.desc(DEFAULT_ORDER_COLUMN));
+            orders.add(Sort.Order.desc(BaseConstants.DEFAULT_ORDER_COLUMN));
         }
         return Sort.by(orders);
     }
@@ -286,26 +262,23 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         List<T> contents = new ArrayList<>(tList.size());
         for (Tuple tuple : tList) {
             List<TupleElement<?>> tupleElements = tuple.getElements();
-            T t = null;
-            try {
-                t = tClass.newInstance();
-                for (int i = 0; i < tupleElements.size(); i++) {
-                    Field field;
-                    try {
-                        field = tClass.getDeclaredField(show.get(i));
-                    } catch (NoSuchFieldException | SecurityException e) {
-                        try {
-                            field = tClass.getSuperclass().getDeclaredField(show.get(i));
-                        } catch (NoSuchFieldException | SecurityException noSuchFieldException) {
-                            field = tClass.getSuperclass().getSuperclass().getDeclaredField(show.get(i));
-                        }
+            JSONObject jsonObject = new JSONObject();
+            for (int i = 0; i < tupleElements.size(); i++) {
+                String showColumn = show.get(i);
+                if (showColumn.contains(".")) {
+                    String[] showColumns = showColumn.split("\\.");
+                    JSONObject filedJsonObject = jsonObject.getJSONObject(showColumns[0]);
+                    if (null == filedJsonObject) {
+                        filedJsonObject = new JSONObject();
                     }
-                    field.setAccessible(true);
-                    field.set(t, tuple.get(i));
+                    filedJsonObject.put(showColumns[1], tuple.get(i));
+                    jsonObject.put(showColumns[0], filedJsonObject);
+
+                } else {
+                    jsonObject.put(showColumn, tuple.get(i));
                 }
-            } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
-                e.printStackTrace();
             }
+            T t = jsonObject.toJavaObject(tClass);
             contents.add(t);
         }
         return contents;
@@ -325,7 +298,12 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
-        addDepartment(predicates, builder, root);
+        if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
+            if (useDepartment) {
+                Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+                predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
+            }
+        }
         if (!CollectionUtils.isEmpty(conditions)) {
 
             Expression<?> expression;
@@ -411,22 +389,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                     break;
                 default:
                     break;
-            }
-        }
-    }
-
-    /**
-     * 添加部门条件
-     *
-     * @param predicates 总条件
-     * @param builder    组装工具
-     * @param root       实体
-     */
-    private static void addDepartment(List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
-        if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
-            if (useDepartment) {
-                Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-                predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
             }
         }
     }
