@@ -14,4 +14,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface ReaderRepository extends JpaRepository<Reader, Long>, JpaSpecificationExecutor<Reader> {
 
+    Reader findTopByWechatWebOpenid(String wechatWebOpenId);
+    Reader findTopByWechatMiniOpenid(String wechatMiniOpenId);
+    Reader findTopByUnionid(String unionid);
+
+
 }

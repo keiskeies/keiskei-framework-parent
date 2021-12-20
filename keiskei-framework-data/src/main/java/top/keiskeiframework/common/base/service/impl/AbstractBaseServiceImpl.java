@@ -140,8 +140,21 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
+    public List<T> findAllByColumn(String column, Object value) {
+        return findAll(new BaseRequestDto<>(column, value));
+    }
+
+    @Override
     public T findById(ID id) {
         return jpaRepository.findById(id).orElse(null);
+    }
+
+
+    @Override
+    public T findByColumn(String column, Object value) {
+        Example<T> example = Example.of()
+        jpaRepository.findOne()
+        return null;
     }
 
     @Override

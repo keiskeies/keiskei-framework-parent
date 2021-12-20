@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Inherited
 @Documented
 public @interface Lockable {
+    String lockName() default "";
     /**
      * 锁键值
      * 默认key为类名+方法名，可以用spel表达式自定义，加上方法参数

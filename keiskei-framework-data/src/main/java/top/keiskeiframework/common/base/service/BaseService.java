@@ -3,8 +3,8 @@ package top.keiskeiframework.common.base.service;
 import org.springframework.data.domain.Page;
 import top.keiskeiframework.common.base.dto.BasePageDto;
 import top.keiskeiframework.common.base.dto.BaseRequestDto;
-import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.io.Serializable;
@@ -54,12 +54,30 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
     List<T> findAll(T t);
 
     /**
+     * 通过单一字段查询
+     *
+     * @param column 字段名称
+     * @param value  字段值
+     * @return
+     */
+    List<T> findAllByColumn(String column, Object value);
+
+    /**
      * 根据id查询
      *
      * @param id id
      * @return .
      */
     T findById(ID id);
+
+    /**
+     * 通过单一字段查询
+     *
+     * @param column 字段名称
+     * @param value  字段值
+     * @return 。
+     */
+    T findByColumn(String column, Object value);
 
     /**
      * 新增

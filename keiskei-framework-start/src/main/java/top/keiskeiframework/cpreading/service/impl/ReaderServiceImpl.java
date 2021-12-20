@@ -1,5 +1,6 @@
 package top.keiskeiframework.cpreading.service.impl;
 
+import org.springframework.data.domain.ExampleMatcher;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.cpreading.entity.Reader;
 import top.keiskeiframework.cpreading.repository.ReaderRepository;
@@ -20,5 +21,4 @@ public class ReaderServiceImpl extends ListServiceImpl<Reader, Long> implements 
 
     @Autowired
     private ReaderRepository readerRepository;
-
 }

@@ -1,14 +1,14 @@
 package top.keiskeiframework.common.base.dto;
 
 import com.alibaba.fastjson.JSON;
+import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.constants.BaseConstants;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.base.dto.QueryConditionDTO;
+import top.keiskeiframework.common.base.enums.ConditionEnum;
 
-import javax.persistence.criteria.Join;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,9 +24,8 @@ import java.util.stream.Collectors;
  * </p>
  * @since 2020/11/24 23:08
  */
+@NoArgsConstructor
 public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
-
-    protected Map<String, Join<?, ?>> joinMap;
 
     protected Set<String> fields;
 
@@ -52,11 +51,29 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
      * 查询条件
      */
     protected List<QueryConditionDTO> conditions;
+
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionDTO.class);
         }
     }
+
+    /**
+     * 组装单一条件
+     *
+     * @param column 字段
+     * @param value  值
+     */
+    public BaseRequestDto(String column, Object value) {
+        this.conditions = Collections.singletonList(
+                new QueryConditionDTO(
+                        column,
+                        ConditionEnum.EQ,
+                        Collections.singletonList(value)
+                )
+        );
+    }
+
     public List<QueryConditionDTO> getConditions(Class<T> tClass) {
         if (!conditionEmpty()) {
             Set<String> fields = this.getFields(tClass);
@@ -70,6 +87,7 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
         }
         return this.conditions;
     }
+
     public boolean conditionEmpty() {
         return CollectionUtils.isEmpty(conditions);
     }
@@ -78,6 +96,7 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
      * 显示字段
      */
     protected List<String> show;
+
     public void setShow(String show) {
         if (!StringUtils.isEmpty(show)) {
             this.show = Arrays.stream(show.split(BaseConstants.SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
