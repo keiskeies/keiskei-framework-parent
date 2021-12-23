@@ -23,7 +23,7 @@ public class VipResponse implements Serializable {
     private static final long serialVersionUID = -6438788677327822483L;
 
     @ApiModelProperty(value = "用户信息id", dataType="Integer")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty(value = "姓名", dataType="String")
     private String name;

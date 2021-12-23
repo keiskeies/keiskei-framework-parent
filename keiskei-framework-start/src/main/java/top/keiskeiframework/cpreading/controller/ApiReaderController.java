@@ -2,6 +2,7 @@ package top.keiskeiframework.cpreading.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.HttpClientUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.cpreading.dto.*;
+import top.keiskeiframework.cpreading.entity.Reader;
+import top.keiskeiframework.cpreading.service.IReaderService;
 import top.keiskeiframework.cpreading.wechart.config.WechatPayProperties;
 import top.keiskeiframework.cpreading.wechart.dto.response.WechatUserInfoResponse;
 import top.keiskeiframework.cpreading.wechart.dto.response.WechatUserJudgeResponse;
@@ -29,16 +32,23 @@ import top.keiskeiframework.cpreading.wechart.support.WechatPaySupportService;
 import top.keiskeiframework.cpreading.wechart.util.SHA1Util;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
+/**
+ * <p>
+ * 微信用户 controller层
+ * </p>
+ *
+ * @author right_way@foxmail.com
+ * @since 2021-11-28 22:37:20
+ */
 @RestController
 @RequestMapping("/api/v2/cpreading/reader")
 @Slf4j
+@Api(tags = "碎片阅读 - 微信用户")
 public class ApiReaderController {
 
     @Autowired
@@ -47,12 +57,14 @@ public class ApiReaderController {
     private WechatPayProperties wechatPayProperties;
     @Autowired
     private CacheStorageService cacheStorageService;
+    @Autowired
+    private IReaderService readerService;
 
     private volatile static String APP_NAME = null;
     private final static int GIVE_NUM = 1000;
 
     @ApiOperation("微信H5登录")
-    @PostMapping("/login/h5")
+    @PostMapping("/wechatWeb/login")
     @Lockable(lockName = "VIP_LOGIN_LOCK_INSERT", key = "#request.wxCode")
     public R<VipResponse> loginH5(
             @Validated({Insert.class}) @RequestBody VipRequest request,
@@ -66,55 +78,37 @@ public class ApiReaderController {
         if (!StringUtils.isEmpty(wchatUserInfo.getErrcode())) {
             throw new BizException(BizExceptionEnum.ERROR);
         }
-        QueryWrapper<Customer> customerQueryWrapper = new QueryWrapper<>();
-        customerQueryWrapper.eq("wechat_openid", wechatUserJudge.getOpenid());
-
-        Customer customer = customerService.getOne(customerQueryWrapper);
-        boolean firstLogin = false;
-        if (null == customer) {
-
-            customerQueryWrapper = new QueryWrapper<>();
-            customerQueryWrapper.eq("unionid", wchatUserInfo.getUnionid());
-            customer = customerService.getOne(customerQueryWrapper);
-
-            if (null == customer) {
-                customer = new Customer();
-                customer.setCreateTime(LocalDateTime.now());
-                firstLogin = true;
+        Reader reader = readerService.findByColumn("wechatWebOpenid", wechatUserJudge.getOpenid());
+        if (null == reader) {
+            if (!StringUtils.isEmpty(wchatUserInfo.getUnionid())) {
+                reader = readerService.findByColumn("unionid", wchatUserInfo.getUnionid());
+            }
+            if (null == reader) {
+                reader = new Reader();
             }
         }
-        customer.setAvatar(wchatUserInfo.getHeadimgurl());
-        customer.setName(wchatUserInfo.getNickname());
-        customer.setCountry(wchatUserInfo.getCountry());
-        customer.setPrivilege(String.join(",", wchatUserInfo.getPrivilege()));
-        customer.setCity(wchatUserInfo.getCity());
-        customer.setSex(wchatUserInfo.getSex());
-        customer.setUnionid(wchatUserInfo.getUnionid());
-        customer.setWechatOpenid(wechatUserJudge.getOpenid());
-        customerService.saveOrUpdate(customer);
+        reader.setAvatar(wchatUserInfo.getHeadimgurl());
+        reader.setName(wchatUserInfo.getNickname());
+        reader.setCountry(wchatUserInfo.getCountry());
+        reader.setPrivilege(String.join(",", wchatUserInfo.getPrivilege()));
+        reader.setCity(wchatUserInfo.getCity());
+        reader.setSex(wchatUserInfo.getSexEnum());
+        reader.setUnionid(wchatUserInfo.getUnionid());
+        reader.setWechatWebOpenid(wechatUserJudge.getOpenid());
+        readerService.save(reader);
 
         VipResponse vipResponse = new VipResponse();
-        BeanUtils.copyPropertiesIgnoreNull(customer, vipResponse);
+        BeanUtils.copyPropertiesIgnoreNull(reader, vipResponse);
         vipResponse.setWxCode(request.getWxCode());
         vipResponse.setAppName(null);
+
         vipResponse.setToken(httpServletRequest.getSession().getId());
-
         httpServletRequest.getSession().setAttribute("user", vipResponse);
-
-        if (firstLogin) {
-            CustomerAccountRequest customerAccount = new CustomerAccountRequest();
-            customerAccount.setCustomerId(customer.getId());
-            customerAccount.setRechargeAmount(0);
-            customerAccount.setGiveAmount(GIVE_NUM);
-            customerAccountSupportService.save(customerAccount);
-
-            vipResponse.setFirstLoginMessage("首次登陆赠送您 " + (GIVE_NUM / 100D) + " 个币, 请前往钱包查看");
-        }
         return R.ok(vipResponse);
     }
 
     @ApiOperation("微信小程序获取openid")
-    @PostMapping("/openid/mini")
+    @PostMapping("/wechatMini/openid")
     @Lockable(lockName = "VIP_LOGIN_LOCK_INSERT", key = "#request.wxCode")
     public R<WechatUserJudgeResponse> getOpenid(
             @Validated({Insert.class}) @RequestBody VipMiniAppOpenidRequest request
@@ -129,7 +123,7 @@ public class ApiReaderController {
     }
 
     @ApiOperation("微信小程序登录")
-    @PostMapping("/v2/login/mini")
+    @PostMapping("/wechatMini/login")
     @Lockable(lockName = "VIP_LOGIN_LOCK_INSERT", key = "#request.wxCode")
     public R<VipResponse> loginMini(
             @Validated({Insert.class}) @RequestBody VipMiniAppRequest request,
@@ -140,118 +134,38 @@ public class ApiReaderController {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
         }
         String appName = getAppName();
-        boolean firstLogin = false;
-        QueryWrapper<Customer> customerQueryWrapper = new QueryWrapper<>();
-        customerQueryWrapper.eq("mini_app_openid", request.getOpenid());
-
-        Customer customer = customerService.getOne(customerQueryWrapper);
-        if (null == customer) {
-            customerQueryWrapper = new QueryWrapper<>();
-            customerQueryWrapper.eq("unionid", request.getUnionid());
-            customer = customerService.getOne(customerQueryWrapper);
+        Reader reader = readerService.findByColumn("wechatMiniOpenid", request.getOpenid());
+        if (!StringUtils.isEmpty(request.getUnionid())) {
+            reader = readerService.findByColumn("unionid", request.getUnionid());
         }
-        if (null == customer) {
-            customer = new Customer();
-            customer.setCreateTime(LocalDateTime.now());
-            customer.setAppName(appName);
-            firstLogin = true;
+        if (null == reader) {
+            reader = new Reader();
+            reader.setAppName(appName);
         }
-        customer.setAvatar(request.getAvatar());
-        customer.setName(request.getName());
-        customer.setCountry(request.getCountry());
-        customer.setCity(request.getCity());
-        customer.setSex(request.getSex());
-        customer.setUnionid(request.getUnionid());
-        customer.setMiniAppOpenid(request.getOpenid());
+        reader.setAvatar(request.getAvatar());
+        reader.setName(request.getName());
+        reader.setCountry(request.getCountry());
+        reader.setCity(request.getCity());
+        reader.setSex(request.getSexEnum());
+        reader.setUnionid(request.getUnionid());
+        reader.setWechatMiniOpenid(request.getOpenid());
 
-        customerService.saveOrUpdate(customer);
+        readerService.save(reader);
 
         VipResponse vipResponse = new VipResponse();
-        BeanUtils.copyPropertiesIgnoreNull(customer, vipResponse);
+        BeanUtils.copyPropertiesIgnoreNull(reader, vipResponse);
         vipResponse.setWechatOpenid(request.getOpenid());
         vipResponse.setWxCode(request.getWxCode());
         vipResponse.setToken(httpServletRequest.getSession().getId());
         vipResponse.setAppName(appName);
 
         httpServletRequest.getSession().setAttribute("user", vipResponse);
-
-
-        if (firstLogin) {
-            CustomerAccountRequest customerAccount = new CustomerAccountRequest();
-            customerAccount.setCustomerId(customer.getId());
-            customerAccount.setRechargeAmount(0);
-            customerAccount.setGiveAmount(GIVE_NUM);
-            customerAccountSupportService.save(customerAccount);
-
-            vipResponse.setFirstLoginMessage("首次登陆赠送您 " + (GIVE_NUM / 100) + " 个币, 请前往钱包查看");
-        }
         return R.ok(vipResponse);
     }
-
-    @ApiOperation("微信小程序登录")
-    @PostMapping("/login/mini")
-    @Lockable(lockName = "VIP_LOGIN_LOCK_INSERT", key = "#request.wxCode")
-    public R<VipResponse> loginMini(
-            @Validated({Insert.class}) @RequestBody VipRequest request,
-            HttpServletRequest httpServletRequest
-    ) {
-        String appName = getAppName();
-        WechatUserJudgeResponse wechatUserJudge = wechatPaySupportService.getOpenid(request.getWxCode(), AppTypeEnum.MIN_APP, appName);
-        if (!StringUtils.isEmpty(wechatUserJudge.getReturn_code())) {
-            throw new BizException(BizExceptionEnum.ERROR);
-        }
-        QueryWrapper<Customer> customerQueryWrapper = new QueryWrapper<>();
-        customerQueryWrapper.eq("mini_app_openid", wechatUserJudge.getOpenid());
-
-        Customer customer = customerService.getOne(customerQueryWrapper);
-        boolean firstLogin = false;
-        if (null == customer) {
-
-            customerQueryWrapper = new QueryWrapper<>();
-            customerQueryWrapper.eq("name", request.getName());
-            customerQueryWrapper.isNull("mini_app_openid");
-            customer = customerService.getOne(customerQueryWrapper);
-
-            if (null == customer) {
-                customer = new Customer();
-                customer.setCreateTime(LocalDateTime.now());
-                customer.setAppName(appName);
-                firstLogin = true;
-            }
-        }
-        customer.setAvatar(request.getAvatar());
-        customer.setName(request.getName());
-        customer.setCountry(request.getCountry());
-        customer.setCity(request.getCity());
-        customer.setSex(request.getSex());
-        customer.setMiniAppOpenid(wechatUserJudge.getOpenid());
-
-        customerService.saveOrUpdate(customer);
-
-        VipResponse vipResponse = new VipResponse();
-        BeanUtils.copyPropertiesIgnoreNull(customer, vipResponse);
-        vipResponse.setWechatOpenid(wechatUserJudge.getOpenid());
-        vipResponse.setWxCode(request.getWxCode());
-        vipResponse.setToken(httpServletRequest.getSession().getId());
-
-        httpServletRequest.getSession().setAttribute("user", vipResponse);
-
-        if (firstLogin) {
-            CustomerAccountRequest customerAccount = new CustomerAccountRequest();
-            customerAccount.setCustomerId(customer.getId());
-            customerAccount.setRechargeAmount(0);
-            customerAccount.setGiveAmount(GIVE_NUM);
-            customerAccountSupportService.save(customerAccount);
-
-            vipResponse.setFirstLoginMessage("首次登陆赠送您 " + (GIVE_NUM / 100) + " 个币, 请前往钱包查看");
-        }
-        return R.ok(vipResponse);
-    }
-
 
 
     @ApiOperation("获取微信信息")
-    @PostMapping("/getWxInfo/h5")
+    @PostMapping("/wechatWeb/getWxInfo")
     public R<Map<String, String>> getWxInfo(@Validated @RequestBody TicketRequest request) throws Exception {
 
         String timestamp = (System.currentTimeMillis() / 1000) + "";

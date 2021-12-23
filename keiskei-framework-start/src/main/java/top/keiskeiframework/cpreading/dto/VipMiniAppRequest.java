@@ -3,7 +3,8 @@ package top.keiskeiframework.cpreading.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.apache.ibatis.annotations.Insert;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.cpreading.enums.ReaderSexEnum;
 
 import javax.validation.constraints.NotBlank;
 
@@ -53,6 +54,10 @@ public class VipMiniAppRequest {
     @ApiModelProperty(value = "unionid", dataType="String")
     private String unionid;
 
+
+    public ReaderSexEnum getSexEnum() {
+        return ReaderSexEnum.convert(this.sex);
+    }
 
 
 

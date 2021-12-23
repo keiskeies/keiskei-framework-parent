@@ -3,7 +3,7 @@ package top.keiskeiframework.cpreading.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.apache.ibatis.annotations.Insert;
+import top.keiskeiframework.common.annotation.validate.Insert;
 
 import javax.validation.constraints.NotBlank;
 
@@ -18,15 +18,13 @@ import javax.validation.constraints.NotBlank;
  */
 
 @Data
-@ApiModel(value="VipMiniAppOpenidRequest", description="用户信息 前台请求类")
+@ApiModel(value = "VipMiniAppOpenidRequest", description = "用户信息 前台请求类")
 public class VipMiniAppOpenidRequest {
 
 
-    @ApiModelProperty(value = "wxCode", dataType="String")
+    @ApiModelProperty(value = "wxCode", dataType = "String")
     @NotBlank(message = "wxCode为空", groups = {Insert.class})
     private String wxCode;
-
-
 
 
 }

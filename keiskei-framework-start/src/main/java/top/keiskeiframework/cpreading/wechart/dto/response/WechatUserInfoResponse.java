@@ -2,6 +2,7 @@ package top.keiskeiframework.cpreading.wechart.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.keiskeiframework.cpreading.enums.ReaderSexEnum;
 
 import java.util.List;
 
@@ -40,4 +41,8 @@ public class WechatUserInfoResponse {
     private String headimgurl;
     private String unionid;
     private List<String> privilege;
+
+    public ReaderSexEnum getSexEnum() {
+        return ReaderSexEnum.convert(this.sex);
+    }
 }

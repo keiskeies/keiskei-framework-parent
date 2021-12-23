@@ -70,8 +70,14 @@ public class Reader extends ListEntity<Long> {
     @ApiModelProperty(value = "微信唯一标识", dataType="String")
     private String unionid;
 
+    @ApiModelProperty(value = "微信小程序名称", dataType="String")
+    private String appName;
+
     @ApiModelProperty(value = "微信特权", dataType="String")
     private String privilege;
+    private String province;
+    private String city;
+    private String country;
 
     @ApiModelProperty(value = "抖音OPENID", dataType="String")
     private String tiktokOpenid;

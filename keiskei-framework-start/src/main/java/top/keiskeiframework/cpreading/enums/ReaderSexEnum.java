@@ -13,12 +13,19 @@ import lombok.Getter;
  * @since 2021-11-28 22:37:20
  */
 public enum ReaderSexEnum {
+    // 未知
+    NONE,
 
-    // 女
-    FEMAIE,
     // 男
     MALE,
+
+    // 女
+    FEMALE,
     ;
+
+    public static ReaderSexEnum convert(int index) {
+        return ReaderSexEnum.values()[index];
+    }
 
 
 }

@@ -152,9 +152,22 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public T findByColumn(String column, Object value) {
-        Example<T> example = Example.of()
-        jpaRepository.findOne()
-        return null;
+        Class<T> tClass = getTClass();
+
+        try {
+            T t = tClass.newInstance();
+            Field field = tClass.getDeclaredField(column);
+            field.setAccessible(true);
+            field.set(t, value);
+
+            Example<T> example = Example.of(t);
+            Optional<T> optionalT = jpaRepository.findOne(example);
+
+            return optionalT.orElse(null);
+        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -261,7 +274,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         }
 
         Expression<LocalDateTime> expression = root.get(timeField);
-        predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
+        if (null != chartRequestDTO.getStart() && null != chartRequestDTO.getEnd()) {
+            predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
+        }
 
         if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
             for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {

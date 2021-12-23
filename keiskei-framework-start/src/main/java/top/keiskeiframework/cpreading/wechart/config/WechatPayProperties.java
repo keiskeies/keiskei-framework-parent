@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "keiskei.wechat-pay")
+@ConfigurationProperties(prefix = "keiskei.wechat")
 public class WechatPayProperties {
 
     private String appId;
