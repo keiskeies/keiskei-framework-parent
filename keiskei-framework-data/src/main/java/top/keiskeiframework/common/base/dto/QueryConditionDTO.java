@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class QueryConditionDTO {
     private ConditionEnum condition;
 
     @ApiModelProperty(value = "字段值", dataType = "String")
-    private List<Object> value;
+    private List<? extends Serializable> value;
 
 
 }

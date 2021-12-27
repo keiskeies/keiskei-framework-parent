@@ -327,7 +327,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             for (QueryConditionDTO condition : conditions) {
                 String column = condition.getColumn();
 
-                List<Object> values = condition.getValue();
+                List<?> values = condition.getValue();
                 if (CollectionUtils.isEmpty(values)) {
                     continue;
                 }

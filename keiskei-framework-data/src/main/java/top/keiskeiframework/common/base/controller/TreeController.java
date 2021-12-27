@@ -50,16 +50,17 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
     @ApiOperation("下拉框")
     public R<List<T>> tree(
             BaseRequestDto<T, ID> request,
+            BasePageDto<T, ID> page,
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list;
         if (request.requestEmpty()) {
             list = treeService.findAll();
         } else {
-            list = treeService.findAll(request);
+            list = treeService.findAll(request, page);
         }
         if (tree) {
-            return R.ok(new TreeEntityUtils<>(list).getTree(id));
+            return R.ok(new TreeEntityUtils<>(list).getTreeAll(id));
         } else {
             return R.ok(list);
         }

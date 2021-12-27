@@ -64,7 +64,7 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
      * @param column 字段
      * @param value  值
      */
-    public BaseRequestDto(String column, Object value) {
+    public BaseRequestDto(String column, Serializable value) {
         this.conditions = Collections.singletonList(
                 new QueryConditionDTO(
                         column,

@@ -62,7 +62,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param value  字段值
      * @return
      */
-    List<T> findAllByColumn(String column, Object value);
+    List<T> findAllByColumn(String column, Serializable value);
 
     /**
      * 根据id查询
@@ -79,7 +79,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param value  字段值
      * @return 。
      */
-    T findByColumn(String column, Object value);
+    T findByColumn(String column, Serializable value);
 
     /**
      * 新增

@@ -58,12 +58,12 @@ public class BookFeeling extends TreeEntity<Long> {
     private String content;
 
     @ApiModelProperty(value = "回复数量", dataType = "Long")
-    private Long replyNum;
+    private Long replyNum = 0L;
 
     @ApiModelProperty(value = "评论等级", dataType = "Integer")
     private Integer level = 1;
 
     @ApiModelProperty(value = "点赞数量", dataType = "Long")
-    private Long likeNum;
+    private Long likeNum = 0L;
 
 }

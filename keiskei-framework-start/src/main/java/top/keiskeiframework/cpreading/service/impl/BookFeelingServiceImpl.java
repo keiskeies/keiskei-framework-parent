@@ -1,6 +1,7 @@
 package top.keiskeiframework.cpreading.service.impl;
 
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
+import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.cpreading.entity.BookFeeling;
 import top.keiskeiframework.cpreading.repository.BookFeelingRepository;
 import top.keiskeiframework.cpreading.service.IBookFeelingService;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2021-11-28 22:37:20
  */
 @Service
-public class BookFeelingServiceImpl extends ListServiceImpl<BookFeeling, Long> implements IBookFeelingService {
+public class BookFeelingServiceImpl extends TreeServiceImpl<BookFeeling, Long> implements IBookFeelingService {
 
     @Autowired
     private BookFeelingRepository bookFeelingRepository;

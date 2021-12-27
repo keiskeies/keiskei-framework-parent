@@ -163,7 +163,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findAllByColumn(String column, Object value) {
+    public List<T> findAllByColumn(String column, Serializable value) {
         return findAll(new BaseRequestDto<>(column, value));
     }
 
@@ -174,7 +174,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
 
     @Override
-    public T findByColumn(String column, Object value) {
+    public T findByColumn(String column, Serializable value) {
         Class<T> tClass = getTClass();
 
         try {
