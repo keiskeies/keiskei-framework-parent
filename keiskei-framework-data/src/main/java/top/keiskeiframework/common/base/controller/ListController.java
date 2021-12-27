@@ -40,8 +40,8 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
 
     @GetMapping("/options")
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestDto<T, ID> request) {
-        return R.ok(listService.findAll(request));
+    public R<List<T>> options(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+        return R.ok(listService.findAll(request, page));
     }
 
     @GetMapping("/{id}")
@@ -52,8 +52,14 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
 
     @PostMapping
     @ApiOperation("新增")
-    public R<T> save(@RequestBody @Validated({Insert.class}) T fieldInfo) {
-        return R.ok(listService.saveAndNotify(fieldInfo));
+    public R<T> save(@RequestBody @Validated({Insert.class}) T t) {
+        return R.ok(listService.saveAndNotify(t));
+    }
+
+    @PostMapping("/multi")
+    @ApiOperation("新增")
+    public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
+        return R.ok(listService.saveAll(ts));
     }
 
     @PutMapping

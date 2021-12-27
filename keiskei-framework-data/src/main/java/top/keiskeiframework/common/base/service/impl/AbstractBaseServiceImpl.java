@@ -33,6 +33,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -74,30 +75,25 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     public Page<T> page(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
         Class<T> tClass = getTClass();
         Pageable pageable = page.getPageable(tClass);
-        Specification<T> specification;
+
+        Specification<T> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
 
         if (request.showEmpty()) {
-            specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-            };
             return jpaSpecificationExecutor.findAll(specification, pageable);
         } else {
-            AtomicReference<CriteriaQuery<Tuple>> criteriaQueryAtomicReference = new AtomicReference<>();
-            AtomicReference<Predicate[]> predicatesAtomicReference = new AtomicReference<>();
-
-            specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-                predicatesAtomicReference.set(predicates.toArray(new Predicate[0]));
-                criteriaQueryAtomicReference.set(criteriaBuilder.createTupleQuery());
-                return criteriaBuilder.and(predicatesAtomicReference.get());
-            };
             long total = jpaSpecificationExecutor.count(specification);
-            CriteriaQuery<Tuple> query = criteriaQueryAtomicReference.get();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Tuple> query = builder.createTupleQuery();
             Root<T> root = query.from(tClass);
-            query.where(predicatesAtomicReference.get());
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass)));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc()));
+            Map<String, Join<?, ?>> joinMap = new ConcurrentHashMap<>();
+
+            Predicate predicate = specification.toPredicate(root, query, builder);
+            query.where(predicate);
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc(), joinMap));
             List<T> contents = BaseRequestUtils.queryDataList(query, page.getPage(), page.getSize(), request.getShow(tClass), tClass);
             return new PageImpl<T>(contents, pageable, total);
         }
@@ -119,10 +115,10 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public List<T> findAll(BaseRequestDto<T, ID> request) {
         Class<T> tClass = getTClass();
-        Specification<T> specification;
+
 
         if (request.showEmpty()) {
-            specification = (root, query, criteriaBuilder) -> {
+            Specification<T> specification = (root, query, criteriaBuilder) -> {
                 List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             };
@@ -131,10 +127,37 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
             Root<T> root = query.from(tClass);
+            Map<String, Join<?, ?>> joinMap = new HashMap<>();
+
             List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
             query.where(predicates.toArray(new Predicate[0]));
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass)));
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
             query.orderBy(BaseRequestUtils.getOrders(root, tClass));
+            return BaseRequestUtils.queryDataList(query, request.getShow(tClass), tClass);
+        }
+    }
+
+    @Override
+    public List<T> findAll(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+        Class<T> tClass = getTClass();
+
+
+        if (request.showEmpty()) {
+            Specification<T> specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            };
+            return jpaSpecificationExecutor.findAll(specification);
+        } else {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
+            Root<T> root = query.from(tClass);
+            Map<String, Join<?, ?>> joinMap = new HashMap<>();
+
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
+            query.where(predicates.toArray(new Predicate[0]));
+            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc(), joinMap));
             return BaseRequestUtils.queryDataList(query, request.getShow(tClass), tClass);
         }
     }

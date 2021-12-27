@@ -34,8 +34,10 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * 查询全部
      *
      * @param request 查询条件
+     * @param page 只使用排序
      * @return 。
      */
+    List<T> findAll(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
     List<T> findAll(BaseRequestDto<T, ID> request);
 
     /**

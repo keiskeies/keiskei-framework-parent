@@ -46,20 +46,16 @@ public class BookAuthor extends ListEntity<Long> {
     @ApiModelProperty(value = "姓名", dataType="String")
     private String name;
 
-    @NotNull(message = "来源不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "来源", dataType="String")
     private BookAuthorSourceEnum source;
 
-    @NotBlank(message = "作者简介不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "作者简介", dataType="String")
     @Column(columnDefinition = "longtext")
     private String content;
 
-    @NotNull(message = "上一次更新者不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "上一次更新者", dataType="Integer")
     private Integer lastUpdateUserId;
 
-    @NotNull(message = "更新次数不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "更新次数", dataType="Integer")
     private Integer updateTimes;
 

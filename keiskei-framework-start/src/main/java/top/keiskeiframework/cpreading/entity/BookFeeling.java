@@ -38,7 +38,7 @@ import java.util.*;
 @Entity
 @Table(name = "cpreading_book_feeling")
 @ApiModel(value="BookFeeling", description="图书感悟")
-public class BookFeeling extends ListEntity<Long> {
+public class BookFeeling extends TreeEntity<Long> {
 
     private static final long serialVersionUID = -3275305891050571851L;
 
@@ -56,5 +56,14 @@ public class BookFeeling extends ListEntity<Long> {
     @ApiModelProperty(value = "内容", dataType="String")
     @Column(columnDefinition = "mediumtext")
     private String content;
+
+    @ApiModelProperty(value = "回复数量", dataType = "Long")
+    private Long replyNum;
+
+    @ApiModelProperty(value = "评论等级", dataType = "Integer")
+    private Integer level = 1;
+
+    @ApiModelProperty(value = "点赞数量", dataType = "Long")
+    private Long likeNum;
 
 }

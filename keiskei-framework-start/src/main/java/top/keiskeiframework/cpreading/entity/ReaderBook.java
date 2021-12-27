@@ -1,6 +1,7 @@
 package top.keiskeiframework.cpreading.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import org.springframework.data.annotation.CreatedDate;
 import top.keiskeiframework.common.base.entity.*;
 import top.keiskeiframework.common.util.data.*;
 import lombok.*;
@@ -48,11 +49,11 @@ public class ReaderBook extends ListEntity<Long> {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Book book;
 
-    @NotNull(message = "阅读开始不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "阅读开始", dataType="LocalDate")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @CreatedDate
     private LocalDate startDate;
 
     @ApiModelProperty(value = "阅读结束", dataType="LocalDate")
@@ -61,8 +62,6 @@ public class ReaderBook extends ListEntity<Long> {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @NotNull(message = "读者不能为空", groups = {Insert.class, Update.class})
-    @Valid
     @ApiModelProperty(value = "读者", dataType="Reader")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Reader reader;

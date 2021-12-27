@@ -68,9 +68,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID> ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show, Map<String, Join<?, ?>> joinMap) {
         List<Selection<?>> selections = new ArrayList<>(show.size());
-        Map<String, Join<?, ?>> joinMap = new HashMap<>(show.size());
+
         for (String showColumn : show) {
             if (showColumn.contains(".")) {
                 String[] columns = showColumn.split("\\.");
@@ -84,7 +84,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                 selections.add(root.get(showColumn));
             }
         }
-        joinMap.clear();
         return selections;
     }
 
@@ -99,19 +98,36 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID>   ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc, Map<String, Join<?, ?>> joinMap) {
         List<Order> orders = new ArrayList<>();
         if (tClass.getSuperclass().equals(TreeEntity.class)) {
             orders.add(new OrderImpl(root.get("parentId"), true));
         }
-
         if (!StringUtils.isEmpty(desc)) {
-            orders.add(new OrderImpl(root.get(desc), false));
+            for(String sc : desc.split(",")) {
+                orders.add(getOrderImpl(root, sc, false, joinMap));
+            }
         }
         if (!StringUtils.isEmpty(asc)) {
-            orders.add(new OrderImpl(root.get(asc), true));
+            for(String sc : asc.split(",")) {
+                orders.add(getOrderImpl(root, sc, true, joinMap));
+            }
         }
         return getOrders(root, tClass, orders);
+    }
+
+    private static <T extends ListEntity<ID>, ID extends Serializable> OrderImpl getOrderImpl(Root<T> root, String sc, boolean asc, Map<String, Join<?, ?>> joinMap) {
+        if (sc.contains(".")) {
+            String[] columns = sc.split("\\.");
+            Join<?, ?> join = joinMap.get(columns[0]);
+            if (null == join) {
+                join = root.join(columns[0], JoinType.LEFT);
+                joinMap.put(columns[0], join);
+            }
+            return new OrderImpl(join.get(columns[1]), asc);
+        } else {
+            return new OrderImpl(root.get(sc), asc);
+        }
     }
 
     /**
@@ -305,6 +321,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             }
         }
         if (!CollectionUtils.isEmpty(conditions)) {
+            Map<String, Join<?, ?>> joinMap = new HashMap<>();
 
             Expression<?> expression;
             for (QueryConditionDTO condition : conditions) {
@@ -317,7 +334,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                 // 若为关联表
                 if (column.contains(".")) {
                     String[] columns = column.split("\\.");
-                    Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                    Join<?, ?> join = joinMap.get(columns[0]);
+                    if (null == join) {
+                        join = root.join(columns[0], JoinType.INNER);
+                        joinMap.put(columns[0], join);
+                    }
                     expression = join.get(columns[1]);
                 } else {
                     expression = root.get(column);

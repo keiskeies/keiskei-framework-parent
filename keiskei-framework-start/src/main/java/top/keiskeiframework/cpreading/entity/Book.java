@@ -55,11 +55,9 @@ public class Book extends ListEntity<Long> {
         inverseJoinColumns = {@JoinColumn(name = "bookauthor_id", referencedColumnName = "id")})
     private List<BookAuthor> authors;
 
-    @NotBlank(message = "译者不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "译者", dataType="String")
     private String translator;
 
-    @NotBlank(message = "主图不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "主图", dataType="String")
     private String image;
 
@@ -71,7 +69,6 @@ public class Book extends ListEntity<Long> {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private BookType type;
 
-    @NotBlank(message = "出版社不能为空", groups = {Insert.class, Update.class})
     @ApiModelProperty(value = "出版社", dataType="String")
     private String publication;
 

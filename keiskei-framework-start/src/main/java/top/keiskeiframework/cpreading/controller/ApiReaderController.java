@@ -63,6 +63,7 @@ public class ApiReaderController {
     private volatile static String APP_NAME = null;
     private final static int GIVE_NUM = 1000;
 
+
     @ApiOperation("微信H5登录")
     @PostMapping("/wechatWeb/login")
     @Lockable(lockName = "VIP_LOGIN_LOCK_INSERT", key = "#request.wxCode")
