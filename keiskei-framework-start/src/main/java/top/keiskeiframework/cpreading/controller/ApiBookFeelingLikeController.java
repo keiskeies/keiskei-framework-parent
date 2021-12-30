@@ -1,13 +1,15 @@
 package top.keiskeiframework.cpreading.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.keiskeiframework.common.base.controller.ListController;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.cpreading.entity.BookFeeling;
+import top.keiskeiframework.cpreading.entity.BookFeelingLike;
+import top.keiskeiframework.cpreading.service.IBookFeelingLikeService;
 import top.keiskeiframework.cpreading.service.IBookFeelingService;
 
 /**
@@ -19,12 +21,12 @@ import top.keiskeiframework.cpreading.service.IBookFeelingService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/api/v2/cpreading/bookFeeling")
+@RequestMapping("/api/v2/cpreading/bookFeelingLike")
 @Api(tags = "碎片阅读 - 图书感悟")
-public class ApiBookFeelingController {
+public class ApiBookFeelingLikeController extends ListController<BookFeelingLike, Long> {
 
     @Autowired
-    private IBookFeelingService bookFeelingService;
+    private IBookFeelingLikeService bookFeelingLikeService;
 
 
 }

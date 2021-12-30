@@ -22,4 +22,14 @@ public class BookFeelingServiceImpl extends TreeServiceImpl<BookFeeling, Long> i
     @Autowired
     private BookFeelingRepository bookFeelingRepository;
 
+    @Override
+    public int addLike(Long id) {
+        return bookFeelingRepository.addLikeNum(id);
+    }
+
+    @Override
+    public int delLike(Long id) {
+        return bookFeelingRepository.delLikeNum(id);
+    }
+
 }

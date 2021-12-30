@@ -12,5 +12,17 @@ import top.keiskeiframework.cpreading.entity.BookFeeling;
  * @since 2021-11-28 22:37:20
  */
 public interface IBookFeelingService extends BaseService<BookFeeling, Long> {
+    /**
+     * 点赞
+     * @param id 。
+     * @return 。
+     */
+    int addLike(Long id);
 
+    /**
+     * 取消赞
+     * @param id 。
+     * @return 。
+     */
+    int delLike(Long id);
 }

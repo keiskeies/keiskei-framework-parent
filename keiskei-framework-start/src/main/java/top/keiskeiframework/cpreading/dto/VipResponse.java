@@ -28,6 +28,9 @@ public class VipResponse implements Serializable {
     @ApiModelProperty(value = "姓名", dataType="String")
     private String name;
 
+    @ApiModelProperty(value = "昵称", dataType="String")
+    private String nickName;
+
     @ApiModelProperty(value = "手机号", dataType="String")
     private String phone;
 

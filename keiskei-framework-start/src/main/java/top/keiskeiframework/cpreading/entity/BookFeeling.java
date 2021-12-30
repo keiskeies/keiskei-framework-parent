@@ -57,6 +57,18 @@ public class BookFeeling extends TreeEntity<Long> {
     @Column(columnDefinition = "mediumtext")
     private String content;
 
+    @ApiModelProperty(value = "读者", dataType="Reader")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private Reader reader;
+
+    @PostPersist
+    private void postPersist() {
+        Reader reader = new Reader();
+        reader.setId(super.createUserId);
+        this.reader = reader;
+
+    }
+
     @ApiModelProperty(value = "回复数量", dataType = "Long")
     private Long replyNum = 0L;
 

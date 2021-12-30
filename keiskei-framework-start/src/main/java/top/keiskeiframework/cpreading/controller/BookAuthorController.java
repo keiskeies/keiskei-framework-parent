@@ -18,7 +18,7 @@ import top.keiskeiframework.cpreading.service.IBookAuthorService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/{api:api|admin}/v2/cpreading/bookAuthor")
+@RequestMapping("/admin/v2/cpreading/bookAuthor")
 @Api(tags = "碎片阅读 - 图书作者")
 public class BookAuthorController extends ListController<BookAuthor, Long>{
 

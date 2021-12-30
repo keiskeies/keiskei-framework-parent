@@ -36,7 +36,6 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
                 operateLog.setType(type);
                 operateLogService.save(operateLog);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

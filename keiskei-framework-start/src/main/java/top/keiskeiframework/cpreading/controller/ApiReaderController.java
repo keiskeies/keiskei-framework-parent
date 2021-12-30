@@ -23,13 +23,13 @@ import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.cpreading.dto.*;
 import top.keiskeiframework.cpreading.entity.Reader;
 import top.keiskeiframework.cpreading.service.IReaderService;
-import top.keiskeiframework.cpreading.wechart.config.WechatPayProperties;
-import top.keiskeiframework.cpreading.wechart.dto.response.WechatUserInfoResponse;
-import top.keiskeiframework.cpreading.wechart.dto.response.WechatUserJudgeResponse;
-import top.keiskeiframework.cpreading.wechart.enums.AppTypeEnum;
-import top.keiskeiframework.cpreading.wechart.sdk.WXPayUtil;
-import top.keiskeiframework.cpreading.wechart.support.WechatPaySupportService;
-import top.keiskeiframework.cpreading.wechart.util.SHA1Util;
+import top.keiskeiframework.cpreading.config.WechatPayProperties;
+import top.keiskeiframework.cpreading.dto.wechat.WechatUserInfoResponse;
+import top.keiskeiframework.cpreading.dto.wechat.WechatUserJudgeResponse;
+import top.keiskeiframework.cpreading.enums.AppTypeEnum;
+import top.keiskeiframework.cpreading.sdk.WXPayUtil;
+import top.keiskeiframework.cpreading.support.WechatPaySupportService;
+import top.keiskeiframework.cpreading.util.SHA1Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -99,7 +99,12 @@ public class ApiReaderController {
         readerService.save(reader);
 
         VipResponse vipResponse = new VipResponse();
-        BeanUtils.copyPropertiesIgnoreNull(reader, vipResponse);
+        vipResponse.setId(reader.getId());
+        vipResponse.setName(reader.getName());
+        vipResponse.setNickName(reader.getNikeName());
+        vipResponse.setAvatar(reader.getAvatar());
+        vipResponse.setPhone(reader.getPhone());
+        vipResponse.setWechatOpenid(reader.getWechatWebOpenid());
         vipResponse.setWxCode(request.getWxCode());
         vipResponse.setAppName(null);
 
@@ -154,7 +159,11 @@ public class ApiReaderController {
         readerService.save(reader);
 
         VipResponse vipResponse = new VipResponse();
-        BeanUtils.copyPropertiesIgnoreNull(reader, vipResponse);
+        vipResponse.setId(reader.getId());
+        vipResponse.setName(reader.getName());
+        vipResponse.setNickName(reader.getNikeName());
+        vipResponse.setAvatar(reader.getAvatar());
+        vipResponse.setPhone(reader.getPhone());
         vipResponse.setWechatOpenid(request.getOpenid());
         vipResponse.setWxCode(request.getWxCode());
         vipResponse.setToken(httpServletRequest.getSession().getId());

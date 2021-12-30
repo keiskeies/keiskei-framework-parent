@@ -18,7 +18,7 @@ import top.keiskeiframework.cpreading.service.IReaderService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/{api:api|admin}/v2/cpreading/reader")
+@RequestMapping("/admin/v2/cpreading/reader")
 @Api(tags = "碎片阅读 - 读者管理")
 public class ReaderController extends ListController<Reader, Long>{
 
