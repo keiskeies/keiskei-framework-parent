@@ -168,6 +168,16 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
+    public Long count(BaseRequestDto<T, ID> request) {
+        Class<T> tClass = getTClass();
+        Specification<T> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+        return jpaSpecificationExecutor.count(specification);
+    }
+
+    @Override
     public T findById(ID id) {
         return jpaRepository.findById(id).orElse(null);
     }

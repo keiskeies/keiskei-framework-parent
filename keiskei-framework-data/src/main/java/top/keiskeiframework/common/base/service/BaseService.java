@@ -65,6 +65,12 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
     List<T> findAllByColumn(String column, Serializable value);
 
     /**
+     * 查询数量
+     * @param request
+     * @return
+     */
+    Long count(BaseRequestDto<T, ID> request);
+    /**
      * 根据id查询
      *
      * @param id id

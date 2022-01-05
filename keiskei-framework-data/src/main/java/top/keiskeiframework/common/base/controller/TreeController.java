@@ -45,6 +45,11 @@ public class TreeController<T extends TreeEntity<ID>, ID extends Serializable> {
     }
 
 
+    @GetMapping("/count")
+    @ApiOperation("数量")
+    public R<Long> options(BaseRequestDto<T, ID> request) {
+        return R.ok(treeService.count(request));
+    }
 
     @GetMapping("/options")
     @ApiOperation("下拉框")

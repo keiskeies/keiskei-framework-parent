@@ -38,6 +38,12 @@ public class ListController<T extends ListEntity<ID>, ID extends Serializable> {
     }
 
 
+    @GetMapping("/count")
+    @ApiOperation("数量")
+    public R<Long> options(BaseRequestDto<T, ID> request) {
+        return R.ok(listService.count(request));
+    }
+
     @GetMapping("/options")
     @ApiOperation("下拉框")
     public R<List<T>> options(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
