@@ -34,7 +34,6 @@ import java.util.Map;
  * @since : 2019/7/13 16:14
  */
 @Configuration
-@EnableCaching
 @Slf4j
 public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
 

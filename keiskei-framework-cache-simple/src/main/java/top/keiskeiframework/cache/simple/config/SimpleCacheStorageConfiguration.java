@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
  * @since : 2019/7/13 16:14
  */
 @Configuration
-@EnableCaching
 @Slf4j
 public class SimpleCacheStorageConfiguration extends CachingConfigurerSupport {
 
