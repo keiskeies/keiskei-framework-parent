@@ -6,6 +6,7 @@ import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
+import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.cpreading.entity.Book;
 import top.keiskeiframework.cpreading.entity.BookType;
 import top.keiskeiframework.cpreading.entity.Reader;
@@ -43,11 +44,11 @@ public class ReaderBookServiceImpl extends ListServiceImpl<ReaderBook, Long> imp
         Root<ReaderBook> root = query.from(ReaderBook.class);
 
         List<Predicate> predicates = new ArrayList<>();
-//
-//        Join<ReaderBook, Reader> readerJoin = root.join("reader", JoinType.INNER);
-//        Expression<Long> readerExpression = readerJoin.get("id");
-//        predicates.add(criteriaBuilder.equal(readerExpression, readerId));
-//        query.where(predicates.toArray(new Predicate[0]));
+
+        Join<ReaderBook, Reader> readerJoin = root.join("reader", JoinType.INNER);
+        Expression<Long> readerExpression = readerJoin.get("id");
+        predicates.add(criteriaBuilder.equal(readerExpression, MdcUtils.getLongUserId()));
+        query.where(predicates.toArray(new Predicate[0]));
 
 
         Join<ReaderBook, Book> bookJoin = root.join("book", JoinType.INNER);
@@ -85,11 +86,11 @@ public class ReaderBookServiceImpl extends ListServiceImpl<ReaderBook, Long> imp
         Root<ReaderBook> root = query.from(ReaderBook.class);
 
         List<Predicate> predicates = new ArrayList<>();
-//
-//        Join<ReaderBook, Reader> readerJoin = root.join("reader", JoinType.INNER);
-//        Expression<Long> readerExpression = readerJoin.get("id");
-//        predicates.add(criteriaBuilder.equal(readerExpression, readerId));
-//
+
+        Join<ReaderBook, Reader> readerJoin = root.join("reader", JoinType.INNER);
+        Expression<Long> readerExpression = readerJoin.get("id");
+        predicates.add(criteriaBuilder.equal(readerExpression, MdcUtils.getLongUserId()));
+
 
 
         Join<ReaderBook, Book> bookJoin = root.join("book", JoinType.INNER);
@@ -112,6 +113,11 @@ public class ReaderBookServiceImpl extends ListServiceImpl<ReaderBook, Long> imp
         chartRequestDTO.setColumn("createTime");
         chartRequestDTO.setColumnType(ColumnType.TIME);
         chartRequestDTO.setTimeDelta(timeDelta);
+
+        Map<String, List<String>> conditions = new HashMap<>(1);
+        conditions.put("createUserId", Collections.singletonList(MdcUtils.getUserId()));
+
+        chartRequestDTO.setConditions(conditions);
 
         Map<String, Double> data = getChartOptions(chartRequestDTO);
         if (!CollectionUtils.isEmpty(data)) {

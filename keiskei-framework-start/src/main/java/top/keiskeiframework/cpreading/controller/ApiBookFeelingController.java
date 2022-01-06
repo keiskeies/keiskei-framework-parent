@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.base.controller.TreeController;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.cpreading.entity.BookFeeling;
 import top.keiskeiframework.cpreading.service.IBookFeelingService;
@@ -21,7 +22,7 @@ import top.keiskeiframework.cpreading.service.IBookFeelingService;
 @RestController
 @RequestMapping("/api/v2/cpreading/bookFeeling")
 @Api(tags = "碎片阅读 - 图书感悟")
-public class ApiBookFeelingController {
+public class ApiBookFeelingController extends TreeController<BookFeeling, Long> {
 
     @Autowired
     private IBookFeelingService bookFeelingService;

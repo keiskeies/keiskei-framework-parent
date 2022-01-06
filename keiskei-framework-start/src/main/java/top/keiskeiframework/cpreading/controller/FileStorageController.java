@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2021/11/29 11:53
  */
 @Controller
-@RequestMapping("/admin/v2/cpreading/file")
+@RequestMapping("/{api:api|admin}/v2/cpreading/file")
 public class FileStorageController {
 
     @Autowired

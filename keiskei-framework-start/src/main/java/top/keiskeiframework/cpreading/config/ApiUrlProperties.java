@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,5 +17,5 @@ import java.util.List;
 @Data
 @ConfigurationProperties(prefix = "keiskei.api-url")
 public class ApiUrlProperties {
-    private List<String> permitUri;
+    private List<String> permitUri = new ArrayList<>();
 }

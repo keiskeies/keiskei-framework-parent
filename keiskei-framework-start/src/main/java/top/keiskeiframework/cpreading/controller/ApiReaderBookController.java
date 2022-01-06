@@ -3,9 +3,14 @@ package top.keiskeiframework.cpreading.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.base.dto.BasePageDto;
+import top.keiskeiframework.common.base.dto.BaseRequestDto;
+import top.keiskeiframework.common.base.dto.QueryConditionDTO;
 import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
+import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.cpreading.entity.Book;
 import top.keiskeiframework.cpreading.entity.ReaderBook;
@@ -31,6 +36,14 @@ public class ApiReaderBookController extends ListController<ReaderBook, Long> {
 
     @Autowired
     private IReaderBookService readerBookService;
+
+    @Override
+    @GetMapping
+    @ApiOperation("列表")
+    public R<Page<ReaderBook>> list(BaseRequestDto<ReaderBook, Long> request, BasePageDto<ReaderBook, Long> page) {
+        request.addCondition(new QueryConditionDTO("reader.id", MdcUtils.getLongUserId()));
+        return super.list(request, page);
+    }
 
     @GetMapping("/territory")
     @ApiOperation("领域")
