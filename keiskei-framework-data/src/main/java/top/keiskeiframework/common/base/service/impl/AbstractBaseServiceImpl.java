@@ -58,6 +58,8 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     private final static String TIME_FIELD_DEFAULT = "createTime";
     private final static String TIME_FIELD_UNDEFINED = "undefined";
+    private final static String FIELD_NAME = "fieldName";
+    private final static String FIELD_NUMBER = "fieldNumber";
 
     protected Class<T> getTClass() {
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
@@ -306,19 +308,33 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             timeField = TIME_FIELD_DEFAULT;
         }
 
-        Expression<LocalDateTime> expression = root.get(timeField);
+        Expression<LocalDateTime> timeExpression = root.get(timeField);
         if (null != chartRequestDTO.getStart() && null != chartRequestDTO.getEnd()) {
-            predicates.add(builder.between(expression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
+            predicates.add(builder.between(timeExpression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
         }
 
         if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
+
+            Expression<?> expression;
             for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {
 
                 Object[] hasValueValues = entry.getValue().stream()
                         .filter(e -> !StringUtils.isEmpty(e))
                         .toArray();
                 if (hasValueValues.length > 0) {
-                    predicates.add(root.get(entry.getKey()).in(hasValueValues));
+                    if (entry.getKey().contains(".")) {
+                        String[] columns = entry.getKey().split("\\.");
+                        Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                        expression = join.get(columns[1]);
+                    } else {
+                        expression = root.get(entry.getKey());
+                    }
+
+                    if (hasValueValues.length == 1) {
+                        predicates.add(builder.equal(expression, hasValueValues[0]));
+                    } else {
+                        predicates.add(expression.in(hasValueValues));
+                    }
                 }
             }
         }
@@ -331,8 +347,8 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             Expression<String> index = getTimeIndex(builder, root, chartRequestDTO.getColumn(), chartRequestDTO.getTimeDelta());
 
             query.multiselect(
-                    index.alias("index"),
-                    builder.count(root).alias("indexNumber")
+                    index.alias(FIELD_NAME),
+                    builder.count(root).alias(FIELD_NUMBER)
             );
             query.groupBy(index);
             list = entityManager.createQuery(query).getResultList();
@@ -354,8 +370,8 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
                 indexNumber = builder.count(root.get(chartRequestDTO.getColumn()));
             }
             query.multiselect(
-                    index.alias("index"),
-                    indexNumber.alias("indexNumber")
+                    index.alias(FIELD_NAME),
+                    indexNumber.alias(FIELD_NUMBER)
             );
 
             query.groupBy(index);

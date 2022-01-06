@@ -88,6 +88,20 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
         return this.conditions;
     }
 
+    public void addCondition(QueryConditionDTO condition) {
+        if (conditionEmpty()) {
+            this.conditions = new ArrayList<>(1);
+        }
+        this.conditions.add(condition);
+    }
+
+    public void addConditions(List<QueryConditionDTO> conditions) {
+        if (conditionEmpty()) {
+            this.conditions = new ArrayList<>(conditions.size());
+        }
+        this.conditions.addAll(conditions);
+    }
+
     public boolean conditionEmpty() {
         return CollectionUtils.isEmpty(conditions);
     }
@@ -98,12 +112,26 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
     protected List<String> show;
 
     public void setShow(String show) {
-        if (!StringUtils.isEmpty(show)) {
+        if (!showEmpty()) {
             this.show = Arrays.stream(show.split(BaseConstants.SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
             if (!this.show.contains(BaseConstants.ID_COLUMN)) {
                 this.show.add(0, BaseConstants.ID_COLUMN);
             }
         }
+    }
+
+    public void appendShow(String column) {
+        if (showEmpty()) {
+            this.show = new ArrayList<>(1);
+        }
+        this.show.add(column);
+    }
+
+    public void prependShow(String column) {
+        if (showEmpty()) {
+            this.show = new ArrayList<>(1);
+        }
+        this.show.add(0, column);
     }
 
 

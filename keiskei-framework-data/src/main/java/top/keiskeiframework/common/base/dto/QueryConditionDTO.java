@@ -11,6 +11,7 @@ import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +36,23 @@ public class QueryConditionDTO {
 
     @ApiModelProperty(value = "字段值", dataType = "String")
     private List<? extends Serializable> value;
+
+    public QueryConditionDTO(String column, Serializable value) {
+        this.column = column;
+        this.value = Collections.singletonList(value);
+    }
+    public QueryConditionDTO(String column, List<? extends Serializable> value) {
+        this.column = column;
+        this.value = value;
+    }
+
+    public ConditionEnum getCondition() {
+        if (null == this.condition) {
+            return ConditionEnum.EQ;
+        } else {
+            return condition;
+        }
+    }
 
 
 }
