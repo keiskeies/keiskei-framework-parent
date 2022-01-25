@@ -63,9 +63,7 @@ public class BookSection extends ListEntity<Long> {
     @Column(columnDefinition = "longtext")
     private String content;
 
-    @NotNull(message = "图书不能为空", groups = {Insert.class, Update.class})
-    @ApiModelProperty(value = "图书", dataType="Book")
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    private Book book;
+    @ApiModelProperty(value = "图书ID", dataType="Long")
+    private Long bookId;
 
 }

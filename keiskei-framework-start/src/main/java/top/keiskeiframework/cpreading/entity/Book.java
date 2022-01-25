@@ -1,6 +1,8 @@
 package top.keiskeiframework.cpreading.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import top.keiskeiframework.common.base.entity.*;
 import top.keiskeiframework.common.util.data.*;
 import lombok.*;

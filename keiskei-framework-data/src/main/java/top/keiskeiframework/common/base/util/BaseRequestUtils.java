@@ -11,9 +11,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.constants.BaseConstants;
+import top.keiskeiframework.common.base.dto.QueryConditionDTO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
-import top.keiskeiframework.common.base.dto.QueryConditionDTO;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
@@ -39,7 +39,14 @@ import java.util.*;
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>  {
+public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
+    private final static String JOIN_SPLIT = ".";
+    private final static String JOIN_SPLIT_REGEX = "\\.";
+    private final static String CONDITION_SPLIT_REGEX = ",";
+    private final static String LIKE_FIX = "%";
+    private final static String DEPARTMENT_COLUMN = "p";
+    private final static String PARENT_COLUMN = "parentId";
+
     @Value("${keiskei.use-department:false}")
     public void setUseDepartment(Boolean useDepartment) {
         BaseRequestUtils.useDepartment = useDepartment;
@@ -68,23 +75,32 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID> ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show, Map<String, Join<?, ?>> joinMap) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show, Map<String, Join<T, ?>> joinMap) {
         List<Selection<?>> selections = new ArrayList<>(show.size());
 
         for (String showColumn : show) {
-            if (showColumn.contains(".")) {
-                String[] columns = showColumn.split("\\.");
-                Join<?, ?> join = joinMap.get(columns[0]);
-                if (null == join) {
-                    join = root.join(columns[0], JoinType.LEFT);
-                    joinMap.put(columns[0], join);
-                }
+            if (showColumn.contains(JOIN_SPLIT)) {
+                String[] columns = showColumn.split(JOIN_SPLIT_REGEX);
+                Join<T, ?> join = getJoin(root, columns, joinMap);
                 selections.add(join.get(columns[1]));
             } else {
                 selections.add(root.get(showColumn));
             }
         }
         return selections;
+    }
+
+    /**
+     * 获取排序条件
+     *
+     * @param root   root
+     * @param tClass tClass
+     * @param <T>    T
+     * @param <ID>   ID
+     * @return .
+     */
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass) {
+        return getOrders(root, tClass, null);
     }
 
     /**
@@ -98,37 +114,24 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID>   ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc, Map<String, Join<?, ?>> joinMap) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc, Map<String, Join<T, ?>> joinMap) {
         List<Order> orders = new ArrayList<>();
         if (tClass.getSuperclass().equals(TreeEntity.class)) {
-            orders.add(new OrderImpl(root.get("parentId"), true));
+            orders.add(new OrderImpl(root.get(PARENT_COLUMN), true));
         }
         if (!StringUtils.isEmpty(desc)) {
-            for(String sc : desc.split(",")) {
+            for (String sc : desc.split(CONDITION_SPLIT_REGEX)) {
                 orders.add(getOrderImpl(root, sc, false, joinMap));
             }
         }
         if (!StringUtils.isEmpty(asc)) {
-            for(String sc : asc.split(",")) {
+            for (String sc : asc.split(CONDITION_SPLIT_REGEX)) {
                 orders.add(getOrderImpl(root, sc, true, joinMap));
             }
         }
         return getOrders(root, tClass, orders);
     }
 
-    private static <T extends ListEntity<ID>, ID extends Serializable> OrderImpl getOrderImpl(Root<T> root, String sc, boolean asc, Map<String, Join<?, ?>> joinMap) {
-        if (sc.contains(".")) {
-            String[] columns = sc.split("\\.");
-            Join<?, ?> join = joinMap.get(columns[0]);
-            if (null == join) {
-                join = root.join(columns[0], JoinType.LEFT);
-                joinMap.put(columns[0], join);
-            }
-            return new OrderImpl(join.get(columns[1]), asc);
-        } else {
-            return new OrderImpl(root.get(sc), asc);
-        }
-    }
 
     /**
      * 获取排序条件
@@ -158,18 +161,48 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         return orders;
     }
 
+
     /**
-     * 获取排序条件
+     * 获取排序
      *
-     * @param root   root
-     * @param tClass tClass
-     * @param <T>    T
-     * @param <ID>   ID
+     * @param root    root
+     * @param sc      sc
+     * @param asc     asc
+     * @param joinMap joinMap
+     * @param <T>     T
+     * @param <ID>    ID
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass) {
-        return getOrders(root, tClass, null);
+    private static <T extends ListEntity<ID>, ID extends Serializable> OrderImpl getOrderImpl(Root<T> root, String sc, boolean asc, Map<String, Join<T, ?>> joinMap) {
+        if (sc.contains(JOIN_SPLIT)) {
+            String[] columns = sc.split(JOIN_SPLIT_REGEX);
+            Join<T, ?> join = getJoin(root, columns, joinMap);
+            return new OrderImpl(join.get(columns[1]), asc);
+        } else {
+            return new OrderImpl(root.get(sc), asc);
+        }
     }
+
+    /**
+     * 获取中间JOIN
+     *
+     * @param root    root
+     * @param columns column
+     * @param joinMap joinMap
+     * @param <T>     T
+     * @param <ID>    ID
+     * @return .
+     */
+    private static <T extends ListEntity<ID>, ID extends Serializable> Join<T, ?> getJoin(Root<T> root, String[] columns, Map<String, Join<T, ?>> joinMap) {
+        Join<T, ?> join = joinMap.get(columns[0]);
+        if (null == join) {
+            join = root.join(columns[0], JoinType.LEFT);
+            joinMap.put(columns[0], join);
+        }
+        return join;
+    }
+
+
 
     /**
      * 获取Pageable的排序条件
@@ -185,12 +218,13 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         List<Sort.Order> orders = new ArrayList<>();
 
         if (tClass.getSuperclass().equals(TreeEntity.class)) {
-            orders.add(Sort.Order.asc("parentId"));
+            orders.add(Sort.Order.asc(PARENT_COLUMN));
         }
 
         if (!StringUtils.isEmpty(desc)) {
             orders.add(Sort.Order.desc(desc));
         }
+
         if (!StringUtils.isEmpty(asc)) {
             orders.add(Sort.Order.asc(asc));
         }
@@ -281,8 +315,8 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             JSONObject jsonObject = new JSONObject();
             for (int i = 0; i < tupleElements.size(); i++) {
                 String showColumn = show.get(i);
-                if (showColumn.contains(".")) {
-                    String[] showColumns = showColumn.split("\\.");
+                if (showColumn.contains(JOIN_SPLIT)) {
+                    String[] showColumns = showColumn.split(JOIN_SPLIT_REGEX);
                     JSONObject filedJsonObject = jsonObject.getJSONObject(showColumns[0]);
                     if (null == filedJsonObject) {
                         filedJsonObject = new JSONObject();
@@ -317,11 +351,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
             if (useDepartment) {
                 Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-                predicates.add(builder.like(root.get("p"), MdcUtils.getUserDepartment() + "%"));
+                predicates.add(builder.like(root.get(DEPARTMENT_COLUMN), MdcUtils.getUserDepartment() + LIKE_FIX));
             }
         }
         if (!CollectionUtils.isEmpty(conditions)) {
-            Map<String, Join<?, ?>> joinMap = new HashMap<>();
+            Map<String, Join<T, ?>> joinMap = new HashMap<>();
 
             Expression<?> expression;
             for (QueryConditionDTO condition : conditions) {
@@ -332,9 +366,9 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                     continue;
                 }
                 // 若为关联表
-                if (column.contains(".")) {
-                    String[] columns = column.split("\\.");
-                    Join<?, ?> join = joinMap.get(columns[0]);
+                if (column.contains(JOIN_SPLIT)) {
+                    String[] columns = column.split(JOIN_SPLIT_REGEX);
+                    Join<T, ?> join = joinMap.get(columns[0]);
                     if (null == join) {
                         join = root.join(columns[0], JoinType.INNER);
                         joinMap.put(columns[0], join);
@@ -372,7 +406,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                     .filter(e -> null != e && !StringUtils.isEmpty(e.toString()))
                     .toArray();
             if (hasValueValues.length > 0) {
-                predicates.add(expression.in(hasValueValues));
+                if (hasValueValues.length == 1) {
+                    predicates.add(builder.equal(expression, hasValueValues[0]));
+                } else {
+                    predicates.add(expression.in(hasValueValues));
+                }
             }
         } else {
             Object value = condition.getValue().get(0);
@@ -400,13 +438,13 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
                     predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) value));
                     break;
                 case LIKE:
-                    predicates.add(builder.like(expression, "%" + value + "%"));
+                    predicates.add(builder.like(expression, LIKE_FIX + value + LIKE_FIX));
                     break;
                 case LL:
-                    predicates.add(builder.like(expression, value + "%"));
+                    predicates.add(builder.like(expression, value + LIKE_FIX));
                     break;
                 case LR:
-                    predicates.add(builder.like(expression, "%" + value));
+                    predicates.add(builder.like(expression, LIKE_FIX + value));
                     break;
                 default:
                     break;

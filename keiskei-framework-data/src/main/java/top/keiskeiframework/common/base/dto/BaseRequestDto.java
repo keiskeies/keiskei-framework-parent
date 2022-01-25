@@ -112,11 +112,9 @@ public class BaseRequestDto<T extends ListEntity<ID>, ID extends Serializable> {
     protected List<String> show;
 
     public void setShow(String show) {
-        if (!showEmpty()) {
-            this.show = Arrays.stream(show.split(BaseConstants.SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
-            if (!this.show.contains(BaseConstants.ID_COLUMN)) {
-                this.show.add(0, BaseConstants.ID_COLUMN);
-            }
+        this.show = Arrays.stream(show.split(BaseConstants.SHOW_SPLIT)).map(String::trim).collect(Collectors.toList());
+        if (!this.show.contains(BaseConstants.ID_COLUMN)) {
+            this.show.add(0, BaseConstants.ID_COLUMN);
         }
     }
 

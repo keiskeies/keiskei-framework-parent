@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.dto.BasePageDto;
 import top.keiskeiframework.common.base.dto.BaseRequestDto;
+import top.keiskeiframework.common.base.dto.QueryConditionDTO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.dto.BaseSortDTO;
@@ -34,7 +35,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>
@@ -56,10 +56,10 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Autowired
     protected BaseService<T, ID> baseService;
 
-    private final static String TIME_FIELD_DEFAULT = "createTime";
-    private final static String TIME_FIELD_UNDEFINED = "undefined";
-    private final static String FIELD_NAME = "fieldName";
-    private final static String FIELD_NUMBER = "fieldNumber";
+    protected final static String TIME_FIELD_DEFAULT = "createTime";
+    protected final static String TIME_FIELD_UNDEFINED = "undefined";
+    protected final static String FIELD_NAME = "fieldName";
+    protected final static String FIELD_NUMBER = "fieldNumber";
 
     protected Class<T> getTClass() {
         ParameterizedType parameterizedType = ((ParameterizedType) this.getClass().getGenericSuperclass());
@@ -90,7 +90,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Tuple> query = builder.createTupleQuery();
             Root<T> root = query.from(tClass);
-            Map<String, Join<?, ?>> joinMap = new ConcurrentHashMap<>();
+            Map<String, Join<T, ?>> joinMap = new ConcurrentHashMap<>();
 
             Predicate predicate = specification.toPredicate(root, query, builder);
             query.where(predicate);
@@ -117,51 +117,46 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public List<T> findAll(BaseRequestDto<T, ID> request) {
         Class<T> tClass = getTClass();
-
-
         if (request.showEmpty()) {
-            Specification<T> specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-            };
-            return jpaSpecificationExecutor.findAll(specification);
+            return getEntityQueryData(request.getConditions(tClass));
         } else {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
-            Root<T> root = query.from(tClass);
-            Map<String, Join<?, ?>> joinMap = new HashMap<>();
-
-            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-            query.where(predicates.toArray(new Predicate[0]));
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass));
-            return BaseRequestUtils.queryDataList(query, request.getShow(tClass), tClass);
+            return getTupleQueryData(tClass, request.getConditions(tClass), request.getShow(tClass), null, null);
         }
     }
 
     @Override
     public List<T> findAll(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
         Class<T> tClass = getTClass();
-
-
         if (request.showEmpty()) {
-            Specification<T> specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-            };
-            return jpaSpecificationExecutor.findAll(specification);
+            return getEntityQueryData(request.getConditions(tClass));
         } else {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
-            Root<T> root = query.from(tClass);
-            Map<String, Join<?, ?>> joinMap = new HashMap<>();
-
-            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
-            query.where(predicates.toArray(new Predicate[0]));
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc(), joinMap));
-            return BaseRequestUtils.queryDataList(query, request.getShow(tClass), tClass);
+            return getTupleQueryData(tClass, request.getConditions(tClass), request.getShow(tClass), page.getAsc(), page.getDesc());
         }
+    }
+
+    private List<T> getEntityQueryData(List<QueryConditionDTO> conditions) {
+        Specification<T> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, conditions);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+        return jpaSpecificationExecutor.findAll(specification);
+    }
+
+    private List<T> getTupleQueryData(Class<T> tClass, List<QueryConditionDTO> conditions, List<String> show, String asc, String desc) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
+        Root<T> root = query.from(tClass);
+        Map<String, Join<T, ?>> joinMap = new HashMap<>();
+
+        List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, conditions);
+        query.where(predicates.toArray(new Predicate[0]));
+        query.multiselect(BaseRequestUtils.getSelections(root, show, joinMap));
+        if (StringUtils.isEmpty(asc) && StringUtils.isEmpty(desc)) {
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass));
+        } else {
+            query.orderBy(BaseRequestUtils.getOrders(root, tClass, asc, desc, joinMap));
+        }
+        return BaseRequestUtils.queryDataList(query, show, tClass);
     }
 
     @Override
@@ -324,7 +319,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
                 if (hasValueValues.length > 0) {
                     if (entry.getKey().contains(".")) {
                         String[] columns = entry.getKey().split("\\.");
-                        Join<?, ?> join = root.join(columns[0], JoinType.INNER);
+                        Join<T, ?> join = root.join(columns[0], JoinType.INNER);
                         expression = join.get(columns[1]);
                     } else {
                         expression = root.get(entry.getKey());
