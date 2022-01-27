@@ -1,0 +1,12 @@
+spring:
+  kafka:
+    bootstrap-servers: 192.168.31.236:9092,192.168.31.236:9093,192.168.31.236:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: test
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode:

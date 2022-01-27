@@ -18,9 +18,9 @@ import top.keiskeiframework.workflow.service.IIssueService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v2/workflow/issue")
+@RequestMapping("/workflow/issue")
 @Api(tags = "工作流 - 卡片管理")
-public class IssueController extends TreeController<Issue, Long>{
+public class IssueController extends TreeControllerImpl<Issue, Long> {
 
     @Autowired
     private IIssueService issueService;

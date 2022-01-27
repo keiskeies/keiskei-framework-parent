@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.enums.SystemEnum;
-import top.keiskeiframework.system.entity.Permission;
-import top.keiskeiframework.system.entity.Role;
-import top.keiskeiframework.system.service.IRoleService;
+import top.keiskeiframework.system.entity.SystemPermission;
+import top.keiskeiframework.system.entity.SystemRole;
+import top.keiskeiframework.system.service.ISystemRoleService;
 import top.keiskeiframework.system.vo.TokenGrantedAuthority;
 import top.keiskeiframework.system.vo.TokenUser;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
 public class RbacAuthorityService {
 
     @Autowired
-    private IRoleService roleService;
+    private ISystemRoleService roleService;
     /**
      * URL匹配工具
      */
@@ -65,12 +65,12 @@ public class RbacAuthorityService {
 
         //获取角色权限
         for (TokenGrantedAuthority authority : authorities) {
-            Role role = roleService.findById(authority.getId());
-            if (CollectionUtils.isEmpty(role.getPermissions())) {
+            SystemRole systemRole = roleService.findById(authority.getId());
+            if (CollectionUtils.isEmpty(systemRole.getSystemPermissions())) {
                 continue;
             }
-            for (Permission permission : role.getPermissions()) {
-                if (ANT_PATH_MATCHER.match(permission.getPath(), requestUri) && requestMethod.equalsIgnoreCase(permission.getMethod())) {
+            for (SystemPermission systemPermission : systemRole.getSystemPermissions()) {
+                if (ANT_PATH_MATCHER.match(systemPermission.getPath(), requestUri) && requestMethod.equalsIgnoreCase(systemPermission.getMethod())) {
                     return true;
                 }
             }

@@ -18,7 +18,7 @@ import top.keiskeiframework.cpreading.service.IBookFeelingService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/admin/v2/cpreading/bookFeeling")
+@RequestMapping("/cpreading/bookFeeling")
 @Api(tags = "碎片阅读 - 图书感悟")
 public class BookFeelingController extends TreeController<BookFeeling, Long>{
 

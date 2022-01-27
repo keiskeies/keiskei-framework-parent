@@ -3,8 +3,8 @@ package top.keiskeiframework.system.controller;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.ListController;
-import top.keiskeiframework.system.entity.User;
+import top.keiskeiframework.common.base.controller.ListControllerImpl;
+import top.keiskeiframework.system.entity.SystemUser;
 
 
 /**
@@ -16,9 +16,9 @@ import top.keiskeiframework.system.entity.User;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/v2/system/user")
+@RequestMapping("/system/user")
 @Api(tags = "系统设置 - 管理员")
-public class UserController extends ListController<User, Long> {
+public class UserController extends ListControllerImpl<SystemUser, Long> {
 
 
 }

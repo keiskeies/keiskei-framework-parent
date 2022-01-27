@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="table-container">
       <base-list ref="table" url="/${module.path?uncap_first}/${table.name?uncap_first}" :options="options" :columns="columns" :format="format" :rules="rules"
-                 @reloadOptions="handleGetOptions" permission="${module.path?uncap_first}:${table.name?uncap_first}" <#if table.type == "TREE">treeTable</#if>></base-list>
+                 @reloadOptions="handleGetOptions" systemPermission="${module.path?uncap_first}:${table.name?uncap_first}" <#if table.type == "TREE">treeTable</#if>></base-list>
     </div>
   </div>
 </template>

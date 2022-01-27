@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2020-12-16 13:36:30
  */
 @RestController
-@RequestMapping("/admin/v2/dashboard/charts")
+@RequestMapping("/dashboard/charts")
 @Api(tags = "主页 - 图表")
 public class DashboardController {
 

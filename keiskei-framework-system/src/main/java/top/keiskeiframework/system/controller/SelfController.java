@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.vo.R;
+import top.keiskeiframework.system.dto.SystemUserDto;
 import top.keiskeiframework.system.vo.TokenUser;
-import top.keiskeiframework.system.dto.UserDto;
-import top.keiskeiframework.system.dto.UserPasswordDto;
-import top.keiskeiframework.system.entity.User;
-import top.keiskeiframework.system.service.IUserService;
+import top.keiskeiframework.system.dto.SystemUserPasswordDto;
+import top.keiskeiframework.system.entity.SystemUser;
+import top.keiskeiframework.system.service.ISystemUserService;
 import top.keiskeiframework.system.util.SecurityUtils;
 
 /**
@@ -24,35 +24,35 @@ import top.keiskeiframework.system.util.SecurityUtils;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/v2/system/self")
+@RequestMapping("/system/self")
 @Api(tags = "系统设置-个人中心", hidden = true)
 public class SelfController {
 
     @Autowired
-    private IUserService userService;
+    private ISystemUserService userService;
 
     @GetMapping
-    public R<UserDto> getSelfInfo() {
+    public R<SystemUserDto> getSelfInfo() {
         return R.ok(userService.getSelfInfo());
     }
 
     @PutMapping
-    public R<UserDto> update(@RequestBody UserDto userDto) {
+    public R<SystemUserDto> update(@RequestBody SystemUserDto systemUserDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.findById(tokenUser.getId());
-        BeanUtils.copyPropertiesIgnoreNull(userDto, user);
-        userService.update(user);
-        return R.ok(userDto);
+        SystemUser systemUser = userService.findById(tokenUser.getId());
+        BeanUtils.copyPropertiesIgnoreNull(systemUserDto, systemUser);
+        userService.update(systemUser);
+        return R.ok(systemUserDto);
     }
 
     @PatchMapping
-    public R<Boolean> update(@RequestBody @Validated UserPasswordDto userPasswordDto) {
+    public R<Boolean> update(@RequestBody @Validated SystemUserPasswordDto systemUserPasswordDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        User user = userService.findById(tokenUser.getId());
-        Assert.isTrue(userPasswordDto.match(user.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
+        SystemUser systemUser = userService.findById(tokenUser.getId());
+        Assert.isTrue(systemUserPasswordDto.match(systemUser.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
 
-        user.setPassword(userPasswordDto.getNewPassword());
-        userService.update(user);
+        systemUser.setPassword(systemUserPasswordDto.getNewPassword());
+        userService.update(systemUser);
         return R.ok(Boolean.TRUE);
     }
 

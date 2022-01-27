@@ -18,7 +18,7 @@ import top.keiskeiframework.cpreading.service.IBookTypeService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/admin/v2/cpreading/bookType")
+@RequestMapping("/cpreading/bookType")
 @Api(tags = "碎片阅读 - 图书类型")
 public class BookTypeController extends TreeController<BookType, Long>{
 

@@ -92,7 +92,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                                 .responseModel(new ModelRef("TokenUser")).build()))
                 .build();
 
-        return new ApiDescription("登录", "/admin/v2/system/login",
+        return new ApiDescription("登录", "/system/login",
                 "",
                 "登录接口",
                 Collections.singletonList(loginOperation), false);
@@ -126,7 +126,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                                 .parameterType("body")
                                 .modelRef(new ModelRef("UserDto"))
                                 .description("用户信息")
-                                .name("userDto")
+                                .name("systemUserDto")
                                 .required(true)
                                 .build()
                 ))
@@ -147,7 +147,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                                 .parameterType("body")
                                 .modelRef(new ModelRef("UserPasswordDto"))
                                 .description("用户密码信息")
-                                .name("userPasswordDto")
+                                .name("systemUserPasswordDto")
                                 .required(true)
                                 .build()
                 ))
@@ -160,7 +160,7 @@ public class SwaggerAddition implements ApiListingScannerPlugin {
                 ))
                 .build();
 
-        return new ApiDescription("系统设置-个人中心", "/admin/v2/system/self",
+        return new ApiDescription("系统设置-个人中心", "/system/self",
                 ""
                 ,
                 "个人中心",

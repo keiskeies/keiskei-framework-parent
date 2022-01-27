@@ -1,0 +1,46 @@
+spring:
+  kafka:
+    bootstrap-servers: 192.168.31.236:9092,192.168.31.236:9093,192.168.31.236:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: test
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  session:
+    store-type: redis
+    jackson:
+      default-property-inclusion: non_null
+    messages:
+      basename: i18n/messages
+    servlet:
+      multipart:
+        max-file-size: 500MB
+        max-request-size: 500MB
+    datasource:
+      name: news_stand
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      username: ${MYSQL_USERNAME:root}
+      password: ${MYSQL_PASSWORD:123456}
+      url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    redis:
+      timeout: 60000
+      password: ${REDIS_PASSWORD:123456}
+      database: ${REDIS_DB:0}
+      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST:127.0.0.1}
+    jpa:
+      database: mysql
+      show-sql: true
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      generate-ddl: true
+      hibernate:
+        ddl-auto: none
+      properties:
+        hibernate:
+          format_sql: true
+          jdbc:
+            batch_size: 500
+            batch_versioned_data: true
+            order_inserts: true

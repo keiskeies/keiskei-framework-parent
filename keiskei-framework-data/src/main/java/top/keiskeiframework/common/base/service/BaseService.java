@@ -8,6 +8,7 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,10 +35,11 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * 查询全部
      *
      * @param request 查询条件
-     * @param page 只使用排序
+     * @param page    只使用排序
      * @return 。
      */
     List<T> findAll(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
+
     List<T> findAll(BaseRequestDto<T, ID> request);
 
     /**
@@ -60,16 +62,18 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      *
      * @param column 字段名称
      * @param value  字段值
-     * @return
+     * @return 。
      */
     List<T> findAllByColumn(String column, Serializable value);
 
     /**
      * 查询数量
-     * @param request
-     * @return
+     *
+     * @param request request
+     * @return 。
      */
     Long count(BaseRequestDto<T, ID> request);
+
     /**
      * 根据id查询
      *
@@ -120,6 +124,14 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
     T update(T t);
 
     /**
+     * 更新多个
+     *
+     * @param ts ts
+     * @return dataList
+     */
+    List<T> updateAll(List<T> ts);
+
+    /**
      * 更新并通知
      *
      * @param t 。
@@ -140,6 +152,13 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param id id
      */
     void deleteById(ID id);
+
+    /**
+     * 删除多个
+     *
+     * @param ids ids
+     */
+    void deleteByIds(Collection<ID> ids);
 
     /**
      * 删除并通知

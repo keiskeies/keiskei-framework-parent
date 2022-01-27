@@ -15,6 +15,6 @@ public class MoneySerializer extends StdConverter<Long, Double> {
 
     @Override
     public Double convert(Long val) {
-        return val / 100D;
+        return val / 1000D;
     }
 }

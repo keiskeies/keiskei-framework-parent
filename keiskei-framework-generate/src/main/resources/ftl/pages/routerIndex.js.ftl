@@ -19,7 +19,7 @@ import ${module.path?uncap_first}Router from './modules/${module.path?uncap_firs
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.user.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ * Detail see: https://panjiachen.systemUser.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
@@ -28,7 +28,7 @@ import ${module.path?uncap_first}Router from './modules/${module.path?uncap_firs
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    role: 'admin','editor'       control the page roles (you can set multiple roles)
+    systemRole: 'admin','editor'       control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
     noCache: true                if set true, the page will no be cached(default is false)
@@ -40,7 +40,7 @@ import ${module.path?uncap_first}Router from './modules/${module.path?uncap_firs
 
 /**
  * constantRoutes
- * a base page that does not have permission requirements
+ * a base page that does not have systemPermission requirements
  * all roles can be accessed
  */
 export const constantRoutes = [
@@ -93,7 +93,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user', noCache: true }
+        meta: { title: '个人中心', icon: 'systemUser', noCache: true }
       }
     ]
   }
@@ -101,7 +101,7 @@ export const constantRoutes = [
 
 /**
  * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
+ * the routes that need to be dynamically loaded based on systemUser roles
  */
 export const asyncRoutes = [
 </#noparse>
@@ -120,7 +120,7 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://user.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+// Detail see: https://systemUser.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

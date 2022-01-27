@@ -17,7 +17,7 @@ import top.keiskeiframework.system.filter.MdcUserFilter;
 import top.keiskeiframework.system.handler.*;
 import top.keiskeiframework.system.properties.AuthenticateUrl;
 import top.keiskeiframework.system.properties.SystemProperties;
-import top.keiskeiframework.system.service.IUserService;
+import top.keiskeiframework.system.service.ISystemUserService;
 
 /**
  * springSecurity配置中心
@@ -43,7 +43,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     @Autowired
     private SystemProperties systemProperties;
     @Autowired
-    private IUserService userService;
+    private ISystemUserService userService;
     @Value("${keiskei.use-permission:false}")
     private Boolean usePermission;
 

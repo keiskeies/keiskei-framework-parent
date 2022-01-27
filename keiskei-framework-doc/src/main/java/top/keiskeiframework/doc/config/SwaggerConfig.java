@@ -52,7 +52,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket createRestApi() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .pathMapping("/admin/v2")
+                .pathMapping("/")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("top.keiskeiframework"))
                 .paths(PathSelectors.any())

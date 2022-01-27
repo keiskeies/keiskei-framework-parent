@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.base.controller.ListControllerImpl;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;
@@ -19,9 +19,9 @@ import top.keiskeiframework.generate.service.IGenerateService;
  * @since 2020/12/27 22:58
  */
 @RestController
-@RequestMapping("/admin/v2/generate/project")
+@RequestMapping("/generate/project")
 @Api(tags = "文件生成 - 项目管理")
-public class ProjectController extends ListController<ProjectInfo, Long> {
+public class ProjectController extends ListControllerImpl<ProjectInfo, Long> {
 
     @Autowired
     private IGenerateService generateService;

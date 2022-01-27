@@ -42,12 +42,12 @@ public class SystemProperties {
     /**
      * 管理员登录URL
      */
-    private String authWebLoginPath = "/admin/v2/system/login";
+    private String authWebLoginPath = "/system/login";
 
     /**
      * 管理员退出URL
      */
-    private String authWebLogoutPath = "/admin/v2/system/logout";
+    private String authWebLogoutPath = "/system/logout";
 
     /**
      * token有效时长

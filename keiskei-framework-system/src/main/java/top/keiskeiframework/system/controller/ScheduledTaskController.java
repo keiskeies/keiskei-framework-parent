@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.base.controller.ListControllerImpl;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.entity.ScheduledTask;
 import top.keiskeiframework.system.service.IScheduledTaskService;
@@ -22,10 +22,10 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
  * @since 2020-12-10 14:11:30
  */
 @RestController
-@RequestMapping("/admin/v2/system/scheduledTask")
+@RequestMapping("/system/scheduledTask")
 @Api(tags = "系统设置 - 定时任务")
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public class ScheduledTaskController extends ListController<ScheduledTask, Long> {
+public class ScheduledTaskController extends ListControllerImpl<ScheduledTask, Long> {
 
     @Autowired
     private IScheduledTaskService scheduledTaskService;

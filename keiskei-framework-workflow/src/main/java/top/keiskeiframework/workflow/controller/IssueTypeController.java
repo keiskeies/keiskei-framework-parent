@@ -18,9 +18,9 @@ import top.keiskeiframework.workflow.service.IIssueTypeService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v2/workflow/issueType")
+@RequestMapping("/workflow/issueType")
 @Api(tags = "工作流 - 卡片类型")
-public class IssueTypeController extends ListController<IssueType, Long>{
+public class IssueTypeController extends ListControllerImpl<IssueType, Long> {
 
     @Autowired
     private IIssueTypeService issueTypeService;

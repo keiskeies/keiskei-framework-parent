@@ -2,7 +2,7 @@ package top.keiskeiframework.system.handler;
 
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.vo.R;
-import top.keiskeiframework.system.service.IUserService;
+import top.keiskeiframework.system.service.ISystemUserService;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -32,7 +32,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
 
 
     @Autowired
-    private IUserService userService;
+    private ISystemUserService userService;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {

@@ -13,16 +13,11 @@
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-system</module>
         <module>keiskei-framework-workflow</module>
-<!--        <module>keiskei-framework-start</module>-->
         <module>keiskei-framework-doc</module>
+        <module>keiskei-framework-demo</module>
     </modules>
 
     <packaging>pom</packaging>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
-    </parent>
     <properties>
         <java.version>1.8</java.version>
         <keiskei.project.version>2.0.0-jpa-Release</keiskei.project.version>
@@ -74,7 +69,7 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.14</version>
+            <version>0.4.15</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -89,6 +84,27 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.5.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <version>2.3.2.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-file</artifactId>

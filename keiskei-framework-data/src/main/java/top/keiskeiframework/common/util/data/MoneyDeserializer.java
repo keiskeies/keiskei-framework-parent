@@ -16,6 +16,6 @@ public class MoneyDeserializer extends StdConverter<Double, Long> {
 
     @Override
     public Long convert(Double val) {
-        return (long) (val * 100);
+        return (long) (val * 1000);
     }
 }

@@ -18,9 +18,9 @@ import top.keiskeiframework.workflow.service.IIssuePlanService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v2/workflow/issuePlan")
+@RequestMapping("/workflow/issuePlan")
 @Api(tags = "工作流 - 卡片计划")
-public class IssuePlanController extends TreeController<IssuePlan, Long>{
+public class IssuePlanController extends TreeControllerImpl<IssuePlan, Long> {
 
     @Autowired
     private IIssuePlanService issuePlanService;

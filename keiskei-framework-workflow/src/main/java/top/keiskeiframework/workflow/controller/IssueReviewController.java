@@ -18,9 +18,9 @@ import top.keiskeiframework.workflow.service.IIssueReviewService;
  * @since 2021-10-10 21:42:21
  */
 @RestController
-@RequestMapping("/admin/v2/workflow/issueReview")
+@RequestMapping("/workflow/issueReview")
 @Api(tags = "工作流 - 卡片评论")
-public class IssueReviewController extends TreeController<IssueReview, Long>{
+public class IssueReviewController extends TreeControllerImpl<IssueReview, Long> {
 
     @Autowired
     private IIssueReviewService issueReviewService;

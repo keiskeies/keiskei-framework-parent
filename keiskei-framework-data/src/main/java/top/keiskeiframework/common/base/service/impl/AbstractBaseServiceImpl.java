@@ -238,6 +238,15 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         return t;
     }
 
+    @Override
+    public List<T> updateAll(List<T> ts) {
+        if (CollectionUtils.isEmpty(ts)) {
+            return ts;
+        }
+        ts.forEach(baseService::validate);
+        ts = jpaRepository.saveAll(ts);
+        return ts;
+    }
 
     @Override
     public void changeSort(BaseSortDTO<ID> baseSortDto) {
@@ -275,6 +284,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     public void deleteById(ID id) {
         jpaRepository.deleteById(id);
         this.reconfirmIndex();
+    }
+
+    @Override
+    public void deleteByIds(Collection<ID> ids) {
+        ids.forEach(jpaRepository::deleteById);
     }
 
     @Override
