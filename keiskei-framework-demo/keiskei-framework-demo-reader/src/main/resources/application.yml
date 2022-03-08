@@ -1,8 +1,8 @@
-server:
-  port: 8003
 spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:@environment@}
   application:
-    name: customer-service
+    name: ${APPLICATION_NAME:cpreading-reader}
   cloud:
     nacos:
       server-addr: localhost:8848
@@ -10,3 +10,7 @@ spring:
         username: nacos
         password: nacos
         namespace: public
+
+
+
+

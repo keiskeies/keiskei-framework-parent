@@ -1,0 +1,53 @@
+server:
+  port: ${SERVER_PORT:10037}
+  servlet:
+    session:
+      timeout: P60D
+      cookie:
+        http-only: false
+logging:
+  level:
+    top.keiskeiframework: debug
+    jdbc: error
+  pattern:
+    file: "%d [%X{userName}-%X{userId}] %-5level - %msg%n"
+    console: "%d [%X{userName}-%X{userId}] [%thread] %-5level %logger{36} %line - %msg%n"
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  messages:
+    basename: i18n/messages
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  datasource:
+    name: news_stand
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    url: jdbc:log4jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:test_demo}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+  redis:
+    timeout: 60000
+    password: ${REDIS_PASSWORD:123456}
+    database: ${REDIS_DB:0}
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:127.0.0.1}
+  jpa:
+    database: mysql
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 500
+          batch_versioned_data: true
+          order_inserts: true
+  freemarker:
+    cache: false
+
+

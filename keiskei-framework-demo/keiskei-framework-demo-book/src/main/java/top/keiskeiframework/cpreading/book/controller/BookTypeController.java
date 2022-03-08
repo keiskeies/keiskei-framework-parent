@@ -1,0 +1,29 @@
+package top.keiskeiframework.cpreading.book.controller;
+
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import top.keiskeiframework.common.base.controller.TreeControllerImpl;
+import top.keiskeiframework.cpreading.book.entity.BookType;
+import top.keiskeiframework.cpreading.book.service.IBookTypeService;
+
+/**
+ * <p>
+ * 图书类型 controller层
+ * </p>
+ *
+ * @author right_way@foxmail.com
+ * @since 2021-11-28 22:37:20
+ */
+@RestController
+@RequestMapping("/cpreading/bookType")
+@Api(tags = "碎片阅读 - 图书类型")
+public class BookTypeController extends TreeControllerImpl<BookType, Long>{
+
+    @Autowired
+    private IBookTypeService bookTypeService;
+
+
+
+}
