@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "demo_customer_address")
 @ApiModel(value = "CustomerAddress", description = "收货地址")
-public class CustomerAddress extends ListEntity<Long> {
+public class ReaderAddress extends ListEntity<Long> {
 
     @ApiModelProperty(value = "用户", dataType = "Long")
     private Long customerId;

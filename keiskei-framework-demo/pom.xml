@@ -13,7 +13,8 @@
         <module>keiskei-framework-demo-order</module>
         <module>keiskei-framework-demo-goods</module>
         <module>keiskei-framework-demo-log</module>
-        <module>keiskei-framework-demo-customer</module>
+        <module>keiskei-framework-demo-reader</module>
+        <module>keiskei-framework-demo-book</module>
         <module>keiskei-framework-demo-common</module>
         <module>keiskei-framework-demo-cpreading</module>
     </modules>

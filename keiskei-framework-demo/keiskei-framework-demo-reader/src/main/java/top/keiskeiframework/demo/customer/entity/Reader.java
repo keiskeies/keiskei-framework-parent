@@ -28,9 +28,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "demo_customer")
-@ApiModel(value = "Customer", description = "顾客")
-public class Customer extends ListEntity<Long> {
+@Table(name = "cpreading_reader")
+@ApiModel(value = "Reader", description = "顾客")
+public class Reader extends ListEntity<Long> {
 
     @ApiModelProperty(value = "昵称", dataType = "String")
     private String nickname;
