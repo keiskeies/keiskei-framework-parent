@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.TreeController;
+import top.keiskeiframework.common.base.controller.TreeControllerImpl;
 import top.keiskeiframework.cpreading.entity.BookType;
 import top.keiskeiframework.cpreading.service.IBookTypeService;
 
@@ -17,9 +17,9 @@ import top.keiskeiframework.cpreading.service.IBookTypeService;
  * @since 2021-11-28 22:37:20
  */
 @RestController
-@RequestMapping("/api/v2/cpreading/bookType")
+@RequestMapping("/cpreading/bookType")
 @Api(tags = "碎片阅读 - 图书类型")
-public class ApiBookTypeController extends TreeController<BookType, Long>{
+public class BookTypeController extends TreeControllerImpl<BookType, Long>{
 
     @Autowired
     private IBookTypeService bookTypeService;

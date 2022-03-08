@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.service.OperateNotifyService;
+import top.keiskeiframework.common.util.ThreadPoolExecUtil;
 
 import java.lang.reflect.Method;
 
@@ -39,13 +40,19 @@ public class OperateNotifyInterceptor {
             OperateNotify operate = method.getAnnotation(OperateNotify.class);
             switch (operate.type()) {
                 case SAVE:
-                    operateNotifyService.save(result, point.getTarget());
+                    ThreadPoolExecUtil.execute(() -> {
+                        operateNotifyService.save(result, point.getTarget());
+                    });
                     break;
                 case UPDATE:
-                    operateNotifyService.update(result, point.getTarget());
+                    ThreadPoolExecUtil.execute(() -> {
+                        operateNotifyService.update(result, point.getTarget());
+                    });
                     break;
                 case DELETE:
-                    operateNotifyService.delete(result, point.getTarget());
+                    ThreadPoolExecUtil.execute(() -> {
+                        operateNotifyService.delete(result, point.getTarget());
+                    });
                     break;
                 default:
                     break;

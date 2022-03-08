@@ -71,7 +71,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         }
 
         // 登陆后可访问的路径
-        http.authorizeRequests().antMatchers("/admin/*/system/self/**").authenticated();
+        http.authorizeRequests().antMatchers("/system/self/**").authenticated();
         if (!CollectionUtils.isEmpty(systemProperties.getAuthenticatedUrls())) {
             for (AuthenticateUrl authenticateUrl : systemProperties.getAuthenticatedUrls()) {
                 http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).authenticated();

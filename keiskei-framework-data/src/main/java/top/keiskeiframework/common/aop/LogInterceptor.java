@@ -21,6 +21,7 @@ import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.util.MdcUtils;
+import top.keiskeiframework.common.util.ThreadPoolExecUtil;
 import top.keiskeiframework.common.util.UserInfoUtils;
 import top.keiskeiframework.common.vo.R;
 
@@ -113,11 +114,11 @@ public class LogInterceptor {
             } finally {
                 MDC.clear();
                 if (null != operateLogService) {
-                    operateLogService.saveLog(operateLog);
+                    ThreadPoolExecUtil.execute(() -> {
+                        operateLogService.saveLog(operateLog);
+                    });
                 }
             }
         }
     }
-
-
 }

@@ -33,7 +33,6 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     private TreeServiceImpl<T, ID> treeService;
 
     @Override
-    @GetMapping
     @ApiOperation("列表")
     public R<Page<T>> list(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
         return R.ok(treeService.page(request, page));
@@ -41,10 +40,11 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> treeList(
+    public R<Page<T>> list(
             BaseRequestDto<T, ID> request,
             BasePageDto<T, ID> page,
-            @RequestParam(required = false, defaultValue = "true") Boolean tree) {
+            @RequestParam(required = false, defaultValue = "true") Boolean tree
+    ) {
         Page<T> pageList = treeService.page(request, page);
         if (tree) {
             List<T> treeList = new TreeEntityUtils<>(pageList.getContent()).getTreeAll();
@@ -55,7 +55,6 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    @GetMapping("/count")
     @ApiOperation("数量")
     public R<Long> count(BaseRequestDto<T, ID> request) {
         return R.ok(treeService.count(request));
@@ -66,7 +65,6 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
         return R.ok(treeService.findAll(request, page));
     }
 
-    @GetMapping("/options")
     @ApiOperation("下拉框")
     public R<List<T>> options(
             BaseRequestDto<T, ID> request,
@@ -87,42 +85,36 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    @GetMapping("/{id}")
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable ID id) {
         return R.ok(treeService.findById(id));
     }
 
     @Override
-    @PostMapping
     @ApiOperation("新增")
     public R<T> save(@RequestBody T fieldInfo) {
         return R.ok(treeService.saveAndNotify(fieldInfo));
     }
 
     @Override
-    @PostMapping("/multi")
     @ApiOperation("新增")
     public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
         return R.ok(treeService.saveAll(ts));
     }
 
     @Override
-    @PutMapping
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
         return R.ok(treeService.updateAndNotify(fieldInfo));
     }
 
     @Override
-    @PutMapping("/multi")
     @ApiOperation("更新")
     public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
         return R.ok(treeService.updateAll(ts));
     }
 
     @Override
-    @PatchMapping("/sort")
     @ApiOperation("更改排序")
     public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
         treeService.changeSort(baseSortDto);
@@ -130,7 +122,6 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    @DeleteMapping("/{id}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable ID id) {
         treeService.deleteByIdAndNotify(id);
@@ -138,7 +129,6 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    @DeleteMapping("/multi")
     @ApiOperation("删除")
     public R<Boolean> delete(@RequestBody List<ID> ids) {
         treeService.deleteByIds(ids);

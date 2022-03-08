@@ -4,8 +4,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.*;
-
+import top.keiskeiframework.common.base.controller.ListControllerImpl;
 import top.keiskeiframework.cpreading.entity.BookExpand;
 import top.keiskeiframework.cpreading.service.IBookExpandService;
 
@@ -20,7 +19,7 @@ import top.keiskeiframework.cpreading.service.IBookExpandService;
 @RestController
 @RequestMapping("/cpreading/bookExpand")
 @Api(tags = "碎片阅读 - 图书拓展")
-public class BookExpandController extends ListController<BookExpand, Long>{
+public class BookExpandController extends ListControllerImpl<BookExpand, Long>{
 
     @Autowired
     private IBookExpandService bookExpandService;

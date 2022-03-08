@@ -15,6 +15,7 @@
         <module>keiskei-framework-demo-log</module>
         <module>keiskei-framework-demo-customer</module>
         <module>keiskei-framework-demo-common</module>
+        <module>keiskei-framework-demo-cpreading</module>
     </modules>
 
     <artifactId>keiskei-framework-demo</artifactId>

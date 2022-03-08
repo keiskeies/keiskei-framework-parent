@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.base.controller.ListController;
+import top.keiskeiframework.common.base.controller.ListControllerImpl;
 import top.keiskeiframework.common.base.dto.BasePageDto;
 import top.keiskeiframework.common.base.dto.BaseRequestDto;
 import top.keiskeiframework.common.base.dto.QueryConditionDTO;
@@ -19,7 +19,6 @@ import top.keiskeiframework.cpreading.vo.BookTerritoryVO;
 import top.keiskeiframework.cpreading.vo.BookTimelineVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -32,7 +31,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v2/cpreading/readerBook")
 @Api(tags = "碎片阅读 - 读者书库")
-public class ApiReaderBookController extends ListController<ReaderBook, Long> {
+public class ApiReaderBookController extends ListControllerImpl<ReaderBook, Long> {
 
     @Autowired
     private IReaderBookService readerBookService;

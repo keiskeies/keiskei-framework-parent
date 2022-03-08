@@ -31,7 +31,6 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @param page    page
      * @return list
      */
-    @GetMapping
     R<Page<T>> list(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
 
     /**
