@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import top.keiskeiframework.common.base.service.OperateLogService;
 import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
-import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.common.vo.R;
+import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.TokenUser;
 import top.keiskeiframework.system.util.ResponseUtils;
 

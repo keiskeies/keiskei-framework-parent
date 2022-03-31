@@ -1,13 +1,10 @@
 package top.keiskeiframework.common.base.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.dto.BasePageDto;
-import top.keiskeiframework.common.base.dto.BaseRequestDto;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.vo.R;
 
@@ -31,7 +28,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @param page    page
      * @return list
      */
-    R<Page<T>> list(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
+    R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
 
     /**
      * 查询数量
@@ -40,7 +37,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return count
      */
     @GetMapping("/count")
-    R<Long> count(BaseRequestDto<T, ID> request);
+    R<Long> count(BaseRequestVO<T, ID> request);
 
     /**
      * 下拉框
@@ -50,7 +47,16 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return AllData
      */
     @GetMapping("/options")
-    R<List<T>> options(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page);
+    R<List<T>> options(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
+
+    /**
+     * 全部下拉框
+     *
+     * @param request request
+     * @return AllData
+     */
+    @GetMapping("/all")
+    R<List<T>> all(BaseRequestVO<T, ID> request);
 
     /**
      * 详情
@@ -59,7 +65,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable ID id);
+    R<T> getOne(@PathVariable("id") ID id);
 
     /**
      * 保存
@@ -101,11 +107,11 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     /**
      * 修改排序
      *
-     * @param baseSortDto dto
+     * @param baseSortVO dto
      * @return boolean
      */
     @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortDTO<ID> baseSortDto);
+    R<Boolean> changeSort(@RequestBody BaseSortVO<ID> baseSortVO);
 
     /**
      * 删除
@@ -114,7 +120,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable ID id);
+    R<Boolean> delete(@PathVariable("id") ID id);
 
     /**
      * 删除多个

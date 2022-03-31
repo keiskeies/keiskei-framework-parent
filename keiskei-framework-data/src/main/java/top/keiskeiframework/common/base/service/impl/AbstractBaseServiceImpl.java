@@ -10,12 +10,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.base.dto.BasePageDto;
-import top.keiskeiframework.common.base.dto.BaseRequestDto;
-import top.keiskeiframework.common.base.dto.QueryConditionDTO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -74,7 +74,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public Page<T> page(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public Page<T> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         Class<T> tClass = getTClass();
         Pageable pageable = page.getPageable(tClass);
 
@@ -115,7 +115,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findAll(BaseRequestDto<T, ID> request) {
+    public List<T> findAll(BaseRequestVO<T, ID> request) {
         Class<T> tClass = getTClass();
         if (request.showEmpty()) {
             return getEntityQueryData(request.getConditions(tClass));
@@ -125,7 +125,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findAll(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public List<T> findAll(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         Class<T> tClass = getTClass();
         if (request.showEmpty()) {
             return getEntityQueryData(request.getConditions(tClass));
@@ -134,7 +134,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         }
     }
 
-    private List<T> getEntityQueryData(List<QueryConditionDTO> conditions) {
+    private List<T> getEntityQueryData(List<QueryConditionVO> conditions) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, conditions);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -142,7 +142,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         return jpaSpecificationExecutor.findAll(specification);
     }
 
-    private List<T> getTupleQueryData(Class<T> tClass, List<QueryConditionDTO> conditions, List<String> show, String asc, String desc) {
+    private List<T> getTupleQueryData(Class<T> tClass, List<QueryConditionVO> conditions, List<String> show, String asc, String desc) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = criteriaBuilder.createTupleQuery();
         Root<T> root = query.from(tClass);
@@ -161,11 +161,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public List<T> findAllByColumn(String column, Serializable value) {
-        return findAll(new BaseRequestDto<>(column, value));
+        return findAll(new BaseRequestVO<>(column, value));
     }
 
     @Override
-    public Long count(BaseRequestDto<T, ID> request) {
+    public Long count(BaseRequestVO<T, ID> request) {
         Class<T> tClass = getTClass();
         Specification<T> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions(tClass));
@@ -249,7 +249,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     }
 
     @Override
-    public void changeSort(BaseSortDTO<ID> baseSortDto) {
+    public void changeSort(BaseSortVO<ID> baseSortVO) {
         try {
             Class<T> clazz = getTClass();
             Field[] fields = clazz.getDeclaredFields();
@@ -259,15 +259,15 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             for (Field field : fields) {
                 if ("id".equals(field.getName())) {
                     field.setAccessible(true);
-                    field.set(t1, baseSortDto.getId1());
-                    field.set(t2, baseSortDto.getId2());
+                    field.set(t1, baseSortVO.getId1());
+                    field.set(t2, baseSortVO.getId2());
                 } else {
                     SortBy sortBy = field.getAnnotation(SortBy.class);
                     if (null != sortBy) {
                         hasSort = true;
                         field.setAccessible(true);
-                        field.set(t1, baseSortDto.getSortBy2());
-                        field.set(t2, baseSortDto.getSortBy1());
+                        field.set(t1, baseSortVO.getSortBy2());
+                        field.set(t2, baseSortVO.getSortBy1());
                     }
                 }
             }

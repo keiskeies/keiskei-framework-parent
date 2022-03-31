@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.util.MdcUtils;
@@ -69,8 +69,8 @@ public class DashboardController {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<Long> baseSortDto) {
-        dashboardService.changeSort(baseSortDto);
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<Long> baseSortVO) {
+        dashboardService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }
 

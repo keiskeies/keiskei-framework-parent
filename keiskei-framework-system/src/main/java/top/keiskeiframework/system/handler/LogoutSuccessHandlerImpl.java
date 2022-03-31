@@ -1,10 +1,10 @@
 package top.keiskeiframework.system.handler;
 
-import top.keiskeiframework.common.vo.R;
 import com.alibaba.fastjson.JSON;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
+import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.util.ResponseUtils;
 
 import javax.servlet.http.HttpServletRequest;

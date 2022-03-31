@@ -6,12 +6,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.util.ResponseUtils;
-import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.FilterChain;

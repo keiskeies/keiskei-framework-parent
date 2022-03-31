@@ -7,9 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.dto.BasePageDto;
-import top.keiskeiframework.common.base.dto.BaseRequestDto;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.vo.R;
@@ -34,21 +34,26 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
     @Override
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         return R.ok(listService.page(request, page));
     }
 
 
     @Override
     @ApiOperation("数量")
-    public R<Long> count(BaseRequestDto<T, ID> request) {
+    public R<Long> count(BaseRequestVO<T, ID> request) {
         return R.ok(listService.count(request));
     }
 
     @Override
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public R<List<T>> options(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         return R.ok(listService.findAll(request, page));
+    }
+    @Override
+    @ApiOperation("全部下拉框")
+    public R<List<T>> all(BaseRequestVO<T, ID> request) {
+        return R.ok(listService.findAll(request));
     }
 
     @Override
@@ -83,8 +88,8 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
 
     @Override
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
-        listService.changeSort(baseSortDto);
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<ID> baseSortVO) {
+        listService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }
 

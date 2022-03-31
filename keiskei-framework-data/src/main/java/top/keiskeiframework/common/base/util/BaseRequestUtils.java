@@ -11,7 +11,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.constants.BaseConstants;
-import top.keiskeiframework.common.base.dto.QueryConditionDTO;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
@@ -203,7 +203,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     }
 
 
-
     /**
      * 获取Pageable的排序条件
      *
@@ -344,7 +343,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <T>        实体类
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionDTO> conditions) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionVO> conditions) {
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
@@ -358,7 +357,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             Map<String, Join<T, ?>> joinMap = new HashMap<>();
 
             Expression<?> expression;
-            for (QueryConditionDTO condition : conditions) {
+            for (QueryConditionVO condition : conditions) {
                 String column = condition.getColumn();
 
                 List<?> values = condition.getValue();
@@ -391,7 +390,8 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param expression 字段
      * @param builder    组装工具
      */
-    private static void addPredicate(List<Predicate> predicates, QueryConditionDTO condition, Expression expression, CriteriaBuilder builder) {
+    private static void addPredicate(List<Predicate> predicates, QueryConditionVO condition, Expression expression,
+                                     CriteriaBuilder builder) {
         if (ConditionEnum.BT.equals(condition.getCondition())) {
             if (condition.getValue().size() == 2) {
                 if (null != condition.getValue().get(0) && !StringUtils.isEmpty(condition.getValue().get(0).toString())) {

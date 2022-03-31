@@ -7,9 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.dto.BasePageDto;
-import top.keiskeiframework.common.base.dto.BaseRequestDto;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.dto.TreePageImpl;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
@@ -34,15 +34,15 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @Override
     @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         return R.ok(treeService.page(request, page));
     }
 
     @GetMapping
     @ApiOperation("列表")
     public R<Page<T>> list(
-            BaseRequestDto<T, ID> request,
-            BasePageDto<T, ID> page,
+            BaseRequestVO<T, ID> request,
+            BasePageVO<T, ID> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
     ) {
         Page<T> pageList = treeService.page(request, page);
@@ -56,19 +56,24 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @Override
     @ApiOperation("数量")
-    public R<Long> count(BaseRequestDto<T, ID> request) {
+    public R<Long> count(BaseRequestVO<T, ID> request) {
         return R.ok(treeService.count(request));
     }
 
     @Override
-    public R<List<T>> options(BaseRequestDto<T, ID> request, BasePageDto<T, ID> page) {
+    public R<List<T>> options(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         return R.ok(treeService.findAll(request, page));
+    }
+
+    @Override
+    public R<List<T>> all(BaseRequestVO<T, ID> request) {
+        return R.ok(treeService.findAll(request));
     }
 
     @ApiOperation("下拉框")
     public R<List<T>> options(
-            BaseRequestDto<T, ID> request,
-            BasePageDto<T, ID> page,
+            BaseRequestVO<T, ID> request,
+            BasePageVO<T, ID> page,
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list;
@@ -116,8 +121,8 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @Override
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortDTO<ID> baseSortDto) {
-        treeService.changeSort(baseSortDto);
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<ID> baseSortVO) {
+        treeService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }
 

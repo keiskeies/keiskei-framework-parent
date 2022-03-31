@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  * @since 2018年9月30日 下午3:20:17
  */
 @ControllerAdvice()
+@Order(-1)
 @Slf4j
 public class GlobalExceptionHandler {
 
@@ -59,8 +61,7 @@ public class GlobalExceptionHandler {
         } else {
             message = e.getMessage();
         }
-        R<?> r = R.failed(message);
-        r.setCode(code);
+        R<?> r = R.failed(code, message);
         log.error("全局异常:", e);
         return r;
     }

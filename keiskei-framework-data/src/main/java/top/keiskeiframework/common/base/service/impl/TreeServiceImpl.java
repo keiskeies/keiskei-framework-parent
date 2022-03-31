@@ -7,10 +7,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.Assert;
 import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
-import top.keiskeiframework.common.base.dto.BaseRequestDto;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.base.dto.BaseSortDTO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.enums.OperateNotifyType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.TreeEntityUtils;
@@ -45,7 +45,7 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
 
 
     @Override
-    public List<T> findAll(BaseRequestDto<T, ID> request) {
+    public List<T> findAll(BaseRequestVO<T, ID> request) {
         return super.findAll(request);
     }
 
@@ -107,8 +107,8 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
 
     @Override
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
-    public void changeSort(BaseSortDTO<ID> baseSortDto) {
-        super.changeSort(baseSortDto);
+    public void changeSort(BaseSortVO<ID> baseSortVO) {
+        super.changeSort(baseSortVO);
     }
 
     @Override
