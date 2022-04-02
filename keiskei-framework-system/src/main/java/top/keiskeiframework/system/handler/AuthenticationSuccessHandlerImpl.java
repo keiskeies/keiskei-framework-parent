@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import top.keiskeiframework.common.base.service.OperateLogService;
-import top.keiskeiframework.common.dto.log.OperateLogDTO;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
 import top.keiskeiframework.common.vo.R;
+import top.keiskeiframework.log.dto.OperateLogDTO;
+import top.keiskeiframework.log.service.OperateLogService;
+import top.keiskeiframework.system.util.ResponseUtils;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.TokenUser;
-import top.keiskeiframework.system.util.ResponseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

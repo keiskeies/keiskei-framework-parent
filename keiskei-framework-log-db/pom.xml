@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>keiskei-framework-system</artifactId>
+    <artifactId>keiskei-framework-log-db</artifactId>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
@@ -19,15 +19,6 @@
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-log</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
     </dependencies>
-
 
 </project>

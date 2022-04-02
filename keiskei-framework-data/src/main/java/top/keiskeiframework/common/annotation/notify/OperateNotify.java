@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.annotation.notify;
 
-import top.keiskeiframework.common.enums.OperateNotifyType;
+import top.keiskeiframework.common.enums.log.OperateNotifyType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

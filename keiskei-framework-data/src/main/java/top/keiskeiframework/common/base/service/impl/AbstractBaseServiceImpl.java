@@ -19,7 +19,7 @@ import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
-import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;

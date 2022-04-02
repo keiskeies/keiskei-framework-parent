@@ -9,11 +9,11 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.dto.SystemUserDto;
-import top.keiskeiframework.system.vo.TokenUser;
 import top.keiskeiframework.system.dto.SystemUserPasswordDto;
 import top.keiskeiframework.system.entity.SystemUser;
 import top.keiskeiframework.system.service.ISystemUserService;
 import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.system.vo.TokenUser;
 
 /**
  * <p>

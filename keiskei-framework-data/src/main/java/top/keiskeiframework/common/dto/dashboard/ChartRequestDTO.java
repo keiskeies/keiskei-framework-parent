@@ -1,10 +1,12 @@
 package top.keiskeiframework.common.dto.dashboard;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
-import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

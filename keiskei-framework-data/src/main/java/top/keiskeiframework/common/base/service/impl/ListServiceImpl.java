@@ -8,7 +8,7 @@ import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.enums.OperateNotifyType;
+import top.keiskeiframework.common.enums.log.OperateNotifyType;
 
 import java.io.Serializable;
 

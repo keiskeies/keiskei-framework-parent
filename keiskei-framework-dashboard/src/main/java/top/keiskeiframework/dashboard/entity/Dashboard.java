@@ -13,8 +13,8 @@ import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
-import top.keiskeiframework.common.enums.dashboard.TimeDeltaEnum;
-import top.keiskeiframework.common.enums.dashboard.TimeTypeEnum;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
+import top.keiskeiframework.common.enums.timer.TimeTypeEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
