@@ -16,10 +16,10 @@
         <module>keiskei-framework-lombok</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-cache-redis</module>
-        <module>keiskei-framework-cache-jcache</module>
         <module>keiskei-framework-cache-simple</module>
         <module>keiskei-framework-notify</module>
         <module>keiskei-framework-notify-email</module>
+        <module>keiskei-framework-log</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -58,10 +58,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
         </dependency>
     </dependencies>
 
