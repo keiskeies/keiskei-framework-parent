@@ -1,13 +1,12 @@
 package top.keiskeiframework.common.token.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.RequestFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.token.config.TokenProperties;
-import top.keiskeiframework.common.token.util.JwtTokenUtils;
 import top.keiskeiframework.common.token.vo.TokenUser;
+import top.keiskeiframework.common.util.JwtTokenUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import javax.servlet.*;

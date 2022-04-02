@@ -96,6 +96,11 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
+    public R<T> getOne(String column, Serializable value) {
+        return R.ok(treeService.findByColumn(column, value));
+    }
+
+    @Override
     @ApiOperation("新增")
     public R<T> save(@RequestBody T fieldInfo) {
         return R.ok(treeService.saveAndNotify(fieldInfo));

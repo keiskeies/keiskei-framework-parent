@@ -63,6 +63,11 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
     }
 
     @Override
+    public R<T> getOne(String column, Serializable value) {
+        return R.ok(listService.findByColumn(column, value));
+    }
+
+    @Override
     @ApiOperation("新增")
     public R<T> save(@RequestBody @Validated({Insert.class}) T t) {
         return R.ok(listService.saveAndNotify(t));

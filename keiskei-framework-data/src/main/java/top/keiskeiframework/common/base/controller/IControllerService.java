@@ -67,6 +67,9 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     @GetMapping("/{id}")
     R<T> getOne(@PathVariable("id") ID id);
 
+    @GetMapping("/{column}/{value}")
+    R<T> getOne(@PathVariable("column") String column, @PathVariable("value") Serializable value);
+
     /**
      * 保存
      *
