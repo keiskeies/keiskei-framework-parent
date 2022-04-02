@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.enums.exception.IErrorCode;
 
@@ -31,6 +32,7 @@ public class R<T> implements Serializable {
 
     @ApiModelProperty(value = "错误信息", dataType = "String", notes = "正常")
     @Getter
+    @Setter
     private String msg;
 
 
@@ -44,6 +46,9 @@ public class R<T> implements Serializable {
 
     public static <T> R<T> failed(String msg) {
         return restResult(null, ApiErrorCode.FAILED.getCode(), msg);
+    }
+    public static <T> R<T> failed(Long code, String msg) {
+        return restResult(null, code, msg);
     }
 
     public static <T> R<T> failed(IErrorCode errorCode) {
