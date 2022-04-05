@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.keiskeiframework.common.base.controller.IControllerService;
-import top.keiskeiframework.common.base.dto.BasePageImpl;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -35,7 +34,6 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
     @ApiOperation("列表")
     public R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         Page<T> tPage = listService.page(request, page);
-//        return R.ok(new BasePageImpl<T>(tPage.getContent(), tPage.getPageable(), tPage.getTotalElements()));
         return R.ok(tPage);
     }
 

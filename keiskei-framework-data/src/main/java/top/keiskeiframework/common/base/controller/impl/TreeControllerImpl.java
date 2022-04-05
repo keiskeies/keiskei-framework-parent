@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.keiskeiframework.common.base.controller.IControllerService;
-import top.keiskeiframework.common.base.dto.BasePageImpl;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.TreeEntity;
@@ -59,14 +58,11 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list;
-        if (request.requestEmpty()) {
-            list = treeService.findAll();
-        } else {
-            list = treeService.findAll(request, page);
-        }
         if (tree) {
+            list = treeService.findAll(request);
             return R.ok(new TreeEntityUtils<>(list).getTreeAll(id));
         } else {
+            list = treeService.findAll(request, page);
             return R.ok(list);
         }
     }
@@ -78,12 +74,7 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
             BaseRequestVO<T, ID> request,
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
-        List<T> list;
-        if (request.requestEmpty()) {
-            list = treeService.findAll();
-        } else {
-            list = treeService.findAll(request);
-        }
+        List<T> list = treeService.findAll(request);
         if (tree) {
             return R.ok(new TreeEntityUtils<>(list).getTreeAll(id));
         } else {

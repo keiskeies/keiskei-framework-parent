@@ -1,14 +1,12 @@
 package top.keiskeiframework.cloud.feign.front.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.cloud.feign.dto.BasePageDTO;
-import top.keiskeiframework.cloud.feign.dto.BaseRequestDTO;
+import org.springframework.data.domain.PageImpl;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
 import top.keiskeiframework.cloud.feign.front.service.ITreeFrontService;
+import top.keiskeiframework.cloud.feign.front.util.TreeEntityDtoUtils;
 import top.keiskeiframework.cloud.feign.service.ITreeFeignService;
 
 import java.io.Serializable;
@@ -28,40 +26,81 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
     protected ITreeFeignService<T, ID> treeFeignService;
 
     @Override
-    public Page<T> page(BaseRequestDTO<T, ID> request, BasePageDTO<T, ID> page, Boolean tree) {
-        return treeFeignService.list(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null),
-                page.getPage(),
-                page.getSize(),
-                page.getDesc(),
-                page.getAsc(),
-                tree
+    public Page<T> page(
+            String conditions,
+            String show,
+            Integer page,
+            Integer size,
+            String desc,
+            String asc,
+            Boolean tree
+    ) {
+        Page<T> noTreeResult = treeFeignService.list(
+                conditions,
+                show,
+                page,
+                size,
+                desc,
+                asc,
+                false
         ).getData();
+
+        if (tree) {
+            List<T> treeList = new TreeEntityDtoUtils<>(noTreeResult.getContent()).getTreeAll();
+            return new PageImpl<>(treeList, noTreeResult.getPageable(), noTreeResult.getTotalElements());
+        } else {
+            return new PageImpl<>(noTreeResult.getContent(), noTreeResult.getPageable(), noTreeResult.getTotalElements());
+        }
     }
 
     @Override
-    public List<T> all(BaseRequestDTO<T, ID> request, ID id, Boolean tree) {
-        return treeFeignService.all(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null),
+    public List<T> all(
+            String conditions,
+            String show,
+            ID id,
+            Boolean tree
+    ) {
+        List<T> noTreeData = treeFeignService.all(
+                conditions,
+                show,
                 id,
-                tree
+                false
         ).getData();
+        if (tree) {
+            return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
+        }
+        {
+            return noTreeData;
+        }
     }
 
     @Override
-    public List<T> options(BaseRequestDTO<T, ID> request, BasePageDTO<T, ID> page, ID id, Boolean tree) {
-        return treeFeignService.options(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null),
-                page.getPage(),
-                page.getSize(),
-                page.getDesc(),
-                page.getAsc(),
+    public List<T> options(
+            String conditions,
+            String show,
+            Integer page,
+            Integer size,
+            String desc,
+            String asc,
+            ID id,
+            Boolean tree
+    ) {
+        List<T> noTreeData = treeFeignService.options(
+                conditions,
+                show,
+                page,
+                size,
+                desc,
+                asc,
                 id,
-                tree
+                false
         ).getData();
+        if (tree) {
+            return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
+        }
+        {
+            return noTreeData;
+        }
     }
 
     @Override

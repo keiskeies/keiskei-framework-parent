@@ -1,12 +1,8 @@
 package top.keiskeiframework.cloud.feign.front.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.cloud.feign.dto.BasePageDTO;
-import top.keiskeiframework.cloud.feign.dto.BaseRequestDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
 import top.keiskeiframework.cloud.feign.service.IListFeignService;
@@ -30,34 +26,51 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
     private IListFeignService<T, ID> listFeignService;
 
     @Override
-    public Page<T> page(BaseRequestDTO<T, ID> request, BasePageDTO<T, ID> page) {
+    public Page<T> page(
+            String conditions,
+            String show,
+            Integer page,
+            Integer size,
+            String desc,
+            String asc
+    ) {
         return listFeignService.list(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null),
-                page.getPage(),
-                page.getSize(),
-                page.getDesc(),
-                page.getAsc()
+                conditions,
+                show,
+                page,
+                size,
+                desc,
+                asc
         ).getData();
     }
 
     @Override
-    public List<T> all(BaseRequestDTO<T, ID> request) {
+    public List<T> all(
+            String conditions,
+            String show
+    ) {
         return listFeignService.all(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null)
+                conditions,
+                show
         ).getData();
     }
 
     @Override
-    public List<T> options(BaseRequestDTO<T, ID> request, BasePageDTO<T, ID> page) {
+    public List<T> options(
+            String conditions,
+            String show,
+            Integer page,
+            Integer size,
+            String desc,
+            String asc
+    ) {
         return listFeignService.options(
-                (!CollectionUtils.isEmpty(request.getConditions()) ? JSON.toJSONString(request.getConditions()) : null),
-                (!CollectionUtils.isEmpty(request.getShow()) ? String.join(",", request.getShow()) : null),
-                page.getPage(),
-                page.getSize(),
-                page.getDesc(),
-                page.getAsc()
+                conditions,
+                show,
+                page,
+                size,
+                desc,
+                asc
         ).getData();
     }
 
