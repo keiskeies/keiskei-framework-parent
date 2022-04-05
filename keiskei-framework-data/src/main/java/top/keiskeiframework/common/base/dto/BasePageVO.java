@@ -38,7 +38,8 @@ public class BasePageVO<T extends ListEntity<ID>, ID extends Serializable> {
     /**
      * 获取分页条件
      *
-     * @return 。
+     * @param tClass tclass
+     * @return .
      */
     public Pageable getPageable(@NonNull Class<T> tClass) {
         return PageRequest.of(

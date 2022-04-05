@@ -15,16 +15,8 @@ import java.util.List;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface FeignBaseService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializable> {
 
-
-
-    /**
-     * 下拉框列表
-     *
-     * @return .
-     */
-    List<T> findAll(BaseRequestDTO<T, ID> request);
 
 
     /**
@@ -36,6 +28,13 @@ public interface FeignBaseService<T extends ListEntityDTO<ID>, ID extends Serial
     T findById(ID id);
 
 
+    /**
+     * 指定字段查询
+     *
+     * @param column 字段
+     * @param value  值
+     * @return 。
+     */
     T findByColumn(String column, Serializable value);
 
 

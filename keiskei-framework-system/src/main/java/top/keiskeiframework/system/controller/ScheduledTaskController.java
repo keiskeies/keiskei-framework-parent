@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.keiskeiframework.common.base.controller.ListControllerImpl;
+import top.keiskeiframework.common.base.controller.impl.ListControllerImpl;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.system.entity.ScheduledTask;
 import top.keiskeiframework.system.service.IScheduledTaskService;

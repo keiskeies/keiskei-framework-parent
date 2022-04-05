@@ -69,10 +69,11 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     /**
      * 获取查询的指定字段
      *
-     * @param root root
-     * @param show show
-     * @param <T>  T
-     * @param <ID> ID
+     * @param root    root
+     * @param show    show
+     * @param <T>     T
+     * @param <ID>    ID
+     * @param joinMap joinMap
      * @return .
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Selection<?>> getSelections(Root<T> root, List<String> show, Map<String, Join<T, ?>> joinMap) {
@@ -106,12 +107,13 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     /**
      * 获取排序
      *
-     * @param root   root
-     * @param tClass tClass
-     * @param asc    asc
-     * @param desc   desc
-     * @param <T>    T
-     * @param <ID>   ID
+     * @param root    root
+     * @param tClass  tClass
+     * @param asc     asc
+     * @param desc    desc
+     * @param <T>     T
+     * @param <ID>    ID
+     * @param joinMap joinMap
      * @return .
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Order> getOrders(Root<T> root, Class<T> tClass, String asc, String desc, Map<String, Join<T, ?>> joinMap) {
@@ -341,6 +343,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param builder    builder
      * @param conditions 查询条件
      * @param <T>        实体类
+     * @param <ID>       ID
      * @return .
      */
     public static <T extends ListEntity<ID>, ID extends Serializable> List<Predicate> getPredicates(Root<T> root, CriteriaBuilder builder, List<QueryConditionVO> conditions) {

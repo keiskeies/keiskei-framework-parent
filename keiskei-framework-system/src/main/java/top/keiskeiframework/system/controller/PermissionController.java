@@ -3,7 +3,7 @@ package top.keiskeiframework.system.controller;
 import io.swagger.annotations.Api;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.base.controller.TreeControllerImpl;
+import top.keiskeiframework.common.base.controller.impl.TreeControllerImpl;
 import top.keiskeiframework.system.entity.SystemPermission;
 
 /**

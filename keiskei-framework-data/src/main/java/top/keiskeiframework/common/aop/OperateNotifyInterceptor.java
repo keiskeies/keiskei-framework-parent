@@ -32,32 +32,33 @@ public class OperateNotifyInterceptor {
     @Around(value = "@annotation(top.keiskeiframework.common.annotation.notify.OperateNotify)")
     public Object aroundLock(ProceedingJoinPoint point) throws Throwable {
 
-
         Object result = point.proceed();
-        try {
-            MethodSignature signature = (MethodSignature) point.getSignature();
-            Method method = signature.getMethod();
-            OperateNotify operate = method.getAnnotation(OperateNotify.class);
-            switch (operate.type()) {
-                case SAVE:
-                    ThreadPoolExecUtil.execute(() -> {
-                        operateNotifyService.save(result, point.getTarget());
-                    });
-                    break;
-                case UPDATE:
-                    ThreadPoolExecUtil.execute(() -> {
-                        operateNotifyService.update(result, point.getTarget());
-                    });
-                    break;
-                case DELETE:
-                    ThreadPoolExecUtil.execute(() -> {
-                        operateNotifyService.delete(result, point.getTarget());
-                    });
-                    break;
-                default:
-                    break;
+        if (null != operateNotifyService) {
+            try {
+                MethodSignature signature = (MethodSignature) point.getSignature();
+                Method method = signature.getMethod();
+                OperateNotify operate = method.getAnnotation(OperateNotify.class);
+                switch (operate.type()) {
+                    case SAVE:
+                        ThreadPoolExecUtil.execute(() -> {
+                            operateNotifyService.save(result, point.getTarget());
+                        });
+                        break;
+                    case UPDATE:
+                        ThreadPoolExecUtil.execute(() -> {
+                            operateNotifyService.update(result, point.getTarget());
+                        });
+                        break;
+                    case DELETE:
+                        ThreadPoolExecUtil.execute(() -> {
+                            operateNotifyService.delete(result, point.getTarget());
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception ignored) {
             }
-        } catch (Exception ignored) {
         }
         return result;
     }

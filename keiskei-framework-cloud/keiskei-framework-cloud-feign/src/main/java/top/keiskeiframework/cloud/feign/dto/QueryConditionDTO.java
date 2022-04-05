@@ -36,6 +36,7 @@ public class QueryConditionDTO {
 
     public QueryConditionDTO(String column, Serializable value) {
         this.column = column;
+        this.condition = ConditionEnum.EQ;
         this.value = Collections.singletonList(value);
     }
 

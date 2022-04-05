@@ -6,10 +6,12 @@ import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,15 +24,6 @@ import java.util.List;
 public interface IControllerService<T extends ListEntity<ID>, ID extends Serializable> {
 
     /**
-     * 分页列表
-     *
-     * @param request reqeust
-     * @param page    page
-     * @return list
-     */
-    R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
-
-    /**
      * 查询数量
      *
      * @param request request
@@ -38,25 +31,6 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      */
     @GetMapping("/count")
     R<Long> count(BaseRequestVO<T, ID> request);
-
-    /**
-     * 下拉框
-     *
-     * @param request request
-     * @param page    page
-     * @return AllData
-     */
-    @GetMapping("/options")
-    R<List<T>> options(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
-
-    /**
-     * 全部下拉框
-     *
-     * @param request request
-     * @return AllData
-     */
-    @GetMapping("/all")
-    R<List<T>> all(BaseRequestVO<T, ID> request);
 
     /**
      * 详情
@@ -67,6 +41,13 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     @GetMapping("/{id}")
     R<T> getOne(@PathVariable("id") ID id);
 
+    /**
+     * 单个条件查询详情
+     *
+     * @param column 字段
+     * @param value  值
+     * @return 。
+     */
     @GetMapping("/{column}/{value}")
     R<T> getOne(@PathVariable("column") String column, @PathVariable("value") Serializable value);
 
@@ -135,4 +116,12 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     R<Boolean> delete(@RequestBody List<ID> ids);
 
 
+    /**
+     * 数据统计
+     *
+     * @param chartRequestDTO 统计条件
+     * @return 。
+     */
+    @GetMapping("/statistic")
+    R<Map<String, Double>> statistic(ChartRequestDTO chartRequestDTO);
 }

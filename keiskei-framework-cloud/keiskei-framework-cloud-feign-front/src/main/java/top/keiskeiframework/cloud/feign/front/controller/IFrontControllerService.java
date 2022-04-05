@@ -16,16 +16,8 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IFeignControllerService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends Serializable> {
 
-
-    /**
-     * 查询全部
-     * @param request
-     * @return
-     */
-    @GetMapping("/all")
-    R<List<T>> all(BaseRequestDTO<T, ID> request);
 
     /**
      * 详情
@@ -63,7 +55,6 @@ public interface IFeignControllerService<T extends ListEntityDTO<ID>, ID extends
      */
     @DeleteMapping("/{id}")
     R<Boolean> delete(@PathVariable("id") ID id);
-
 
 
 }

@@ -2,7 +2,7 @@ package top.keiskeiframework.common.base.constants;
 
 /**
  * <p>
- *
+ * 基础常量
  * </p>
  *
  * @author v_chenjiamin

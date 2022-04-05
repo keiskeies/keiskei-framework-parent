@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.common.base.controller.ListControllerImpl;
+import top.keiskeiframework.common.base.controller.impl.ListControllerImpl;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.enums.BuildStatusEnum;

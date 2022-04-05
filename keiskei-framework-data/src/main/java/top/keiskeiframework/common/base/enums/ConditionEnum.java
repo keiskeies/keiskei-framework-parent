@@ -2,7 +2,7 @@ package top.keiskeiframework.common.base.enums;
 
 /**
  * <p>
- *
+ * 数据对比条件
  * </p>
  *
  * @author v_chenjiamin

@@ -17,7 +17,8 @@ import java.util.Map;
  * 基础服务接口
  * </p>
  *
- * @param <T> 实体类
+ * @param <T>  实体类
+ * @param <ID> ID
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
@@ -27,6 +28,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * 列表查询
      *
      * @param request 列表条件
+     * @param page    列表条件
      * @return .
      */
     Page<T> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);

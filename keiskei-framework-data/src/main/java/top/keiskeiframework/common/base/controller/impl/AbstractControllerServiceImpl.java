@@ -1,114 +1,104 @@
-package top.keiskeiframework.common.base.controller;
+package top.keiskeiframework.common.base.controller.impl;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
+import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- * 通用前端控制器
+ * controller实现抽象类
  * </p>
  *
  * @author James Chen right_way@foxmail.com
- * @since 2020/12/21 13:02
+ * @since 2022/4/3 20:51
  */
-public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializable> implements IControllerService<T, ID> {
+public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID extends Serializable> implements IControllerService<T, ID> {
 
     @Autowired
-    private ListServiceImpl<T, ID> listService;
-
-
-    @Override
-    @GetMapping
-    @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
-        return R.ok(listService.page(request, page));
-    }
+    private BaseService<T, ID> baseService;
 
 
     @Override
     @ApiOperation("数量")
     public R<Long> count(BaseRequestVO<T, ID> request) {
-        return R.ok(listService.count(request));
-    }
-
-    @Override
-    @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
-        return R.ok(listService.findAll(request, page));
-    }
-    @Override
-    @ApiOperation("全部下拉框")
-    public R<List<T>> all(BaseRequestVO<T, ID> request) {
-        return R.ok(listService.findAll(request));
+        return R.ok(baseService.count(request));
     }
 
     @Override
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable ID id) {
-        return R.ok(listService.findById(id));
+        return R.ok(baseService.findById(id));
     }
 
     @Override
     public R<T> getOne(String column, Serializable value) {
-        return R.ok(listService.findByColumn(column, value));
+        return R.ok(baseService.findByColumn(column, value));
     }
 
     @Override
     @ApiOperation("新增")
     public R<T> save(@RequestBody @Validated({Insert.class}) T t) {
-        return R.ok(listService.saveAndNotify(t));
+        return R.ok(baseService.saveAndNotify(t));
     }
 
     @Override
     @ApiOperation("新增")
     public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
-        return R.ok(listService.saveAll(ts));
+        return R.ok(baseService.saveAll(ts));
     }
 
     @Override
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
-        return R.ok(listService.updateAndNotify(fieldInfo));
+        return R.ok(baseService.updateAndNotify(fieldInfo));
     }
 
     @Override
     @ApiOperation("更新")
     public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
-        return R.ok(listService.updateAll(ts));
+        return R.ok(baseService.updateAll(ts));
     }
 
     @Override
     @ApiOperation("更改排序")
     public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<ID> baseSortVO) {
-        listService.changeSort(baseSortVO);
+        baseService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable ID id) {
-        listService.deleteByIdAndNotify(id);
+        baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> delete(@RequestBody List<ID> ids) {
-        listService.deleteByIds(ids);
+        baseService.deleteByIds(ids);
         return R.ok(Boolean.TRUE);
+    }
+
+    @Override
+    @ApiOperation("统计")
+    public R<Map<String, Double>> statistic(ChartRequestDTO chartRequestDTO) {
+        return R.ok(baseService.getChartOptions(chartRequestDTO));
     }
 }

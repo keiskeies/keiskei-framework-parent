@@ -2,9 +2,11 @@ package top.keiskeiframework.cloud.feign.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.cloud.feign.enums.ConditionEnum;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +47,17 @@ public class BaseRequestDTO<T extends ListEntityDTO<ID>, ID extends Serializable
                         Collections.singletonList(value)
                 )
         );
+    }
+
+    public void addCondition(QueryConditionDTO queryConditionDTO) {
+        if (CollectionUtils.isEmpty(this.conditions)) {
+            this.conditions = new ArrayList<>();
+        }
+        this.conditions.add(queryConditionDTO);
+    }
+
+    public void addCondition(String column, Serializable value) {
+        addCondition(new QueryConditionDTO(column, value));
     }
 
     /**
