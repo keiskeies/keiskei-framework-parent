@@ -1,4 +1,4 @@
-package top.keiskeiframework.log.config;
+package top.keiskeiframework.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,9 +1,9 @@
-package top.keiskeiframework.log.util;
+package top.keiskeiframework.common.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
-import top.keiskeiframework.log.config.ThreadPoolProperties;
+import top.keiskeiframework.common.config.ThreadPoolProperties;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

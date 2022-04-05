@@ -21,7 +21,7 @@ import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;
-import top.keiskeiframework.log.util.ThreadPoolExecUtils;
+import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 import top.keiskeiframework.log.util.UserInfoUtils;
 
 import javax.servlet.http.HttpServletRequest;
