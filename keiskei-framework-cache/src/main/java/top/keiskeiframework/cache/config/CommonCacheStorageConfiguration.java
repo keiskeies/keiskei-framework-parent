@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <p>
- *
+ * 缓存KEY生成规则配置
  * </p>
  *
  * @author v_chenjiamin

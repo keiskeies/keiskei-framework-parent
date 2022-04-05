@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- *
+ * 缓存实现抽象类
  * </p>
  *
  * @author v_chenjiamin

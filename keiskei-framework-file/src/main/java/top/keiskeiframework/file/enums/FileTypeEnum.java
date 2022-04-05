@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * <p>
- *
+ * 文件魔数枚举
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com

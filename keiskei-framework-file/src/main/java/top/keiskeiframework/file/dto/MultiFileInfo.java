@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <p>
- *
+ * 文件上传实体类
  * </p>
  *
  * @author ：陈加敏 right_way@foxmail.com

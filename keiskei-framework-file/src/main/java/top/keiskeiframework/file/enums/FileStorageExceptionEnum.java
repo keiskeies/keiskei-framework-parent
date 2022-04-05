@@ -6,7 +6,7 @@ import top.keiskeiframework.common.enums.exception.IErrorCode;
 
 /**
  * <p>
- *
+ * 文件异常枚举
  * </p>
  *
  * @author 陈加敏 right_way@foxmail.com

@@ -13,6 +13,10 @@
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-file</artifactId>
         </dependency>
         <dependency>

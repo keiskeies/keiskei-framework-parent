@@ -19,20 +19,17 @@ import java.io.Serializable;
  * @since 2020/11/22 21:19
  */
 @ApiModel(value = "R", description = "统一返回结构")
+@Data
 public class R<T> implements Serializable {
     private static final long serialVersionUID = 4464081726731277091L;
 
     @ApiModelProperty(value = "状态码", dataType = "long", notes = "0: 正常")
-    @Getter
     private long code;
 
     @ApiModelProperty(value = "数据", dataType = "T")
-    @Getter
     private T data;
 
     @ApiModelProperty(value = "错误信息", dataType = "String", notes = "正常")
-    @Getter
-    @Setter
     private String msg;
 
 

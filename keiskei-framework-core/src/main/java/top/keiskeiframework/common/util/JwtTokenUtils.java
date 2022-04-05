@@ -13,7 +13,7 @@ import java.util.UUID;
 
 /**
  * <p>
- *
+ * jwt工具类
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -26,10 +26,11 @@ public class JwtTokenUtils {
     public static String SECRET = "secret";
 
     /**
-     * 生成token
+     * 加密
      *
-     * @param t 加密数据
-     * @return .
+     * @param t   实体类
+     * @param <T> 实体类
+     * @return 。
      */
     public static <T> String getJwtString(T t) {
         Map<String, Object> map = new HashMap<>(1);
@@ -43,10 +44,12 @@ public class JwtTokenUtils {
     }
 
     /**
-     * 获取user
+     * 解码
      *
-     * @param token .
-     * @return .
+     * @param token  密文
+     * @param tClass 实体类
+     * @param <T>    实体类
+     * @return 。
      */
     public static <T> T parse(String token, Class<T> tClass) {
         try {
