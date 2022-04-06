@@ -4,11 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.enums.CalcType;
+import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
 import top.keiskeiframework.cloud.feign.service.IListFeignService;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,7 +38,7 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
             String desc,
             String asc
     ) {
-        return listFeignService.list(
+        return listFeignService.page(
                 conditions,
                 show,
                 page,
@@ -90,15 +94,51 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
         return listFeignService.save(t).getData();
     }
 
+    @Override
+    public List<T> save(List<T> ts) {
+        return listFeignService.save(ts).getData();
+    }
 
     @Override
     public T update(T t) {
         return listFeignService.update(t).getData();
     }
 
+    @Override
+    public List<T> update(List<T> ts) {
+        return listFeignService.update(ts).getData();
+    }
 
     @Override
     public void deleteById(ID id) {
         listFeignService.delete(id);
+    }
+
+    @Override
+    public Boolean delete(List<ID> ids) {
+        return listFeignService.delete(ids).getData();
+    }
+
+    @Override
+    public Map<String, Double> statistic(
+            String column,
+            String timeField,
+            ColumnType columnType,
+            TimeDeltaEnum timeDelta,
+            String start,
+            String end,
+            CalcType calcType,
+            String conditions
+    ) {
+        return listFeignService.statistic(
+                column,
+                timeField,
+                columnType,
+                timeDelta,
+                start,
+                end,
+                calcType,
+                conditions
+        ).getData();
     }
 }

@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.BaseSortDTO;
 import top.keiskeiframework.cloud.feign.dto.ChartRequestDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.enums.CalcType;
+import top.keiskeiframework.cloud.feign.enums.ColumnType;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
@@ -33,7 +36,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return 。
      */
     @GetMapping
-    R<Page<T>> list(
+    R<Page<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
@@ -172,12 +175,29 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
     R<Boolean> delete(@RequestBody List<ID> ids);
 
 
+
     /**
      * 数据统计
      *
-     * @param chartRequestDTO 统计条件
+     * @param column     统计字段
+     * @param timeField  时间字段
+     * @param columnType 字段类型
+     * @param timeDelta  时间间隔
+     * @param start      起始时间
+     * @param end        结束时间
+     * @param calcType   计算方式
+     * @param conditions 查询条件
      * @return 。
      */
     @GetMapping("/statistic")
-    R<Map<String, Double>> statistic(ChartRequestDTO chartRequestDTO);
+    R<Map<String, Double>> statistic(
+            @RequestParam(name = "column") String column,
+            @RequestParam(name = "timeField", required = false) String timeField,
+            @RequestParam(name = "columnType") ColumnType columnType,
+            @RequestParam(name = "timeDelta") TimeDeltaEnum timeDelta,
+            @RequestParam(name = "start", required = false) String start,
+            @RequestParam(name = "end", required = false) String end,
+            @RequestParam(name = "calcType", required = false) CalcType calcType,
+            @RequestParam(name = "conditions", required = false) String conditions
+    );
 }

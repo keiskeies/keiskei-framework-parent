@@ -32,7 +32,7 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
+    public R<Page<T>> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         Page<T> tPage = listService.page(request, page);
         return R.ok(tPage);
     }

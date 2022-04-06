@@ -35,7 +35,7 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(
+    public R<Page<T>> page(
             BaseRequestVO<T, ID> request,
             BasePageVO<T, ID> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree

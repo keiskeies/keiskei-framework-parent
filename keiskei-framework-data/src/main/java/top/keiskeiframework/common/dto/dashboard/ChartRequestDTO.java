@@ -3,6 +3,7 @@ package top.keiskeiframework.common.dto.dashboard;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -72,7 +73,7 @@ public class ChartRequestDTO implements Serializable {
      * key  字段
      * value  范围
      */
-    private Map<String, List<String>> conditions;
+    private List<QueryConditionVO> conditions;
 
     public ChartRequestDTO (ChartType chartType, ColumnType columnType, LocalDateTime start, LocalDateTime end) {
         this.chartType = chartType;

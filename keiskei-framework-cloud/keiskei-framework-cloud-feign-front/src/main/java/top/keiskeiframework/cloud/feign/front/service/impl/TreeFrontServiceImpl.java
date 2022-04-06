@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
+import top.keiskeiframework.cloud.feign.enums.CalcType;
+import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.ITreeFrontService;
 import top.keiskeiframework.cloud.feign.front.util.TreeEntityDtoUtils;
 import top.keiskeiframework.cloud.feign.service.ITreeFeignService;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 基础查询接口
@@ -35,7 +39,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
             String asc,
             Boolean tree
     ) {
-        Page<T> noTreeResult = treeFeignService.list(
+        Page<T> noTreeResult = treeFeignService.page(
                 conditions,
                 show,
                 page,
@@ -108,7 +112,6 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
         return treeFeignService.getOne(id).getData();
     }
 
-
     @Override
     public T findByColumn(String column, Serializable value) {
         return treeFeignService.getOne(column, value).getData();
@@ -119,15 +122,51 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
         return treeFeignService.save(t).getData();
     }
 
+    @Override
+    public List<T> save(List<T> ts) {
+        return treeFeignService.save(ts).getData();
+    }
 
     @Override
     public T update(T t) {
         return treeFeignService.update(t).getData();
     }
 
+    @Override
+    public List<T> update(List<T> ts) {
+        return treeFeignService.update(ts).getData();
+    }
 
     @Override
     public void deleteById(ID id) {
         treeFeignService.delete(id);
+    }
+
+    @Override
+    public Boolean delete(List<ID> ids) {
+        return treeFeignService.delete(ids).getData();
+    }
+
+    @Override
+    public Map<String, Double> statistic(
+            String column,
+            String timeField,
+            ColumnType columnType,
+            TimeDeltaEnum timeDelta,
+            String start,
+            String end,
+            CalcType calcType,
+            String conditions
+    ) {
+        return treeFeignService.statistic(
+                column,
+                timeField,
+                columnType,
+                timeDelta,
+                start,
+                end,
+                calcType,
+                conditions
+        ).getData();
     }
 }

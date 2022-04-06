@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -277,11 +278,11 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
         chartRequestDTO.setChartType(direction.getType());
 
         if (!CollectionUtils.isEmpty(direction.getConditions())) {
-            Map<String, List<String>> conditions = new HashMap<>();
+            List<QueryConditionVO> queryConditions = new ArrayList<>(direction.getConditions().size());
             for (DashboardDirectionCondition condition : direction.getConditions()) {
-                conditions.put(condition.getField(), TagSerializer.convertValue(condition.getRangeValue()));
+                queryConditions.add(new QueryConditionVO(condition.getField(), TagSerializer.convertValue(condition.getRangeValue())));
             }
-            chartRequestDTO.setConditions(conditions);
+            chartRequestDTO.setConditions(queryConditions);
         }
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");

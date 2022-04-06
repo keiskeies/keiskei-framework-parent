@@ -1,11 +1,11 @@
-package top.keiskeiframework.common.aop;
+package top.keiskeiframework.cloud.feign.front.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -18,6 +18,7 @@ import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.vo.R;
 
+import javax.annotation.Priority;
 import java.util.stream.Collectors;
 
 /**
@@ -28,10 +29,10 @@ import java.util.stream.Collectors;
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午3:20:17
  */
-@ControllerAdvice({"top.keiskeiframework", "org.springframework"})
-@Component
+@ControllerAdvice
 @Order(-1)
 @Slf4j
+@Priority(1)
 public class GlobalExceptionHandler {
 
 

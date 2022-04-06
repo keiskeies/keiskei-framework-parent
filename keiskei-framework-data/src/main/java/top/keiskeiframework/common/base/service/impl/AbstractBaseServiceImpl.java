@@ -322,21 +322,21 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             predicates.add(builder.between(timeExpression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
         }
 
-        if (null != chartRequestDTO.getConditions() && !chartRequestDTO.getConditions().isEmpty()) {
+        if (!CollectionUtils.isEmpty(chartRequestDTO.getConditions())) {
 
             Expression<?> expression;
-            for (Map.Entry<String, List<String>> entry : chartRequestDTO.getConditions().entrySet()) {
+            for (QueryConditionVO queryConditionVO : chartRequestDTO.getConditions()) {
 
-                Object[] hasValueValues = entry.getValue().stream()
+                Object[] hasValueValues = queryConditionVO.getValue().stream()
                         .filter(e -> !StringUtils.isEmpty(e))
                         .toArray();
                 if (hasValueValues.length > 0) {
-                    if (entry.getKey().contains(".")) {
-                        String[] columns = entry.getKey().split("\\.");
+                    if (queryConditionVO.getColumn().contains(".")) {
+                        String[] columns = queryConditionVO.getColumn().split("\\.");
                         Join<T, ?> join = root.join(columns[0], JoinType.INNER);
                         expression = join.get(columns[1]);
                     } else {
-                        expression = root.get(entry.getKey());
+                        expression = root.get(queryConditionVO.getColumn());
                     }
 
                     if (hasValueValues.length == 1) {
