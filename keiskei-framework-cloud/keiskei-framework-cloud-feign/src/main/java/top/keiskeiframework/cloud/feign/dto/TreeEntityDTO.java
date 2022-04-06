@@ -1,7 +1,10 @@
 package top.keiskeiframework.cloud.feign.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +20,9 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TreeEntityDTO<ID extends Serializable> extends ListEntityDTO<ID> implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
