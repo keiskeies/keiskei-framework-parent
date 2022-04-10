@@ -15,9 +15,9 @@ import top.keiskeiframework.common.exception.BizException;
  */
 public class MdcUtils {
 
-    private static final String USER_ID = "userId";
-    private static final String USER_NAME = "userName";
-    private static final String USER_DEPARTMENT = "userDepartment";
+    public static final String USER_ID = "userId";
+    public static final String USER_NAME = "userName";
+    public static final String USER_DEPARTMENT = "userDepartment";
 
     public static void setUserId(String userId) {
         MDC.put(USER_ID, userId);
