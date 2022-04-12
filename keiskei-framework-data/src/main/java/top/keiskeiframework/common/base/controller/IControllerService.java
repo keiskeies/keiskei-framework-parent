@@ -48,8 +48,8 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @param value  值
      * @return 。
      */
-    @GetMapping("/{column}/{value}")
-    R<T> getOne(@PathVariable("column") String column, @PathVariable("value") Serializable value);
+    @GetMapping("/column")
+    R<T> getOne(@RequestParam(name = "column") String column, @RequestParam(name = "value") Serializable value);
 
     /**
      * 保存

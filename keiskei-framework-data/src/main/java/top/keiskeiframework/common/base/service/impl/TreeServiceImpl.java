@@ -54,6 +54,16 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @OperateNotify(type = OperateNotifyType.SAVE)
     @Lockable(key = "#t.hashCode()")
     public T saveAndNotify(T t) {
+        if (null != t.getParentId()) {
+            T parent = treeService.findById(t.getParentId());
+            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+            t = super.save(t);
+            t.setSign(parent.getSign() + t.getId() + SPILT);
+
+        } else {
+            t = super.save(t);
+            t.setSign(t.getId() + SPILT);
+        }
         return super.save(t);
     }
 
@@ -85,7 +95,17 @@ public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable> 
     @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name")
     @OperateNotify(type = OperateNotifyType.UPDATE)
     public T updateAndNotify(T t) {
-        return super.update(t);
+        Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+        if (null != t.getParentId()) {
+            T parent = treeService.findById(t.getParentId());
+            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
+            t.setSign(parent.getSign() + t.getId() + SPILT);
+        } else {
+            t.setSign(t.getId() + SPILT);
+        }
+
+        t = super.save(t);
+        return t;
     }
 
     @Override

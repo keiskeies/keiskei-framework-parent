@@ -2,30 +2,36 @@ package top.keiskeiframework.common.base.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
+import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
-import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.base.util.BaseRequestUtils;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -83,22 +89,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        if (request.showEmpty()) {
-            return jpaSpecificationExecutor.findAll(specification, pageable);
-        } else {
-            long total = jpaSpecificationExecutor.count(specification);
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tuple> query = builder.createTupleQuery();
-            Root<T> root = query.from(tClass);
-            Map<String, Join<T, ?>> joinMap = new ConcurrentHashMap<>();
-
-            Predicate predicate = specification.toPredicate(root, query, builder);
-            query.where(predicate);
-            query.multiselect(BaseRequestUtils.getSelections(root, request.getShow(tClass), joinMap));
-            query.orderBy(BaseRequestUtils.getOrders(root, tClass, page.getAsc(), page.getDesc(), joinMap));
-            List<T> contents = BaseRequestUtils.queryDataList(query, page.getPage(), page.getSize(), request.getShow(tClass), tClass);
-            return new PageImpl<T>(contents, pageable, total);
-        }
+        return jpaSpecificationExecutor.findAll(specification, pageable);
     }
 
 
@@ -117,21 +108,13 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     @Override
     public List<T> findAll(BaseRequestVO<T, ID> request) {
         Class<T> tClass = getTClass();
-        if (request.showEmpty()) {
-            return getEntityQueryData(request.getConditions(tClass));
-        } else {
-            return getTupleQueryData(tClass, request.getConditions(tClass), request.getShow(tClass), null, null);
-        }
+        return getEntityQueryData(request.getConditions(tClass));
     }
 
     @Override
     public List<T> findAll(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
         Class<T> tClass = getTClass();
-        if (request.showEmpty()) {
-            return getEntityQueryData(request.getConditions(tClass));
-        } else {
-            return getTupleQueryData(tClass, request.getConditions(tClass), request.getShow(tClass), page.getAsc(), page.getDesc());
-        }
+        return getEntityQueryData(request.getConditions(tClass));
     }
 
     private List<T> getEntityQueryData(List<QueryConditionVO> conditions) {
@@ -156,7 +139,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         } else {
             query.orderBy(BaseRequestUtils.getOrders(root, tClass, asc, desc, joinMap));
         }
-        return BaseRequestUtils.queryDataList(query, show, tClass);
+        return BaseRequestUtils.queryDataList(query, show, tClass, entityManager);
     }
 
     @Override

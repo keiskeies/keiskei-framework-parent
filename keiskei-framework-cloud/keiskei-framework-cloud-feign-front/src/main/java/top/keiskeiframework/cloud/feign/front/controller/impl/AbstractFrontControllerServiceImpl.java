@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.cloud.feign.front.controller.IFrontControllerService;
 import top.keiskeiframework.cloud.feign.front.service.IFrontService;
+import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.vo.R;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * 前置控制器
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -35,7 +36,7 @@ public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO
 
     @Override
     @ApiOperation("新增")
-    public R<T> save(@RequestBody T fieldInfo) {
+    public R<T> save(@RequestBody @Validated({Insert.class})T fieldInfo) {
         return R.ok(frontService.save(fieldInfo));
     }
 

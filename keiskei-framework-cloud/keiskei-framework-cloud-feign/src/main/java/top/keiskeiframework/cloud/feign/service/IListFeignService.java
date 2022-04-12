@@ -107,8 +107,8 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @param value  value
      * @return data
      */
-    @GetMapping("/{column}/{value}")
-    R<T> getOne(@PathVariable("column") String column, @PathVariable("value") Serializable value);
+    @GetMapping("/column")
+    R<T> getOne(@RequestParam(name = "column") String column, @RequestParam(name = "value") Serializable value);
 
     /**
      * 保存

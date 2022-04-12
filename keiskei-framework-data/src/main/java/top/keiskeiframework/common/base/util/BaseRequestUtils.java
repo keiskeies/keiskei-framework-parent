@@ -52,15 +52,6 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         BaseRequestUtils.useDepartment = useDepartment;
     }
 
-    @Autowired
-    public void setEntityManager(EntityManager entityManager) {
-        BaseRequestUtils.entityManager = entityManager;
-    }
-
-    /**
-     * 数据查询工具
-     */
-    private static EntityManager entityManager;
     /**
      * 是否启用部门权限
      */
@@ -283,8 +274,8 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID>   id
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, List<String> show, Class<T> tClass) {
-        return queryDataList(query, null, null, show, tClass);
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, List<String> show, Class<T> tClass,EntityManager entityManager) {
+        return queryDataList(query, null, null, show, tClass, entityManager);
     }
 
     /**
@@ -299,7 +290,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      * @param <ID>   id
      * @return .
      */
-    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, Integer page, Integer size, List<String> show, Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, Integer page, Integer size, List<String> show, Class<T> tClass, EntityManager entityManager) {
         TypedQuery<Tuple> tTypedQuery = entityManager.createQuery(query);
         if (null != page && null != size) {
             tTypedQuery.setFirstResult((page - 1) * size);
