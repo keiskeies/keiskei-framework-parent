@@ -1,7 +1,7 @@
-package top.keiskeiframework.generate.repository;
+package top.keiskeiframework.generate.mapper;
 
 import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
-import top.keiskeiframework.generate.entity.FieldEnumInfo;
+import top.keiskeiframework.generate.entity.FieldInfo;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.FieldEnumInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface FieldEnumInfoMapper extends BaseEntityMapper<FieldEnumInfo, Long> {
+public interface FieldInfoMapper extends BaseEntityMapper<FieldInfo, Long> {
 
 }

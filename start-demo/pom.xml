@@ -21,6 +21,10 @@
             <artifactId>keiskei-framework-log-db</artifactId>
         </dependency>
         <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-generate</artifactId>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>

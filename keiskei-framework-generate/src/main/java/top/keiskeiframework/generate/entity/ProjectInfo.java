@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Transient;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -61,8 +62,8 @@ public class ProjectInfo extends ListEntity<Long> {
     @ApiModelProperty(value = "作者", dataType = "String")
     private String author;
 
-    @ApiModelProperty(value = "文件方式", dataType = "String")
-    private ProjectInfoFileJarEnum fileJar = ProjectInfoFileJarEnum.LOCAL;
+//    @ApiModelProperty(value = "文件方式", dataType = "String")
+//    private ProjectInfoFileJarEnum fileJar = ProjectInfoFileJarEnum.LOCAL;
 
     @ApiModelProperty(value = "日志存储", dataType = "Boolean")
     private Boolean sqlLog = false;
@@ -73,5 +74,5 @@ public class ProjectInfo extends ListEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
     @Valid
-    private List<ModuleInfo> modules = new ArrayList<>();
+    private transient List<ModuleInfo> modules = new ArrayList<>();
 }

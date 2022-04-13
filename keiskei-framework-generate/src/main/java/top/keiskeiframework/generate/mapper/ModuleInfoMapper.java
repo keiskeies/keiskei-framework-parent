@@ -1,4 +1,4 @@
-package top.keiskeiframework.generate.repository;
+package top.keiskeiframework.generate.mapper;
 
 import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
 import top.keiskeiframework.generate.entity.ModuleInfo;

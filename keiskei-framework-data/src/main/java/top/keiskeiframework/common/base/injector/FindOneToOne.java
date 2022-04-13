@@ -23,6 +23,6 @@ public class FindOneToOne extends AbstractMethod {
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
 
         return this.addSelectMappedStatementForTable(mapperClass,
-                "findAll", sqlSource, tableInfo);
+                "findOneToOne", sqlSource, tableInfo);
     }
 }

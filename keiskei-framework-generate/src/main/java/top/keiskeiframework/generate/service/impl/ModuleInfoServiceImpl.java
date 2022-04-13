@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ModuleInfo;
-import top.keiskeiframework.generate.repository.ModuleInfoMapper;
+import top.keiskeiframework.generate.mapper.ModuleInfoMapper;
 import top.keiskeiframework.generate.service.IModuleInfoService;
 
 /**

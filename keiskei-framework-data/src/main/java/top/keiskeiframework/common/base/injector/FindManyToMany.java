@@ -23,6 +23,6 @@ public class FindManyToMany extends AbstractMethod {
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
 
         return this.addSelectMappedStatementForTable(mapperClass,
-                "findAll", sqlSource, tableInfo);
+                "findManyToMany", sqlSource, tableInfo);
     }
 }

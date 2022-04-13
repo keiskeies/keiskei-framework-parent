@@ -1,10 +1,13 @@
 package top.keiskeiframework.logdb.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.annotation.log.Lockable;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
 import top.keiskeiframework.log.dto.OperateLogDTO;
@@ -45,5 +48,13 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
     @Lockable(key = "#t.hashCode()")
     public boolean save(OperateLog operateLog) {
         return super.save(operateLog);
+    }
+
+    @Override
+    public IPage<OperateLog> page(BaseRequestVO<OperateLog, Long> request, BasePageVO<OperateLog, Long> page) {
+        IPage<OperateLog> result = super.page(request, page);
+        this.baseMapper.findManyToMany(new OperateLog());
+
+        return result;
     }
 }
