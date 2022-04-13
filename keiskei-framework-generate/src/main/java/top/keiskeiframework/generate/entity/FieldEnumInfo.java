@@ -1,5 +1,7 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
@@ -32,8 +33,8 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gr_field_enum_info")
+
+@TableName(value = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
 public class FieldEnumInfo extends ListEntity<Long> {
     private static final long serialVersionUID = -7401234718671320506L;
@@ -57,16 +58,9 @@ public class FieldEnumInfo extends ListEntity<Long> {
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_enum_id")
-    @OrderBy("sortBy")
     private List<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
-
-
-    @PostPersist
-    private void postPersist() {
-        this.sortBy = super.getId();
-    }
 }

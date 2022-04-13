@@ -1,5 +1,7 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,8 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.annotation.validate.*;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
 import javax.persistence.*;
@@ -30,8 +32,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gr_module_info")
+@TableName(value = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
 public class ModuleInfo extends ListEntity<Long> {
 
@@ -55,17 +56,10 @@ public class ModuleInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "module_id")
-    @OrderBy("sortBy")
     @Valid
     private List<TableInfo> tables = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
-
-
-    @PostPersist
-    private void postPersist() {
-        this.sortBy = super.getId();
-    }
 }

@@ -2,7 +2,7 @@ package top.keiskeiframework.generate.service.impl;
 
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.FieldInfo;
-import top.keiskeiframework.generate.repository.FieldInfoRepository;
+import top.keiskeiframework.generate.repository.FieldInfoMapper;
 import top.keiskeiframework.generate.service.IFieldInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,6 @@ import org.springframework.stereotype.Service;
 public class FieldInfoServiceImpl extends ListServiceImpl<FieldInfo, Long> implements IFieldInfoService {
 
     @Autowired
-    private FieldInfoRepository fieldInfoRepository;
+    private FieldInfoMapper fieldInfoMapper;
 
 }

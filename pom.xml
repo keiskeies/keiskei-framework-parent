@@ -5,16 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.keiskeiframework</groupId>
     <artifactId>keiskei-framework-parent</artifactId>
-    <version>2.0.0-jpa-Release</version>
+    <version>2.0.0-mp-Release</version>
     <modules>
         <module>keiskei-framework-data</module>
         <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log-db</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-system</module>
-        <module>keiskei-framework-workflow</module>
         <module>keiskei-framework-doc</module>
         <module>keiskei-framework-cloud</module>
+        <module>start-demo</module>
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -24,7 +24,7 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>1.8</java.version>
-        <keiskei.project.version>2.0.0-jpa-Release</keiskei.project.version>
+        <keiskei.project.version>2.0.0-mp-Release</keiskei.project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>8</maven.compiler.source>

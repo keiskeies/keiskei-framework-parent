@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sys_role")
+@TableName(value = "sys_role")
 @ApiModel(value = "SystemRole", description = "角色")
 public class SystemRole extends ListEntity<Long> {
 
@@ -40,7 +40,6 @@ public class SystemRole extends ListEntity<Long> {
     @NotBlank(message = "角色名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
-    @ManyToMany(targetEntity = SystemPermission.class, cascade = CascadeType.MERGE)
     @JoinTable(name = "sys_role_permission",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})

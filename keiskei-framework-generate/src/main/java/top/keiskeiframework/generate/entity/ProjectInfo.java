@@ -1,10 +1,15 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.validate.*;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
@@ -27,8 +32,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gr_project_info")
+@TableName(value = "gr_project_info")
 @ApiModel(value = "ProjectInfo", description = "项目信息")
 public class ProjectInfo extends ListEntity<Long> {
 
@@ -69,6 +73,5 @@ public class ProjectInfo extends ListEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
     @Valid
-    @OrderBy("sortBy")
     private List<ModuleInfo> modules = new ArrayList<>();
 }

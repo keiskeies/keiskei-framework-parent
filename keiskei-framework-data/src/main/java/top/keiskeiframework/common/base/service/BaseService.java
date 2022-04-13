@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.service;
 
-import org.springframework.data.domain.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.BaseSortVO;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> {
+public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> extends IService<T> {
 
     /**
      * 列表查询
@@ -31,17 +32,14 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param page    列表条件
      * @return .
      */
-    Page<T> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
+    IPage<T> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
 
     /**
      * 查询全部
      *
      * @param request 查询条件
-     * @param page    只使用排序
      * @return 。
      */
-    List<T> findAll(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
-
     List<T> findAll(BaseRequestVO<T, ID> request);
 
     /**
@@ -50,13 +48,6 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @return .
      */
     List<T> findAll();
-
-    /**
-     * 下拉框列表
-     *
-     * @param t 查询条件
-     * @return .
-     */
     List<T> findAll(T t);
 
     /**
@@ -93,13 +84,6 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      */
     T findByColumn(String column, Serializable value);
 
-    /**
-     * 新增
-     *
-     * @param t .
-     * @return .
-     */
-    T save(T t);
 
     /**
      * 新增并通知
@@ -108,30 +92,6 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @return 。
      */
     T saveAndNotify(T t);
-
-    /**
-     * 批量新增
-     *
-     * @param tList .
-     * @return .
-     */
-    List<T> saveAll(List<T> tList);
-
-    /**
-     * 更新
-     *
-     * @param t .
-     * @return .
-     */
-    T update(T t);
-
-    /**
-     * 更新多个
-     *
-     * @param ts ts
-     * @return dataList
-     */
-    List<T> updateAll(List<T> ts);
 
     /**
      * 更新并通知
@@ -147,20 +107,6 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param baseSortVO .
      */
     void changeSort(BaseSortVO<ID> baseSortVO);
-
-    /**
-     * 删除
-     *
-     * @param id id
-     */
-    void deleteById(ID id);
-
-    /**
-     * 删除多个
-     *
-     * @param ids ids
-     */
-    void deleteByIds(Collection<ID> ids);
 
     /**
      * 删除并通知

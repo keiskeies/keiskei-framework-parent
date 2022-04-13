@@ -1,8 +1,8 @@
 package top.keiskeiframework.common.base.controller.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,42 +35,23 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> page(
+    public R<IPage<T>> page(
             BaseRequestVO<T, ID> request,
             BasePageVO<T, ID> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
     ) {
-        Page<T> pageList = treeService.page(request, page);
+        IPage<T> pageList = treeService.page(request, page);
         if (tree) {
-            List<T> treeList = new TreeEntityUtils<>(pageList.getContent()).getTreeAll();
-            return R.ok(new PageImpl<>(treeList, pageList.getPageable(), pageList.getTotalElements()));
-        } else {
-            return R.ok(new PageImpl<>(pageList.getContent(), pageList.getPageable(), pageList.getTotalElements()));
+            List<T> treeList = new TreeEntityUtils<>(pageList.getRecords()).getTreeAll();
+            pageList.setRecords(treeList);
         }
+        return R.ok(pageList);
     }
 
 
     @GetMapping("/options")
     @ApiOperation("下拉框")
     public R<List<T>> options(
-            BaseRequestVO<T, ID> request,
-            BasePageVO<T, ID> page,
-            @RequestParam(required = false) ID id,
-            @RequestParam(required = false, defaultValue = "true") Boolean tree) {
-        List<T> list;
-        if (tree) {
-            list = treeService.findAll(request);
-            return R.ok(new TreeEntityUtils<>(list).getTreeAll(id));
-        } else {
-            list = treeService.findAll(request, page);
-            return R.ok(list);
-        }
-    }
-
-
-    @GetMapping("/all")
-    @ApiOperation("全部下拉框")
-    public R<List<T>> all(
             BaseRequestVO<T, ID> request,
             @RequestParam(required = false) ID id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {

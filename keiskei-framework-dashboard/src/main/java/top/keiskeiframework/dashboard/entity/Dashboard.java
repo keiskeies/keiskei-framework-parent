@@ -1,5 +1,7 @@
 package top.keiskeiframework.dashboard.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -35,21 +36,15 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "dashboard")
+@TableName(value = "dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
 public class Dashboard extends ListEntity<Long> {
 
     private static final long serialVersionUID = -5855392143364324899L;
 
     @ApiModelProperty(value = "排序", dataType = "Long")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
-
-    @PostPersist
-    private void postPersist() {
-        this.sortBy = super.getId();
-    }
 
     @ApiModelProperty(value = "图表名称", dataType = "String")
     @NotBlank(message = "图表名称不能为空", groups = {Insert.class, Update.class})

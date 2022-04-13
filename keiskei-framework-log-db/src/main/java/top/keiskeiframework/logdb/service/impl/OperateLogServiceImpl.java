@@ -43,7 +43,7 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
     @Override
     @Async
     @Lockable(key = "#t.hashCode()")
-    public OperateLog save(OperateLog operateLog) {
+    public boolean save(OperateLog operateLog) {
         return super.save(operateLog);
     }
 }

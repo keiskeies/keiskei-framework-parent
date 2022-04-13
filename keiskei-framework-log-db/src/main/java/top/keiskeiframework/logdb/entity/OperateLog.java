@@ -1,5 +1,6 @@
 package top.keiskeiframework.logdb.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,11 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.annotation.dashboard.Chartable;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -28,8 +28,7 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "log_operate_log")
+@TableName(value = "log_operate_log")
 @ApiModel(value = "OperateLog", description = "操作日志")
 @Chartable
 public class OperateLog extends ListEntity<Long> {

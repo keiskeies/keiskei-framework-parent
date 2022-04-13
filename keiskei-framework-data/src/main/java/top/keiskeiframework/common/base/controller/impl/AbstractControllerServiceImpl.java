@@ -66,7 +66,8 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     @Override
     @ApiOperation("新增")
     public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
-        return R.ok(baseService.saveAll(ts));
+        baseService.saveBatch(ts);
+        return R.ok(ts);
     }
 
     @Override
@@ -78,7 +79,10 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     @Override
     @ApiOperation("更新")
     public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
-        return R.ok(baseService.updateAll(ts));
+        for (T t : ts) {
+            baseService.updateAndNotify(t);
+        }
+        return R.ok(ts);
     }
 
     @Override
@@ -98,7 +102,9 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     @Override
     @ApiOperation("删除")
     public R<Boolean> delete(@RequestBody List<ID> ids) {
-        baseService.deleteByIds(ids);
+        for (ID id : ids) {
+            baseService.deleteByIdAndNotify(id);
+        }
         return R.ok(Boolean.TRUE);
     }
 

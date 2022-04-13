@@ -1,10 +1,11 @@
 package top.keiskeiframework.common.base.dto;
 
-import lombok.*;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.util.BaseRequestUtils;
 
 import java.io.Serializable;
 
@@ -28,22 +29,13 @@ public class BasePageVO<T extends ListEntity<ID>, ID extends Serializable> {
     @Setter
     @Getter
     private Integer page = 1, size = 20;
-    /**
-     * 排序方式
-     */
-    @Setter
-    @Getter
-    private String desc, asc;
 
     /**
      * 获取分页条件
      *
-     * @param tClass tclass
      * @return .
      */
-    public Pageable getPageable(@NonNull Class<T> tClass) {
-        return PageRequest.of(
-                this.page - 1, this.size,
-                BaseRequestUtils.getSort(tClass, asc, desc));
+    public Page<T> getPageable() {
+        return new Page<>(page, size);
     }
 }

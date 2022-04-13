@@ -21,7 +21,7 @@ import top.keiskeiframework.system.vo.TokenUser;
 import top.keiskeiframework.system.entity.SystemDepartment;
 import top.keiskeiframework.system.entity.SystemRole;
 import top.keiskeiframework.system.properties.SystemProperties;
-import top.keiskeiframework.system.repository.SystemUserRepository;
+import top.keiskeiframework.system.mapper.SystemUserMapper;
 import top.keiskeiframework.system.service.ISystemDepartmentService;
 import top.keiskeiframework.system.service.ISystemPermissionService;
 import top.keiskeiframework.system.service.ISystemUserService;
@@ -42,8 +42,6 @@ import java.util.stream.Collectors;
 @Service
 public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Long> implements ISystemUserService {
     @Autowired
-    private SystemUserRepository systemUserRepository;
-    @Autowired
     private CacheStorageService cacheStorageService;
     @Autowired
     private SystemProperties systemProperties;
@@ -59,7 +57,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Long> imp
         if (StringUtils.isEmpty(username)) {
             throw new BizException(BizExceptionEnum.CHECK_FIELD);
         }
-        SystemUser systemUser = systemUserRepository.findTopByUsername(username);
+        SystemUser systemUser = this.findByColumn("username", username);
         if (null == systemUser) {
             throw new UsernameNotFoundException("用户名不存在！");
         }
@@ -96,14 +94,14 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Long> imp
         if (StringUtils.isEmpty(username)) {
             return;
         }
-        SystemUser systemUser = systemUserRepository.findTopByUsername(username);
+        SystemUser systemUser = this.findByColumn("username", username);
         if (null == systemUser) {
             return;
         }
         if (cacheStorageService.overTimeNum(String.format(SystemEnum.USER_ERROR_TIMES_SUFFIX, username))) {
             LocalDateTime lockTime = LocalDateTime.now().plusMinutes(systemProperties.getLockMinutes());
             systemUser.setAccountLockTime(lockTime);
-            systemUserRepository.save(systemUser);
+            this.saveAndNotify(systemUser);
         }
     }
 
@@ -121,7 +119,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Long> imp
             }
         }
 
-        SystemUser systemUser = systemUserRepository.getOne(tokenUser.getId());
+        SystemUser systemUser = this.findById(tokenUser.getId());
         Set<SystemPermission> systemPermissions = new HashSet<>();
 
         for (SystemRole systemRole : systemUser.getSystemRoles()) {

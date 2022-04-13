@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,9 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.annotation.dashboard.Chartable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,8 +29,7 @@ import java.util.Set;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@Entity
-@Table(name = "sys_user")
+@TableName(value = "sys_user")
 @ApiModel(value = "SystemUser", description = "管理员")
 public class SystemUser extends ListEntity<Long> {
 

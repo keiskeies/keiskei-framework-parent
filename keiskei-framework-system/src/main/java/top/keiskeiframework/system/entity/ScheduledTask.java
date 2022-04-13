@@ -1,17 +1,19 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -27,9 +29,8 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Accessors(chain = true)
-@Table(name = "sys_scheduled_task")
+@TableName(value = "sys_scheduled_task")
 @ApiModel(value = "ScheduledTask", description = "定时任务")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class ScheduledTask extends ListEntity<Long> {

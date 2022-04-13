@@ -3,10 +3,6 @@ package top.keiskeiframework.common.base;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 
 /**
  * 执行原生SQL Service
@@ -17,14 +13,15 @@ import javax.persistence.Query;
 
 @Component
 public class SqlService {
-    @PersistenceContext
-    EntityManager entityManager;
+//    @PersistenceContext
+//    EntityManager entityManager;
 
 
     @Transactional(rollbackFor = Exception.class)
     public int executeSql(String sql) {
-        Query query = entityManager.createNativeQuery(sql);
-        return query.executeUpdate();
+//        Query query = entityManager.createNativeQuery(sql);
+//        return query.executeUpdate();
+        return 0;
     }
 
 }

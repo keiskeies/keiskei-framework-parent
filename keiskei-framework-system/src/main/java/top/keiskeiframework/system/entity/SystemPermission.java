@@ -1,5 +1,7 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,12 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -29,8 +27,7 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sys_permission")
+@TableName(value = "sys_permission")
 @ApiModel(value = "SystemPermission", description = "操作权限")
 public class SystemPermission extends TreeEntity<Long> {
 
@@ -53,11 +50,6 @@ public class SystemPermission extends TreeEntity<Long> {
     private String method;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
-
-    @PreUpdate
-    public void onUpdate() {
-        sortBy = Long.parseLong(id.toString());
-    }
 }

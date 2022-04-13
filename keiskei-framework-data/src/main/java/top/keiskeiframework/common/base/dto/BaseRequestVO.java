@@ -1,7 +1,9 @@
 package top.keiskeiframework.common.base.dto;
 
 import com.alibaba.fastjson.JSON;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.constants.BaseConstants;
@@ -26,8 +28,15 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor
 public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
+    /**
+     * 排序方式
+     */
+    @Setter
+    @Getter
+    private String desc, asc;
 
     protected Set<String> fields;
+
 
     protected Set<String> getFields(Class<T> tClass) {
         if (CollectionUtils.isEmpty(fields)) {

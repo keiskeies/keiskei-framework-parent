@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.TableInfo;
-import top.keiskeiframework.generate.repository.TableInfoRepository;
+import top.keiskeiframework.generate.repository.TableInfoMapper;
 import top.keiskeiframework.generate.service.ITableInfoService;
 
 /**
@@ -19,6 +19,6 @@ import top.keiskeiframework.generate.service.ITableInfoService;
 public class TableInfoServiceImpl extends ListServiceImpl<TableInfo, Long> implements ITableInfoService {
 
     @Autowired
-    private TableInfoRepository tableInfoRepository;
+    private TableInfoMapper tableInfoMapper;
 
 }

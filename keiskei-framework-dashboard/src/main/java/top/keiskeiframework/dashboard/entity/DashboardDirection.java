@@ -1,5 +1,6 @@
 package top.keiskeiframework.dashboard.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "dashboard_direction")
+@TableName(value = "dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends ListEntity<Long> {
 
@@ -40,11 +40,11 @@ public class DashboardDirection extends ListEntity<Long> {
     private String field;
 
     @ApiModelProperty(value = "实体类", dataType = "String")
-    @NotBlank(message="实体类不能为空", groups = {Insert.class, Update.class})
+    @NotBlank(message = "实体类不能为空", groups = {Insert.class, Update.class})
     private String entityClass;
 
     @ApiModelProperty(value = "显示名称", dataType = "String")
-    @NotBlank(message="显示名称不能为空", groups = {Insert.class, Update.class})
+    @NotBlank(message = "显示名称不能为空", groups = {Insert.class, Update.class})
     private String entityName;
 
     @ApiModelProperty(value = "查询条件")
@@ -53,6 +53,6 @@ public class DashboardDirection extends ListEntity<Long> {
     private List<DashboardDirectionCondition> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
-    @NotNull(message="图表类型不能为空", groups = {Insert.class, Update.class})
+    @NotNull(message = "图表类型不能为空", groups = {Insert.class, Update.class})
     private ChartType type;
 }

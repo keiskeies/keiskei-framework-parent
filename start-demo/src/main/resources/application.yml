@@ -1,0 +1,38 @@
+logging:
+  level:
+    top.keiskeiframework: debug
+    jdbc: error
+  pattern:
+    file: "%d [%X{userName}-%X{userId}] %-5level - %msg%n"
+    console: "%d [%X{userName}-%X{userId}] [%thread] %-5level %logger{36} %line - %msg%n"
+  session:
+    store-type: redis
+  jackson:
+    default-property-inclusion: non_null
+  messages:
+    basename: i18n/messages
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  datasource:
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: "SELECT 1"
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+    name: cpreading
+    driver-class-name:
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.31.236:13306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true
+    &characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+  redis:
+    timeout: 60000
+    password: pojienimasiquanjia
+    database: 10
+    port: 6379
+    host: 192.168.31.236

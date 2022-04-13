@@ -57,8 +57,9 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
             @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #dashboard.id")
     })
-    public Dashboard update(Dashboard dashboard) {
-        return super.update(dashboard);
+    public Dashboard updateAndNotify(Dashboard dashboard) {
+        super.updateById(dashboard);
+        return dashboard;
     }
 
     @Override
@@ -66,8 +67,8 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id"),
             @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
     })
-    public void deleteById(Long id) {
-        super.deleteById(id);
+    public void deleteByIdAndNotify(Long id) {
+        super.removeById(id);
     }
 
 

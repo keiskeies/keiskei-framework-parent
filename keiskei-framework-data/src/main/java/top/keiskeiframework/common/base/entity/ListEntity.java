@@ -1,5 +1,7 @@
 package top.keiskeiframework.common.base.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,15 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.aop.AbstractAuditorAware;
-import top.keiskeiframework.common.util.MdcUtils;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -27,6 +24,7 @@ import java.time.LocalDateTime;
  * <p>
  * 基础实体类
  * </p>
+ *
  * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
@@ -35,54 +33,51 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public class ListEntity<ID extends Serializable> implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected ID id;
 
 
     /**
      * 数据所属部门
      */
+    @TableField(fill = FieldFill.INSERT)
     protected String p;
 
-    @PrePersist
-    protected void onCreate() {
-        p = MdcUtils.getUserDepartment();
-    }
+    /**
+     * 删除标记
+     */
+    @TableField(fill = FieldFill.INSERT)
+    protected Integer d;
 
     /**
      * 数据创建人
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
-    @CreatedBy
+    @TableField(fill = FieldFill.INSERT)
     protected Long createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
-    @LastModifiedBy
+    @TableField(fill = FieldFill.UPDATE)
     protected Long updateUserId;
 
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreationTimestamp
-    @Column(updatable = false)
     @ApiModelProperty(value = "创建时间", dataType = "LocalDateTime")
+    @TableField(fill = FieldFill.INSERT)
     protected LocalDateTime createTime;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @UpdateTimestamp
     @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     protected LocalDateTime updateTime;
 
 

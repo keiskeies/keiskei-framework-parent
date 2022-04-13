@@ -1,16 +1,26 @@
 package top.keiskeiframework.generate.entity;
 
-import io.swagger.annotations.*;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
-import top.keiskeiframework.common.annotation.validate.*;
-import top.keiskeiframework.common.base.entity.*;
-import top.keiskeiframework.generate.enums.*;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
+import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
+import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +37,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gr_table_info")
+@TableName(value = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
 public class TableInfo extends ListEntity<Long> {
 
@@ -61,16 +70,10 @@ public class TableInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "table_id")
-    @OrderBy("sortBy")
     @Valid
     private List<FieldInfo> fields = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
-
-    @PostPersist
-    private void postPersist() {
-        this.sortBy = super.getId();
-    }
 }

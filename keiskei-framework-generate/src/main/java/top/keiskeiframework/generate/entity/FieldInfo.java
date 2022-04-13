@@ -1,5 +1,7 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,12 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.SortBy;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 import top.keiskeiframework.generate.enums.FieldInfoRelationEnum;
+import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -33,8 +34,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "gr_field_info")
+@TableName(value = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
 public class FieldInfo extends ListEntity<Long> {
 
@@ -90,17 +90,11 @@ public class FieldInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_id")
-    @OrderBy("sortBy")
     private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
 
     @ApiModelProperty(value = "排序", dataType = "ID")
-    @SortBy(desc = false)
+    @OrderBy
     private Long sortBy;
 
-
-    @PostPersist
-    private void postPersist() {
-        this.sortBy = super.getId();
-    }
 
 }

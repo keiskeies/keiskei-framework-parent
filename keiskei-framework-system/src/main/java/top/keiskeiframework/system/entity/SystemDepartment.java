@@ -1,5 +1,6 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,8 +11,6 @@ import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -27,8 +26,7 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sys_department")
+@TableName(value = "sys_department")
 @ApiModel(value = "SystemDepartment", description = "部门管理")
 public class SystemDepartment extends TreeEntity<Long> {
 
