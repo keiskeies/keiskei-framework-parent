@@ -10,6 +10,7 @@ import top.keiskeiframework.common.base.constants.BaseConstants;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
+import top.keiskeiframework.common.util.BeanUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -17,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @param <ID> .
  * @param <T>  .
  * @author James Chen right_way@foxmail.com
  * @version 1.0
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @since 2020/11/24 23:08
  */
 @NoArgsConstructor
-public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
+public class BaseRequestVO<T extends ListEntity> {
     /**
      * 排序方式
      */
@@ -35,30 +35,13 @@ public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
     @Getter
     private String desc, asc;
 
-    protected Set<String> fields;
 
 
-    protected Set<String> getFields(Class<T> tClass) {
-        if (CollectionUtils.isEmpty(fields)) {
-            fields = new HashSet<>();
-            for (Field field : tClass.getDeclaredFields()) {
-                fields.add(field.getName());
-            }
-            for (Field field : tClass.getSuperclass().getDeclaredFields()) {
-                fields.add(field.getName());
-            }
-            if (tClass.getSuperclass().equals(TreeEntity.class)) {
-                for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
-                    fields.add(field.getName());
-                }
-            }
-        }
-        return fields;
-    }
 
     /**
      * 查询条件
      */
+    @Getter
     protected List<QueryConditionVO> conditions;
 
     public void setConditions(String conditions) {
@@ -83,20 +66,6 @@ public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
         );
     }
 
-    public List<QueryConditionVO> getConditions(Class<T> tClass) {
-        if (!conditionEmpty()) {
-            Set<String> fields = this.getFields(tClass);
-            this.conditions.removeIf(e -> {
-                if (e.getColumn().contains(".")) {
-                    return !fields.contains(e.getColumn().substring(0, e.getColumn().lastIndexOf(".")));
-                } else {
-                    return !fields.contains(e.getColumn());
-                }
-            });
-        }
-        return this.conditions;
-    }
-
     public void addCondition(QueryConditionVO condition) {
         if (conditionEmpty()) {
             this.conditions = new ArrayList<>(1);
@@ -118,6 +87,7 @@ public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
     /**
      * 显示字段
      */
+    @Getter
     protected List<String> show;
 
     public void setShow(String show) {
@@ -141,36 +111,14 @@ public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> {
         this.show.add(0, column);
     }
 
-
-    public List<String> getShow(Class<T> tClass) {
-        if (!showEmpty()) {
-            if (tClass.getSuperclass().equals(TreeEntity.class)) {
-                if (!this.show.contains(BaseConstants.PARENT_ID_COLUMN)) {
-                    this.show.add(1, BaseConstants.PARENT_ID_COLUMN);
-                }
-            }
-        }
-        if (!showEmpty()) {
-            Set<String> fields = this.getFields(tClass);
-            this.show.removeIf(e -> {
-                if (e.contains(".")) {
-                    return !fields.contains(e.substring(0, e.lastIndexOf(".")));
-                } else {
-                    return !fields.contains(e);
-                }
-            });
-        }
-        return this.show;
-    }
-
     public boolean showEmpty() {
         return CollectionUtils.isEmpty(show);
     }
 
-
     public boolean requestEmpty() {
-        return CollectionUtils.isEmpty(conditions) && CollectionUtils.isEmpty(show);
+        return this.showEmpty() && this.conditionEmpty();
     }
+
 
     @Override
     public String toString() {

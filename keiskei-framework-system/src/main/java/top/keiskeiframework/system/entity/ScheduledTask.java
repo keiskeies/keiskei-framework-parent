@@ -33,7 +33,7 @@ import javax.validation.constraints.NotBlank;
 @TableName(value = "sys_scheduled_task")
 @ApiModel(value = "ScheduledTask", description = "定时任务")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class ScheduledTask extends ListEntity<Long> {
+public class ScheduledTask extends ListEntity {
 
     private static final long serialVersionUID = -2520015535285512159L;
 

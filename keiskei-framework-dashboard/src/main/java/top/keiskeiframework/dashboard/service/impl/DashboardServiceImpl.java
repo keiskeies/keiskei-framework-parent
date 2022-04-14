@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> implements IDashboardService {
+public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
 
 
 
@@ -288,7 +288,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Long> imple
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 
-        BaseService<?, ?> baseService = (BaseService<?, ?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
+        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
         return baseService.getChartOptions(chartRequestDTO);
     }
 

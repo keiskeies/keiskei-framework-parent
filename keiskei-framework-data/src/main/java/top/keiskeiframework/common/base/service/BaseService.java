@@ -23,7 +23,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> extends IService<T> {
+public interface BaseService<T extends ListEntity> extends IService<T> {
 
     /**
      * 列表查询
@@ -32,7 +32,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param page    列表条件
      * @return .
      */
-    IPage<T> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page);
+    IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page);
 
     /**
      * 查询全部
@@ -40,7 +40,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param request 查询条件
      * @return 。
      */
-    List<T> findAll(BaseRequestVO<T, ID> request);
+    List<T> findAll(BaseRequestVO<T> request);
 
     /**
      * 下拉框列表
@@ -58,6 +58,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @return 。
      */
     List<T> findAllByColumn(String column, Serializable value);
+    List<T> findAllByColumnCache(String oneToMany, String column, Serializable value);
 
     /**
      * 查询数量
@@ -65,7 +66,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param request request
      * @return 。
      */
-    Long count(BaseRequestVO<T, ID> request);
+    Long count(BaseRequestVO<T> request);
 
     /**
      * 根据id查询
@@ -73,7 +74,8 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param id id
      * @return .
      */
-    T findById(ID id);
+    T findById(Long id);
+    T findByIdCache(Long id);
 
     /**
      * 通过单一字段查询
@@ -106,14 +108,15 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      *
      * @param baseSortVO .
      */
-    void changeSort(BaseSortVO<ID> baseSortVO);
+    void changeSort(BaseSortVO baseSortVO);
 
     /**
      * 删除并通知
      *
      * @param id 。
      */
-    void deleteByIdAndNotify(ID id);
+    void deleteByIdAndNotify(Long id);
+    void deleteByIdAndNotifySingle(Long id);
 
     /**
      * 校验数据

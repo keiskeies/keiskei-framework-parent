@@ -14,7 +14,6 @@ import java.util.List;
  * 基础实体类
  * </p>
  *
- * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
@@ -23,11 +22,11 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeEntityDTO<ID extends Serializable> extends ListEntityDTO<ID> implements Serializable {
+public class TreeEntityDTO extends ListEntityDTO implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
-    protected ID parentId;
+    protected Long parentId;
     protected String sign;
-    protected List<? extends TreeEntityDTO<ID>> children;
+    protected List<? extends TreeEntityDTO> children;
 
 }

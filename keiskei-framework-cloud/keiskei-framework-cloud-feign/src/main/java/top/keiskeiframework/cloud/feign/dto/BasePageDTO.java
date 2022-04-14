@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @since 2020/11/24 23:08
  */
 @Data
-public class BasePageDTO<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public class BasePageDTO<T extends ListEntityDTO> {
 
     private Integer page = 1;
     private Integer size = 20;

@@ -11,7 +11,7 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IScheduledTaskService extends BaseService<ScheduledTask, Long> {
+public interface IScheduledTaskService extends BaseService<ScheduledTask> {
 
     /**
      * 更改任务状态

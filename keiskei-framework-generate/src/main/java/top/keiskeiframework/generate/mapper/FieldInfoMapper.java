@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.FieldInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface FieldInfoMapper extends BaseEntityMapper<FieldInfo, Long> {
+public interface FieldInfoMapper extends BaseEntityMapper<FieldInfo> {
 
 }

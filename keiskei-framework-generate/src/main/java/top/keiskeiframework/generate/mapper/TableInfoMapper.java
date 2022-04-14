@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.TableInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface TableInfoMapper extends BaseEntityMapper<TableInfo, Long> {
+public interface TableInfoMapper extends BaseEntityMapper<TableInfo> {
 
 }

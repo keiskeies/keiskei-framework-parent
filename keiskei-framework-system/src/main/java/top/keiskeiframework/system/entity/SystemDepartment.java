@@ -28,7 +28,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "sys_department")
 @ApiModel(value = "SystemDepartment", description = "部门管理")
-public class SystemDepartment extends TreeEntity<Long> {
+public class SystemDepartment extends TreeEntity {
 
     private static final long serialVersionUID = 4845168322937249454L;
 

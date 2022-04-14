@@ -13,14 +13,14 @@ import java.io.Serializable;
  * @author cjm
  */
 @Data
-public class BaseSortVO<ID> implements Serializable {
+public class BaseSortVO implements Serializable {
     private static final long serialVersionUID = -899342361316647661L;
 
     /**
      * id1
      */
     @NotNull
-    private ID id1;
+    private Long id1;
 
     /**
      * sortby1 修改后的排序
@@ -31,7 +31,7 @@ public class BaseSortVO<ID> implements Serializable {
      * ID2
      */
     @NotNull
-    private ID id2;
+    private Long id2;
     /**
      * 修改后的排序
      */

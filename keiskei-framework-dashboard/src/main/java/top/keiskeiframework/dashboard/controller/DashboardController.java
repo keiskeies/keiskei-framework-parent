@@ -69,7 +69,7 @@ public class DashboardController {
 
     @PutMapping("/sort")
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<Long> baseSortVO) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO baseSortVO) {
         dashboardService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }

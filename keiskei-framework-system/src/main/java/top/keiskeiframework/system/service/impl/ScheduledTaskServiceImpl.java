@@ -22,7 +22,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  */
 @Service
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Long> implements IScheduledTaskService {
+public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired

@@ -15,8 +15,8 @@ import top.keiskeiframework.system.service.ISystemRoleService;
  * @since 2020-12-10 14:11:30
  */
 @Service
-@ConditionalOnProperty({"keiskei.use-permission"})
-public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole, Long> implements ISystemRoleService {
+//@ConditionalOnProperty({"keiskei.use-permission"})
+public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole> implements ISystemRoleService {
 
 
 }

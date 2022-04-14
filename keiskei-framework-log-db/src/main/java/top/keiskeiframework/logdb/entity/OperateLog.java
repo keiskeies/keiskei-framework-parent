@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 @TableName(value = "log_operate_log")
 @ApiModel(value = "OperateLog", description = "操作日志")
 @Chartable
-public class OperateLog extends ListEntity<Long> {
+public class OperateLog extends ListEntity {
 
     private static final long serialVersionUID = -1735705706625546610L;
 

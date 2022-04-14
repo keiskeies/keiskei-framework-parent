@@ -15,7 +15,7 @@ import java.util.List;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface ITreeFrontService<T extends ListEntityDTO<ID>, ID extends Serializable> extends IFrontService<T, ID> {
+public interface ITreeFrontService<T extends ListEntityDTO> extends IFrontService<T> {
 
 
     /**
@@ -60,7 +60,7 @@ public interface ITreeFrontService<T extends ListEntityDTO<ID>, ID extends Seria
             Integer size,
             String desc,
             String asc,
-            ID id,
+            Long id,
             Boolean tree
     );
 
@@ -77,7 +77,7 @@ public interface ITreeFrontService<T extends ListEntityDTO<ID>, ID extends Seria
     List<T> all(
             String conditions,
             String show,
-            ID id,
+            Long id,
             Boolean tree
     );
 

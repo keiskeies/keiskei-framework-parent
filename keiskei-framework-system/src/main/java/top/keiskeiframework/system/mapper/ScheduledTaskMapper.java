@@ -13,6 +13,6 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @since 2020-12-10 14:11:30
  */
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public interface ScheduledTaskMapper extends BaseEntityMapper<ScheduledTask, Long> {
+public interface ScheduledTaskMapper extends BaseEntityMapper<ScheduledTask> {
 
 }

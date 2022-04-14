@@ -31,7 +31,7 @@ import java.util.Set;
 @AllArgsConstructor
 @TableName(value = "sys_role")
 @ApiModel(value = "SystemRole", description = "角色")
-public class SystemRole extends ListEntity<Long> {
+public class SystemRole extends ListEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,5 +43,5 @@ public class SystemRole extends ListEntity<Long> {
     @JoinTable(name = "sys_role_permission",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
-    private Set<SystemPermission> systemPermissions;
+    private transient Set<SystemPermission> systemPermissions;
 }

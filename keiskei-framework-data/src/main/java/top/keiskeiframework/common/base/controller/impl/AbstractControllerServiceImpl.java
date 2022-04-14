@@ -34,21 +34,21 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/3 20:51
  */
-public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID extends Serializable> implements IControllerService<T, ID> {
+public abstract class AbstractControllerServiceImpl<T extends ListEntity> implements IControllerService<T> {
 
     @Autowired
-    private BaseService<T, ID> baseService;
+    private BaseService<T> baseService;
 
 
     @Override
     @ApiOperation("数量")
-    public R<Long> count(BaseRequestVO<T, ID> request) {
+    public R<Long> count(BaseRequestVO<T> request) {
         return R.ok(baseService.count(request));
     }
 
     @Override
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable ID id) {
+    public R<T> getOne(@PathVariable Long id) {
         return R.ok(baseService.findById(id));
     }
 
@@ -87,22 +87,22 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
 
     @Override
     @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO<ID> baseSortVO) {
+    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO baseSortVO) {
         baseService.changeSort(baseSortVO);
         return R.ok(Boolean.TRUE);
     }
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable ID id) {
+    public R<Boolean> delete(@PathVariable Long id) {
         baseService.deleteByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@RequestBody List<ID> ids) {
-        for (ID id : ids) {
+    public R<Boolean> delete(@RequestBody List<Long> ids) {
+        for (Long id : ids) {
             baseService.deleteByIdAndNotify(id);
         }
         return R.ok(Boolean.TRUE);

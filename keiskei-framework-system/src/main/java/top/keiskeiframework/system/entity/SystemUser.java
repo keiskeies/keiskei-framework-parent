@@ -15,6 +15,7 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Set;
 @NoArgsConstructor
 @TableName(value = "sys_user")
 @ApiModel(value = "SystemUser", description = "管理员")
-public class SystemUser extends ListEntity<Long> {
+public class SystemUser extends ListEntity {
 
     private static final long serialVersionUID = -3821316560303369479L;
 
@@ -65,13 +66,15 @@ public class SystemUser extends ListEntity<Long> {
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
     @ManyToMany(targetEntity = SystemRole.class, cascade = CascadeType.DETACH)
     @JoinTable(name = "sys_user_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private Set<SystemRole> systemRoles;
+            joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "roleId", referencedColumnName = "id")})
+    private transient List<SystemRole> systemRoles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    private SystemDepartment systemDepartment;
+    @JoinColumn(name = "departmentId")
+    private transient SystemDepartment systemDepartment;
+    private Long departmentId;
 
     /**
      * 最后登录时间

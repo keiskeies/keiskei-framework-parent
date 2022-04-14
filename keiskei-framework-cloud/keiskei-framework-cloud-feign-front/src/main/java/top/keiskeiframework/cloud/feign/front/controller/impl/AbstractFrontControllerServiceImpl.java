@@ -22,15 +22,15 @@ import java.io.Serializable;
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/3 21:34
  */
-public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO<ID>, ID extends Serializable> implements IFrontControllerService<T, ID> {
+public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO> implements IFrontControllerService<T> {
 
     @Autowired
-    private IFrontService<T, ID> frontService;
+    private IFrontService<T> frontService;
 
 
     @Override
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable ID id) {
+    public R<T> getOne(@PathVariable Long id) {
         return R.ok(frontService.findById(id));
     }
 
@@ -48,7 +48,7 @@ public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable ID id) {
+    public R<Boolean> delete(@PathVariable Long id) {
         frontService.deleteById(id);
         return R.ok(Boolean.TRUE);
     }

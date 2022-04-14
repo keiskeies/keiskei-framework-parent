@@ -12,7 +12,7 @@ import top.keiskeiframework.system.entity.SystemDepartment;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-@ConditionalOnProperty({"keiskei.use-department"})
-public interface SystemDepartmentMapper extends BaseEntityMapper<SystemDepartment, Long> {
+//@ConditionalOnProperty({"keiskei.use-department"})
+public interface SystemDepartmentMapper extends BaseEntityMapper<SystemDepartment> {
 
 }

@@ -29,7 +29,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "sys_permission")
 @ApiModel(value = "SystemPermission", description = "操作权限")
-public class SystemPermission extends TreeEntity<Long> {
+public class SystemPermission extends TreeEntity {
 
     private static final long serialVersionUID = -7872341210410988194L;
 

@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author James Chen right_way@foxmail.com
  * @since 2020年12月10日11:41:05
  */
-public interface ISystemUserService extends BaseService<SystemUser, Long>, UserDetailsService {
+public interface ISystemUserService extends BaseService<SystemUser>, UserDetailsService {
 
     /**
      * 添加用户密码错误次数

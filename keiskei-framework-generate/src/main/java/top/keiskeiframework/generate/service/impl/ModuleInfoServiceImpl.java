@@ -1,5 +1,6 @@
 package top.keiskeiframework.generate.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
@@ -16,7 +17,8 @@ import top.keiskeiframework.generate.service.IModuleInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class ModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo, Long> implements IModuleInfoService {
+@Slf4j
+public class ModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo> implements IModuleInfoService {
 
     @Autowired
     private ModuleInfoMapper moduleInfoMapper;

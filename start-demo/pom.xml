@@ -18,11 +18,19 @@
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-cache-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-log-db</artifactId>
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-generate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.keiskeiframework</groupId>
+            <artifactId>keiskei-framework-system</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

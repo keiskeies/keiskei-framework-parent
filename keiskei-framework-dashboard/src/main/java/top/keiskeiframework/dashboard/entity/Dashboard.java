@@ -38,7 +38,7 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
-public class Dashboard extends ListEntity<Long> {
+public class Dashboard extends ListEntity {
 
     private static final long serialVersionUID = -5855392143364324899L;
 
@@ -85,7 +85,7 @@ public class Dashboard extends ListEntity<Long> {
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "dashboard_id")
+    @JoinColumn(name = "dashboardId")
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
     private List<DashboardDirection> directions;
 }

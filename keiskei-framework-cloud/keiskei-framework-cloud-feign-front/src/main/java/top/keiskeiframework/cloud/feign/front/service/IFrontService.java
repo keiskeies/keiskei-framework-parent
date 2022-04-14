@@ -18,7 +18,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontService<T extends ListEntityDTO> {
 
 
     /**
@@ -27,7 +27,7 @@ public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializa
      * @param id id
      * @return .
      */
-    T findById(ID id);
+    T findById(Long id);
 
 
     /**
@@ -81,7 +81,7 @@ public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializa
      *
      * @param id id
      */
-    void deleteById(ID id);
+    void deleteById(Long id);
 
 
     /**
@@ -90,7 +90,7 @@ public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializa
      * @param ids ids
      * @return 。
      */
-    Boolean delete(List<ID> ids);
+    Boolean delete(List<Long> ids);
 
 
     /**

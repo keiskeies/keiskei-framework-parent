@@ -22,7 +22,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Serializable> {
+public interface ITreeFeignService<T extends TreeEntityDTO> {
 
     /**
      * 分页查询
@@ -68,7 +68,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "id", required = false) ID id,
+            @RequestParam(name = "id", required = false) Long id,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree
     );
 
@@ -85,7 +85,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
     R<List<T>> all(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(required = false) ID id,
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree);
 
     /**
@@ -108,7 +108,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") ID id);
+    R<T> getOne(@PathVariable("id") Long id);
 
 
     /**
@@ -165,7 +165,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortDTO<ID> baseSortVO);
+    R<Boolean> changeSort(@RequestBody BaseSortDTO baseSortVO);
 
     /**
      * 删除
@@ -174,7 +174,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") ID id);
+    R<Boolean> delete(@PathVariable("id") Long id);
 
     /**
      * 删除多个
@@ -183,7 +183,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<ID> ids);
+    R<Boolean> delete(@RequestBody List<Long> ids);
 
 
 

@@ -29,7 +29,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "gr_field_enum_affect_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举影响值")
-public class FieldEnumAffectInfo extends ListEntity<Long> {
+public class FieldEnumAffectInfo extends ListEntity {
     private static final long serialVersionUID = 8981895417058350169L;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
@@ -44,6 +44,8 @@ public class FieldEnumAffectInfo extends ListEntity<Long> {
 
     @ApiModelProperty(value = "禁用字段", dataType = "Boolean")
     private Boolean disableEdit;
+    private Long fieldEnumId;
+    private transient String oneToMany = "field_enum_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

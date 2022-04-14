@@ -21,7 +21,7 @@ import top.keiskeiframework.generate.service.IGenerateService;
 @RestController
 @RequestMapping("/generate/project")
 @Api(tags = "文件生成 - 项目管理")
-public class ProjectController extends ListControllerImpl<ProjectInfo, Long> {
+public class ProjectController extends ListControllerImpl<ProjectInfo> {
 
     @Autowired
     private IGenerateService generateService;

@@ -15,8 +15,8 @@ import top.keiskeiframework.system.service.ISystemPermissionService;
  * @since 2020-12-10 14:11:30
  */
 @Service
-@ConditionalOnProperty({"keiskei.use-permission"})
-public class SystemPermissionServiceImpl extends TreeServiceImpl<SystemPermission, Long> implements ISystemPermissionService {
+//@ConditionalOnProperty({"keiskei.use-permission"})
+public class SystemPermissionServiceImpl extends TreeServiceImpl<SystemPermission> implements ISystemPermissionService {
 
 
 }

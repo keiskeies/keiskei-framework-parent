@@ -19,7 +19,7 @@ import top.keiskeiframework.system.entity.SystemDepartment;
 @RequestMapping("/system/department")
 @Api(tags = "系统设置 - 部门管理")
 @ConditionalOnProperty({"keiskei.use-department"})
-public class DepartmentController extends TreeControllerImpl<SystemDepartment, Long> {
+public class DepartmentController extends TreeControllerImpl<SystemDepartment> {
 
 
 }

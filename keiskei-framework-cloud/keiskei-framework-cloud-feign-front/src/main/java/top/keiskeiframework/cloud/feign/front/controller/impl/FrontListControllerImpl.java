@@ -21,12 +21,12 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class FrontListControllerImpl<T extends ListEntityDTO<ID>, ID extends Serializable>
-        extends AbstractFrontControllerServiceImpl<T, ID>
-        implements IFrontControllerService<T, ID> {
+public class FrontListControllerImpl<T extends ListEntityDTO>
+        extends AbstractFrontControllerServiceImpl<T>
+        implements IFrontControllerService<T> {
 
     @Autowired
-    protected ListFrontServiceImpl<T, ID> listFrontService;
+    protected ListFrontServiceImpl<T> listFrontService;
 
     @GetMapping
     @ApiOperation("列表")

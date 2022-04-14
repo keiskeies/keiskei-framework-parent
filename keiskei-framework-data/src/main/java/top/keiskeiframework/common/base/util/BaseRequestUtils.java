@@ -7,29 +7,30 @@ import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
-import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
  * 请求处理工具
  * </p>
  *
- * @param <T>  .
- * @param <ID> .
+ * @param <T> .
  * @author v_chenjiamin
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
+public class BaseRequestUtils<T extends ListEntity> {
     private final static String JOIN_SPLIT = ".";
     private final static String JOIN_SPLIT_REGEX = "\\.";
-    private final static String CONDITION_SPLIT_REGEX = ",";
-    private final static String LIKE_FIX = "%";
     private final static String DEPARTMENT_COLUMN = "p";
     private final static String PARENT_COLUMN = "parentId";
     private final static String CREATE_TIME_COLUMN = "create_time";
@@ -45,34 +46,73 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     private static boolean useDepartment = false;
 
 
-    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapper(
-            BaseRequestVO<T, ID> request, Class<T> tClass
-    ) {
-
+    public static <T extends ListEntity> QueryWrapper<T> getQueryWrapper(BaseRequestVO<T> request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        boolean hasOrder = false;
         if (null != request) {
+
+            Set<String> fields = null;
+            if (!request.requestEmpty()) {
+                fields = new HashSet<>();
+                for (Field field : tClass.getDeclaredFields()) {
+                    fields.add(field.getName());
+                }
+                for (Field field : tClass.getSuperclass().getDeclaredFields()) {
+                    fields.add(field.getName());
+                }
+                if (tClass.getSuperclass().equals(TreeEntity.class)) {
+                    for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
+                        fields.add(field.getName());
+                    }
+                }
+            }
+
             if (!request.conditionEmpty()) {
-                convertConditions(queryWrapper, request.getConditions(tClass));
+                List<QueryConditionVO> conditions = request.getConditions();
+                Set<String> finalFields = fields;
+                conditions.removeIf(e -> {
+                    if (e.getColumn().contains(JOIN_SPLIT)) {
+                        return !finalFields.contains(e.getColumn().substring(0, e.getColumn().lastIndexOf(JOIN_SPLIT)));
+                    } else {
+                        return !finalFields.contains(e.getColumn());
+                    }
+                });
+                convertConditions(queryWrapper, conditions);
             }
             if (!request.showEmpty()) {
-                queryWrapper.select(request.getShow(tClass).toArray(new String[]{}));
+                List<String> shows = request.getShow();
+                Set<String> finalFields1 = fields;
+                shows.removeIf(e -> {
+                    if (e.contains(JOIN_SPLIT)) {
+                        return !finalFields1.contains(e.substring(0, e.lastIndexOf(JOIN_SPLIT)));
+                    } else {
+                        return !finalFields1.contains(e);
+                    }
+                });
+
+                queryWrapper.select(shows.stream().map(BeanUtils::humpToUnderline)
+                        .collect(Collectors.toList()).toArray(new String[]{}));
             }
             if (!StringUtils.isEmpty(request.getAsc())) {
-                queryWrapper.orderByAsc(request.getAsc());
+                queryWrapper.orderByAsc(BeanUtils.humpToUnderline(request.getAsc()));
+                hasOrder = true;
             }
             if (!StringUtils.isEmpty(request.getDesc())) {
-                queryWrapper.orderByDesc(request.getDesc());
+                queryWrapper.orderByDesc(BeanUtils.humpToUnderline(request.getDesc()));
+                hasOrder = true;
             }
         }
 
-        queryWrapper.orderByDesc(CREATE_TIME_COLUMN);
+        if (!hasOrder) {
+            queryWrapper.orderByDesc(CREATE_TIME_COLUMN);
+        }
         if (useDepartment) {
             queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
         }
         return queryWrapper;
     }
 
-    private static <T extends ListEntity<ID>, ID extends Serializable> void convertConditions(
+    private static <T extends ListEntity> void convertConditions(
             QueryWrapper<T> queryWrapper, List<QueryConditionVO> conditions
     ) {
         for (QueryConditionVO condition : conditions) {

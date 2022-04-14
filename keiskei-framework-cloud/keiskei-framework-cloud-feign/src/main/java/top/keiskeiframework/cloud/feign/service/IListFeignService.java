@@ -22,7 +22,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IListFeignService<T extends ListEntityDTO> {
 
     /**
      * 分页查询
@@ -97,7 +97,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") ID id);
+    R<T> getOne(@PathVariable("id") Long id);
 
 
     /**
@@ -154,7 +154,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortDTO<ID> baseSortVO);
+    R<Boolean> changeSort(@RequestBody BaseSortDTO baseSortVO);
 
     /**
      * 删除
@@ -163,7 +163,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") ID id);
+    R<Boolean> delete(@PathVariable("id") Long id);
 
     /**
      * 删除多个
@@ -172,7 +172,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<ID> ids);
+    R<Boolean> delete(@RequestBody List<Long> ids);
 
 
 

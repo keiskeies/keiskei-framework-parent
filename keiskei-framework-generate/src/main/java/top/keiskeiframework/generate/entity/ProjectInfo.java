@@ -1,5 +1,6 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,7 +36,7 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "gr_project_info")
 @ApiModel(value = "ProjectInfo", description = "项目信息")
-public class ProjectInfo extends ListEntity<Long> {
+public class ProjectInfo extends ListEntity {
 
     private static final long serialVersionUID = 8549325611615861124L;
 
@@ -49,6 +50,7 @@ public class ProjectInfo extends ListEntity<Long> {
 
     @ApiModelProperty(value = "项目版本", dataType = "String")
     @NotBlank(message = "项目版本不能为空", groups = {Insert.class, Update.class})
+    @OrderBy
     private String version;
 
     @ApiModelProperty(value = "favicon", dataType = "String")
@@ -72,7 +74,7 @@ public class ProjectInfo extends ListEntity<Long> {
     private Boolean workflow = false;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "projectId")
     @Valid
     private transient List<ModuleInfo> modules = new ArrayList<>();
 }

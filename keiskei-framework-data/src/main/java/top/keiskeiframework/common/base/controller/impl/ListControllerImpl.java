@@ -11,7 +11,6 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.vo.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,17 +21,17 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializable>
-        extends AbstractControllerServiceImpl<T, ID>
-        implements IControllerService<T, ID> {
+public class ListControllerImpl<T extends ListEntity>
+        extends AbstractControllerServiceImpl<T>
+        implements IControllerService<T> {
 
     @Autowired
-    private ListServiceImpl<T, ID> listService;
+    private ListServiceImpl<T> listService;
 
 
     @GetMapping
     @ApiOperation("列表")
-    public R<IPage<T>> page(BaseRequestVO<T, ID> request, BasePageVO<T, ID> page) {
+    public R<IPage<T>> page(BaseRequestVO<T> request, BasePageVO<T> page) {
         IPage<T> tPage = listService.page(request, page);
         return R.ok(tPage);
     }
@@ -40,7 +39,7 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
 
     @GetMapping("/options")
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T, ID> request) {
+    public R<List<T>> options(BaseRequestVO<T> request) {
         return R.ok(listService.findAll(request));
     }
 

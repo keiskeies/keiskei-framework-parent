@@ -19,17 +19,7 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Long> implements IProjectInfoService {
+public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo> implements IProjectInfoService {
     @Autowired
     private IGenerateService generateService;
-
-    @Override
-    public IPage<ProjectInfo> page(BaseRequestVO<ProjectInfo, Long> request, BasePageVO<ProjectInfo, Long> page) {
-        IPage<ProjectInfo> result = super.page(request, page);
-
-        for (ProjectInfo record : result.getRecords()) {
-            this.baseMapper.findOneToMany(record);
-        }
-        return result;
-    }
 }

@@ -25,7 +25,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.info("start insert fill ....");
         this.strictInsertFill(metaObject, "p", String.class, MdcUtils.getUserDepartment());
-        this.strictInsertFill(metaObject, "p", Integer.class, 0);
+        this.strictInsertFill(metaObject, "d", Integer.class, 0);
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "createUserId", Long.class, StringUtils.isEmpty(MdcUtils.getUserId()) ?
                 null : Long.valueOf(MdcUtils.getUserId()));

@@ -36,7 +36,7 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
-public class FieldInfo extends ListEntity<Long> {
+public class FieldInfo extends ListEntity {
 
     private static final long serialVersionUID = -6407989526318566170L;
 
@@ -90,7 +90,9 @@ public class FieldInfo extends ListEntity<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "field_id")
-    private List<FieldEnumInfo> fieldEnums = new ArrayList<>();
+    private transient List<FieldEnumInfo> fieldEnums = new ArrayList<>();
+    private String tableId;
+    private transient String oneToMany = "table_id";
 
     @ApiModelProperty(value = "排序", dataType = "ID")
     @OrderBy

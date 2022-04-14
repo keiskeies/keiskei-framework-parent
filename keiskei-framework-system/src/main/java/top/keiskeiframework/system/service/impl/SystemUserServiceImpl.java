@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @since 2020年12月10日11:41:05
  */
 @Service
-public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Long> implements ISystemUserService {
+public class SystemUserServiceImpl extends ListServiceImpl<SystemUser> implements ISystemUserService {
     @Autowired
     private CacheStorageService cacheStorageService;
     @Autowired

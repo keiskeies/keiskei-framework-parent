@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
  * 基础实体类
  * </p>
  *
- * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
@@ -24,14 +22,13 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements Serializable {
+public class TreeEntity extends ListEntity implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 
-    protected ID parentId;
+    protected Long parentId;
 
     protected String sign;
 
-    @Transient
-    protected List<? extends TreeEntity<ID>> children;
+    protected transient List<? extends TreeEntity> children;
 
 }

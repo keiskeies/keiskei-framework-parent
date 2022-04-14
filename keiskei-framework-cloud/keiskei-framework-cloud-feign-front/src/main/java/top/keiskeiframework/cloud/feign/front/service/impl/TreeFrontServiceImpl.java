@@ -24,10 +24,10 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serializable> implements ITreeFrontService<T, ID> {
+public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFrontService<T> {
 
     @Autowired
-    protected ITreeFeignService<T, ID> treeFeignService;
+    protected ITreeFeignService<T> treeFeignService;
 
     @Override
     public Page<T> page(
@@ -61,7 +61,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
     public List<T> all(
             String conditions,
             String show,
-            ID id,
+            Long id,
             Boolean tree
     ) {
         List<T> noTreeData = treeFeignService.all(
@@ -86,7 +86,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
             Integer size,
             String desc,
             String asc,
-            ID id,
+            Long id,
             Boolean tree
     ) {
         List<T> noTreeData = treeFeignService.options(
@@ -108,7 +108,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
     }
 
     @Override
-    public T findById(ID id) {
+    public T findById(Long id) {
         return treeFeignService.getOne(id).getData();
     }
 
@@ -138,12 +138,12 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<ID>, ID extends Serial
     }
 
     @Override
-    public void deleteById(ID id) {
+    public void deleteById(Long id) {
         treeFeignService.delete(id);
     }
 
     @Override
-    public Boolean delete(List<ID> ids) {
+    public Boolean delete(List<Long> ids) {
         return treeFeignService.delete(ids).getData();
     }
 

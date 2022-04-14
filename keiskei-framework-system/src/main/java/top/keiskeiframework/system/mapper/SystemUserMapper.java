@@ -6,5 +6,5 @@ import top.keiskeiframework.system.entity.SystemUser;
 /**
  * @author v_chenjiamin
  */
-public interface SystemUserMapper extends BaseEntityMapper<SystemUser, Long> {
+public interface SystemUserMapper extends BaseEntityMapper<SystemUser> {
 }

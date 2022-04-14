@@ -12,7 +12,7 @@ import top.keiskeiframework.system.entity.SystemPermission;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-@ConditionalOnProperty({"keiskei.use-permission"})
-public interface SystemPermissionMapper extends BaseEntityMapper<SystemPermission, Long> {
+//@ConditionalOnProperty({"keiskei.use-permission"})
+public interface SystemPermissionMapper extends BaseEntityMapper<SystemPermission> {
 
 }

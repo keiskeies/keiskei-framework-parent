@@ -21,12 +21,12 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class FrontTreeControllerImpl<T extends TreeEntityDTO<ID>, ID extends Serializable>
-        extends AbstractFrontControllerServiceImpl<T, ID>
-        implements IFrontControllerService<T, ID> {
+public class FrontTreeControllerImpl<T extends TreeEntityDTO>
+        extends AbstractFrontControllerServiceImpl<T>
+        implements IFrontControllerService<T> {
 
     @Autowired
-    protected TreeFrontServiceImpl<T, ID> feignTreeService;
+    protected TreeFrontServiceImpl<T> feignTreeService;
 
     @GetMapping
     @ApiOperation("列表")
@@ -59,7 +59,7 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<ID>, ID extends Ser
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "id", required = false) ID id,
+            @RequestParam(name = "id", required = false) Long id,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree) {
         return R.ok(feignTreeService.options(
                 conditions,
@@ -78,7 +78,7 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<ID>, ID extends Ser
     public R<List<T>> all(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(required = false) ID id,
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
     ) {
         return R.ok(feignTreeService.all(

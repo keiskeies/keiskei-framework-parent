@@ -16,7 +16,7 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontControllerService<T extends ListEntityDTO> {
 
 
     /**
@@ -26,7 +26,7 @@ public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") ID id);
+    R<T> getOne(@PathVariable("id") Long id);
 
     /**
      * 保存
@@ -54,7 +54,7 @@ public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") ID id);
+    R<Boolean> delete(@PathVariable("id") Long id);
 
 
 }

@@ -24,7 +24,7 @@ import top.keiskeiframework.logdb.service.IOperateLogService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> implements IOperateLogService, OperateLogService {
+public class OperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService, OperateLogService {
 
     @Autowired
     private IOperateLogService operateLogService;
@@ -50,11 +50,4 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
         return super.save(operateLog);
     }
 
-    @Override
-    public IPage<OperateLog> page(BaseRequestVO<OperateLog, Long> request, BasePageVO<OperateLog, Long> page) {
-        IPage<OperateLog> result = super.page(request, page);
-        this.baseMapper.findManyToOne(new OperateLog());
-
-        return result;
-    }
 }

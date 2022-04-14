@@ -23,7 +23,7 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @Data
-public class BaseRequestDTO<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public class BaseRequestDTO<T extends ListEntityDTO> {
 
     protected Set<String> fields;
 

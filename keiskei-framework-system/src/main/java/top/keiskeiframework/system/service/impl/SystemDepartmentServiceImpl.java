@@ -15,8 +15,8 @@ import top.keiskeiframework.system.service.ISystemDepartmentService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-@ConditionalOnProperty({"keiskei.use-department"})
-public class SystemDepartmentServiceImpl extends TreeServiceImpl<SystemDepartment, Long> implements ISystemDepartmentService {
+//@ConditionalOnProperty({"keiskei.use-department"})
+public class SystemDepartmentServiceImpl extends TreeServiceImpl<SystemDepartment> implements ISystemDepartmentService {
 
 
 

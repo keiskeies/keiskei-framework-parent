@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class FieldInfoServiceImpl extends ListServiceImpl<FieldInfo, Long> implements IFieldInfoService {
+public class FieldInfoServiceImpl extends ListServiceImpl<FieldInfo> implements IFieldInfoService {
 
     @Autowired
     private FieldInfoMapper fieldInfoMapper;

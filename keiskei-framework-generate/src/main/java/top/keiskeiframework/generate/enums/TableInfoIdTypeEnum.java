@@ -1,7 +1,13 @@
 package top.keiskeiframework.generate.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Objects;
 
 /**
  * <p>
@@ -13,20 +19,32 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum TableInfoIdTypeEnum {
+public enum TableInfoIdTypeEnum implements IEnum<Integer> {
     /**
      * String
      */
-    STRING("String"),
+    STRING(0, "String"),
     /**
      * Long
      */
-    LONG("Long"),
+    LONG(1,"Long"),
     /**
      * Integer
      */
-    INTEGER("Integer")
+    INTEGER(2,"Integer")
 
     ;
-    private final String value;
+    @EnumValue
+    @JsonValue
+    private final Integer value;
+    private final String name;
+    @JsonCreator
+    public static TableInfoIdTypeEnum getByValue(int value) {
+        for (TableInfoIdTypeEnum tableInfoIdTypeEnum : TableInfoIdTypeEnum.values()) {
+            if (Objects.equals(value, tableInfoIdTypeEnum.getValue())) {
+                return tableInfoIdTypeEnum;
+            }
+        }
+        return null;
+    }
 }

@@ -21,7 +21,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IControllerService<T extends ListEntity<ID>, ID extends Serializable> {
+public interface IControllerService<T extends ListEntity> {
 
     /**
      * 查询数量
@@ -30,7 +30,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return count
      */
     @GetMapping("/count")
-    R<Long> count(BaseRequestVO<T, ID> request);
+    R<Long> count(BaseRequestVO<T> request);
 
     /**
      * 详情
@@ -39,7 +39,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") ID id);
+    R<T> getOne(@PathVariable("id") Long id);
 
     /**
      * 单个条件查询详情
@@ -95,7 +95,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return boolean
      */
     @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortVO<ID> baseSortVO);
+    R<Boolean> changeSort(@RequestBody BaseSortVO baseSortVO);
 
     /**
      * 删除
@@ -104,7 +104,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") ID id);
+    R<Boolean> delete(@PathVariable("id") Long id);
 
     /**
      * 删除多个
@@ -113,7 +113,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<ID> ids);
+    R<Boolean> delete(@RequestBody List<Long> ids);
 
 
     /**

@@ -25,19 +25,19 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializable>
-        extends AbstractControllerServiceImpl<T, ID>
-        implements IControllerService<T, ID> {
+public class TreeControllerImpl<T extends TreeEntity>
+        extends AbstractControllerServiceImpl<T>
+        implements IControllerService<T> {
 
     @Autowired
-    private TreeServiceImpl<T, ID> treeService;
+    private TreeServiceImpl<T> treeService;
 
 
     @GetMapping
     @ApiOperation("列表")
     public R<IPage<T>> page(
-            BaseRequestVO<T, ID> request,
-            BasePageVO<T, ID> page,
+            BaseRequestVO<T> request,
+            BasePageVO<T> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
     ) {
         IPage<T> pageList = treeService.page(request, page);
@@ -52,8 +52,8 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     @GetMapping("/options")
     @ApiOperation("下拉框")
     public R<List<T>> options(
-            BaseRequestVO<T, ID> request,
-            @RequestParam(required = false) ID id,
+            BaseRequestVO<T> request,
+            @RequestParam(required = false) Long id,
             @RequestParam(required = false, defaultValue = "true") Boolean tree) {
         List<T> list = treeService.findAll(request);
         if (tree) {

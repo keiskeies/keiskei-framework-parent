@@ -34,7 +34,7 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
-public class ModuleInfo extends ListEntity<Long> {
+public class ModuleInfo extends ListEntity {
 
     private static final long serialVersionUID = 754302484437506602L;
 
@@ -57,9 +57,12 @@ public class ModuleInfo extends ListEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "module_id")
     @Valid
-    private List<TableInfo> tables = new ArrayList<>();
+    private transient List<TableInfo> tables = new ArrayList<>();
+    private Long projectId;
+    private transient String oneToMany = "project_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
     private Long sortBy;
+
 }
