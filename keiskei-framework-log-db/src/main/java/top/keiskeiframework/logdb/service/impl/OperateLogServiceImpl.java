@@ -53,7 +53,7 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Long> imp
     @Override
     public IPage<OperateLog> page(BaseRequestVO<OperateLog, Long> request, BasePageVO<OperateLog, Long> page) {
         IPage<OperateLog> result = super.page(request, page);
-        this.baseMapper.findManyToMany(new OperateLog());
+        this.baseMapper.findManyToOne(new OperateLog());
 
         return result;
     }

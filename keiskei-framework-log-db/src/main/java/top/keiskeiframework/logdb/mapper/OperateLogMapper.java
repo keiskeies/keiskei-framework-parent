@@ -11,6 +11,6 @@ import top.keiskeiframework.logdb.entity.OperateLog;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface OperateLogRepository extends BaseEntityMapper<OperateLog, Long> {
+public interface OperateLogMapper extends BaseEntityMapper<OperateLog, Long> {
 
 }

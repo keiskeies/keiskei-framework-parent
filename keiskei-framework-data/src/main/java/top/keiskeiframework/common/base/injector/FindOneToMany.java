@@ -26,6 +26,7 @@ public class FindOneToMany extends AbstractMethod {
 
         Field[] fields = modelClass.getFields();
         for (Field field : fields) {
+            log.info("field: {}", field.getName());
             if (null != field.getAnnotation(OneToMany.class)) {
                 log.info(field.getType().getName());
             }
