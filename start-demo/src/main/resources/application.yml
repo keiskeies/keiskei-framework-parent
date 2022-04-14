@@ -23,8 +23,12 @@ spring:
     password: Cjm@12070817
     url: jdbc:mysql://127.0.0.1:3306/test_demo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   redis:
-    timeout: 123456
-    password: pojienimasiquanjia
+    timeout: 6000
+    password: 123456
     database: 11
     port: 6379
     host: 127.0.0.1
+mybatis-plus:
+  type-enums-package: top.keiskeiframwork.**
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
