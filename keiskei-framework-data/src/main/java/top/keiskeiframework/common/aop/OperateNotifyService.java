@@ -1,4 +1,4 @@
-package top.keiskeiframework.common.base.service;
+package top.keiskeiframework.common.aop;
 
 import org.springframework.scheduling.annotation.Async;
 

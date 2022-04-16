@@ -63,7 +63,7 @@ public class DashboardController {
     @PutMapping
     @ApiOperation("更新")
     public R<Dashboard> update(@RequestBody @Validated({Update.class}) Dashboard fieldInfo) {
-        fieldInfo = dashboardService.updateAndNotify(fieldInfo);
+        fieldInfo = dashboardService.updateByIdAndNotify(fieldInfo);
         return R.ok(fieldInfo);
     }
 
@@ -77,7 +77,7 @@ public class DashboardController {
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable Long id) {
-        dashboardService.deleteByIdAndNotify(id);
+        dashboardService.removeByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 

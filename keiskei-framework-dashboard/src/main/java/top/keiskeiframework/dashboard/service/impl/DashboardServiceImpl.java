@@ -33,6 +33,7 @@ import top.keiskeiframework.dashboard.enums.DashboardExceptionEnum;
 import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,9 +56,9 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
     @Override
     @Caching(evict= {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
-            @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #dashboard.id")
+            @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #dashboard.id")
     })
-    public Dashboard updateAndNotify(Dashboard dashboard) {
+    public Dashboard updateByIdAndNotify(Dashboard dashboard) {
         super.updateById(dashboard);
         return dashboard;
     }
@@ -65,17 +66,17 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
     @Override
     @Caching(evict= {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id"),
-            @CacheEvict(cacheNames = CACHE_NAME, key = "targetClass.name + ':' + #id")
+            @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     })
-    public void deleteByIdAndNotify(Long id) {
-        super.removeById(id);
+    public boolean removeByIdAndNotify(Serializable id) {
+        return super.removeById(id);
     }
 
 
     @Override
     @Cacheable(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Long id) {
-        Dashboard dashboard = super.findById(id);
+        Dashboard dashboard = super.getByIdCache(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
         LocalDateTime[] startAndEnd;

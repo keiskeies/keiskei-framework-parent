@@ -20,7 +20,7 @@ public class TreeServiceImpl<T extends TreeEntity>
 
 
     @Autowired
-    private TreeServiceImpl<T> treeService;
+    protected TreeServiceImpl<T> treeService;
 
 
 }

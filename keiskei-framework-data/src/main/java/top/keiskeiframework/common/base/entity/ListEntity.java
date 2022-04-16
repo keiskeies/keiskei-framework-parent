@@ -1,7 +1,9 @@
 package top.keiskeiframework.common.base.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,6 +34,7 @@ import java.time.LocalDateTime;
 public class ListEntity implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
 
+    @TableId(type = IdType.AUTO)
     protected Long id;
 
 

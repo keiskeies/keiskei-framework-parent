@@ -3,10 +3,7 @@ package top.keiskeiframework.common.config;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import top.keiskeiframework.common.base.injector.FindManyToMany;
-import top.keiskeiframework.common.base.injector.FindManyToOne;
-import top.keiskeiframework.common.base.injector.FindOneToMany;
-import top.keiskeiframework.common.base.injector.FindOneToOne;
+import top.keiskeiframework.common.base.injector.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +23,15 @@ public class MyLogicSqlInjector extends DefaultSqlInjector {
         //获取父类中的集合
         List<AbstractMethod> list = new ArrayList<>(super.getMethodList(mapperClass, tableInfo));
         //自定义的方法
-        list.add(new FindManyToMany());
         list.add(new FindOneToMany());
+
         list.add(new FindManyToOne());
+
         list.add(new FindOneToOne());
+
+        list.add(new FindManyToMany());
+        list.add(new SaveManyToMany());
+        list.add(new DeleteManyToMany());
         return list;
     }
 }

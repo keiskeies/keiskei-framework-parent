@@ -10,8 +10,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.annotation.log.Lockable;
-import top.keiskeiframework.common.annotation.notify.OperateNotify;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.BaseSortVO;
@@ -21,7 +19,6 @@ import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
-import top.keiskeiframework.common.enums.log.OperateNotifyType;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.SpringUtils;
 
@@ -31,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +45,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends ServiceImpl<BaseEntityMapper<T>
         , T> implements BaseService<T>, IService<T> {
-
+    protected final static String CACHE_TREE_NAME = "CACHE:TREE";
+    protected final static String CACHE_LIST_NAME = "CACHE:LIST";
     @Autowired
     private BaseService<T> baseService;
 
@@ -56,7 +55,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
 
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
-            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            ManyToMany oneToMany = field.getAnnotation(ManyToMany.class);
             if (null == oneToMany) {
                 continue;
             }
@@ -80,7 +79,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
 
                 String fieldName = null;
                 for (ManyToManyResult manyToManyResult : entry.getValue()) {
-                    ListEntity e = baseService.findById(manyToManyResult.getSecondId());
+                    ListEntity e = baseService.getById(manyToManyResult.getSecondId());
                     if (null == e) {
                         continue;
                     }
@@ -98,6 +97,67 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
                 }
 
             }
+        }
+    }
+
+    protected void saveManyToMany(T t) {
+        boolean hasManyToMany = false;
+
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            ManyToMany oneToMany = field.getAnnotation(ManyToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinTable joinTable = field.getAnnotation(JoinTable.class);
+            if (null != joinTable) {
+                hasManyToMany = true;
+            }
+
+        }
+        if (hasManyToMany) {
+            this.baseMapper.saveManyToMany(t);
+        }
+    }
+
+    protected void updateManyToMany(T t) {
+        boolean hasManyToMany = false;
+
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            ManyToMany oneToMany = field.getAnnotation(ManyToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinTable joinTable = field.getAnnotation(JoinTable.class);
+            if (null != joinTable) {
+                hasManyToMany = true;
+            }
+
+        }
+        if (hasManyToMany) {
+            this.baseMapper.deleteManyToMany(t.getId());
+            this.baseMapper.saveManyToMany(t);
+        }
+    }
+
+    protected void deleteManyToMany(T t) {
+        boolean hasManyToMany = false;
+
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            ManyToMany oneToMany = field.getAnnotation(ManyToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinTable joinTable = field.getAnnotation(JoinTable.class);
+            if (null != joinTable) {
+                hasManyToMany = true;
+            }
+
+        }
+        if (hasManyToMany) {
+            this.baseMapper.deleteManyToMany(t.getId());
         }
     }
 
@@ -130,6 +190,47 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    protected void saveOneToMany(T t) {
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                Object joDataObj = field.get(t);
+                if (null == joDataObj) {
+                    continue;
+                }
+                Collection joinData = (Collection<?>) joDataObj;
+                if (CollectionUtils.isEmpty(joinData)) {
+                    continue;
+                }
+
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+
+                Long id = t.getId();
+                Field joinField = clz.getDeclaredField(joinColumn.name());
+                joinField.setAccessible(true);
+                for (Object joinDatum : joinData) {
+                    joinField.setLong(joinDatum, id);
+                }
+
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+                baseService.saveBatch(joinData);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -167,6 +268,42 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         }
     }
 
+    protected void saveOneToOne(T t) {
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+            if (null == oneToOne) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                Object joinDataObj = field.get(t);
+                if (null == joinDataObj) {
+                    continue;
+                }
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+
+                Long id = t.getId();
+
+                Field joinField = clz.getDeclaredField(joinColumn.name());
+                joinField.setAccessible(true);
+                joinField.set(joinDataObj, id);
+
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+                baseService.saveAny(joinDataObj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected void getManyToOne(T t) {
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -184,7 +321,12 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
             try {
                 Field joinField = t.getClass().getDeclaredField(joinColumn.name());
                 joinField.setAccessible(true);
-                value = joinField.getLong(t);
+                Object v = joinField.get(t);
+                if (null != v) {
+                    value = Long.parseLong(v.toString());
+                } else {
+                    continue;
+                }
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
                 continue;
@@ -192,7 +334,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
 
             String entity = clz.getSimpleName();
             BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
-            ListEntity joinResult = baseService.findById(value);
+            ListEntity joinResult = baseService.getById(value);
 
             if (null != joinResult) {
                 field.setAccessible(true);
@@ -203,6 +345,34 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
                 }
             }
         }
+    }
+
+    protected void saveManyToOne(T t) {
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            ManyToOne manyToMany = field.getAnnotation(ManyToOne.class);
+            if (null == manyToMany) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                Object joinDataObj = field.get(t);
+                if (null == joinDataObj) {
+                    continue;
+                }
+                ListEntity joinData = (ListEntity) joinDataObj;
+                Field joinField = t.getClass().getDeclaredField(joinColumn.name());
+                joinField.setAccessible(true);
+                joinField.set(t, joinData.getId());
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        this.updateById(t);
     }
 
 
@@ -219,7 +389,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
 
     @Override
     public List<T> findAll() {
-         return this.list(BaseRequestUtils.getQueryWrapper(null, null));
+        return this.list(BaseRequestUtils.getQueryWrapper(null, null));
     }
 
 
@@ -242,7 +412,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     @Override
-    public T findById(Long id) {
+    public T getById(Serializable id) {
         return super.getById(id);
     }
 
@@ -253,18 +423,33 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         return this.getOne(queryWrapper);
     }
 
+
     @Override
-    @OperateNotify(type = OperateNotifyType.SAVE)
-    @Lockable(key = "#t.hashCode()")
-    public T saveAndNotify(T t) {
+    public boolean save(T t) {
         super.save(t);
-        return t;
+        saveManyToMany(t);
+        saveOneToMany(t);
+        saveManyToOne(t);
+        saveOneToOne(t);
+        return true;
     }
 
     @Override
-    public T updateAndNotify(T t) {
+    public T saveAny(Object ojb) {
+        try {
+            T t = (T) ojb;
+            save(t);
+            return t;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean updateById(T t) {
         super.updateById(t);
-        return t;
+        updateManyToMany(t);
+        return true;
     }
 
     @Override
@@ -297,11 +482,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void deleteByIdAndNotify(Long id) {
-        super.removeById(id);
     }
 
     @Override

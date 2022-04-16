@@ -65,7 +65,7 @@ public class RbacAuthorityService {
 
         //获取角色权限
         for (TokenGrantedAuthority authority : authorities) {
-            SystemRole systemRole = roleService.findById(authority.getId());
+            SystemRole systemRole = roleService.getById(authority.getId());
             if (CollectionUtils.isEmpty(systemRole.getSystemPermissions())) {
                 continue;
             }

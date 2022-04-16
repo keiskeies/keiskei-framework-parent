@@ -3,6 +3,7 @@ package top.keiskeiframework.common.util;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -16,7 +17,7 @@ import java.util.*;
 public class TreeEntityUtils<T extends TreeEntity> {
 
 
-    private final LinkedHashMap<Long, List<T>> map;
+    private final LinkedHashMap<Serializable, List<T>> map;
 
     public TreeEntityUtils(List<T> list) {
         map = new LinkedHashMap<>();
@@ -38,7 +39,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public List<T> getTree(Long id) {
+    public List<T> getTree(Serializable id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -51,7 +52,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
         return responses;
     }
 
-    public List<T> getTreeAll(Long id) {
+    public List<T> getTreeAll(Serializable id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -70,8 +71,8 @@ public class TreeEntityUtils<T extends TreeEntity> {
         List<T> responses = getTreeAll(null);
         if (CollectionUtils.isEmpty(responses)) {
             responses = new ArrayList<>();
-            Set<Long> keySet = new HashSet<>(map.keySet());
-            for (Long key : keySet) {
+            Set<Serializable> keySet = new HashSet<>(map.keySet());
+            for (Serializable key : keySet) {
                 List<T> tempList = getTreeAll(key);
                 if (!CollectionUtils.isEmpty(tempList)) {
                     responses.addAll(tempList);
@@ -79,8 +80,8 @@ public class TreeEntityUtils<T extends TreeEntity> {
             }
         }
         if (!map.isEmpty()) {
-            Set<Long> keySet = new HashSet<>(map.keySet());
-            for (Long key : keySet) {
+            Set<Serializable> keySet = new HashSet<>(map.keySet());
+            for (Serializable key : keySet) {
                 List<T> tempList = getTreeAll(key);
                 if (!CollectionUtils.isEmpty(tempList)) {
                     responses.addAll(tempList);
@@ -96,9 +97,9 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<Long> getChildIds(Long id) {
+    public Set<Serializable> getChildIds(Serializable id) {
         List<T> tempList = map.get(id);
-        Set<Long> tempIds = new HashSet<>();
+        Set<Serializable> tempIds = new HashSet<>();
         tempIds.add(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return tempIds;
@@ -116,7 +117,7 @@ public class TreeEntityUtils<T extends TreeEntity> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<T> getChildren(Long id) {
+    public Set<T> getChildren(Serializable id) {
         List<T> tempList = map.get(id);
         Set<T> children = new HashSet<>();
         if (CollectionUtils.isEmpty(tempList)) {

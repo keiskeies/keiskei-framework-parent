@@ -48,7 +48,7 @@ public class ScheduledTaskConfig implements SchedulingConfigurer {
 
             // 可以通过改变数据库数据进而实现动态改变执行周期
             taskRegistrar.addTriggerTask(task,
-                    triggerContext -> new CronTrigger(scheduledTaskService.findById(scheduledTask.getId()).getCron()).nextExecutionTime(triggerContext)
+                    triggerContext -> new CronTrigger(scheduledTaskService.getById(scheduledTask.getId()).getCron()).nextExecutionTime(triggerContext)
             );
         }
     }

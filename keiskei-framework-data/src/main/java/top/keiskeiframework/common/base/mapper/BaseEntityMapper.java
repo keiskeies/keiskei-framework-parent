@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.injector.dto.ManyToManyResult;
 
@@ -22,4 +23,6 @@ public interface BaseEntityMapper<T extends ListEntity> extends BaseMapper<T> {
     List<Map<Long, Long>> findOneToMany(T t);
     List<Map<Long, Long>> findManyToOne(T t);
     List<Map<Long, Long>> findOneToOne(T t);
+    void saveManyToMany(T t);
+    void deleteManyToMany(@Param("id") Long id);
 }

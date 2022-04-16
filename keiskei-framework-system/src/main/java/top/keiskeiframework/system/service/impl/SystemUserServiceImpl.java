@@ -21,7 +21,6 @@ import top.keiskeiframework.system.vo.TokenUser;
 import top.keiskeiframework.system.entity.SystemDepartment;
 import top.keiskeiframework.system.entity.SystemRole;
 import top.keiskeiframework.system.properties.SystemProperties;
-import top.keiskeiframework.system.mapper.SystemUserMapper;
 import top.keiskeiframework.system.service.ISystemDepartmentService;
 import top.keiskeiframework.system.service.ISystemPermissionService;
 import top.keiskeiframework.system.service.ISystemUserService;
@@ -67,7 +66,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser> implement
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
             if (null != departmentService) {
-                SystemDepartment systemDepartment = departmentService.findById(tokenUser.getDepartmentId());
+                SystemDepartment systemDepartment = departmentService.getById(tokenUser.getDepartmentId());
                 Assert.notNull(systemDepartment, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
                 tokenUser.setDepartment(systemDepartment.getSign());
             }
@@ -119,7 +118,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser> implement
             }
         }
 
-        SystemUser systemUser = this.findById(tokenUser.getId());
+        SystemUser systemUser = this.getById(tokenUser.getId());
         Set<SystemPermission> systemPermissions = new HashSet<>();
 
         for (SystemRole systemRole : systemUser.getSystemRoles()) {

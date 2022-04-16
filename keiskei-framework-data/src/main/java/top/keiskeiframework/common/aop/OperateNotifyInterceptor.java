@@ -8,7 +8,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
-import top.keiskeiframework.common.base.service.OperateNotifyService;
 import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 
 import java.lang.reflect.Method;

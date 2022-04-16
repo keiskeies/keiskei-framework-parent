@@ -25,7 +25,7 @@ import java.util.List;
 public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServiceImpl<T> implements BaseService<T>, IService<T> {
 
     @Autowired
-    private ListServiceImpl<T> listService;
+    protected ListServiceImpl<T> listService;
 
     @Override
     public IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page) {
@@ -40,8 +40,8 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
     }
 
     @Override
-    public T findById(Long id) {
-        T t = super.findByIdCache(id);
+    public T getById(Serializable id) {
+        T t = listService.getByIdCache(id);
         getManyToMany(t);
         getOneToMany(t);
         getManyToOne(t);
@@ -61,5 +61,6 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
         }
         return ts;
     }
+
 
 }

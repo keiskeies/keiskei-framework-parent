@@ -49,7 +49,7 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
     @Override
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable Long id) {
-        return R.ok(baseService.findById(id));
+        return R.ok(baseService.getById(id));
     }
 
     @Override
@@ -73,14 +73,14 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
     @Override
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
-        return R.ok(baseService.updateAndNotify(fieldInfo));
+        return R.ok(baseService.updateByIdAndNotify(fieldInfo));
     }
 
     @Override
     @ApiOperation("更新")
     public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
         for (T t : ts) {
-            baseService.updateAndNotify(t);
+            baseService.updateByIdAndNotify(t);
         }
         return R.ok(ts);
     }
@@ -95,7 +95,7 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
     @Override
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable Long id) {
-        baseService.deleteByIdAndNotify(id);
+        baseService.removeByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
     @ApiOperation("删除")
     public R<Boolean> delete(@RequestBody List<Long> ids) {
         for (Long id : ids) {
-            baseService.deleteByIdAndNotify(id);
+            baseService.removeByIdAndNotify(id);
         }
         return R.ok(Boolean.TRUE);
     }

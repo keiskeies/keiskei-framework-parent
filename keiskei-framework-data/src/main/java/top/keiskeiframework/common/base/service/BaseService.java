@@ -19,7 +19,6 @@ import java.util.Map;
  * </p>
  *
  * @param <T>  实体类
- * @param <ID> ID
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
@@ -58,7 +57,7 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @return 。
      */
     List<T> findAllByColumn(String column, Serializable value);
-    List<T> findAllByColumnCache(String oneToMany, String column, Serializable value);
+
 
     /**
      * 查询数量
@@ -68,14 +67,6 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      */
     Long count(BaseRequestVO<T> request);
 
-    /**
-     * 根据id查询
-     *
-     * @param id id
-     * @return .
-     */
-    T findById(Long id);
-    T findByIdCache(Long id);
 
     /**
      * 通过单一字段查询
@@ -94,6 +85,16 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @return 。
      */
     T saveAndNotify(T t);
+    T saveAny(Object ojb);
+
+
+    /**
+     * 保存并更新缓存
+     * @param t T
+     * @return 。
+     */
+    T saveCache(T t);
+
 
     /**
      * 更新并通知
@@ -101,7 +102,9 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @param t 。
      * @return 。
      */
-    T updateAndNotify(T t);
+    T updateByIdAndNotify(T t);
+    T updateByIdCache(T t);
+
 
     /**
      * 更改排序
@@ -115,8 +118,8 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      *
      * @param id 。
      */
-    void deleteByIdAndNotify(Long id);
-    void deleteByIdAndNotifySingle(Long id);
+    boolean removeByIdAndNotify(Serializable id);
+
 
     /**
      * 校验数据
