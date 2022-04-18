@@ -23,12 +23,6 @@ public class MyLogicSqlInjector extends DefaultSqlInjector {
         //获取父类中的集合
         List<AbstractMethod> list = new ArrayList<>(super.getMethodList(mapperClass, tableInfo));
         //自定义的方法
-        list.add(new FindOneToMany());
-
-        list.add(new FindManyToOne());
-
-        list.add(new FindOneToOne());
-
         list.add(new FindManyToMany());
         list.add(new SaveManyToMany());
         list.add(new DeleteManyToMany());

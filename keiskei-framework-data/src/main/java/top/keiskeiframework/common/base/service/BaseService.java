@@ -57,6 +57,7 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @return 。
      */
     List<T> findAllByColumn(String column, Serializable value);
+    void deleteAllByColumn(String column, Serializable value);
 
 
     /**
@@ -104,6 +105,7 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      */
     T updateByIdAndNotify(T t);
     T updateByIdCache(T t);
+    T updateAny(Object ojb);
 
 
     /**

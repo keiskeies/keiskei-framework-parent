@@ -79,23 +79,23 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     <#--        一对多-->
         <#elseif field.relation == 'ONE_TO_MANY'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name="${table.name?lower_case}_id")
     private List<${field.relationEntity}> ${field.name} = new ArrayList<>();
 
     <#--        多对多-->
         <#elseif field.relation == 'MANY_TO_MANY'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="List<${field.relationEntity!}>")
-    @ManyToMany(targetEntity = ${field.relationEntity}.class, cascade = CascadeType.DETACH)
+    @ManyToMany
     @JoinTable(name = "${module.path?lower_case}_${table.name?lower_case}_${field.relationEntity?lower_case}",
         joinColumns = {@JoinColumn(name = "${table.name?lower_case}_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "${field.name}_${field.relationEntity?lower_case}_id", referencedColumnName = "id")})
-    private List<${field.relationEntity}> ${field.name};
+    private Collection<${field.relationEntity}> ${field.name};
 
     <#--        多对一-->
         <#elseif field.relation == 'MANY_TO_ONE'>
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.relationEntity!}")
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @ManyToOne
     private ${field.relationEntity} ${field.name};
 
         </#if>

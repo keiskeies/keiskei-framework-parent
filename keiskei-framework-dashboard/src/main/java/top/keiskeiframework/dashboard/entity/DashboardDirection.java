@@ -8,15 +8,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
-import javax.persistence.*;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -36,6 +38,8 @@ import java.util.List;
 public class DashboardDirection extends ListEntity {
 
     private static final long serialVersionUID = -2719449560787668928L;
+
+    @BatchCacheField
     private Long dashboardId;
 
     @ApiModelProperty(value = "字段", dataType = "String")
@@ -50,9 +54,9 @@ public class DashboardDirection extends ListEntity {
     private String entityName;
 
     @ApiModelProperty(value = "查询条件")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "dashboard_direction_id")
-    private List<DashboardDirectionCondition> conditions;
+    private transient Collection<DashboardDirectionCondition> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
     @NotNull(message = "图表类型不能为空", groups = {Insert.class, Update.class})

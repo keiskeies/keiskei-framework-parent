@@ -20,9 +20,6 @@ import java.util.Map;
 public interface BaseEntityMapper<T extends ListEntity> extends BaseMapper<T> {
 
     List<ManyToManyResult> findManyToMany(T t);
-    List<Map<Long, Long>> findOneToMany(T t);
-    List<Map<Long, Long>> findManyToOne(T t);
-    List<Map<Long, Long>> findOneToOne(T t);
     void saveManyToMany(T t);
     void deleteManyToMany(@Param("id") Long id);
 }

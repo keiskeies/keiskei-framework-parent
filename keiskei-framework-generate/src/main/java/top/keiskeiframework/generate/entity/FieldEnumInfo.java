@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
@@ -18,6 +19,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -56,11 +58,12 @@ public class FieldEnumInfo extends ListEntity {
     private FieldEnumInfoEffectEnum effect;
 
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "field_enum_id")
-    private transient List<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
+    private transient Collection<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
+
+    @BatchCacheField
     private String fieldId;
-    private transient String oneToMany = "field_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

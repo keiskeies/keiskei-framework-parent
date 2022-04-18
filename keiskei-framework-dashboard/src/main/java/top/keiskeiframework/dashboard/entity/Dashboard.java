@@ -17,11 +17,12 @@ import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.timer.TimeTypeEnum;
 
-import javax.persistence.*;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -84,8 +85,8 @@ public class Dashboard extends ListEntity {
     private TimeDeltaEnum fieldDelta;
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "dashboardId")
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
-    private List<DashboardDirection> directions;
+    private transient Collection<DashboardDirection> directions;
 }

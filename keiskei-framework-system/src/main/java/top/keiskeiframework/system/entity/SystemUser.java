@@ -15,6 +15,7 @@ import top.keiskeiframework.common.base.entity.ListEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -64,16 +65,17 @@ public class SystemUser extends ListEntity {
     private String email;
 
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
-    @ManyToMany(targetEntity = SystemRole.class, cascade = CascadeType.DETACH)
+    @ManyToMany
     @JoinTable(name = "sys_user_role",
             joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "roleId", referencedColumnName = "id")})
-    private transient List<SystemRole> systemRoles;
+    private transient Collection<SystemRole> systemRoles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "departmentId")
     private transient SystemDepartment systemDepartment;
+
     private Long departmentId;
 
     /**

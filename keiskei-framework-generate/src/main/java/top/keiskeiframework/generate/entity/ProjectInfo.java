@@ -9,17 +9,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Transient;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
-import javax.persistence.*;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -64,8 +64,8 @@ public class ProjectInfo extends ListEntity {
     @ApiModelProperty(value = "作者", dataType = "String")
     private String author;
 
-//    @ApiModelProperty(value = "文件方式", dataType = "String")
-//    private ProjectInfoFileJarEnum fileJar = ProjectInfoFileJarEnum.LOCAL;
+    @ApiModelProperty(value = "文件方式", dataType = "String")
+    private ProjectInfoFileJarEnum fileJar = ProjectInfoFileJarEnum.LOCAL;
 
     @ApiModelProperty(value = "日志存储", dataType = "Boolean")
     private Boolean sqlLog = false;
@@ -73,8 +73,8 @@ public class ProjectInfo extends ListEntity {
     @ApiModelProperty(value = "构建工作流", dataType = "Boolean")
     private Boolean workflow = false;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "projectId")
     @Valid
-    private transient List<ModuleInfo> modules = new ArrayList<>();
+    private transient Collection<ModuleInfo> modules = new ArrayList<>();
 }

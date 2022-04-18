@@ -51,6 +51,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     private BaseService<T> baseService;
 
     protected void getManyToMany(T t) {
+        if (null == t) {
+            return;
+        }
         boolean hasManyToMany = false;
 
         Field[] fields = t.getClass().getDeclaredFields();
@@ -101,6 +104,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void saveManyToMany(T t) {
+        if (null == t) {
+            return;
+        }
         boolean hasManyToMany = false;
 
         Field[] fields = t.getClass().getDeclaredFields();
@@ -112,6 +118,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
             JoinTable joinTable = field.getAnnotation(JoinTable.class);
             if (null != joinTable) {
                 hasManyToMany = true;
+                break;
             }
 
         }
@@ -121,6 +128,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void updateManyToMany(T t) {
+        if (null == t) {
+            return;
+        }
         boolean hasManyToMany = false;
 
         Field[] fields = t.getClass().getDeclaredFields();
@@ -132,6 +142,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
             JoinTable joinTable = field.getAnnotation(JoinTable.class);
             if (null != joinTable) {
                 hasManyToMany = true;
+                break;
             }
 
         }
@@ -142,6 +153,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void deleteManyToMany(T t) {
+        if (null == t) {
+            return;
+        }
         boolean hasManyToMany = false;
 
         Field[] fields = t.getClass().getDeclaredFields();
@@ -153,6 +167,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
             JoinTable joinTable = field.getAnnotation(JoinTable.class);
             if (null != joinTable) {
                 hasManyToMany = true;
+                break;
             }
 
         }
@@ -162,6 +177,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void getOneToMany(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
@@ -195,6 +213,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void saveOneToMany(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
@@ -235,7 +256,86 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         }
     }
 
+    protected void updateOneToMany(T t) {
+        if (null == t) {
+            return;
+        }
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                Object joDataObj = field.get(t);
+                if (null == joDataObj) {
+                    continue;
+                }
+                Collection joinData = (Collection<?>) joDataObj;
+                if (CollectionUtils.isEmpty(joinData)) {
+                    continue;
+                }
+
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+
+                Long id = t.getId();
+                Field joinField = clz.getDeclaredField(joinColumn.name());
+                joinField.setAccessible(true);
+                for (Object joinDatum : joinData) {
+                    joinField.setLong(joinDatum, id);
+                }
+
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+
+                baseService.deleteAllByColumn(joinColumn.name(), id);
+                baseService.saveBatch(joinData);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void deleteOneToMany(T t) {
+        if (null == t) {
+            return;
+        }
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            if (null == oneToMany) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+
+                Long id = t.getId();
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+
+                baseService.deleteAllByColumn(BeanUtils.humpToUnderline(joinColumn.name()), id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected void getOneToOne(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
@@ -269,6 +369,9 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void saveOneToOne(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
@@ -304,7 +407,82 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         }
     }
 
+    protected void updateOneToOne(T t) {
+        if (null == t) {
+            return;
+        }
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+            if (null == oneToOne) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                Object joinDataObj = field.get(t);
+                if (null == joinDataObj) {
+                    continue;
+                }
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+
+                Long id = t.getId();
+
+                Field joinField = clz.getDeclaredField(joinColumn.name());
+                joinField.setAccessible(true);
+                joinField.set(joinDataObj, id);
+
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+                baseService.updateAny(joinDataObj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void deleteOneToOne(T t) {
+        if (null == t) {
+            return;
+        }
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+            if (null == oneToOne) {
+                continue;
+            }
+            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+            if (null == joinColumn) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                Object joinDataObj = field.get(t);
+                if (null == joinDataObj) {
+                    continue;
+                }
+                ListEntity joinData = (ListEntity) joinDataObj;
+                Type type = field.getGenericType();
+                ParameterizedType pt = (ParameterizedType) type;
+                Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
+                String entity = clz.getSimpleName();
+                BaseService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", BaseService.class);
+                baseService.removeById(joinData.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected void getManyToOne(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToOne manyToMany = field.getAnnotation(ManyToOne.class);
@@ -348,7 +526,11 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     protected void saveManyToOne(T t) {
+        if (null == t) {
+            return;
+        }
         Field[] fields = t.getClass().getDeclaredFields();
+        boolean hasManyToOne = false;
         for (Field field : fields) {
             ManyToOne manyToMany = field.getAnnotation(ManyToOne.class);
             if (null == manyToMany) {
@@ -368,18 +550,25 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
                 Field joinField = t.getClass().getDeclaredField(joinColumn.name());
                 joinField.setAccessible(true);
                 joinField.set(t, joinData.getId());
+                hasManyToOne = true;
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
         }
-        this.updateById(t);
+        if (hasManyToOne) {
+            this.updateById(t);
+        }
     }
 
+    protected void updateManyToOne(T t) {
+        this.saveManyToOne(t);
+    }
+
+    protected void deleteManyToOne(T t){}
 
     @Override
     public IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page) {
         return this.page(new Page<>(page.getPage(), page.getSize()), BaseRequestUtils.getQueryWrapper(request, getEntityClass()));
-
     }
 
     @Override
@@ -404,6 +593,14 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(column, value);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public void deleteAllByColumn(String column, Serializable value) {
+        List<T> ts = baseService.findAllByColumn(column, value);
+        for (T t : ts) {
+            baseService.removeById(t.getId());
+        }
     }
 
     @Override
@@ -447,9 +644,23 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
 
     @Override
     public boolean updateById(T t) {
-        super.updateById(t);
+        baseMapper.updateById(t);
         updateManyToMany(t);
+        updateManyToOne(t);
+        updateOneToMany(t);
+        updateOneToOne(t);
         return true;
+    }
+
+    @Override
+    public T updateAny(Object ojb) {
+        try {
+            T t = (T) ojb;
+            updateById(t);
+            return t;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -487,6 +698,20 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     @Override
     public void validate(T t) {
 
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        T t = baseService.getById(id);
+        if (null != t) {
+            deleteManyToMany(t);
+            deleteOneToOne(t);
+            deleteOneToMany(t);
+            deleteManyToOne(t);
+            return super.removeById(id);
+        } else {
+            return true;
+        }
     }
 
     @Override

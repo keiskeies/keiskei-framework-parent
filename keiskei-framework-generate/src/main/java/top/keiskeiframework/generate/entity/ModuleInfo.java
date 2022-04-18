@@ -9,14 +9,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -54,12 +58,13 @@ public class ModuleInfo extends ListEntity {
     @NotBlank(message = "模块包名不能为空", groups = {Insert.class, Update.class})
     private String packageName;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "module_id")
     @Valid
-    private transient List<TableInfo> tables = new ArrayList<>();
+    private transient Collection<TableInfo> tables = new ArrayList<>();
+
+    @BatchCacheField
     private Long projectId;
-    private transient String oneToMany = "project_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

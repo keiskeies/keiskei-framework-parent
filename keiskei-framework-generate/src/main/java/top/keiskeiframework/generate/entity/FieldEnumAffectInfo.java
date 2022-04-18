@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
@@ -44,8 +45,9 @@ public class FieldEnumAffectInfo extends ListEntity {
 
     @ApiModelProperty(value = "禁用字段", dataType = "Boolean")
     private Boolean disableEdit;
+
+    @BatchCacheField
     private Long fieldEnumId;
-    private transient String oneToMany = "field_enum_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -16,13 +17,14 @@ import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
-import javax.persistence.*;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * <p>
@@ -68,12 +70,13 @@ public class TableInfo extends ListEntity {
     @ApiModelProperty(value = "接口类型", dataType = "String")
     private TableInfoControllerTypeEnum controllerType;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "table_id")
     @Valid
-    private transient List<FieldInfo> fields = new ArrayList<>();
+    private transient Collection<FieldInfo> fields = new ArrayList<>();
+
+    @BatchCacheField
     private Long moduleId;
-    private transient String oneToMany = "module_id";
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

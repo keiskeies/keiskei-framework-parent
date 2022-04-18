@@ -81,7 +81,4 @@ public class ListEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     protected LocalDateTime updateTime;
 
-    protected transient String oneToMany;
-
-
 }

@@ -1,7 +1,5 @@
 package top.keiskeiframework.common.annotation.log;
 
-import org.springframework.lang.Nullable;
-
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Documented
 public @interface Lockable {
     String lockName() default "";
+
     /**
      * 锁键值
      * 默认key为类名+方法名，可以用spel表达式自定义，加上方法参数

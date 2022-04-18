@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -36,6 +37,9 @@ import javax.validation.constraints.NotBlank;
 public class DashboardDirectionCondition extends ListEntity {
 
     private static final long serialVersionUID = -2434119392535767822L;
+
+    @BatchCacheField
+    private Long dashboardDirectionId;
 
     @ApiModelProperty(value = "字段", dataType = "String")
     @NotBlank(message = "字段不能为空", groups = {Insert.class, Update.class})

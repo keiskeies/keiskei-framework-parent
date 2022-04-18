@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -19,6 +20,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -88,11 +90,12 @@ public class FieldInfo extends ListEntity {
     @ApiModelProperty(value = "字段校验", dataType = "String")
     private String validate;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "field_id")
-    private transient List<FieldEnumInfo> fieldEnums = new ArrayList<>();
+    private transient Collection<FieldEnumInfo> fieldEnums = new ArrayList<>();
+
+    @BatchCacheField
     private String tableId;
-    private transient String oneToMany = "table_id";
 
     @ApiModelProperty(value = "排序", dataType = "ID")
     @OrderBy

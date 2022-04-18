@@ -27,8 +27,9 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
     @Autowired
     protected ListServiceImpl<T> listService;
 
+
     @Override
-    public IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page) {
+    public IPage<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page) {
         IPage<T> iPage = super.page(request, page);
         for (T record : iPage.getRecords()) {
             getManyToMany(record);
