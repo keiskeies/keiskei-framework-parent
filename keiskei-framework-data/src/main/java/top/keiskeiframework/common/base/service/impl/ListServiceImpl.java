@@ -63,5 +63,15 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
         return ts;
     }
 
-
+    @Override
+    public List<T> findAllComplete(BaseRequestVO<T> request) {
+        List<T> ts = super.findAll(request);
+        for (T t : ts) {
+            getManyToMany(t);
+            getOneToMany(t);
+            getManyToOne(t);
+            getOneToOne(t);
+        }
+        return ts;
+    }
 }

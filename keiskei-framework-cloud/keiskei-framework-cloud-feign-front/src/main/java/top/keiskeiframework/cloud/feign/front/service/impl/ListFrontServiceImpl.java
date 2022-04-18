@@ -1,5 +1,6 @@
 package top.keiskeiframework.cloud.feign.front.service.impl;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,8 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
             Integer page,
             Integer size,
             String desc,
-            String asc
+            String asc,
+            Boolean complete
     ) {
         return listFeignService.page(
                 conditions,
@@ -44,37 +46,26 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
                 page,
                 size,
                 desc,
-                asc
+                asc,
+                complete
         ).getData();
     }
 
-    @Override
-    public List<T> all(
-            String conditions,
-            String show
-    ) {
-        return listFeignService.all(
-                conditions,
-                show
-        ).getData();
-    }
 
     @Override
     public List<T> options(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
             String desc,
-            String asc
+            String asc,
+            Boolean complete
     ) {
         return listFeignService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
-                asc
+                asc,
+                complete
         ).getData();
     }
 

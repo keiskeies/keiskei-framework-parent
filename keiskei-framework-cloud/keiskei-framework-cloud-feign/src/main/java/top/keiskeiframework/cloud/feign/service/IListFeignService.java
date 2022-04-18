@@ -42,15 +42,14 @@ public interface IListFeignService<T extends ListEntityDTO> {
             @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc);
+            @RequestParam(name = "asc", required = false) String asc,
+            @RequestParam(required = false, defaultValue = "false") Boolean complete);
 
     /**
      * 下拉框
      *
      * @param conditions 查询条件
      * @param show       显示字段
-     * @param page       页码
-     * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
      * @return 。
@@ -59,23 +58,9 @@ public interface IListFeignService<T extends ListEntityDTO> {
     R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc);
-
-    /**
-     * 全部下拉框
-     *
-     * @param conditions 查询条件
-     * @param show       显示字段
-     * @return 。
-     */
-    @GetMapping("/all")
-    R<List<T>> all(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show
-    );
+            @RequestParam(name = "asc", required = false) String asc,
+            @RequestParam(required = false, defaultValue = "false") Boolean complete);
 
     /**
      * 查询数量

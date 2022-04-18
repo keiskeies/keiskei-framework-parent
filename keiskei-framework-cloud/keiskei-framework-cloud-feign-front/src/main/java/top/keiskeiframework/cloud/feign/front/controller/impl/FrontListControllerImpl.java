@@ -30,13 +30,14 @@ public class FrontListControllerImpl<T extends ListEntityDTO>
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(
+    public R<Page<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc
+            @RequestParam(name = "asc", required = false) String asc,
+            @RequestParam(required = false, defaultValue = "false") Boolean complete
     ) {
         return R.ok(listFrontService.page(
                 conditions,
@@ -44,7 +45,8 @@ public class FrontListControllerImpl<T extends ListEntityDTO>
                 page,
                 size,
                 desc,
-                asc
+                asc,
+                complete
         ));
     }
 
@@ -54,31 +56,16 @@ public class FrontListControllerImpl<T extends ListEntityDTO>
     public R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc
+            @RequestParam(name = "asc", required = false) String asc,
+            @RequestParam(required = false, defaultValue = "false") Boolean complete
     ) {
         return R.ok(listFrontService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
-                asc
-        ));
-    }
-
-
-    @GetMapping("/all")
-    @ApiOperation("全部下拉框")
-    public R<List<T>> all(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show
-    ) {
-        return R.ok(listFrontService.all(
-                conditions,
-                show
+                asc,
+                complete
         ));
     }
 }

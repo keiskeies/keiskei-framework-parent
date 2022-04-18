@@ -25,8 +25,6 @@ import java.util.Set;
 @Data
 public class BaseRequestDTO<T extends ListEntityDTO> {
 
-    protected Set<String> fields;
-
 
     /**
      * 查询条件
@@ -65,11 +63,6 @@ public class BaseRequestDTO<T extends ListEntityDTO> {
      */
     protected List<String> show;
 
-    @Override
-    public String toString() {
-        return "BaseRequest{" +
-                "conditions=" + conditions +
-                ", show=" + show +
-                '}';
-    }
+    private String desc;
+    private String asc;
 }

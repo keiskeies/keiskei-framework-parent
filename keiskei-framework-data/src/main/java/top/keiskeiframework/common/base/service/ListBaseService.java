@@ -27,6 +27,15 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      */
     IPage<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page);
 
+
+    /**
+     * 完整数据列表查询
+     *
+     * @param request 查询条件
+     * @return 。
+     */
+    List<T> findAllComplete(BaseRequestVO<T> request);
+
     /**
      * 通过缓存获取，不拼装链接表数据
      *

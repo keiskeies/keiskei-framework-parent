@@ -19,7 +19,6 @@ public class BasePageDTO<T extends ListEntityDTO> {
 
     private Integer page = 1;
     private Integer size = 20;
-    private String desc;
-    private String asc;
+
 
 }

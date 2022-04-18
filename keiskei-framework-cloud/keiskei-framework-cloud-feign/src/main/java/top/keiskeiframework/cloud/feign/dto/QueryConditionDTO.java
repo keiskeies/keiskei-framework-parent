@@ -1,5 +1,6 @@
 package top.keiskeiframework.cloud.feign.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,15 @@ import java.util.List;
 public class QueryConditionDTO {
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
+    @JSONField(alternateNames = "c")
     private String column;
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
+    @JSONField(alternateNames = "d")
     private ConditionEnum condition;
 
     @ApiModelProperty(value = "字段值", dataType = "String")
+    @JSONField(alternateNames = "v")
     private List<? extends Serializable> value;
 
     public QueryConditionDTO(String column, Serializable value) {

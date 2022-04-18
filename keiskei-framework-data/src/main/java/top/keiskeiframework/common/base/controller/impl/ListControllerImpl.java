@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
@@ -31,16 +32,27 @@ public class ListControllerImpl<T extends ListEntity>
 
     @GetMapping
     @ApiOperation("列表")
-    public R<IPage<T>> page(BaseRequestVO<T> request, BasePageVO<T> page) {
-        IPage<T> tPage = listService.page(request, page);
+    public R<IPage<T>> page(BaseRequestVO<T> request, BasePageVO<T> page, @RequestParam(required = false, defaultValue = "false") Boolean complete) {
+        IPage<T> tPage;
+        if (complete) {
+            tPage = listService.pageComplete(request, page);
+        } else {
+            tPage = listService.page(request, page);
+        }
         return R.ok(tPage);
     }
 
 
     @GetMapping("/options")
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T> request) {
-        return R.ok(listService.findAll(request));
+    public R<List<T>> options(BaseRequestVO<T> request, @RequestParam(required = false, defaultValue = "false") Boolean complete) {
+        List<T> ts;
+        if (complete) {
+            ts = listService.findAllComplete(request);
+        } else {
+            ts = listService.findAll(request);
+        }
+        return R.ok(ts);
     }
 
 }
