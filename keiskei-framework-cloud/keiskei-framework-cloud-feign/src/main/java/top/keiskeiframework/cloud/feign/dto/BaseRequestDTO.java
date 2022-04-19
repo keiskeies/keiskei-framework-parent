@@ -9,11 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
- * @param <ID> .
- * @param <T>  .
+ * @param <T> .
  * @author James Chen right_way@foxmail.com
  * @version 1.0
  * <p>
@@ -23,9 +21,10 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @Data
-public class BaseRequestDTO<T extends ListEntityDTO> {
+public class BaseRequestDTO<T extends ListEntityDTO> implements Serializable{
 
 
+    private static final long serialVersionUID = 6342066245160279585L;
     /**
      * 查询条件
      */

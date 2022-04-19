@@ -2,8 +2,7 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
@@ -30,7 +29,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
     protected ITreeFeignService<T> treeFeignService;
 
     @Override
-    public Page<T> page(
+    public PageResultDTO<T> page(
             String conditions,
             String show,
             Integer page,
@@ -39,7 +38,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
             String asc,
             Boolean tree
     ) {
-        Page<T> noTreeResult = treeFeignService.page(
+        PageResultDTO<T> tiPage = treeFeignService.page(
                 conditions,
                 show,
                 page,
@@ -50,11 +49,10 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
         ).getData();
 
         if (tree) {
-            List<T> treeList = new TreeEntityDtoUtils<>(noTreeResult.getContent()).getTreeAll();
-            return new PageImpl<>(treeList, noTreeResult.getPageable(), noTreeResult.getTotalElements());
-        } else {
-            return new PageImpl<>(noTreeResult.getContent(), noTreeResult.getPageable(), noTreeResult.getTotalElements());
+            List<T> treeList = new TreeEntityDtoUtils<>(tiPage.getRecords()).getTreeAll();
+            tiPage.setRecords(treeList);
         }
+        return tiPage;
     }
 
     @Override
@@ -73,9 +71,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
         if (tree) {
             return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
         }
-        {
-            return noTreeData;
-        }
+        return noTreeData;
     }
 
     @Override
@@ -102,9 +98,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
         if (tree) {
             return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
         }
-        {
-            return noTreeData;
-        }
+        return noTreeData;
     }
 
     @Override
@@ -150,22 +144,24 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
     @Override
     public Map<String, Double> statistic(
             String column,
-            String timeField,
             ColumnType columnType,
+            String timeField,
             TimeDeltaEnum timeDelta,
             String start,
             String end,
             CalcType calcType,
+            String sumColumn,
             String conditions
     ) {
         return treeFeignService.statistic(
                 column,
-                timeField,
                 columnType,
+                timeField,
                 timeDelta,
                 start,
                 end,
                 calcType,
+                sumColumn,
                 conditions
         ).getData();
     }

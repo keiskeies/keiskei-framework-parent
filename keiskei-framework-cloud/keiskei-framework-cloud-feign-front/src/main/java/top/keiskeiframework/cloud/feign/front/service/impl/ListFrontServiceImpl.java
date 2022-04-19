@@ -1,15 +1,17 @@
 package top.keiskeiframework.cloud.feign.front.service.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
 import top.keiskeiframework.cloud.feign.service.IListFeignService;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
+import top.keiskeiframework.common.exception.BizException;
+import top.keiskeiframework.common.util.MdcUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
     private IListFeignService<T> listFeignService;
 
     @Override
-    public Page<T> page(
+    public PageResultDTO<T> page(
             String conditions,
             String show,
             Integer page,
@@ -113,22 +115,24 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
     @Override
     public Map<String, Double> statistic(
             String column,
-            String timeField,
             ColumnType columnType,
+            String timeField,
             TimeDeltaEnum timeDelta,
             String start,
             String end,
             CalcType calcType,
+            String sumColumn,
             String conditions
     ) {
         return listFeignService.statistic(
                 column,
-                timeField,
                 columnType,
+                timeField,
                 timeDelta,
                 start,
                 end,
                 calcType,
+                sumColumn,
                 conditions
         ).getData();
     }

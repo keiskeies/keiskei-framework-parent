@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
 
 
     @Override
-    public IPage<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page) {
-        IPage<T> iPage = super.page(request, page);
+    public Page<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page) {
+        Page<T> iPage = super.page(request, page);
         for (T record : iPage.getRecords()) {
             getManyToMany(record);
             getOneToMany(record);

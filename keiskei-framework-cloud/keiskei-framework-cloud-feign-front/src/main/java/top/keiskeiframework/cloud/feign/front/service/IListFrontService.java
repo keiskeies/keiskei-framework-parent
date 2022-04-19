@@ -1,7 +1,7 @@
 package top.keiskeiframework.cloud.feign.front.service;
 
-import org.springframework.data.domain.Page;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface IListFrontService<T extends ListEntityDTO> extends IFrontServic
      * @param asc        正序字段
      * @return 。
      */
-    Page<T> page(
+    PageResultDTO<T> page(
             String conditions,
             String show,
             Integer page,

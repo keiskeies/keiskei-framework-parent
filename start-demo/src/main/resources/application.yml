@@ -5,6 +5,8 @@ logging:
   pattern:
     file: "%d [%X{userName}-%X{userId}] %-5level - %msg%n"
     console: "%d [%X{userName}-%X{userId}] [%thread] %-5level %logger{36} %line - %msg%n"
+server:
+  port: 9001
 spring:
   session:
     store-type: redis

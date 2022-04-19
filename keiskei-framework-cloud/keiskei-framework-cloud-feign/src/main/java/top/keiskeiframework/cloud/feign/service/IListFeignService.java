@@ -1,10 +1,9 @@
 package top.keiskeiframework.cloud.feign.service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.BaseSortDTO;
-import top.keiskeiframework.cloud.feign.dto.ChartRequestDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
@@ -33,10 +32,11 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
+     * @param complete   是否完整数据
      * @return 。
      */
     @GetMapping
-    R<Page<T>> page(
+    R<PageResultDTO<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
@@ -52,6 +52,7 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @param show       显示字段
      * @param desc       倒序字段
      * @param asc        正序字段
+     * @param complete   是否完整数据
      * @return 。
      */
     @GetMapping("/options")
@@ -160,7 +161,6 @@ public interface IListFeignService<T extends ListEntityDTO> {
     R<Boolean> delete(@RequestBody List<Long> ids);
 
 
-
     /**
      * 数据统计
      *
@@ -171,18 +171,20 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @param start      起始时间
      * @param end        结束时间
      * @param calcType   计算方式
+     * @param sumColumn  求和字段
      * @param conditions 查询条件
      * @return 。
      */
     @GetMapping("/statistic")
     R<Map<String, Double>> statistic(
             @RequestParam(name = "column") String column,
-            @RequestParam(name = "timeField", required = false) String timeField,
             @RequestParam(name = "columnType") ColumnType columnType,
+            @RequestParam(name = "timeField", required = false) String timeField,
             @RequestParam(name = "timeDelta") TimeDeltaEnum timeDelta,
             @RequestParam(name = "start", required = false) String start,
             @RequestParam(name = "end", required = false) String end,
             @RequestParam(name = "calcType", required = false) CalcType calcType,
+            @RequestParam(name = "sumColumn", required = false) String sumColumn,
             @RequestParam(name = "conditions", required = false) String conditions
     );
 }

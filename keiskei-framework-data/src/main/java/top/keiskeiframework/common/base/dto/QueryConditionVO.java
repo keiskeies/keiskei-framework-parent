@@ -24,8 +24,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
-public class QueryConditionVO {
+public class QueryConditionVO implements Serializable{
 
+    private static final long serialVersionUID = -7635199550979456815L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
     @JSONField(alternateNames = "c")
     private String column;

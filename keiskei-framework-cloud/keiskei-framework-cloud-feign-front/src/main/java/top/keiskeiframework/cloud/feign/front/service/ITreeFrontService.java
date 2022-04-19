@@ -1,9 +1,8 @@
 package top.keiskeiframework.cloud.feign.front.service;
 
-import org.springframework.data.domain.Page;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public interface ITreeFrontService<T extends ListEntityDTO> extends IFrontServic
      * @param tree       是否树状结构
      * @return 。
      */
-    Page<T> page(
+    PageResultDTO<T> page(
             String conditions,
             String show,
             Integer page,

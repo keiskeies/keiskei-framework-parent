@@ -2,15 +2,14 @@ package top.keiskeiframework.cloud.feign.front.controller.impl;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
 import top.keiskeiframework.cloud.feign.front.controller.IFrontControllerService;
 import top.keiskeiframework.cloud.feign.front.service.impl.TreeFrontServiceImpl;
 import top.keiskeiframework.common.vo.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO>
 
     @GetMapping
     @ApiOperation("列表")
-    public R<Page<T>> list(
+    public R<PageResultDTO<T>> list(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,

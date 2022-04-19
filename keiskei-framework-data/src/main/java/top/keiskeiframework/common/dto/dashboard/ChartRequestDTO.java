@@ -23,8 +23,6 @@ import java.util.Map;
  * @since 2021/5/9 22:37
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ChartRequestDTO implements Serializable {
     private static final long serialVersionUID = -1354993776756493818L;
 
@@ -66,7 +64,12 @@ public class ChartRequestDTO implements Serializable {
     /**
      * 计算方式
      */
-    private CalcType calcType = CalcType.COUNT;
+    private CalcType calcType;
+
+    /**
+     * 求和字段
+     */
+    private String sumColumn;
 
     /**
      * 查询条件
@@ -75,7 +78,11 @@ public class ChartRequestDTO implements Serializable {
      */
     private List<QueryConditionVO> conditions;
 
+    public ChartRequestDTO () {
+        this.calcType = CalcType.COUNT;
+    }
     public ChartRequestDTO (ChartType chartType, ColumnType columnType, LocalDateTime start, LocalDateTime end) {
+        calcType = CalcType.COUNT;
         this.chartType = chartType;
         this.columnType = columnType;
         this.start = start;

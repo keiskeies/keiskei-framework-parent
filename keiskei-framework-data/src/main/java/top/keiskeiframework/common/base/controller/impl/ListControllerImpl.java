@@ -1,6 +1,6 @@
 package top.keiskeiframework.common.base.controller.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +32,8 @@ public class ListControllerImpl<T extends ListEntity>
 
     @GetMapping
     @ApiOperation("列表")
-    public R<IPage<T>> page(BaseRequestVO<T> request, BasePageVO<T> page, @RequestParam(required = false, defaultValue = "false") Boolean complete) {
-        IPage<T> tPage;
+    public R<Page<T>> page(BaseRequestVO<T> request, BasePageVO<T> page, @RequestParam(required = false, defaultValue = "false") Boolean complete) {
+        Page<T> tPage;
         if (complete) {
             tPage = listService.pageComplete(request, page);
         } else {

@@ -19,6 +19,7 @@ import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
+import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.vo.R;
 
@@ -112,12 +113,13 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
     @ApiOperation("统计")
     public R<Map<String, Double>> statistic(
             String column,
-            String timeField,
             ColumnType columnType,
+            String timeField,
             TimeDeltaEnum timeDelta,
             String start,
             String end,
             CalcType calcType,
+            String sumColumn,
             String conditions
     ) {
         ChartRequestDTO chartRequestDTO = new ChartRequestDTO();
@@ -135,6 +137,12 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity> implem
         }
         if (null != calcType) {
             chartRequestDTO.setCalcType(calcType);
+            if (calcType.equals(CalcType.SUM)) {
+                if (StringUtils.isEmpty(sumColumn)) {
+                    throw new RuntimeException("求和字段：sumColumn 为空");
+                }
+                chartRequestDTO.setSumColumn(sumColumn);
+            }
         }
         if (!StringUtils.isEmpty(conditions)) {
             chartRequestDTO.setConditions(JSON.parseArray(conditions, QueryConditionVO.class));

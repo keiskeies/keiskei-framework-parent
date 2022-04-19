@@ -14,7 +14,7 @@
         <module>keiskei-framework-system</module>
         <module>keiskei-framework-doc</module>
         <module>keiskei-framework-cloud</module>
-        <module>start-demo</module>
+<!--        <module>start-demo</module>-->
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>

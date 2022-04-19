@@ -81,6 +81,7 @@ public abstract class AbstractListBaseServiceImpl<T extends ListEntity>
             BatchCacheField batchCacheField = field.getAnnotation(BatchCacheField.class);
             if (null != batchCacheField) {
                 String cacheField = BeanUtils.humpToUnderline(field.getName());
+                column = BeanUtils.humpToUnderline(column);
                 if (cacheField.equals(column)) {
                     return listService.findAllByColumnCache(column, value);
                 }

@@ -19,7 +19,11 @@ import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.util.BeanUtils;
+import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.util.SpringUtils;
 
 import javax.persistence.*;
@@ -27,10 +31,9 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.temporal.UnsupportedTemporalTypeException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +50,10 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
         , T> implements BaseService<T>, IService<T> {
     protected final static String CACHE_TREE_NAME = "CACHE:TREE";
     protected final static String CACHE_LIST_NAME = "CACHE:LIST";
+    protected final static String RESULT_KEY = "RESULT_KEY";
+    protected final static String RESULT_VALUE = "RESULT_VALUE";
+
+
     @Autowired
     private BaseService<T> baseService;
 
@@ -567,7 +574,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     protected void deleteManyToOne(T t){}
 
     @Override
-    public IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page) {
+    public Page<T> page(BaseRequestVO<T> request, BasePageVO<T> page) {
         return this.page(new Page<>(page.getPage(), page.getSize()), BaseRequestUtils.getQueryWrapper(request, getEntityClass()));
     }
 
@@ -616,7 +623,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     @Override
     public T findByColumn(String column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(column, value);
+        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
         return this.getOne(queryWrapper);
     }
 
@@ -715,8 +722,72 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity> extends Serv
     }
 
     @Override
-    public Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO) {
-        return null;
+    public Map<String, Double> getChartOptions(ChartRequestDTO chart) {
+        Class<T> tClass = getEntityClass();
+        QueryWrapper<T> queryWrapper = BaseRequestUtils.getQueryWrapperByConditions(chart.getConditions(), tClass);
+        // 是否指定新的创建时间字段
+        String timeField = chart.getTimeField();
+        if (StringUtils.isEmpty(timeField)) {
+            timeField = "create_time";
+        }
+        if (null != chart.getStart() && null != chart.getEnd()) {
+            queryWrapper.between(BeanUtils.humpToUnderline(timeField), chart.getStart(), chart.getEnd());
+        }
+
+        String column = BeanUtils.humpToUnderline(chart.getColumn());
+        String resultKey;
+        String resultValue;
+        if (ColumnType.TIME.equals(chart.getColumnType())) {
+            resultKey = getTimeIndex(column, chart.getTimeDelta());
+            resultValue = "COUNT(`id`)";
+        } else {
+            resultKey = column;
+            if (CalcType.SUM.equals(chart.getCalcType())) {
+                resultValue = "SUM(`" + BeanUtils.humpToUnderline(chart.getSumColumn()) + "`)";
+            } else {
+                resultValue = "COUNT(`id`)";
+            }
+        }
+        queryWrapper.select(resultKey + " AS " + RESULT_KEY, resultValue + " AS " + RESULT_VALUE);
+        queryWrapper.groupBy(RESULT_KEY);
+        List<Map<String, Object>> list = this.listMaps(queryWrapper);
+
+        Map<String, Double> result;
+        if (CalcType.SUM.equals(chart.getCalcType())) {
+            result = list.stream().collect(Collectors.toMap(
+                    e -> e.get(RESULT_KEY).toString(),
+                    e -> ((BigDecimal)e.get(RESULT_VALUE)).doubleValue()
+            ));
+        } else if (ColumnType.TIME.equals(chart.getColumnType()) && TimeDeltaEnum.WEEK_DAY.equals(chart.getTimeDelta())) {
+            result = list.stream().collect(Collectors.toMap(
+                    e -> DateTimeUtils.WEEK_RANGE.get((Integer) e.get(RESULT_KEY)),
+                    e -> ((Long)e.get(RESULT_VALUE)).doubleValue()
+            ));
+        } else {
+            result = list.stream().collect(Collectors.toMap(
+                    e -> e.get(RESULT_KEY).toString(),
+                    e -> ((Long)e.get(RESULT_VALUE)).doubleValue()
+            ));
+        }
+        return result;
+    }
+
+    protected static String getTimeIndex(String column, TimeDeltaEnum delta) {
+        String index;
+        switch (delta) {
+            case HOUR: index = "DATE_FORMAT(" + column + ", '%H')"; break;
+            case ALL_HOURS: index = "DATE_FORMAT(" + column + ", '%Y-%m-%d %H')"; break;
+            case WEEK_DAY: index = "WEEKDAY(" + column + ")"; break;
+            case MONTH: index = "DATE_FORMAT(" + column + ", '%m')"; break;
+            case MONTH_DAYS: index = "DATE_FORMAT(" + column + ", '%d)"; break;
+            case ALL_DAYS: index = "DATE_FORMAT(" + column + ", '%Y-%m-%d')"; break;
+            case ALL_MONTHS: index = "DATE_FORMAT(" + column + ", '%Y-%m')"; break;
+            case QUARTER: index = "QUARTER(" + column + ")"; break;
+            case ALL_QUARTERS: index = "CONCAT(DATE_FORMAT(" + column + ", '%Y'), '-', QUARTER("+column+")"; break;
+            case YEAR: index = "DATE_FORMAT(" + column + ", '%Y')"; break;
+            default: throw new UnsupportedTemporalTypeException("时间间隔类型错误: " + delta);
+        }
+        return index;
     }
 
 

@@ -1,9 +1,8 @@
 package top.keiskeiframework.common.base.controller.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.keiskeiframework.common.base.controller.IControllerService;
@@ -14,7 +13,6 @@ import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 import top.keiskeiframework.common.vo.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,12 +33,12 @@ public class TreeControllerImpl<T extends TreeEntity>
 
     @GetMapping
     @ApiOperation("列表")
-    public R<IPage<T>> page(
+    public R<Page<T>> page(
             BaseRequestVO<T> request,
             BasePageVO<T> page,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
     ) {
-        IPage<T> pageList = treeService.page(request, page);
+        Page<T> pageList = treeService.page(request, page);
         if (tree) {
             List<T> treeList = new TreeEntityUtils<>(pageList.getRecords()).getTreeAll();
             pageList.setRecords(treeList);

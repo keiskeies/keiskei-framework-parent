@@ -3,6 +3,7 @@ package top.keiskeiframework.common.base.util;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
@@ -13,6 +14,7 @@ import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,60 +46,62 @@ public class BaseRequestUtils<T extends ListEntity> {
      * 是否启用部门权限
      */
     private static boolean useDepartment = false;
+    private static <T extends ListEntity> Set<String> getTClassFields(Class<T> tClass) {
+        Set<String> fields = new HashSet<>();
+        for (Field field : tClass.getDeclaredFields()) {
+            fields.add(field.getName());
+        }
+        for (Field field : tClass.getSuperclass().getDeclaredFields()) {
+            fields.add(field.getName());
+        }
+        if (tClass.getSuperclass().equals(TreeEntity.class)) {
+            for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
+                fields.add(field.getName());
+            }
+        }
+        return fields;
+    }
 
+    public static <T extends ListEntity> QueryWrapper<T> getQueryWrapperByConditions(List<QueryConditionVO> conditions,
+                                                                         Class<T> tClass) {
+        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(conditions)) {
+            Set<String> fields = getTClassFields(tClass);
+            conditions.removeIf(e -> !fields.contains(e.getColumn()));
+            convertConditions(queryWrapper, conditions);
+        }
+
+        if (useDepartment) {
+            queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+        }
+        return queryWrapper;
+    }
 
     public static <T extends ListEntity> QueryWrapper<T> getQueryWrapper(BaseRequestVO<T> request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         boolean hasOrder = false;
         if (null != request) {
 
-            Set<String> fields = null;
-            if (!request.requestEmpty()) {
-                fields = new HashSet<>();
-                for (Field field : tClass.getDeclaredFields()) {
-                    fields.add(field.getName());
-                }
-                for (Field field : tClass.getSuperclass().getDeclaredFields()) {
-                    fields.add(field.getName());
-                }
-                if (tClass.getSuperclass().equals(TreeEntity.class)) {
-                    for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
-                        fields.add(field.getName());
-                    }
-                }
-            }
+            Set<String> fields = getTClassFields(tClass);
 
-            if (!request.conditionEmpty()) {
-                List<QueryConditionVO> conditions = request.getConditions();
-                Set<String> finalFields = fields;
-                conditions.removeIf(e -> {
-                    if (e.getColumn().contains(JOIN_SPLIT)) {
-                        return !finalFields.contains(e.getColumn().substring(0, e.getColumn().lastIndexOf(JOIN_SPLIT)));
-                    } else {
-                        return !finalFields.contains(e.getColumn());
-                    }
-                });
-                convertConditions(queryWrapper, conditions);
+            if (!CollectionUtils.isEmpty(fields)) {
+                if (!request.conditionEmpty()) {
+                    List<QueryConditionVO> conditions = request.getConditions();
+                    conditions.removeIf(e -> !fields.contains(e.getColumn()));
+                    convertConditions(queryWrapper, conditions);
+                }
+                if (!request.showEmpty()) {
+                    List<String> shows = request.getShow();
+                    shows.removeIf(e -> !fields.contains(e));
+                    queryWrapper.select(shows.stream().map(BeanUtils::humpToUnderline)
+                            .collect(Collectors.toList()).toArray(new String[]{}));
+                }
             }
-            if (!request.showEmpty()) {
-                List<String> shows = request.getShow();
-                Set<String> finalFields1 = fields;
-                shows.removeIf(e -> {
-                    if (e.contains(JOIN_SPLIT)) {
-                        return !finalFields1.contains(e.substring(0, e.lastIndexOf(JOIN_SPLIT)));
-                    } else {
-                        return !finalFields1.contains(e);
-                    }
-                });
-
-                queryWrapper.select(shows.stream().map(BeanUtils::humpToUnderline)
-                        .collect(Collectors.toList()).toArray(new String[]{}));
-            }
-            if (!StringUtils.isEmpty(request.getAsc())) {
+            if (!StringUtils.isEmpty(request.getAsc()) && fields.contains(request.getAsc())) {
                 queryWrapper.orderByAsc(BeanUtils.humpToUnderline(request.getAsc()));
                 hasOrder = true;
             }
-            if (!StringUtils.isEmpty(request.getDesc())) {
+            if (!StringUtils.isEmpty(request.getDesc()) && fields.contains(request.getDesc())) {
                 queryWrapper.orderByDesc(BeanUtils.humpToUnderline(request.getDesc()));
                 hasOrder = true;
             }

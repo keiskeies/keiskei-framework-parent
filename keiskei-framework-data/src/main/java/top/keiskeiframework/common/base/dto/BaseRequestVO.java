@@ -27,7 +27,8 @@ import java.util.stream.Collectors;
  * @since 2020/11/24 23:08
  */
 @NoArgsConstructor
-public class BaseRequestVO<T extends ListEntity> {
+public class BaseRequestVO<T extends ListEntity> implements Serializable{
+    private static final long serialVersionUID = -296451048174918297L;
     /**
      * 排序方式
      */

@@ -126,18 +126,20 @@ public interface IControllerService<T extends ListEntity> {
      * @param start      起始时间
      * @param end        结束时间
      * @param calcType   计算方式
+     * @param sumColumn  求字和段
      * @param conditions 查询条件
      * @return 。
      */
     @GetMapping("/statistic")
     R<Map<String, Double>> statistic(
             @RequestParam(name = "column") String column,
-            @RequestParam(name = "timeField", required = false) String timeField,
             @RequestParam(name = "columnType") ColumnType columnType,
-            @RequestParam(name = "timeDelta") TimeDeltaEnum timeDelta,
+            @RequestParam(name = "timeField", required = false) String timeField,
+            @RequestParam(name = "timeDelta", required = false) TimeDeltaEnum timeDelta,
             @RequestParam(name = "start", required = false) String start,
             @RequestParam(name = "end", required = false) String end,
             @RequestParam(name = "calcType", required = false) CalcType calcType,
+            @RequestParam(name = "sumColumn", required = false) String sumColumn,
             @RequestParam(name = "conditions", required = false) String conditions
     );
 }

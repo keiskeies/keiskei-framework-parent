@@ -131,7 +131,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
     public ChartOptionVO getTimeChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
         ChartOptionVO result = new ChartOptionVO();
         chartRequestDTO.setTimeDelta(dashboard.getFieldDelta());
-        List<DashboardDirection> yFields = dashboard.getDirections();
+        Collection<DashboardDirection> yFields = dashboard.getDirections();
         List<String> axisData = DateTimeUtils.timeRange(chartRequestDTO.getStart(), chartRequestDTO.getEnd(), chartRequestDTO.getTimeDelta());
         List<Series> seriesList = new ArrayList<>(yFields.size());
         List<String> legendData = new ArrayList<>(yFields.size());
@@ -156,7 +156,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
      */
     public ChartOptionVO getFieldChartOption(ChartRequestDTO chartRequestDTO, Dashboard dashboard) {
         ChartOptionVO result = new ChartOptionVO();
-        List<DashboardDirection> yFields = dashboard.getDirections();
+        Collection<DashboardDirection> yFields = dashboard.getDirections();
         Set<String> axisDataSet = new HashSet<>();
         Map<DashboardDirection, Map<String, Double>> dataList = new HashMap<>(yFields.size());
         List<String> legendData = new ArrayList<>(yFields.size());
@@ -317,7 +317,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
                 throw new BizException(DashboardExceptionEnum.TIME_EMPTY);
             }
         }
-        List<DashboardDirection> yFields = dashboard.getDirections();
+        Collection<DashboardDirection> yFields = dashboard.getDirections();
         if (yFields.size() > 1) {
             for (DashboardDirection direction : yFields) {
                 if (ChartType.LINE_BAR.equals(dashboard.getType())) {

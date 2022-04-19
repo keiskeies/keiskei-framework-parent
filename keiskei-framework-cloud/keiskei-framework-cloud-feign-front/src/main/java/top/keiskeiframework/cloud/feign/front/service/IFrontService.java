@@ -103,17 +103,19 @@ public interface IFrontService<T extends ListEntityDTO> {
      * @param start      起始时间
      * @param end        结束时间
      * @param calcType   计算方式
+     * @param sumColumn  求和字段
      * @param conditions 查询条件
      * @return 。
      */
     Map<String, Double> statistic(
             String column,
-            String timeField,
             ColumnType columnType,
+            String timeField,
             TimeDeltaEnum timeDelta,
             String start,
             String end,
             CalcType calcType,
+            String sumColumn,
             String conditions
     );
 
