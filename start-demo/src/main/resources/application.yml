@@ -19,6 +19,7 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
   datasource:
+    type:
     name: test_demo
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root

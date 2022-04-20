@@ -13,6 +13,7 @@
     <modules>
         <module>keiskei-framework-cloud-feign</module>
         <module>keiskei-framework-cloud-feign-front</module>
+        <module>keiskei-framework-cloud-core</module>
     </modules>
     <artifactId>keiskei-framework-cloud</artifactId>
 

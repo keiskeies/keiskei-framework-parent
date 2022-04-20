@@ -27,8 +27,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "p", String.class, MdcUtils.getUserDepartment());
         this.strictInsertFill(metaObject, "d", Integer.class, 0);
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "createUserId", Long.class, StringUtils.isEmpty(MdcUtils.getUserId()) ?
-                null : Long.valueOf(MdcUtils.getUserId()));
+        this.strictInsertFill(metaObject, "createUserId", Long.class, MdcUtils.getLongUserIdNoException());
 
     }
 
@@ -36,8 +35,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.info("start update fill ....");
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "updateUserId", Long.class, StringUtils.isEmpty(MdcUtils.getUserId()) ?
-                null : Long.valueOf(MdcUtils.getUserId()));
+        this.strictInsertFill(metaObject, "updateUserId", Long.class, MdcUtils.getLongUserIdNoException());
     }
 }
 
