@@ -20,7 +20,7 @@ public class OperateLogDTO implements Serializable {
     /**
      * 操作人员
      */
-    private Long userId;
+    private Integer userId;
     /**
      * 操作IP
      */

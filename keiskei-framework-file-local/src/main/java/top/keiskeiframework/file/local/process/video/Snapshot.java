@@ -2,15 +2,16 @@ package top.keiskeiframework.file.local.process.video;
 
 import lombok.Data;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
-//import org.bytedeco.javacv.FFmpegFrameGrabber;
-//import org.bytedeco.javacv.Frame;
-//import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.springframework.util.StringUtils;
 
 /**
  * @author James Chen right_way@foxmail.com
@@ -61,61 +62,51 @@ public class Snapshot {
             }
         }
     }
-    public void snapshot(File video, HttpServletResponse response) throws IOException {
-        InputStream is = new FileInputStream(video);
-    }
+    public BufferedImage snapshot(File video) throws IOException {
+        FFmpegFrameGrabber ff = new FFmpegFrameGrabber(video);
+        ff.start();
+        // 截取中间帧图片(具体依实际情况而定)
+        int i = 0;
+        long allTime = ff.getLengthInTime() / 1000;
+        int length = ff.getLengthInFrames();
+        if (t < 0 || t > allTime) {
+            t = 0L;
+        }
+        t = (long) (t * 1D * length / allTime);
+        Frame frame = null;
+        while (i < length) {
+            frame = ff.grabFrame();
+            if ((i > t) && (frame.image != null)) {
+                break;
+            }
+            i++;
+        }
 
-//    public void snapshot(File video, HttpServletResponse response) throws IOException {
-//        FFmpegFrameGrabber ff = new FFmpegFrameGrabber(video);
-//        ff.start();
-//        // 截取中间帧图片(具体依实际情况而定)
-//        int i = 0;
-//        long allTime = ff.getLengthInTime() / 1000;
-//        int length = ff.getLengthInFrames();
-//        if (t < 0 || t > allTime) {
-//            t = 0L;
-//        }
-//        t = (long) (t * 1D * length / allTime);
-//        Frame frame = null;
-//        while (i < length) {
-//            frame = ff.grabFrame();
-//            if ((i > t) && (frame.image != null)) {
-//                break;
-//            }
-//            i++;
-//        }
-//
-//        // 截取的帧图片
-//        Java2DFrameConverter converter = new Java2DFrameConverter();
-//        BufferedImage srcImage = converter.getBufferedImage(frame);
-//        int srcImageWidth = srcImage.getWidth();
-//        int srcImageHeight = srcImage.getHeight();
-//
-//        // 对截图进行等比例缩放(缩略图)
-//
-//        int width, height;
-//        if (null != w && 0 != w) {
-//            width = w;
-//            height = (int) (((double) width / srcImageWidth) * srcImageHeight);
-//        } else if (null != h && 0 != h) {
-//            height = h;
-//            width = (int) (((double) height / srcImageHeight) * srcImageWidth);
-//        } else {
-//            width = srcImageWidth;
-//            height = srcImageHeight;
-//        }
-//
-//        BufferedImage thumbnailImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-//        thumbnailImage.getGraphics().drawImage(srcImage.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
-//
-//        if (StringUtils.isEmpty(f)) {
-//            f = "jpg";
-//        }
-//        response.setContentType("image/" + f);
-//        OutputStream os = response.getOutputStream();
-//        ImageIO.write(thumbnailImage, f, os);
-//        ff.stop();
-//
-//    }
+
+        // 截取的帧图片
+        Java2DFrameConverter converter = new Java2DFrameConverter();
+        BufferedImage srcImage = converter.getBufferedImage(frame);
+        int srcImageWidth = srcImage.getWidth();
+        int srcImageHeight = srcImage.getHeight();
+
+        // 对截图进行等比例缩放(缩略图)
+
+        int width, height;
+        if (null != w && 0 != w) {
+            width = w;
+            height = (int) (((double) width / srcImageWidth) * srcImageHeight);
+        } else if (null != h && 0 != h) {
+            height = h;
+            width = (int) (((double) height / srcImageHeight) * srcImageWidth);
+        } else {
+            width = srcImageWidth;
+            height = srcImageHeight;
+        }
+
+        BufferedImage thumbnailImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        thumbnailImage.getGraphics().drawImage(srcImage.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
+        ff.stop();
+        return thumbnailImage;
+    }
 
 }

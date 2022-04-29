@@ -22,37 +22,48 @@ public class MdcUtils {
     public static void setUserId(String userId) {
         MDC.put(USER_ID, userId);
     }
+
     public static String getUserId() {
         return MDC.get(USER_ID);
     }
 
-    public static Long getLongUserId() {
+    public static String getStringUserId() {
         String mdcUserIdStr = MDC.get(USER_ID);
         if (StringUtils.isEmpty(mdcUserIdStr)) {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
         }
-        return Long.parseLong(mdcUserIdStr);
+        return mdcUserIdStr;
     }
 
-    public static Long getLongUserIdNoException() {
+    public static Integer getLongUserId() {
+        String mdcUserIdStr = MDC.get(USER_ID);
+        if (StringUtils.isEmpty(mdcUserIdStr)) {
+            throw new BizException(BizExceptionEnum.AUTH_ERROR);
+        }
+        return Integer.parseInt(mdcUserIdStr);
+    }
+
+    public static Integer getIntegerUserIdNoException() {
         String mdcUserIdStr = MDC.get(USER_ID);
         if (StringUtils.isEmpty(mdcUserIdStr)) {
             return null;
         }
-        return Long.parseLong(mdcUserIdStr);
+        return Integer.parseInt(mdcUserIdStr);
     }
-
 
 
     public static void setUserName(String userName) {
         MDC.put(USER_NAME, userName);
     }
+
     public static String getUserName() {
         return MDC.get(USER_NAME);
     }
+
     public static void setUserDepartment(String userDepartment) {
         MDC.put(USER_DEPARTMENT, userDepartment);
     }
+
     public static String getUserDepartment() {
         return MDC.get(USER_DEPARTMENT);
     }

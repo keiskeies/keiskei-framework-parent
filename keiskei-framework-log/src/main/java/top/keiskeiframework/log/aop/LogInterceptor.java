@@ -57,7 +57,7 @@ public class LogInterceptor {
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
             String userId = MdcUtils.getUserId();
             if (!StringUtils.isEmpty(userId)) {
-                operateLog.setUserId(Long.valueOf(MdcUtils.getUserId()));
+                operateLog.setUserId(Integer.valueOf(MdcUtils.getUserId()));
             }
             operateLog.setType(request.getMethod());
             operateLog.setIp(UserInfoUtils.getIpAddress(request));

@@ -13,13 +13,16 @@ import top.keiskeiframework.file.dto.FileInfo;
 import top.keiskeiframework.file.dto.MultiFileInfo;
 import top.keiskeiframework.file.enums.FileStorageExceptionEnum;
 import top.keiskeiframework.file.local.config.FileLocalProperties;
-import top.keiskeiframework.file.local.util.FileShowUtils;
+import top.keiskeiframework.file.local.util.ImageFileShowUtils;
 import top.keiskeiframework.file.local.util.MultiFileUtils;
+import top.keiskeiframework.file.local.util.VideoFileShowUtils;
 import top.keiskeiframework.file.service.FileStorageService;
 import top.keiskeiframework.file.util.FileStorageUtils;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 
@@ -155,7 +158,13 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
             if (null == exist(fileName)) {
                 throw new RuntimeException(FileStorageExceptionEnum.FILE_DOWN_FAIL.getMsg());
             }
-            FileShowUtils.show(fileLocalProperties.getPath() + fileName, process, request, response);
+            Image image = ImageIO.read(new File(fileLocalProperties.getPath() + fileName));
+
+            if(null != image) {
+                ImageFileShowUtils.show(fileLocalProperties.getPath() , fileName, process, request, response);
+            } else {
+                VideoFileShowUtils.show(fileLocalProperties.getPath() , fileName, process, request, response);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             response.reset();
