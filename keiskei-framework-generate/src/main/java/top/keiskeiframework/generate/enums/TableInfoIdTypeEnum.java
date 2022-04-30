@@ -25,9 +25,9 @@ public enum TableInfoIdTypeEnum implements IEnum<Integer> {
      */
     STRING(0, "String"),
     /**
-     * Long
+     * Integer
      */
-    LONG(1,"Long"),
+    Integer(1,"Integer"),
     /**
      * Integer
      */

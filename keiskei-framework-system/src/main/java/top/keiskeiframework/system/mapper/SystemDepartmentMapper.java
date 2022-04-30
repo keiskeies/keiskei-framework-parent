@@ -13,6 +13,6 @@ import top.keiskeiframework.system.entity.SystemDepartment;
  * @since 2020-12-16 13:36:30
  */
 //@ConditionalOnProperty({"keiskei.use-department"})
-public interface SystemDepartmentMapper extends BaseEntityMapper<SystemDepartment> {
+public interface SystemDepartmentMapper extends BaseEntityMapper<SystemDepartment, Integer> {
 
 }

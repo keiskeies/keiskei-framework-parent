@@ -34,12 +34,12 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "dashboard_direction_condition")
 @ApiModel(value = "DashboardDirectionCondition", description = "图表横坐标查询条件")
-public class DashboardDirectionCondition extends ListEntity {
+public class DashboardDirectionCondition extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -2434119392535767822L;
+    private static final Long serialVersionUID = -2434119392535767822L;
 
     @BatchCacheField
-    private Long dashboardDirectionId;
+    private Integer dashboardDirectionId;
 
     @ApiModelProperty(value = "字段", dataType = "String")
     @NotBlank(message = "字段不能为空", groups = {Insert.class, Update.class})

@@ -17,20 +17,20 @@ public interface IGenerateService {
      * 构建指定项目
      * @param itemId 项目id
      */
-    void build(Long itemId);
+    void build(Integer itemId);
 
     /**
      * 刷新项目状态
      * @param itemId 项目id
      * @return .
      */
-    BuildStatusEnum refreshStatus(Long itemId);
+    BuildStatusEnum refreshStatus(Integer itemId);
 
     /**
      * 获取下载地址
      * @param itemId 项目id
      * @return .
      */
-    String getDownloadAddress(Long itemId);
+    String getDownloadAddress(Integer itemId);
 
 }

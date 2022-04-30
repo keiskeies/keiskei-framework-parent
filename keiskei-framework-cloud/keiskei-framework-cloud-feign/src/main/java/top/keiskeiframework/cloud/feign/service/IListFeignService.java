@@ -21,7 +21,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IListFeignService<T extends ListEntityDTO> {
+public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Serializable> {
 
     /**
      * 分页查询
@@ -63,18 +63,35 @@ public interface IListFeignService<T extends ListEntityDTO> {
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(required = false, defaultValue = "false") Boolean complete);
 
+
     /**
      * 查询数量
      *
      * @param conditions 查询条件
-     * @param show       显示字段
      * @return count
      */
     @GetMapping("/count")
-    R<Long> count(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show
-    );
+    R<Integer> count(@RequestParam(name = "conditions", required = false) String conditions);
+
+
+    /**
+     * 判断是否存在
+     *
+     * @param conditions 查询条件
+     * @return 。
+     */
+    @GetMapping("/exist")
+    R<Boolean> exist(@RequestParam(name = "conditions", required = false) String conditions);
+
+    /**
+     * 条件查询单个
+     *
+     * @param conditions 查询条件
+     * @return 。
+     */
+    @GetMapping("/conditions")
+    R<T> getOne(@RequestParam(name = "conditions", required = false) String conditions);
+
 
     /**
      * 详情
@@ -83,18 +100,8 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") Long id);
+    R<T> findById(@PathVariable("id") ID id);
 
-
-    /**
-     * 条件详情
-     *
-     * @param column 字段
-     * @param value  value
-     * @return data
-     */
-    @GetMapping("/column")
-    R<T> getOne(@RequestParam(name = "column") String column, @RequestParam(name = "value") Serializable value);
 
     /**
      * 保存
@@ -105,6 +112,7 @@ public interface IListFeignService<T extends ListEntityDTO> {
     @PostMapping
     R<T> save(@RequestBody T t);
 
+
     /**
      * 保存多个
      *
@@ -113,6 +121,7 @@ public interface IListFeignService<T extends ListEntityDTO> {
      */
     @PostMapping("/multi")
     R<List<T>> save(@RequestBody List<T> ts);
+
 
     /**
      * 更新
@@ -133,14 +142,6 @@ public interface IListFeignService<T extends ListEntityDTO> {
     @PutMapping("/multi")
     R<List<T>> update(@RequestBody List<T> ts);
 
-    /**
-     * 修改排序
-     *
-     * @param baseSortVO dto
-     * @return boolean
-     */
-    @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortDTO baseSortVO);
 
     /**
      * 删除
@@ -149,7 +150,9 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") Long id);
+    R<Boolean> delete(@PathVariable("id") ID id);
+
+
 
     /**
      * 删除多个
@@ -158,7 +161,17 @@ public interface IListFeignService<T extends ListEntityDTO> {
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<Long> ids);
+    R<Boolean> delete(@RequestBody List<ID> ids);
+
+
+    /**
+     * 条件删除
+     *
+     * @param conditions 条件
+     * @return 。
+     */
+    @DeleteMapping("/conditions")
+    R<Boolean> deleteByConditions(@RequestAttribute String conditions);
 
 
     /**

@@ -9,32 +9,32 @@ import java.io.Serializable;
  * <p>
  * 排序改变接受类
  * </p>
- *
+ * @param <ID> .
  * @author cjm
  */
 @Data
-public class BaseSortVO implements Serializable {
-    private static final long serialVersionUID = -899342361316647661L;
+public class BaseSortVO<ID extends Serializable> implements Serializable {
+    private static final Long serialVersionUID = -899342361316647661L;
 
     /**
      * id1
      */
     @NotNull
-    private Long id1;
+    private ID id1;
 
     /**
      * sortby1 修改后的排序
      */
     @NotNull
-    private Long sortBy1;
+    private Integer sortBy1;
     /**
      * ID2
      */
     @NotNull
-    private Long id2;
+    private ID id2;
     /**
      * 修改后的排序
      */
     @NotNull
-    private Long sortBy2;
+    private Integer sortBy2;
 }

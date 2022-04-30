@@ -1,8 +1,9 @@
 package top.keiskeiframework.common.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
 import top.keiskeiframework.common.enums.exception.IErrorCode;
-import lombok.*;
 
 
 /**
@@ -17,7 +18,7 @@ import lombok.*;
 @Data
 public class BizException extends RuntimeException {
 
-    private static final long serialVersionUID = -7098200834996845904L;
+    private static final Long serialVersionUID = -7098200834996845904L;
 
     /**
      * 错误码
@@ -40,7 +41,7 @@ public class BizException extends RuntimeException {
         this.message = message;
     }
 
-    public BizException(long code, String message) {
+    public BizException(Long code, String message) {
         this.code = code;
         this.message = message;
     }

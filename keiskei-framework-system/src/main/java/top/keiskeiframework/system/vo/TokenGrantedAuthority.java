@@ -18,8 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 public class TokenGrantedAuthority implements GrantedAuthority {
 
-    private static final long serialVersionUID = -7873909088341560213L;
+    private static final Long serialVersionUID = -7873909088341560213L;
 
-    private Long id;
+    private Integer id;
     private String authority;
 }

@@ -21,10 +21,10 @@ import java.util.List;
  */
 @NoArgsConstructor
 @Data
-public class BaseRequestDTO<T extends ListEntityDTO> implements Serializable{
+public class BaseRequestDTO<T extends ListEntityDTO<ID>, ID extends Serializable> implements Serializable{
 
 
-    private static final long serialVersionUID = 6342066245160279585L;
+    private static final Long serialVersionUID = 6342066245160279585L;
     /**
      * 查询条件
      */
@@ -41,7 +41,7 @@ public class BaseRequestDTO<T extends ListEntityDTO> implements Serializable{
                 new QueryConditionDTO(
                         column,
                         ConditionEnum.EQ,
-                        Collections.singletonList(value)
+                        value
                 )
         );
     }
@@ -62,6 +62,6 @@ public class BaseRequestDTO<T extends ListEntityDTO> implements Serializable{
      */
     protected List<String> show;
 
-    private String desc;
-    private String asc;
+    protected String desc;
+    protected String asc;
 }

@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  * <p>
  * 基础实体类
  * </p>
- *
+ * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
@@ -31,11 +31,10 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListEntity implements Serializable {
-    private static final long serialVersionUID = -8025795001235125591L;
+public class ListEntity<ID extends Serializable> implements Serializable {
+    private static final Long serialVersionUID = -8025795001235125591L;
 
-    @TableId(type = IdType.AUTO)
-    protected Long id;
+    protected ID id;
 
 
     /**
@@ -57,14 +56,14 @@ public class ListEntity implements Serializable {
      * 数据初始化来源 {@link top.keiskeiframework.common.config.MyMetaObjectHandler}
      */
     @TableField(fill = FieldFill.INSERT)
-    protected Long createUserId;
+    protected Integer createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link top.keiskeiframework.common.config.MyMetaObjectHandler}
      */
     @TableField(fill = FieldFill.UPDATE)
-    protected Long updateUserId;
+    protected Integer updateUserId;
 
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

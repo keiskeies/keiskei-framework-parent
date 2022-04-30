@@ -19,7 +19,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class LineOrBarSeries extends Series implements Serializable {
-    private static final long serialVersionUID = -5085259754180445771L;
+    private static final Long serialVersionUID = -5085259754180445771L;
     /**
      * 数据
      */

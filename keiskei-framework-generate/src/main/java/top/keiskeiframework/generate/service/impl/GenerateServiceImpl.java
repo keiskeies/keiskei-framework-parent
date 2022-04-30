@@ -38,7 +38,7 @@ public class GenerateServiceImpl implements IGenerateService {
     @Override
     @Async
     @Lockable(key = "#itemId", message = "代码构建中，请稍候~")
-    public void build(Long itemId) {
+    public void build(Integer itemId) {
 
         if (!BuildStatusEnum.NONE.equals(generateService.refreshStatus(itemId))) {
             throw new BizException(BizExceptionEnum.ERROR);
@@ -77,12 +77,12 @@ public class GenerateServiceImpl implements IGenerateService {
     }
 
     @Override
-    public BuildStatusEnum refreshStatus(Long itemId) {
+    public BuildStatusEnum refreshStatus(Integer itemId) {
         return BuildStatusEnum.NONE;
     }
 
     @Override
-    public String getDownloadAddress(Long itemId) {
+    public String getDownloadAddress(Integer itemId) {
         return null;
     }
 }

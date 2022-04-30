@@ -16,7 +16,7 @@ import top.keiskeiframework.system.service.ISystemRoleService;
  */
 @Service
 //@ConditionalOnProperty({"keiskei.use-permission"})
-public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole> implements ISystemRoleService {
+public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole, Integer> implements ISystemRoleService {
 
 
 }

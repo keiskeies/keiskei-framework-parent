@@ -11,12 +11,12 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IScheduledTaskService extends BaseService<ScheduledTask> {
+public interface IScheduledTaskService extends BaseService<ScheduledTask, Integer> {
 
     /**
      * 更改任务状态
      * @param id .
      */
-    void excute(Long id);
+    void excute(Integer id);
 
 }

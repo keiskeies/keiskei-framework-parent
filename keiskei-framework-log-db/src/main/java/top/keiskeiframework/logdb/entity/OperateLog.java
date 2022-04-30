@@ -31,12 +31,12 @@ import javax.validation.constraints.NotNull;
 @TableName(value = "log_operate_log")
 @ApiModel(value = "OperateLog", description = "操作日志")
 @Chartable
-public class OperateLog extends ListEntity {
+public class OperateLog extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -1735705706625546610L;
+    private static final Long serialVersionUID = -1735705706625546610L;
 
-    @ApiModelProperty(value = "操作人员", dataType = "Long")
-    private Long userId;
+    @ApiModelProperty(value = "操作人员", dataType = "Integer")
+    private Integer userId;
 
     @ApiModelProperty(value = "操作IP", dataType = "String")
     @NotNull(message = "请选择操作IP", groups = {Insert.class})

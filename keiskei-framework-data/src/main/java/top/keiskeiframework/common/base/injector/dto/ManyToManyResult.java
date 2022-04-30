@@ -14,9 +14,8 @@ import java.io.Serializable;
  */
 @Data
 public class ManyToManyResult implements Serializable{
-    private static final long serialVersionUID = 8394766169458529140L;
+    private static final Long serialVersionUID = 8394766169458529140L;
     private String entity;
     private String fieldName;
-    private Long firstId;
-    private Long secondId;
+    private Object joinId;
 }

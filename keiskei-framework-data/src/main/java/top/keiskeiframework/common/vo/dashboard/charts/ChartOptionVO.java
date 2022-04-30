@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 public class ChartOptionVO implements Serializable {
-    private static final long serialVersionUID = -2401179965618911915L;
+    private static final Long serialVersionUID = -2401179965618911915L;
     /**
      * xy坐标翻转
      */

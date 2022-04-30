@@ -12,11 +12,12 @@ import java.util.List;
  * <p>
  *
  * </p>
- *
+ * @param <T> .
+ * @param <ID> .
  * @author v_chenjiamin
  * @since 2022/4/15 15:36
  */
-public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
+public interface ListBaseService<T extends ListEntity<ID>, ID extends Serializable> extends BaseService<T, ID> {
 
     /**
      * 完整数据列表查询
@@ -25,7 +26,7 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      * @param page    列表条件
      * @return .
      */
-    IPage<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page);
+    IPage<T> pageComplete(BaseRequestVO<T, ID> request, BasePageVO page);
 
 
     /**
@@ -34,7 +35,7 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      * @param request 查询条件
      * @return 。
      */
-    List<T> findAllComplete(BaseRequestVO<T> request);
+    List<T> listComplete(BaseRequestVO<T, ID> request);
 
     /**
      * 通过缓存获取，不拼装链接表数据
@@ -44,7 +45,15 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      */
     T getByIdCache(Serializable id);
 
+    /**
+     * 保存并更新缓存
+     * @param t T
+     * @return 。
+     */
+    T saveCache(T t);
 
+
+    T updateByIdCache(T t);
     /**
      * 查询针对某个字段的缓存
      *
@@ -52,7 +61,9 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      * @param value  值
      * @return 。
      */
-    List<T> findAllByColumnCache(String column, Serializable value);
+    List<T> listByColumnCache(String column, Serializable value);
+
+    boolean removeByColumn(String column, Serializable value);
 
     /**
      * 删除针对某个字段的缓存
@@ -60,5 +71,5 @@ public interface ListBaseService<T extends ListEntity> extends BaseService<T> {
      * @param column 字段
      * @param value  值
      */
-    void deleteAllByColumnCache(String column, Serializable value);
+    void removeByColumnCache(String column, Serializable value);
 }

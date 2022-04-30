@@ -10,6 +10,7 @@ import top.keiskeiframework.cloud.feign.front.controller.IFrontControllerService
 import top.keiskeiframework.cloud.feign.front.service.impl.TreeFrontServiceImpl;
 import top.keiskeiframework.common.vo.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,12 +21,12 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class FrontTreeControllerImpl<T extends TreeEntityDTO>
-        extends AbstractFrontControllerServiceImpl<T>
-        implements IFrontControllerService<T> {
+public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends Serializable>
+        extends AbstractFrontControllerServiceImpl<T, ID>
+        implements IFrontControllerService<T, ID> {
 
     @Autowired
-    protected TreeFrontServiceImpl<T> feignTreeService;
+    protected TreeFrontServiceImpl<T, ID> feignTreeService;
 
     @GetMapping
     @ApiOperation("列表")
@@ -58,7 +59,7 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO>
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "id", required = false) ID id,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree) {
         return R.ok(feignTreeService.options(
                 conditions,
@@ -69,23 +70,6 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO>
                 asc,
                 id,
                 tree));
-    }
-
-
-    @GetMapping("/all")
-    @ApiOperation("全部下拉框")
-    public R<List<T>> all(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show,
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false, defaultValue = "true") Boolean tree
-    ) {
-        return R.ok(feignTreeService.all(
-                conditions,
-                show,
-                id,
-                tree
-        ));
     }
 
 }

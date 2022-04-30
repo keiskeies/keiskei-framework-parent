@@ -38,8 +38,8 @@ import java.util.List;
 
 @TableName(value = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
-public class FieldEnumInfo extends ListEntity {
-    private static final long serialVersionUID = -7401234718671320506L;
+public class FieldEnumInfo extends ListEntity<Integer> {
+    private static final Long serialVersionUID = -7401234718671320506L;
 
     @ApiModelProperty(value = "名称", dataType = "String")
     @NotBlank(message = "名称不能为空", groups = {Insert.class})
@@ -67,5 +67,5 @@ public class FieldEnumInfo extends ListEntity {
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 }

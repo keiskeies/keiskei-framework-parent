@@ -11,7 +11,7 @@ import top.keiskeiframework.system.entity.SystemPermission;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface ISystemPermissionService extends BaseService<SystemPermission> {
+public interface ISystemPermissionService extends BaseService<SystemPermission, Integer> {
 
 
 }

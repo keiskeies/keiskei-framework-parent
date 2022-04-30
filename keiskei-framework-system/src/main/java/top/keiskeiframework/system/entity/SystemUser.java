@@ -33,9 +33,9 @@ import java.util.Set;
 @NoArgsConstructor
 @TableName(value = "sys_user")
 @ApiModel(value = "SystemUser", description = "管理员")
-public class SystemUser extends ListEntity {
+public class SystemUser extends ListEntity<Integer>  {
 
-    private static final long serialVersionUID = -3821316560303369479L;
+    private static final Long serialVersionUID = -3821316560303369479L;
 
     @ApiModelProperty(value = "账号", dataType = "String")
     @NotBlank(message = "账号不能为空", groups = {Insert.class})
@@ -76,7 +76,7 @@ public class SystemUser extends ListEntity {
     @JoinColumn(name = "departmentId")
     private transient SystemDepartment systemDepartment;
 
-    private Long departmentId;
+    private Integer departmentId;
 
     /**
      * 最后登录时间
@@ -94,7 +94,7 @@ public class SystemUser extends ListEntity {
      * 密码错误次数
      */
     @JsonIgnore
-    private Long passwordErrorTimes;
+    private Integer passwordErrorTimes;
 
     /**
      * 锁定时间

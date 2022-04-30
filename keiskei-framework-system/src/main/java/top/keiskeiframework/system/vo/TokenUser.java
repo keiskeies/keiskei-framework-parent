@@ -17,9 +17,9 @@ import java.util.Collection;
 @Data
 public class TokenUser implements UserDetails {
 
-    private static final long serialVersionUID = 6452938173658688276L;
+    private static final Long serialVersionUID = 6452938173658688276L;
 
-    private Long id;
+    private Integer id;
     private String name;
     private String avatar;
     private String phone;
@@ -39,7 +39,7 @@ public class TokenUser implements UserDetails {
      * 所属部门
      */
     @JsonIgnore
-    private Long departmentId;
+    private Integer departmentId;
     /**
      * 部门标识
      */

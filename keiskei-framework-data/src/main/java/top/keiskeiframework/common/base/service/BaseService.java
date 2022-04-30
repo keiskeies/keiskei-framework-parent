@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +17,12 @@ import java.util.Map;
  * 基础服务接口
  * </p>
  *
- * @param <T>  实体类
+ * @param <T> .
+ * @param <ID> .
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface BaseService<T extends ListEntity> extends IService<T> {
+public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> extends IService<T> {
 
     /**
      * 列表查询
@@ -31,7 +31,14 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @param page    列表条件
      * @return .
      */
-    IPage<T> page(BaseRequestVO<T> request, BasePageVO<T> page);
+    IPage<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
+
+    /**
+     * 条件查询单个
+     * @param request 查询条件
+     * @return 。
+     */
+    T getOne(BaseRequestVO<T, ID> request);
 
     /**
      * 查询全部
@@ -39,15 +46,8 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @param request 查询条件
      * @return 。
      */
-    List<T> findAll(BaseRequestVO<T> request);
+    List<T> list(BaseRequestVO<T, ID> request);
 
-    /**
-     * 下拉框列表
-     *
-     * @return .
-     */
-    List<T> findAll();
-    List<T> findAll(T t);
 
     /**
      * 通过单一字段查询
@@ -56,8 +56,7 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @param value  字段值
      * @return 。
      */
-    List<T> findAllByColumn(String column, Serializable value);
-    void deleteAllByColumn(String column, Serializable value);
+    List<T> listByColumn(String column, Serializable value);
 
 
     /**
@@ -66,8 +65,15 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
      * @param request request
      * @return 。
      */
-    Long count(BaseRequestVO<T> request);
+    Long count(BaseRequestVO<T, ID> request);
 
+
+    /**
+     * 判断是否存在
+     * @param request request
+     * @return .
+     */
+    Boolean exist(BaseRequestVO<T, ID> request);
 
     /**
      * 通过单一字段查询
@@ -80,56 +86,11 @@ public interface BaseService<T extends ListEntity> extends IService<T> {
 
 
     /**
-     * 新增并通知
-     *
-     * @param t 。
-     * @return 。
-     */
-    T saveAndNotify(T t);
-    T saveAny(Object ojb);
-
-
-    /**
-     * 保存并更新缓存
-     * @param t T
-     * @return 。
-     */
-    T saveCache(T t);
-
-
-    /**
-     * 更新并通知
-     *
-     * @param t 。
-     * @return 。
-     */
-    T updateByIdAndNotify(T t);
-    T updateByIdCache(T t);
-    T updateAny(Object ojb);
-
-
-    /**
-     * 更改排序
-     *
-     * @param baseSortVO .
-     */
-    void changeSort(BaseSortVO baseSortVO);
-
-    /**
      * 删除并通知
      *
-     * @param id 。
      */
-    boolean removeByIdAndNotify(Serializable id);
-
-
-    /**
-     * 校验数据
-     *
-     * @param t .
-     */
-    void validate(T t);
-
+    boolean removeByColumn(String column, Serializable value);
+    boolean removeByCondition(List<QueryConditionVO> conditions);
 
     /**
      * 数据图表

@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Radar implements Serializable {
-    private static final long serialVersionUID = 9065801904058866173L;
+    private static final Long serialVersionUID = 9065801904058866173L;
     /**
      * 雷达坐标
      */
@@ -30,7 +30,7 @@ public class Radar implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Indicator implements Serializable {
-        private static final long serialVersionUID = -7065029137670618519L;
+        private static final Long serialVersionUID = -7065029137670618519L;
         /**
          * 坐标名称
          */

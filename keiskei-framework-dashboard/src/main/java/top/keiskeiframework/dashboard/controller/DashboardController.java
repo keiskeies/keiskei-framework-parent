@@ -38,19 +38,19 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        Dashboard dashboard = Dashboard.builder().createUserId(Long.valueOf(MdcUtils.getUserId())).build();
+        Dashboard dashboard = Dashboard.builder().createUserId(Integer.valueOf(MdcUtils.getUserId())).build();
         return R.ok(dashboardService.findAll(dashboard));
     }
 
     @ApiOperation("详情")
     @GetMapping("/{id}")
-    public R<?> getOne(@PathVariable Long id) {
+    public R<?> getOne(@PathVariable Integer id) {
         return R.ok(dashboardService.getChartOption(id));
     }
 
     @ApiOperation("详情")
     @GetMapping("/{id}/refresh")
-    public R<?> refreshOne(@PathVariable Long id) {
+    public R<?> refreshOne(@PathVariable Integer id) {
         return R.ok(dashboardService.refreshChartOption(id));
     }
 
@@ -76,7 +76,7 @@ public class DashboardController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long id) {
+    public R<Boolean> delete(@PathVariable Integer id) {
         dashboardService.removeByIdAndNotify(id);
         return R.ok(Boolean.TRUE);
     }

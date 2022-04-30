@@ -19,7 +19,7 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo> implements IProjectInfoService {
+public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Integer> implements IProjectInfoService {
     @Autowired
     private IGenerateService generateService;
 }

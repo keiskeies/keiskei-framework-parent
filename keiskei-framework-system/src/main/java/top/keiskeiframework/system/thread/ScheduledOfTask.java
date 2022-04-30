@@ -13,7 +13,7 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
 @Setter
 public class ScheduledOfTask implements Runnable {
 
-    private Long id;
+    private Integer id;
     protected ApplicationContext applicationContext;
 
     /**

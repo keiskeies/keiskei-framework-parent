@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.base.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +17,21 @@ import java.util.List;
  * 树形实体类基础服务实现
  * </p>
  *
- * @param <T> 实体类
+ * @param <T> .
+ * @param <ID> .
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServiceImpl<T> implements BaseService<T>, IService<T> {
+public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
+        extends AbstractListBaseServiceImpl<T, ID> implements BaseService<T, ID>, IService<T> {
 
     @Autowired
-    protected ListServiceImpl<T> listService;
+    protected ListServiceImpl<T, ID> listService;
 
 
     @Override
-    public Page<T> pageComplete(BaseRequestVO<T> request, BasePageVO<T> page) {
+    public Page<T> pageComplete(BaseRequestVO<T, ID> request, BasePageVO page) {
         Page<T> iPage = super.page(request, page);
         for (T record : iPage.getRecords()) {
             getManyToMany(record);
@@ -53,8 +54,8 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
 
 
     @Override
-    public List<T> findAllByColumn(String column, Serializable value) {
-        List<T> ts = super.findAllByColumn(column, value);
+    public List<T> listByColumn(String column, Serializable value) {
+        List<T> ts = super.listByColumn(column, value);
         for (T t : ts) {
             getManyToMany(t);
             getOneToMany(t);
@@ -65,8 +66,8 @@ public class ListServiceImpl<T extends ListEntity> extends AbstractListBaseServi
     }
 
     @Override
-    public List<T> findAllComplete(BaseRequestVO<T> request) {
-        List<T> ts = super.findAll(request);
+    public List<T> listComplete(BaseRequestVO<T, ID> request) {
+        List<T> ts = super.list(request);
         for (T t : ts) {
             getManyToMany(t);
             getOneToMany(t);

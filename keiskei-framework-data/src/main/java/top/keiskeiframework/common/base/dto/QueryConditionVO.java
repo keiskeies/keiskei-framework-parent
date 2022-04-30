@@ -26,33 +26,30 @@ import java.util.List;
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
 public class QueryConditionVO implements Serializable{
 
-    private static final long serialVersionUID = -7635199550979456815L;
+    private static final Long serialVersionUID = -7635199550979456815L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(alternateNames = "c")
-    private String column;
+    private String c;
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(alternateNames = "d")
-    private ConditionEnum condition;
+    private ConditionEnum d;
 
-    @ApiModelProperty(value = "字段值", dataType = "String")
-    @JSONField(alternateNames = "v")
-    private List<? extends Serializable> value;
+    @ApiModelProperty(value = "字段值", dataType = "Serializable")
+    private List<? extends Serializable> v;
 
-    public QueryConditionVO(String column, Serializable value) {
-        this.column = column;
-        this.value = Collections.singletonList(value);
+    public QueryConditionVO(String c, Serializable v) {
+        this.c = c;
+        this.v = Collections.singletonList(v);
     }
-    public QueryConditionVO(String column, List<? extends Serializable> value) {
-        this.column = column;
-        this.value = value;
+    public QueryConditionVO(String c, List<? extends Serializable> v) {
+        this.c = c;
+        this.v = v;
     }
 
-    public ConditionEnum getCondition() {
-        if (null == this.condition) {
+    public ConditionEnum getD() {
+        if (null == this.d) {
             return ConditionEnum.EQ;
         } else {
-            return condition;
+            return d;
         }
     }
 

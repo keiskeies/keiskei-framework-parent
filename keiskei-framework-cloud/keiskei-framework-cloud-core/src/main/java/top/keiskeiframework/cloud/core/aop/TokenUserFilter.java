@@ -51,7 +51,7 @@ public class TokenUserFilter implements Filter {
                 TokenUser tokenUser = JwtTokenUtils.parse(token, TokenUser.class);
                 if (null != tokenUser) {
                     MdcUtils.setUserId(tokenUser.getId() + "");
-                    MdcUtils.setUserName(tokenUser.getUsername());
+                    MdcUtils.setUserName(tokenUser.getNickName());
                     MdcUtils.setUserDepartment(tokenUser.getDepartment());
                 }
             }

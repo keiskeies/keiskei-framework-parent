@@ -41,7 +41,7 @@ public class LockException extends RuntimeException {
         this.message = message;
     }
 
-    public LockException(long code, String message) {
+    public LockException(Long code, String message) {
         this.code = code;
         this.message = message;
     }

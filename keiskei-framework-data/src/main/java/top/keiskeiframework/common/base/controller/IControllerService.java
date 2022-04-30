@@ -1,8 +1,10 @@
 package top.keiskeiframework.common.base.controller;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -18,19 +20,13 @@ import java.util.Map;
  * controller通用接口
  * </p>
  *
+ * @param <T>  .
+ * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IControllerService<T extends ListEntity> {
+public interface IControllerService<T extends ListEntity<ID>, ID extends Serializable> {
 
-    /**
-     * 查询数量
-     *
-     * @param request request
-     * @return count
-     */
-    @GetMapping("/count")
-    R<Long> count(BaseRequestVO<T> request);
 
     /**
      * 详情
@@ -39,17 +35,34 @@ public interface IControllerService<T extends ListEntity> {
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") Long id);
+    R<T> getOne(@PathVariable("id") ID id);
 
     /**
-     * 单个条件查询详情
+     * 查询数量
      *
-     * @param column 字段
-     * @param value  值
-     * @return 。
+     * @param request request
+     * @return count
      */
-    @GetMapping("/column")
-    R<T> getOne(@RequestParam(name = "column") String column, @RequestParam(name = "value") Serializable value);
+    @GetMapping("/count")
+    R<Long> count(BaseRequestVO<T, ID> request);
+
+    /**
+     * 条件查询
+     *
+     * @param request request
+     * @return .
+     */
+    @GetMapping("/conditions")
+    R<T> getOne(BaseRequestVO<T, ID> request);
+
+    /**
+     * 判断是否存在
+     *
+     * @param request request
+     * @return boolean
+     */
+    @GetMapping("/exist")
+    R<Boolean> exist(BaseRequestVO<T, ID> request);
 
     /**
      * 保存
@@ -58,7 +71,7 @@ public interface IControllerService<T extends ListEntity> {
      * @return t with id
      */
     @PostMapping
-    R<T> save(@RequestBody T t);
+    R<T> save(@RequestBody @Validated(Insert.class) T t);
 
     /**
      * 保存多个
@@ -67,7 +80,7 @@ public interface IControllerService<T extends ListEntity> {
      * @return dataList
      */
     @PostMapping("/multi")
-    R<List<T>> save(@RequestBody List<T> ts);
+    R<List<T>> save(@RequestBody @Validated(Insert.class) List<T> ts);
 
     /**
      * 更新
@@ -76,7 +89,7 @@ public interface IControllerService<T extends ListEntity> {
      * @return t
      */
     @PutMapping
-    R<T> update(@RequestBody T t);
+    R<T> update(@RequestBody @Validated(Update.class) T t);
 
 
     /**
@@ -86,16 +99,8 @@ public interface IControllerService<T extends ListEntity> {
      * @return dataList
      */
     @PutMapping("/multi")
-    R<List<T>> update(@RequestBody List<T> ts);
+    R<List<T>> update(@RequestBody @Validated(Update.class) List<T> ts);
 
-    /**
-     * 修改排序
-     *
-     * @param baseSortVO dto
-     * @return boolean
-     */
-    @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortVO baseSortVO);
 
     /**
      * 删除
@@ -103,8 +108,8 @@ public interface IControllerService<T extends ListEntity> {
      * @param id ID
      * @return boolean
      */
-    @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") Long id);
+    @DeleteMapping("/{id]}")
+    R<Boolean> delete(@PathVariable("id") ID id);
 
     /**
      * 删除多个
@@ -113,8 +118,17 @@ public interface IControllerService<T extends ListEntity> {
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<Long> ids);
+    R<Boolean> delete(@RequestBody List<ID> ids);
 
+
+    /**
+     * 条件删除
+     *
+     * @param request 条件
+     * @return 。
+     */
+    @DeleteMapping("/conditions")
+    R<Boolean> deleteByConditions(@RequestBody BaseRequestVO<T, ID> request);
 
     /**
      * 数据统计
@@ -142,4 +156,6 @@ public interface IControllerService<T extends ListEntity> {
             @RequestParam(name = "sumColumn", required = false) String sumColumn,
             @RequestParam(name = "conditions", required = false) String conditions
     );
+
+
 }

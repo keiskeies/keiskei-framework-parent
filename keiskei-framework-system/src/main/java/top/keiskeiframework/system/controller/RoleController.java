@@ -19,7 +19,7 @@ import top.keiskeiframework.system.entity.SystemRole;
 @RequestMapping("/system/role")
 @Api(tags = "系统设置 - 角色管理")
 @ConditionalOnProperty({"keiskei.use-permission"})
-public class RoleController extends ListControllerImpl<SystemRole> {
+public class RoleController extends ListControllerImpl<SystemRole, Integer> {
 
 
 }

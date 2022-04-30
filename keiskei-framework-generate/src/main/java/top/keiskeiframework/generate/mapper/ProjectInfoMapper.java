@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.ProjectInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface ProjectInfoMapper extends BaseEntityMapper<ProjectInfo> {
+public interface ProjectInfoMapper extends BaseEntityMapper<ProjectInfo, Integer> {
 
 }

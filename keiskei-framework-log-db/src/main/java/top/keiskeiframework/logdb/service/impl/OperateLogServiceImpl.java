@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.log.OperateTypeEnum;
+import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;
 import top.keiskeiframework.logdb.entity.OperateLog;
@@ -21,7 +22,7 @@ import top.keiskeiframework.logdb.service.IOperateLogService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class OperateLogServiceImpl extends ListServiceImpl<OperateLog> implements IOperateLogService, OperateLogService {
+public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Integer> implements IOperateLogService, OperateLogService {
 
     @Autowired
     private IOperateLogService operateLogService;
@@ -34,14 +35,13 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog> implement
         if (null != type) {
             try {
                 operateLog.setType(type);
-                operateLogService.save(operateLog);
-            } catch (Exception e) {
+                ThreadPoolExecUtils.execute(() -> operateLogService.save(operateLog));
+            } catch (Exception ignored) {
             }
         }
     }
 
     @Override
-    @Async
     @Lockable(key = "#t.hashCode()")
     public boolean save(OperateLog operateLog) {
         return super.save(operateLog);

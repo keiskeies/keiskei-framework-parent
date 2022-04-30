@@ -27,12 +27,12 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListEntityDTO implements Serializable {
-    private static final long serialVersionUID = -8025795001235125591L;
-    protected Long id;
+public class ListEntityDTO<ID extends Serializable> implements Serializable {
+    private static final Long serialVersionUID = -8025795001235125591L;
+    protected ID id;
     protected String p;
-    protected Long createUserId;
-    protected Long updateUserId;
+    protected Integer createUserId;
+    protected Integer updateUserId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

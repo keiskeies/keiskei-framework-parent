@@ -13,6 +13,6 @@ import top.keiskeiframework.system.entity.SystemPermission;
  * @since 2020-12-10 14:11:30
  */
 //@ConditionalOnProperty({"keiskei.use-permission"})
-public interface SystemPermissionMapper extends BaseEntityMapper<SystemPermission> {
+public interface SystemPermissionMapper extends BaseEntityMapper<SystemPermission, Integer> {
 
 }

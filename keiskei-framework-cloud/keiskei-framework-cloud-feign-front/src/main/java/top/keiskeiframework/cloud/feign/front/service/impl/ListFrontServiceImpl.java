@@ -27,10 +27,10 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFrontService<T> {
+public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serializable> implements IListFrontService<T, ID> {
 
     @Autowired
-    private IListFeignService<T> listFeignService;
+    private IListFeignService<T, ID> listFeignService;
 
     @Override
     public PageResultDTO<T> page(
@@ -72,14 +72,18 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
     }
 
     @Override
-    public T findById(Long id) {
-        return listFeignService.getOne(id).getData();
+    public T findById(ID id) {
+        return listFeignService.findById(id).getData();
     }
 
+    @Override
+    public T getOne(String conditions) {
+        return listFeignService.getOne(conditions).getData();
+    }
 
     @Override
-    public T findByColumn(String column, Serializable value) {
-        return listFeignService.getOne(column, value).getData();
+    public Integer count(String conditions) {
+        return listFeignService.count(conditions).getData();
     }
 
     @Override
@@ -103,12 +107,12 @@ public class ListFrontServiceImpl<T extends ListEntityDTO> implements IListFront
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(ID id) {
         listFeignService.delete(id);
     }
 
     @Override
-    public Boolean delete(List<Long> ids) {
+    public Boolean delete(List<ID> ids) {
         return listFeignService.delete(ids).getData();
     }
 

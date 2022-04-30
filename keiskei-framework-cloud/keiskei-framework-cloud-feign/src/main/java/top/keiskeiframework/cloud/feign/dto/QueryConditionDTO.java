@@ -1,15 +1,17 @@
 package top.keiskeiframework.cloud.feign.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.cloud.feign.enums.ConditionEnum;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,41 +24,72 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
-public class QueryConditionDTO implements Serializable{
+public class QueryConditionDTO implements Serializable {
 
-    private static final long serialVersionUID = 3265390040551843537L;
+    private static final Long serialVersionUID = 3265390040551843537L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(alternateNames = "c")
-    private String column;
+    private String c;
 
     @ApiModelProperty(value = "字段条件", dataType = "String")
-    @JSONField(alternateNames = "d")
-    private ConditionEnum condition;
+    private ConditionEnum d = ConditionEnum.EQ;
 
     @ApiModelProperty(value = "字段值", dataType = "String")
-    @JSONField(alternateNames = "v")
-    private List<? extends Serializable> value;
+    private List<? extends Serializable> v;
 
-    public QueryConditionDTO(String column, Serializable value) {
-        this.column = column;
-        this.condition = ConditionEnum.EQ;
-        this.value = Collections.singletonList(value);
+    public QueryConditionDTO(String c, Serializable... v) {
+        this.c = c;
+        this.v = Arrays.asList(v);
+    }
+    public QueryConditionDTO(String c, ConditionEnum d, Serializable... v) {
+        this.c = c;
+        this.d = d;
+        this.v = Arrays.asList(v);
     }
 
-    public QueryConditionDTO(String column, List<? extends Serializable> value) {
-        this.column = column;
-        this.value = value;
+    public static String singleCondition(String c, Serializable... v) {
+        return "[" + JSON.toJSONString(new QueryConditionDTO(c, v)) + "]";
     }
 
-    public ConditionEnum getCondition() {
-        if (null == this.condition) {
-            return ConditionEnum.EQ;
-        } else {
-            return condition;
+    public static QueryConditionDTO.QueryConditionDTOBuilder builder() {
+        return new QueryConditionDTO.QueryConditionDTOBuilder();
+    }
+
+    public static class QueryConditionDTOBuilder {
+        private List<QueryConditionDTO> conditions;
+
+        QueryConditionDTOBuilder() {
+        }
+
+        public QueryConditionDTO.QueryConditionDTOBuilder conditions(
+                final String c, Serializable... v) {
+            if (CollectionUtils.isEmpty(conditions)) {
+                this.conditions = new ArrayList<>();
+            }
+            this.conditions.add(new QueryConditionDTO(c, v));
+            return this;
+        }
+
+        public QueryConditionDTO.QueryConditionDTOBuilder conditions(
+                final String c, ConditionEnum d, Serializable... v) {
+            if (CollectionUtils.isEmpty(conditions)) {
+                this.conditions = new ArrayList<>();
+            }
+            this.conditions.add(new QueryConditionDTO(c, d, v));
+            return this;
+        }
+
+
+        public String build() {
+            if (CollectionUtils.isEmpty(conditions)) {
+                return null;
+            }
+            return JSON.toJSONString(conditions);
+        }
+
+        @Override
+        public String toString() {
+            return JSON.toJSONString(conditions);
         }
     }
-
-
 }

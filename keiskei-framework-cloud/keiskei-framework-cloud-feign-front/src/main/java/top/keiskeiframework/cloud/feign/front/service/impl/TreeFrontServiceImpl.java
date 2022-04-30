@@ -23,10 +23,10 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFrontService<T> {
+public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Serializable> implements ITreeFrontService<T, ID> {
 
     @Autowired
-    protected ITreeFeignService<T> treeFeignService;
+    protected ITreeFeignService<T, ID> treeFeignService;
 
     @Override
     public PageResultDTO<T> page(
@@ -55,24 +55,6 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
         return tiPage;
     }
 
-    @Override
-    public List<T> all(
-            String conditions,
-            String show,
-            Long id,
-            Boolean tree
-    ) {
-        List<T> noTreeData = treeFeignService.all(
-                conditions,
-                show,
-                id,
-                false
-        ).getData();
-        if (tree) {
-            return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
-        }
-        return noTreeData;
-    }
 
     @Override
     public List<T> options(
@@ -82,7 +64,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
             Integer size,
             String desc,
             String asc,
-            Long id,
+            ID id,
             Boolean tree
     ) {
         List<T> noTreeData = treeFeignService.options(
@@ -102,13 +84,19 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
     }
 
     @Override
-    public T findById(Long id) {
-        return treeFeignService.getOne(id).getData();
+    public T findById(ID id) {
+        return treeFeignService.findById(id).getData();
+    }
+
+
+    @Override
+    public T getOne(String conditions) {
+        return treeFeignService.getOne(conditions).getData();
     }
 
     @Override
-    public T findByColumn(String column, Serializable value) {
-        return treeFeignService.getOne(column, value).getData();
+    public Integer count(String conditions) {
+        return treeFeignService.count(conditions).getData();
     }
 
     @Override
@@ -132,12 +120,12 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO> implements ITreeFront
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(ID id) {
         treeFeignService.delete(id);
     }
 
     @Override
-    public Boolean delete(List<Long> ids) {
+    public Boolean delete(List<ID> ids) {
         return treeFeignService.delete(ids).getData();
     }
 

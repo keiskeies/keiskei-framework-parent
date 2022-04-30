@@ -1,8 +1,11 @@
 package top.keiskeiframework.cloud.feign.front.controller;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.BaseRequestDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
@@ -16,7 +19,7 @@ import java.util.List;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IFrontControllerService<T extends ListEntityDTO> {
+public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends Serializable> {
 
 
     /**
@@ -26,7 +29,7 @@ public interface IFrontControllerService<T extends ListEntityDTO> {
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") Long id);
+    R<T> getOne(@PathVariable("id") ID id);
 
     /**
      * 保存
@@ -35,7 +38,7 @@ public interface IFrontControllerService<T extends ListEntityDTO> {
      * @return t with id
      */
     @PostMapping
-    R<T> save(@RequestBody T t);
+    R<T> save(@RequestBody @Validated(Insert.class) T t);
 
     /**
      * 更新
@@ -44,7 +47,7 @@ public interface IFrontControllerService<T extends ListEntityDTO> {
      * @return t
      */
     @PutMapping
-    R<T> update(@RequestBody T t);
+    R<T> update(@RequestBody @Validated(Update.class) T t);
 
 
     /**
@@ -54,7 +57,7 @@ public interface IFrontControllerService<T extends ListEntityDTO> {
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") Long id);
+    R<Boolean> delete(@PathVariable("id") ID id);
 
 
 }

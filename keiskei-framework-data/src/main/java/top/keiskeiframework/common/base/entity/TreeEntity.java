@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * 基础实体类
  * </p>
- *
+ * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
@@ -22,13 +22,13 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreeEntity extends ListEntity implements Serializable {
-    private static final long serialVersionUID = -802579500126524571L;
+public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements Serializable {
+    private static final Long serialVersionUID = -802579500126524571L;
 
-    protected Long parentId;
+    protected ID parentId;
 
     protected String sign;
 
-    protected transient List<? extends TreeEntity> children;
+    protected transient List<? extends TreeEntity<ID>> children;
 
 }

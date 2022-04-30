@@ -25,14 +25,14 @@ import top.keiskeiframework.system.service.IScheduledTaskService;
 @RequestMapping("/system/scheduledTask")
 @Api(tags = "系统设置 - 定时任务")
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public class ScheduledTaskController extends ListControllerImpl<ScheduledTask> {
+public class ScheduledTaskController extends ListControllerImpl<ScheduledTask, Integer> {
 
     @Autowired
     private IScheduledTaskService scheduledTaskService;
 
     @PostMapping("/excute/{id}")
     @ApiOperation("执行")
-    public R<Boolean> patch(@PathVariable Long id) {
+    public R<Boolean> patch(@PathVariable Integer id) {
         scheduledTaskService.excute(id);
         return R.ok(Boolean.TRUE);
     }

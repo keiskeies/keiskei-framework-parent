@@ -20,7 +20,7 @@ import java.util.List;
 @ApiModel(value = "SystemUserDto", description = "用户信息")
 public class SystemUserDto {
 
-    private Long id;
+    private Integer id;
 
     @ApiModelProperty(value = "登录用户名", dataType = "String")
     private String username;

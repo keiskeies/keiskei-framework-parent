@@ -36,9 +36,9 @@ import java.util.Collection;
 @AllArgsConstructor
 @TableName(value = "gr_project_info")
 @ApiModel(value = "ProjectInfo", description = "项目信息")
-public class ProjectInfo extends ListEntity {
+public class ProjectInfo extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = 8549325611615861124L;
+    private static final Long serialVersionUID = 8549325611615861124L;
 
     @ApiModelProperty(value = "项目名称", dataType = "String")
     @NotBlank(message = "项目名称不能为空", groups = {Insert.class, Update.class})

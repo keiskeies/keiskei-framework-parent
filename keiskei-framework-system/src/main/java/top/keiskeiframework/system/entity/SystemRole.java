@@ -34,9 +34,9 @@ import java.util.Set;
 @AllArgsConstructor
 @TableName(value = "sys_role")
 @ApiModel(value = "SystemRole", description = "角色")
-public class SystemRole extends ListEntity {
+public class SystemRole extends ListEntity<Integer>  {
 
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
 
 
     @ApiModelProperty(value = "角色名称", dataType = "String")

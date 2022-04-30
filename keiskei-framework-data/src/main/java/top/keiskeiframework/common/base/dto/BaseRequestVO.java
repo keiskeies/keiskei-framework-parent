@@ -18,7 +18,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @param <T>  .
+ * @param <T> .
+ * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @version 1.0
  * <p>
@@ -27,8 +28,8 @@ import java.util.stream.Collectors;
  * @since 2020/11/24 23:08
  */
 @NoArgsConstructor
-public class BaseRequestVO<T extends ListEntity> implements Serializable{
-    private static final long serialVersionUID = -296451048174918297L;
+public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> implements Serializable{
+    private static final Long serialVersionUID = -296451048174918297L;
     /**
      * 排序方式
      */

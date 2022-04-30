@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,58 +9,43 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.log.Lockable;
 import top.keiskeiframework.common.annotation.notify.OperateNotify;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.TreeBaseService;
+import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.log.OperateNotifyType;
 import top.keiskeiframework.common.util.TreeEntityUtils;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
  * 基础查询接口
  *
- * @param <T> 实体类
+ * @param <T> .
+ * @param <ID> .
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public abstract class AbstractTreeBaseServiceImpl<T extends TreeEntity>
-        extends AbstractBaseServiceImpl<T>
-        implements TreeBaseService<T> , IService<T> {
+public abstract class AbstractTreeBaseServiceImpl<T extends TreeEntity<ID>, ID extends Serializable>
+        extends AbstractBaseServiceImpl<T, ID>
+        implements TreeBaseService<T, ID> , IService<T> {
 
     protected final static String SPILT = "/";
     @Autowired
-    private TreeBaseService<T> treeService;
-
-
-    @Override
-    @OperateNotify(type = OperateNotifyType.SAVE)
-    @Lockable(key = "#t.hashCode()")
-    public T saveAndNotify(T t) {
-        return treeService.saveCache(t);
-    }
+    private TreeBaseService<T, ID> treeService;
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")
     @Lockable(key = "#t.hashCode()")
-    public T saveCache(T t) {
-        if (null != t.getParentId()) {
-            T parent = treeService.getById(t.getParentId());
-            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            super.save(t);
-            t.setSign(parent.getSign() + t.getId() + SPILT);
-
-        } else {
-            super.save(t);
-            t.setSign(t.getId() + SPILT);
-        }
-        super.save(t);
-        return t;
+    public boolean save(T t) {
+        return super.save(t);
     }
 
     @Override
@@ -70,54 +56,50 @@ public abstract class AbstractTreeBaseServiceImpl<T extends TreeEntity>
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name"),
+            @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #t.id")
+    })
     public boolean updateById(T t) {
-        treeService.updateByIdCache(t);
+        return super.updateById(t);
+    }
+
+
+    @Override
+    @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")
+    public boolean removeByColumn(String column, Serializable value) {
+        List<T> ts = treeService.listByColumn(column, value);
+        if (CollectionUtils.isEmpty(ts)) {
+            return true;
+        }
+        List<T> tAll = treeService.list();
+        for (T t : ts) {
+            Set<Serializable> childIds = new TreeEntityUtils<>(tAll).getChildIds(t.getId());
+            for (Serializable cid : childIds) {
+                treeService.removeByIdSingle(cid);
+            }
+        }
         return true;
     }
 
     @Override
-    @OperateNotify(type = OperateNotifyType.UPDATE)
-    public T updateByIdAndNotify(T t) {
-        return treeService.updateByIdCache(t);
-    }
-
-
-    @Override
-    @Caching(
-            evict = {@CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")},
-            put = {@CachePut(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #t.id")}
-    )
-    @OperateNotify(type = OperateNotifyType.UPDATE)
-    public T updateByIdCache(T t) {
-        Assert.notNull(t.getId(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-        if (null != t.getParentId()) {
-            T parent = treeService.getById(t.getParentId());
-            Assert.notNull(parent, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            t.setSign(parent.getSign() + t.getId() + SPILT);
-        } else {
-            t.setSign(t.getId() + SPILT);
+    @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")
+    public boolean removeByCondition(List<QueryConditionVO> conditions) {
+        QueryWrapper<T> queryWrapper = BaseRequestUtils.getQueryWrapperByConditions(conditions, getEntityClass());
+        List<T> ts = treeService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(ts)) {
+            return true;
         }
-
-        super.updateById(t);
-        return t;
+        List<T> tAll = treeService.list();
+        for (T t : ts) {
+            Set<Serializable> childIds = new TreeEntityUtils<>(tAll).getChildIds(t.getId());
+            for (Serializable cid : childIds) {
+                treeService.removeByIdSingle(cid);
+            }
+        }
+        return true;
     }
 
-    @Override
-    @Caching(evict = {
-            @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name"),
-            @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #baseSortVO.id1"),
-            @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #baseSortVO.id2")
-    })
-    public void changeSort(BaseSortVO baseSortVO) {
-        super.changeSort(baseSortVO);
-    }
-
-    @Override
-
-    @OperateNotify(type = OperateNotifyType.DELETE)
-    public boolean removeByIdAndNotify(Serializable id) {
-        return treeService.removeById(id);
-    }
 
     @Override
     @Caching(evict = {
@@ -125,9 +107,9 @@ public abstract class AbstractTreeBaseServiceImpl<T extends TreeEntity>
             @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     })
     public boolean removeById(Serializable id) {
-        Set<Serializable> childIds = new TreeEntityUtils<>(treeService.findAll()).getChildIds(id);
+        Set<Serializable> childIds = new TreeEntityUtils<>(treeService.list()).getChildIds(id);
         for (Serializable cid : childIds) {
-            treeService.deleteByIdSingle(cid);
+            treeService.removeByIdSingle(cid);
         }
         return true;
     }
@@ -135,7 +117,7 @@ public abstract class AbstractTreeBaseServiceImpl<T extends TreeEntity>
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     @OperateNotify(type = OperateNotifyType.DELETE)
-    public boolean deleteByIdSingle(Serializable id) {
+    public boolean removeByIdSingle(Serializable id) {
         return super.removeById(id);
     }
 

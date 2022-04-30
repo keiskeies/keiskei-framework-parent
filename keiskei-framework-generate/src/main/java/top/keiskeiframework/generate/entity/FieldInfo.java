@@ -38,9 +38,9 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
-public class FieldInfo extends ListEntity {
+public class FieldInfo extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -6407989526318566170L;
+    private static final Long serialVersionUID = -6407989526318566170L;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
     @NotBlank(message = "字段名称不能为空", groups = {Insert.class, Update.class})
@@ -84,7 +84,7 @@ public class FieldInfo extends ListEntity {
     @ApiModelProperty(value = "是否可排序", dataType = "Boolean")
     private Boolean sortAble = Boolean.FALSE;
 
-    @ApiModelProperty(value = "表格宽度", dataType = "Long")
+    @ApiModelProperty(value = "表格宽度", dataType = "Integer")
     private Integer tableWidth = 200;
 
     @ApiModelProperty(value = "字段校验", dataType = "String")
@@ -99,7 +99,7 @@ public class FieldInfo extends ListEntity {
 
     @ApiModelProperty(value = "排序", dataType = "ID")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 
 
 }

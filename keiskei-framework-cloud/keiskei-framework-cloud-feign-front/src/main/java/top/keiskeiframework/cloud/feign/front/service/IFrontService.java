@@ -18,7 +18,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface IFrontService<T extends ListEntityDTO> {
+public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializable> {
 
 
     /**
@@ -27,17 +27,18 @@ public interface IFrontService<T extends ListEntityDTO> {
      * @param id id
      * @return .
      */
-    T findById(Long id);
+    T findById(ID id);
+
+
+    T getOne(String conditions);
 
 
     /**
-     * 指定字段查询
-     *
-     * @param column 字段
-     * @param value  值
+     * 数量查询
+     * @param conditions 查询条件
      * @return 。
      */
-    T findByColumn(String column, Serializable value);
+    Integer count(String conditions);
 
 
     /**
@@ -81,7 +82,7 @@ public interface IFrontService<T extends ListEntityDTO> {
      *
      * @param id id
      */
-    void deleteById(Long id);
+    void deleteById(ID id);
 
 
     /**
@@ -90,7 +91,7 @@ public interface IFrontService<T extends ListEntityDTO> {
      * @param ids ids
      * @return 。
      */
-    Boolean delete(List<Long> ids);
+    Boolean delete(List<ID> ids);
 
 
     /**

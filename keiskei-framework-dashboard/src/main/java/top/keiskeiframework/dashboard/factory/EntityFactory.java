@@ -113,7 +113,7 @@ public class EntityFactory {
 
     private final static List<Class<?>> DATA_CLASS_SET = Arrays.asList(
             java.lang.Integer.class,
-            java.lang.Long.class,
+            java.lang.Integer.class,
             java.lang.Double.class,
             java.lang.String.class,
             java.lang.Float.class,

@@ -18,7 +18,7 @@ import top.keiskeiframework.system.entity.SystemPermission;
 @RequestMapping("/system/permission")
 @Api(tags = "系统设置 - 权限管理")
 @ConditionalOnProperty({"keiskei.use-permission"})
-public class PermissionController extends TreeControllerImpl<SystemPermission> {
+public class PermissionController extends TreeControllerImpl<SystemPermission, Integer> {
 
 
 }

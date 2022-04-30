@@ -54,8 +54,7 @@ public class FindManyToMany extends AbstractMethod {
             sqlSb.append("UNION ALL SELECT '")
                     .append(entity).append("' AS entity, '")
                     .append(field.getName()).append("' AS fieldName, ")
-                    .append(firstId).append(" AS firstId, ")
-                    .append(secondId).append(" AS secondId FROM ")
+                    .append(secondId).append(" AS joinId FROM ")
                     .append(joinTable.name()).append(" WHERE ")
                     .append(firstId).append(" = #{")
                     .append(firstTableId).append("}");

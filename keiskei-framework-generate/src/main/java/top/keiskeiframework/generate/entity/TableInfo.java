@@ -41,9 +41,9 @@ import java.util.Collection;
 @AllArgsConstructor
 @TableName(value = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
-public class TableInfo extends ListEntity {
+public class TableInfo extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = 7715195221883078519L;
+    private static final Long serialVersionUID = 7715195221883078519L;
 
     @ApiModelProperty(value = "实体类名", dataType = "String")
     @NotBlank(message = "实体类名不能为空", groups = {Insert.class, Update.class})
@@ -55,7 +55,7 @@ public class TableInfo extends ListEntity {
     private String comment;
 
     @ApiModelProperty(value = "主键类型", dataType = "String")
-    private TableInfoIdTypeEnum idType = TableInfoIdTypeEnum.LONG;
+    private TableInfoIdTypeEnum idType = TableInfoIdTypeEnum.Integer;
 
     @ApiModelProperty(value = "表名称", dataType = "String")
     private String tableName;
@@ -76,9 +76,9 @@ public class TableInfo extends ListEntity {
     private transient Collection<FieldInfo> fields = new ArrayList<>();
 
     @BatchCacheField
-    private Long moduleId;
+    private Integer moduleId;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 }

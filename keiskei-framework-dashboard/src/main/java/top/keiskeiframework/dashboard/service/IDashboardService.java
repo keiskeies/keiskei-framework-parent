@@ -12,19 +12,19 @@ import top.keiskeiframework.dashboard.entity.Dashboard;
  * @author v_chenjiamin
  * @since 2021/4/13 18:39
  */
-public interface IDashboardService extends BaseService<Dashboard> {
+public interface IDashboardService extends BaseService<Dashboard, Integer> {
 
     /**
      * 获取图表及结构
      * @param id 图表ID
      * @return 。
      */
-    ChartOptionVO getChartOption(Long id);
+    ChartOptionVO getChartOption(Integer id);
     /**
      * 获取图表及结构
      * @param id 图表ID
      * @return 。
      */
-    ChartOptionVO refreshChartOption(Long id);
+    ChartOptionVO refreshChartOption(Integer id);
 
 }

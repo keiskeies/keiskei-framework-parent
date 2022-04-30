@@ -18,7 +18,7 @@ import top.keiskeiframework.generate.service.IModuleInfoService;
  */
 @Service
 @Slf4j
-public class ModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo> implements IModuleInfoService {
+public class ModuleInfoServiceImpl extends ListServiceImpl<ModuleInfo, Integer> implements IModuleInfoService {
 
     @Autowired
     private ModuleInfoMapper moduleInfoMapper;

@@ -41,7 +41,7 @@ import java.util.*;
 @ApiModel(value="${table.name}", description="${table.comment!}")
 public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 
-    private static final long serialVersionUID = ${serialVersionUID}L;
+    private static final Long serialVersionUID = ${serialVersionUID}L;
 
 <#list table.fields as field>
 <#--        必填校验-->
@@ -112,14 +112,14 @@ public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
     <#else>
 <#--        普通字段-->
     @ApiModelProperty(value = "${field.comment?trim?replace("\"","'")}", dataType="${field.type.value}")
-        <#if field.type == 'LONG_WORD'>
+        <#if field.type == 'Integer_WORD'>
     @Column(columnDefinition = "text")
         </#if>
-        <#if field.type == 'LONG_TEXT'>
+        <#if field.type == 'Integer_TEXT'>
     @Column(columnDefinition = "mediumtext")
         </#if>
         <#if field.type == 'HTML'>
-    @Column(columnDefinition = "longtext")
+    @Column(columnDefinition = "Integertext")
         </#if>
     <#--        金钱-->
         <#if field.type == 'MONEY'>

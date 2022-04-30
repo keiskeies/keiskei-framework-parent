@@ -13,8 +13,8 @@ import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,16 +25,14 @@ import java.util.stream.Collectors;
  * 请求处理工具
  * </p>
  *
- * @param <T> .
+ * @param <T>  .
+ * @param <ID> .
  * @author v_chenjiamin
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends ListEntity> {
-    private final static String JOIN_SPLIT = ".";
-    private final static String JOIN_SPLIT_REGEX = "\\.";
+public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
     private final static String DEPARTMENT_COLUMN = "p";
-    private final static String PARENT_COLUMN = "parentId";
     private final static String CREATE_TIME_COLUMN = "create_time";
 
     @Value("${keiskei.use-department:false}")
@@ -46,7 +44,8 @@ public class BaseRequestUtils<T extends ListEntity> {
      * 是否启用部门权限
      */
     private static boolean useDepartment = false;
-    private static <T extends ListEntity> Set<String> getTClassFields(Class<T> tClass) {
+
+    private static <T extends ListEntity<ID>, ID extends Serializable> Set<String> getTClassFields(Class<T> tClass) {
         Set<String> fields = new HashSet<>();
         for (Field field : tClass.getDeclaredFields()) {
             fields.add(field.getName());
@@ -62,12 +61,12 @@ public class BaseRequestUtils<T extends ListEntity> {
         return fields;
     }
 
-    public static <T extends ListEntity> QueryWrapper<T> getQueryWrapperByConditions(List<QueryConditionVO> conditions,
-                                                                         Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
+            List<QueryConditionVO> conditions, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(conditions)) {
             Set<String> fields = getTClassFields(tClass);
-            conditions.removeIf(e -> !fields.contains(e.getColumn()));
+            conditions.removeIf(e -> !fields.contains(e.getC()));
             convertConditions(queryWrapper, conditions);
         }
 
@@ -77,7 +76,27 @@ public class BaseRequestUtils<T extends ListEntity> {
         return queryWrapper;
     }
 
-    public static <T extends ListEntity> QueryWrapper<T> getQueryWrapper(BaseRequestVO<T> request, Class<T> tClass) {
+    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
+            BaseRequestVO<T, ID> request, Class<T> tClass) {
+        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        if (null != request) {
+            if (!request.conditionEmpty()) {
+                Set<String> fields = getTClassFields(tClass);
+                List<QueryConditionVO> conditions = request.getConditions();
+                conditions.removeIf(e -> !fields.contains(e.getC()));
+                convertConditions(queryWrapper, conditions);
+            }
+        }
+
+        if (useDepartment) {
+            queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+        }
+        return queryWrapper;
+    }
+
+
+    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapper(
+            BaseRequestVO<T, ID> request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         boolean hasOrder = false;
         if (null != request) {
@@ -87,7 +106,7 @@ public class BaseRequestUtils<T extends ListEntity> {
             if (!CollectionUtils.isEmpty(fields)) {
                 if (!request.conditionEmpty()) {
                     List<QueryConditionVO> conditions = request.getConditions();
-                    conditions.removeIf(e -> !fields.contains(e.getColumn()));
+                    conditions.removeIf(e -> !fields.contains(e.getC()));
                     convertConditions(queryWrapper, conditions);
                 }
                 if (!request.showEmpty()) {
@@ -116,35 +135,35 @@ public class BaseRequestUtils<T extends ListEntity> {
         return queryWrapper;
     }
 
-    private static <T extends ListEntity> void convertConditions(
+    private static <T extends ListEntity<ID>, ID extends Serializable> void convertConditions(
             QueryWrapper<T> queryWrapper, List<QueryConditionVO> conditions
     ) {
         for (QueryConditionVO condition : conditions) {
-            String column = BeanUtils.humpToUnderline(condition.getColumn());
-            if (ConditionEnum.BT.equals(condition.getCondition())) {
-                if (condition.getValue().size() == 2) {
-                    if (null != condition.getValue().get(0) && !StringUtils.isEmpty(condition.getValue().get(0).toString())
-                            && null != condition.getValue().get(1) && !StringUtils.isEmpty(condition.getValue().get(1).toString())) {
-                        queryWrapper.between(column, condition.getValue().get(0), condition.getValue().get(1));
+            String column = BeanUtils.humpToUnderline(condition.getC());
+            if (ConditionEnum.BT.equals(condition.getD())) {
+                if (condition.getV().size() == 2) {
+                    if (null != condition.getV().get(0) && !StringUtils.isEmpty(condition.getV().get(0).toString())
+                            && null != condition.getV().get(1) && !StringUtils.isEmpty(condition.getV().get(1).toString())) {
+                        queryWrapper.between(column, condition.getV().get(0), condition.getV().get(1));
                     }
                 }
-            } else if (ConditionEnum.IN.equals(condition.getCondition())) {
-                Object[] hasValueValues = condition.getValue().stream()
+            } else if (ConditionEnum.IN.equals(condition.getD())) {
+                Object[] hasValueValues = condition.getV().stream()
                         .filter(e -> null != e && !StringUtils.isEmpty(e.toString()))
                         .toArray();
                 if (hasValueValues.length > 0) {
                     if (hasValueValues.length == 1) {
-                        queryWrapper.eq(column, condition.getValue().get(0));
+                        queryWrapper.eq(column, condition.getV().get(0));
                     } else {
-                        queryWrapper.in(column, condition.getValue());
+                        queryWrapper.in(column, condition.getV());
                     }
                 }
             } else {
-                Object value = condition.getValue().get(0);
+                Object value = condition.getV().get(0);
                 if (null == value || StringUtils.isEmpty(value.toString())) {
                     continue;
                 }
-                switch (condition.getCondition()) {
+                switch (condition.getD()) {
                     case LIKE:
                         queryWrapper.like(column, value);
                         break;

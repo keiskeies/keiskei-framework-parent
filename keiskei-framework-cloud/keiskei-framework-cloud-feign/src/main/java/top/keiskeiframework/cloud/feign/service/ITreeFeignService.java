@@ -21,7 +21,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface ITreeFeignService<T extends TreeEntityDTO> {
+public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Serializable> {
 
     /**
      * 分页查询
@@ -67,38 +67,38 @@ public interface ITreeFeignService<T extends TreeEntityDTO> {
             @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "id", required = false) ID id,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree
     );
 
+
     /**
-     * 全部下拉框
+     * 条件查询单个
      *
      * @param conditions 查询条件
-     * @param show       显示字段
-     * @param id         根节点ID
-     * @param tree       是否树状结构
      * @return 。
      */
-    @GetMapping("/all")
-    R<List<T>> all(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show,
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false, defaultValue = "true") Boolean tree);
+    @GetMapping("/conditions")
+    R<T> getOne(@RequestParam(name = "conditions", required = false) String conditions);
 
     /**
      * 查询数量
      *
      * @param conditions 查询条件
-     * @param show       显示字段
      * @return count
      */
     @GetMapping("/count")
-    R<Long> count(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show
-    );
+    R<Integer> count(@RequestParam(name = "conditions", required = false) String conditions);
+
+
+    /**
+     * 判断是否存在
+     *
+     * @param conditions 查询条件
+     * @return 。
+     */
+    @GetMapping("/exist")
+    R<Boolean> exist(@RequestParam(name = "conditions", required = false) String conditions);
 
     /**
      * 详情
@@ -107,7 +107,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO> {
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> getOne(@PathVariable("id") Long id);
+    R<T> findById(@PathVariable("id") ID id);
 
 
     /**
@@ -158,22 +158,25 @@ public interface ITreeFeignService<T extends TreeEntityDTO> {
     R<List<T>> update(@RequestBody List<T> ts);
 
     /**
-     * 修改排序
-     *
-     * @param baseSortVO dto
-     * @return boolean
-     */
-    @PatchMapping("/sort")
-    R<Boolean> changeSort(@RequestBody BaseSortDTO baseSortVO);
-
-    /**
      * 删除
      *
      * @param id ID
      * @return boolean
      */
     @DeleteMapping("/{id}")
-    R<Boolean> delete(@PathVariable("id") Long id);
+    R<Boolean> delete(@PathVariable("id") ID id);
+
+
+    /**
+     * 通过字段删除
+     *
+     * @param column 字段
+     * @param value  值
+     * @return 。
+     */
+    @DeleteMapping("/column")
+    R<Boolean> delete(@RequestParam(name = "column") String column, @RequestParam(name = "value") Serializable value);
+
 
     /**
      * 删除多个
@@ -182,7 +185,17 @@ public interface ITreeFeignService<T extends TreeEntityDTO> {
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<Long> ids);
+    R<Boolean> delete(@RequestBody List<ID> ids);
+
+
+    /**
+     * 条件删除
+     *
+     * @param conditions 条件
+     * @return 。
+     */
+    @DeleteMapping("/conditions")
+    R<Boolean> deleteByConditions(@RequestAttribute String conditions);
 
 
     /**

@@ -39,13 +39,13 @@ import java.util.Collection;
 @AllArgsConstructor
 @TableName(value = "dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
-public class Dashboard extends ListEntity {
+public class Dashboard extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -5855392143364324899L;
+    private static final Long serialVersionUID = -5855392143364324899L;
 
-    @ApiModelProperty(value = "排序", dataType = "Long")
+    @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 
     @ApiModelProperty(value = "图表名称", dataType = "String")
     @NotBlank(message = "图表名称不能为空", groups = {Insert.class, Update.class})

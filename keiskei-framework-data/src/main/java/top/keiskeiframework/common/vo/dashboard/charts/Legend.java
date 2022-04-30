@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Legend implements Serializable {
-    private static final long serialVersionUID = -194763321705309878L;
+    private static final Long serialVersionUID = -194763321705309878L;
     /**
      * 数据各类型
      */

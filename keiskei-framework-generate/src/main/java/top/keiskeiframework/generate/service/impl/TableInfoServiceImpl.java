@@ -16,7 +16,7 @@ import top.keiskeiframework.generate.service.ITableInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class TableInfoServiceImpl extends ListServiceImpl<TableInfo> implements ITableInfoService {
+public class TableInfoServiceImpl extends ListServiceImpl<TableInfo, Integer> implements ITableInfoService {
 
     @Autowired
     private TableInfoMapper tableInfoMapper;

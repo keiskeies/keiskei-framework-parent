@@ -25,42 +25,42 @@ import java.io.Serializable;
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/3 21:34
  */
-public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO> implements IFrontControllerService<T> {
+public abstract class AbstractFrontControllerServiceImpl<T extends ListEntityDTO<ID>, ID extends Serializable> implements IFrontControllerService<T, ID> {
 
     @Autowired
-    private IFrontService<T> frontService;
+    private IFrontService<T, ID> frontService;
 
 
     @Override
     @ApiOperation("详情")
-    public R<T> getOne(@PathVariable Long id) {
+    public R<T> getOne(@PathVariable ID id) {
         return R.ok(frontService.findById(id));
     }
 
     @Override
     @ApiOperation("新增")
-    public R<T> save(@RequestBody @Validated({Insert.class})T fieldInfo) {
-        return R.ok(frontService.save(fieldInfo));
+    public R<T> save(@RequestBody @Validated({Insert.class}) T t) {
+        return R.ok(frontService.save(t));
     }
 
     @Override
     @ApiOperation("更新")
-    public R<T> update(@RequestBody @Validated({Update.class}) T fieldInfo) {
-        T oldT = frontService.findById(fieldInfo.getId());
-        if (null == oldT || !MdcUtils.getLongUserId().equals(oldT.getCreateUserId())) {
+    public R<T> update(@RequestBody @Validated({Update.class}) T t) {
+        T oldT = frontService.findById(t.getId());
+        if (null == oldT || !MdcUtils.getIntegerUserId().equals(oldT.getCreateUserId())) {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
         }
-        return R.ok(frontService.update(fieldInfo));
+        return R.ok(frontService.update(t));
     }
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable Long id) {
+    public R<Boolean> delete(@PathVariable ID id) {
         T oldT = frontService.findById(id);
         if (null == oldT) {
             return R.ok(true);
         }
-        if (!MdcUtils.getLongUserId().equals(oldT.getCreateUserId())) {
+        if (!MdcUtils.getIntegerUserId().equals(oldT.getCreateUserId())) {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
         }
         frontService.deleteById(id);

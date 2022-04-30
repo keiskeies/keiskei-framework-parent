@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements IDashboardService {
+public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> implements IDashboardService {
 
 
 
@@ -75,7 +75,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
 
     @Override
     @Cacheable(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
-    public ChartOptionVO getChartOption(Long id) {
+    public ChartOptionVO getChartOption(Integer id) {
         Dashboard dashboard = super.getByIdCache(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
@@ -117,7 +117,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
 
     @Override
     @CachePut(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
-    public ChartOptionVO refreshChartOption(Long id) {
+    public ChartOptionVO refreshChartOption(Integer id) {
         return getChartOption(id);
     }
 
@@ -289,7 +289,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard> implements 
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 
-        BaseService<?> baseService = (BaseService<?>) SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl");
+        BaseService<?,?> baseService = SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl", BaseService.class);
         return baseService.getChartOptions(chartRequestDTO);
     }
 

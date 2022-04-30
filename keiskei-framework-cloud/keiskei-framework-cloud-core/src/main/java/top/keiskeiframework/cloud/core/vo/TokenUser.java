@@ -13,10 +13,11 @@ import lombok.Data;
 @Data
 public class TokenUser {
 
-    private static final long serialVersionUID = 6452938173658688276L;
+    private static final Long serialVersionUID = 6452938173658688276L;
 
-    private Long id;
+    private Integer id;
     private String username;
+    private String nickName;
     private String department;
 
 

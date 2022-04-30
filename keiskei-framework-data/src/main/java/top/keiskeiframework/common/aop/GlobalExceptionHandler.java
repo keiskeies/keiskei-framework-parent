@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public R<?> error(Exception e) {
-        long code = ApiErrorCode.FAILED.getCode();
+        Long code = ApiErrorCode.FAILED.getCode();
         String message;
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;

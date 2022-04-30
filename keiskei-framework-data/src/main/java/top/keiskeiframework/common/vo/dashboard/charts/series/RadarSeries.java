@@ -19,7 +19,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class RadarSeries extends Series implements Serializable {
-    private static final long serialVersionUID = 5295284467232758863L;
+    private static final Long serialVersionUID = 5295284467232758863L;
     /**
      * 数据
      */
@@ -35,7 +35,7 @@ public class RadarSeries extends Series implements Serializable {
     @AllArgsConstructor
     public static class RadarSeriesData implements Serializable {
 
-        private static final long serialVersionUID = 4252943431260003924L;
+        private static final Long serialVersionUID = 4252943431260003924L;
         /**
          * 数据分类名称
          */

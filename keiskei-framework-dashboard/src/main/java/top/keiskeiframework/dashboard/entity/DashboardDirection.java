@@ -35,12 +35,12 @@ import java.util.Collection;
 @AllArgsConstructor
 @TableName(value = "dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
-public class DashboardDirection extends ListEntity {
+public class DashboardDirection extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -2719449560787668928L;
+    private static final Long serialVersionUID = -2719449560787668928L;
 
     @BatchCacheField
-    private Long dashboardId;
+    private Integer dashboardId;
 
     @ApiModelProperty(value = "字段", dataType = "String")
     private String field;

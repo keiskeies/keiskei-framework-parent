@@ -12,12 +12,13 @@ import java.util.List;
  *
  * </p>
  *
+ * @param <T> .
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/18 15:45
  */
 @Data
 public class PageResultDTO<T> implements Serializable {
-    private static final long serialVersionUID = 8545996863226528798L;
+    private static final Long serialVersionUID = 8545996863226528798L;
     protected List<T> records;
     protected Long total;
     protected Long size;

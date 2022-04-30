@@ -22,10 +22,6 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-log-db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.keiskeiframework</groupId>
             <artifactId>keiskei-framework-generate</artifactId>
         </dependency>
         <dependency>

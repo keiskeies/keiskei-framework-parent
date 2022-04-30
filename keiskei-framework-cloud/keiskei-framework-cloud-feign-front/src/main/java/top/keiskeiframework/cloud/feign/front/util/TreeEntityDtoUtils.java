@@ -3,6 +3,7 @@ package top.keiskeiframework.cloud.feign.front.util;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -13,10 +14,10 @@ import java.util.*;
  * @param <T>  .
  * @author 陈加敏
  */
-public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
+public class TreeEntityDtoUtils<T extends TreeEntityDTO<T, ID>, ID extends Serializable> {
 
 
-    private final LinkedHashMap<Long, List<T>> map;
+    private final LinkedHashMap<ID, List<T>> map;
 
     public TreeEntityDtoUtils(List<T> list) {
         map = new LinkedHashMap<>();
@@ -38,7 +39,7 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
      * @param id 当前节点id
      * @return .
      */
-    public List<T> getTree(Long id) {
+    public List<T> getTree(ID id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -50,7 +51,7 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
         }
         return responses;
     }
-    public List<T> getTreeAll(Long id) {
+    public List<T> getTreeAll(ID id) {
         List<T> tempList = map.get(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return null;
@@ -69,8 +70,8 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
         List<T> responses = getTreeAll(null);
         if (CollectionUtils.isEmpty(responses)) {
             responses = new ArrayList<>();
-            Set<Long> keySet = new HashSet<>(map.keySet());
-            for (Long key : keySet) {
+            Set<ID> keySet = new HashSet<>(map.keySet());
+            for (ID key : keySet) {
                 List<T> tempList = getTreeAll(key);
                 if (!CollectionUtils.isEmpty(tempList)) {
                     responses.addAll(tempList);
@@ -78,8 +79,8 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
             }
         }
         if (!map.isEmpty()) {
-            Set<Long> keySet = new HashSet<>(map.keySet());
-            for (Long key : keySet) {
+            Set<ID> keySet = new HashSet<>(map.keySet());
+            for (ID key : keySet) {
                 List<T> tempList = getTreeAll(key);
                 if (!CollectionUtils.isEmpty(tempList)) {
                     responses.addAll(tempList);
@@ -95,9 +96,9 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<Long> getChildIds(Long id) {
+    public Set<ID> getChildIds(ID id) {
         List<T> tempList = map.get(id);
-        Set<Long> tempIds = new HashSet<>();
+        Set<ID> tempIds = new HashSet<>();
         tempIds.add(id);
         if (CollectionUtils.isEmpty(tempList)) {
             return tempIds;
@@ -115,7 +116,7 @@ public class TreeEntityDtoUtils<T extends TreeEntityDTO> {
      * @param id 当前节点id
      * @return .
      */
-    public Set<T> getChildren(Long id) {
+    public Set<T> getChildren(ID id) {
         List<T> tempList = map.get(id);
         Set<T> children = new HashSet<>();
         if (CollectionUtils.isEmpty(tempList)) {

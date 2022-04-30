@@ -33,9 +33,9 @@ import javax.validation.constraints.NotBlank;
 @TableName(value = "sys_scheduled_task")
 @ApiModel(value = "ScheduledTask", description = "定时任务")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class ScheduledTask extends ListEntity {
+public class ScheduledTask extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = -2520015535285512159L;
+    private static final Long serialVersionUID = -2520015535285512159L;
 
     @ApiModelProperty(value = "任务名称", dataType = "String")
     @NotBlank(message = "任务名称不能为空", groups = {Insert.class, Update.class})

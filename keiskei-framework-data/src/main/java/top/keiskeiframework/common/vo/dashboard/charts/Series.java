@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class Series implements Serializable {
-    private static final long serialVersionUID = -4978366786197732637L;
+    private static final Long serialVersionUID = -4978366786197732637L;
     /**
      * 数据分类名称
      */

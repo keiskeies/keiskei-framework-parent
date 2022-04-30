@@ -29,9 +29,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "sys_permission")
 @ApiModel(value = "SystemPermission", description = "操作权限")
-public class SystemPermission extends TreeEntity {
+public class SystemPermission extends TreeEntity<Integer>  {
 
-    private static final long serialVersionUID = -7872341210410988194L;
+    private static final Long serialVersionUID = -7872341210410988194L;
 
     @ApiModelProperty(value = "权限标识", dataType = "String")
     @NotBlank(message = "权限标识不能为空", groups = {Insert.class})
@@ -51,5 +51,5 @@ public class SystemPermission extends TreeEntity {
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 }

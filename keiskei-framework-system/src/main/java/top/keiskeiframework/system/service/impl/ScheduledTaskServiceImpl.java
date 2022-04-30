@@ -22,7 +22,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  */
 @Service
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> implements IScheduledTaskService {
+public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Integer> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
@@ -31,7 +31,7 @@ public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask> imp
 
 
     @Override
-    public void excute(Long id) {
+    public void excute(Integer id) {
 
         ScheduledTask scheduledTask = scheduledTaskService.getById(id);
         Assert.notNull(scheduledTask, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());

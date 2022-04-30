@@ -38,9 +38,9 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
-public class ModuleInfo extends ListEntity {
+public class ModuleInfo extends ListEntity<Integer> {
 
-    private static final long serialVersionUID = 754302484437506602L;
+    private static final Long serialVersionUID = 754302484437506602L;
 
     @ApiModelProperty(value = "模块名称", dataType = "String")
     @NotBlank(message = "模块名称不能为空", groups = {Insert.class, Update.class})
@@ -64,10 +64,10 @@ public class ModuleInfo extends ListEntity {
     private transient Collection<TableInfo> tables = new ArrayList<>();
 
     @BatchCacheField
-    private Long projectId;
+    private Integer projectId;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy
-    private Long sortBy;
+    private Integer sortBy;
 
 }

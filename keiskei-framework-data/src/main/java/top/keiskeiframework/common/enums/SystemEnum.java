@@ -13,7 +13,7 @@ public class SystemEnum {
     /**
      * 超级管理员ID
      */
-    public final static long SUPER_ADMIN_ID = -1L;
+    public final static int SUPER_ADMIN_ID = -1;
     /**
      * 用户密码错误次数key前缀
      */

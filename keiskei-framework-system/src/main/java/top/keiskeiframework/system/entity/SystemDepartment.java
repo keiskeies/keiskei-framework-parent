@@ -28,9 +28,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @TableName(value = "sys_department")
 @ApiModel(value = "SystemDepartment", description = "部门管理")
-public class SystemDepartment extends TreeEntity {
+public class SystemDepartment extends TreeEntity<Integer>  {
 
-    private static final long serialVersionUID = 4845168322937249454L;
+    private static final Long serialVersionUID = 4845168322937249454L;
 
     @ApiModelProperty(value = "部门名称", dataType = "String")
     @NotBlank(message = "部门名称不能为空", groups = {Insert.class})

@@ -213,6 +213,6 @@ public class GenerateFileUtils {
 
     public static String getSerialVersionUID() {
         Random random = new Random();
-        return random.nextLong() + "";
+        return random.nextInteger() + "";
     }
 }

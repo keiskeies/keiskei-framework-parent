@@ -21,27 +21,27 @@ import top.keiskeiframework.generate.service.IGenerateService;
 @RestController
 @RequestMapping("/generate/project")
 @Api(tags = "文件生成 - 项目管理")
-public class ProjectController extends ListControllerImpl<ProjectInfo> {
+public class ProjectController extends ListControllerImpl<ProjectInfo, Integer> {
 
     @Autowired
     private IGenerateService generateService;
 
     @PostMapping("/{id}/build")
     @ApiOperation("创建代码")
-    public R<Boolean> build(@PathVariable("id") Long id) {
+    public R<Boolean> build(@PathVariable("id") Integer id) {
         generateService.build(id);
         return R.ok(true, "项目构建中，请稍等。。。");
     }
 
     @GetMapping("/{id}/status")
     @ApiOperation("代码创建状态")
-    public R<BuildStatusEnum> status(@PathVariable("id") Long id) {
+    public R<BuildStatusEnum> status(@PathVariable("id") Integer id) {
         return R.ok(generateService.refreshStatus(id));
     }
 
     @GetMapping("/{id}/download")
     @ApiOperation("代码下载地址")
-    public R<String> download(@PathVariable("id") Long id) {
+    public R<String> download(@PathVariable("id") Integer id) {
         return R.ok(generateService.getDownloadAddress(id));
     }
 }
