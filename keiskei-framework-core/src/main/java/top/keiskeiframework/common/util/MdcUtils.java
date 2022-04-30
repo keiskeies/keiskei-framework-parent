@@ -35,7 +35,7 @@ public class MdcUtils {
         return mdcUserIdStr;
     }
 
-    public static Integer getLongUserId() {
+    public static Integer getIntegerUserId() {
         String mdcUserIdStr = MDC.get(USER_ID);
         if (StringUtils.isEmpty(mdcUserIdStr)) {
             throw new BizException(BizExceptionEnum.AUTH_ERROR);
