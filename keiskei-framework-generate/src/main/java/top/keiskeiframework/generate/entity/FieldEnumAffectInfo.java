@@ -1,6 +1,8 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
@@ -31,7 +32,10 @@ import javax.validation.constraints.NotBlank;
 @TableName(value = "gr_field_enum_affect_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举影响值")
 public class FieldEnumAffectInfo extends ListEntity<Integer>{
-    private static final Long serialVersionUID = 8981895417058350169L;
+    private static final long serialVersionUID = 8981895417058350169L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
     @NotBlank(message = "字段不能为空", groups = {Insert.class})
@@ -46,7 +50,6 @@ public class FieldEnumAffectInfo extends ListEntity<Integer>{
     @ApiModelProperty(value = "禁用字段", dataType = "Boolean")
     private Boolean disableEdit;
 
-    @BatchCacheField
     private Integer fieldEnumId;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")

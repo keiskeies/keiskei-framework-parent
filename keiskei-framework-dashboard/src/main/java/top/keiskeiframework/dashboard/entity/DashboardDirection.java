@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -37,9 +36,8 @@ import java.util.Collection;
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = -2719449560787668928L;
+    private static final long serialVersionUID = -2719449560787668928L;
 
-    @BatchCacheField
     private Integer dashboardId;
 
     @ApiModelProperty(value = "字段", dataType = "String")

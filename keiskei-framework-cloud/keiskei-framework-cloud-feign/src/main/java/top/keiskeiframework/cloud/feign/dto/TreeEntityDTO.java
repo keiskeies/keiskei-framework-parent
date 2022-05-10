@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class TreeEntityDTO<T extends TreeEntityDTO<T, ID>, ID extends Serializable> extends ListEntityDTO<ID> implements Serializable {
-    private static final Long serialVersionUID = -802579500126524571L;
+    private static final long serialVersionUID = -802579500126524571L;
 
     protected ID parentId;
     protected String sign;

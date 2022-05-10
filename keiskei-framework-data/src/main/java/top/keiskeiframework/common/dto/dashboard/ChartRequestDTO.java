@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Data
 public class ChartRequestDTO implements Serializable {
-    private static final Long serialVersionUID = -1354993776756493818L;
+    private static final long serialVersionUID = -1354993776756493818L;
 
     /**
      * 字段

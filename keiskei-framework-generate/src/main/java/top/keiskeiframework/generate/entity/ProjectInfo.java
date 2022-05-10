@@ -1,6 +1,8 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,7 +40,10 @@ import java.util.Collection;
 @ApiModel(value = "ProjectInfo", description = "项目信息")
 public class ProjectInfo extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = 8549325611615861124L;
+    private static final long serialVersionUID = 8549325611615861124L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "项目名称", dataType = "String")
     @NotBlank(message = "项目名称不能为空", groups = {Insert.class, Update.class})

@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 public class BasePageDTO implements Serializable {
 
-    private static final Long serialVersionUID = -3321020549128340652L;
+    private static final long serialVersionUID = -3321020549128340652L;
     private Integer page;
     private Integer size;
 

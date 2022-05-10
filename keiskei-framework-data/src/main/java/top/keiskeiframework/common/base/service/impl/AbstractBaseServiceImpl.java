@@ -1,18 +1,16 @@
 package top.keiskeiframework.common.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -25,7 +23,6 @@ import top.keiskeiframework.common.util.DateTimeUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.temporal.UnsupportedTemporalTypeException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,17 +38,13 @@ import java.util.stream.Collectors;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
-        extends ServiceImpl<BaseEntityMapper<T, ID>, T>
+public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID extends Serializable, M extends BaseMapper<T>>
+        extends ServiceImpl<M, T>
         implements BaseService<T, ID>, IService<T> {
     protected final static String CACHE_TREE_NAME = "CACHE:TREE";
     protected final static String CACHE_LIST_NAME = "CACHE:LIST";
     protected final static String RESULT_KEY = "RESULT_KEY";
     protected final static String RESULT_VALUE = "RESULT_VALUE";
-
-
-    @Autowired
-    private BaseService<T, ID> baseService;
 
 
     @Override
@@ -74,7 +67,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public Boolean exist(BaseRequestVO<T, ID> request) {
-        return this.baseMapper.exists(BaseRequestUtils.getQueryWrapperByConditions(request, getEntityClass()));
+        return super.count(BaseRequestUtils.getQueryWrapperByConditions(request, getEntityClass())) > 0;
     }
 
     @Override
@@ -88,13 +81,13 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
     public boolean removeByColumn(String column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(column, value);
-        return baseService.remove(queryWrapper);
+        return super.remove(queryWrapper);
     }
 
     @Override
     public boolean removeByCondition(List<QueryConditionVO> conditions) {
         QueryWrapper<T> queryWrapper = BaseRequestUtils.getQueryWrapperByConditions(conditions, getEntityClass());
-        return baseService.remove(queryWrapper);
+        return super.remove(queryWrapper);
     }
 
     @Override
@@ -110,17 +103,6 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
         return this.getOne(queryWrapper);
     }
 
-
-    @Override
-    public boolean removeByIds(Collection<?> list) {
-        if (CollectionUtils.isEmpty(list)) {
-            return true;
-        }
-        for (Object id : list) {
-            baseService.removeById((Serializable) id);
-        }
-        return true;
-    }
 
     @Override
     public Map<String, Double> getChartOptions(ChartRequestDTO chart) {

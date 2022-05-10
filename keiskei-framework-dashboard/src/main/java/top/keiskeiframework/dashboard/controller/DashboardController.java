@@ -1,5 +1,6 @@
 package top.keiskeiframework.dashboard.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.util.MdcUtils;
@@ -39,7 +39,7 @@ public class DashboardController {
     @GetMapping
     public R<List<Dashboard>> list() {
         Dashboard dashboard = Dashboard.builder().createUserId(Integer.valueOf(MdcUtils.getUserId())).build();
-        return R.ok(dashboardService.findAll(dashboard));
+        return R.ok(dashboardService.list(new QueryWrapper<>(dashboard)));
     }
 
     @ApiOperation("详情")
@@ -57,27 +57,21 @@ public class DashboardController {
     @PostMapping
     @ApiOperation("新增")
     public R<Dashboard> save(@RequestBody @Validated({Insert.class}) Dashboard fieldInfo) {
-        return R.ok(dashboardService.saveAndNotify(fieldInfo));
+        dashboardService.save(fieldInfo);
+        return R.ok(fieldInfo);
     }
 
     @PutMapping
     @ApiOperation("更新")
     public R<Dashboard> update(@RequestBody @Validated({Update.class}) Dashboard fieldInfo) {
-        fieldInfo = dashboardService.updateByIdAndNotify(fieldInfo);
+        dashboardService.updateById(fieldInfo);
         return R.ok(fieldInfo);
-    }
-
-    @PutMapping("/sort")
-    @ApiOperation("更改排序")
-    public R<Boolean> changeSort(@RequestBody @Validated BaseSortVO baseSortVO) {
-        dashboardService.changeSort(baseSortVO);
-        return R.ok(Boolean.TRUE);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("删除")
     public R<Boolean> delete(@PathVariable Integer id) {
-        dashboardService.removeByIdAndNotify(id);
+        dashboardService.removeById(id);
         return R.ok(Boolean.TRUE);
     }
 

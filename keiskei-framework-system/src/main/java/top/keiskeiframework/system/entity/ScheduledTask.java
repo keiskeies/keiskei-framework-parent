@@ -1,5 +1,7 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
@@ -29,13 +31,14 @@ import javax.validation.constraints.NotBlank;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
 @TableName(value = "sys_scheduled_task")
 @ApiModel(value = "ScheduledTask", description = "定时任务")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class ScheduledTask extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = -2520015535285512159L;
+    private static final long serialVersionUID = -2520015535285512159L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "任务名称", dataType = "String")
     @NotBlank(message = "任务名称不能为空", groups = {Insert.class, Update.class})

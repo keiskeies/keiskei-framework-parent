@@ -41,7 +41,7 @@ public class SelfController {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
         SystemUser systemUser = userService.getById(tokenUser.getId());
         BeanUtils.copyPropertiesIgnoreNull(systemUserDto, systemUser);
-        userService.updateByIdAndNotify(systemUser);
+        userService.updateById(systemUser);
         return R.ok(systemUserDto);
     }
 
@@ -52,7 +52,7 @@ public class SelfController {
         Assert.isTrue(systemUserPasswordDto.match(systemUser.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
 
         systemUser.setPassword(systemUserPasswordDto.getNewPassword());
-        userService.updateByIdAndNotify(systemUser);
+        userService.updateById(systemUser);
         return R.ok(Boolean.TRUE);
     }
 

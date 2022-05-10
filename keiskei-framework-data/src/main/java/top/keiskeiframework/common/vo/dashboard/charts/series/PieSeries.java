@@ -20,7 +20,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class PieSeries extends Series implements Serializable {
-    private static final Long serialVersionUID = 7755013680905254636L;
+    private static final long serialVersionUID = 7755013680905254636L;
     /**
      * 数据
      */
@@ -35,7 +35,7 @@ public class PieSeries extends Series implements Serializable {
     @AllArgsConstructor
     public static class PieSeriesData implements Serializable {
 
-        private static final Long serialVersionUID = -732244914968958590L;
+        private static final long serialVersionUID = -732244914968958590L;
         private String name;
         private Number value;
     }

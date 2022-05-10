@@ -17,7 +17,7 @@ import java.util.Collection;
 @Data
 public class TokenUser implements UserDetails {
 
-    private static final Long serialVersionUID = 6452938173658688276L;
+    private static final long serialVersionUID = 6452938173658688276L;
 
     private Integer id;
     private String name;

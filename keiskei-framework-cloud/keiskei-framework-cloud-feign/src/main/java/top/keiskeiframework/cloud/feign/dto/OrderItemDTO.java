@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * 降序字段
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 public class OrderItemDTO implements Serializable {
 
-    private static final Long serialVersionUID = 8099586250668537045L;
+    private static final long serialVersionUID = 8099586250668537045L;
 
     private String column;
     private Boolean asc;

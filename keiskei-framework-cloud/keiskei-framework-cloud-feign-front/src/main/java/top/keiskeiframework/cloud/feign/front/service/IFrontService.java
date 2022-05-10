@@ -38,7 +38,7 @@ public interface IFrontService<T extends ListEntityDTO<ID>, ID extends Serializa
      * @param conditions 查询条件
      * @return 。
      */
-    Integer count(String conditions);
+    Long count(String conditions);
 
 
     /**

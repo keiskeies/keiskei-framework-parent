@@ -1,17 +1,19 @@
 package top.keiskeiframework.common.base.controller.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.controller.IControllerService;
+import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
@@ -25,6 +27,7 @@ import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.vo.R;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +41,25 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/3 20:51
  */
+@Order
 public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
         implements IControllerService<T, ID> {
 
     @Autowired
-    private BaseService<T, ID> baseService;
+    protected BaseService<T, ID> baseService;
 
+    @Override
+    @ApiOperation("列表")
+    public R<Page<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
+        return R.ok(baseService.page(baseRequestVO, page));
+    }
+
+    @Override
+    @ApiOperation("下拉框")
+    public R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
+        Page<T> tPage = baseService.page(baseRequestVO, page);
+        return R.ok(tPage.getRecords());
+    }
 
     @Override
     @ApiOperation("数量")
@@ -58,11 +74,13 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     }
 
     @Override
+    @ApiOperation("详情")
     public R<T> getOne(BaseRequestVO<T, ID> request) {
         return R.ok(baseService.getOne(request));
     }
 
     @Override
+    @ApiOperation("存在")
     public R<Boolean> exist(BaseRequestVO<T, ID> request) {
         return R.ok(baseService.exist(request));
     }
@@ -75,15 +93,6 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     }
 
     @Override
-    @ApiOperation("新增")
-    public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
-        for (T t : ts) {
-            baseService.save(t);
-        }
-        return R.ok(ts);
-    }
-
-    @Override
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T t) {
         baseService.updateById(t);
@@ -91,36 +100,42 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     }
 
     @Override
-    @ApiOperation("更新")
-    public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
-        for (T t : ts) {
-            baseService.updateById(t);
-        }
-        return R.ok(ts);
-    }
-
-    @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@PathVariable ID id) {
+    public R<Boolean> deleteById(@PathVariable ID id) {
         return R.ok(baseService.removeById(id));
     }
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> delete(@RequestBody List<ID> ids) {
-        for (ID id : ids) {
-            baseService.removeById(id);
-        }
-        return R.ok(Boolean.TRUE);
+    public R<Boolean> delete(T t) {
+        return R.ok(baseService.removeById(t.getId()));
     }
 
     @Override
     @ApiOperation("删除")
-    public R<Boolean> deleteByConditions(BaseRequestVO<T, ID> request) {
-        return R.ok(baseService.removeByCondition(request.getConditions()));
+    public R<Boolean> deleteMulti(@RequestBody List<ID> ids) {
+        return R.ok(baseService.removeByIds(ids));
     }
 
+    @Override
+    @ApiOperation("删除")
+    public R<Boolean> deleteByConditions(List<QueryConditionVO> conditions) {
+        return R.ok(baseService.removeByCondition(conditions));
+    }
 
+    @Override
+    @ApiOperation("更新")
+    public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
+        baseService.updateBatchById(ts);
+        return R.ok(ts);
+    }
+
+    @Override
+    @ApiOperation("新增")
+    public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
+        baseService.saveBatch(ts);
+        return R.ok(ts);
+    }
 
     @Override
     @ApiOperation("统计")

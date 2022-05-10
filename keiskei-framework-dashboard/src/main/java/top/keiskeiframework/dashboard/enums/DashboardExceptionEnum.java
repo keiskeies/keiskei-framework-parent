@@ -22,7 +22,7 @@ public enum DashboardExceptionEnum implements IErrorCode {
     TIME_EMPTY(500303L, "时间节点为空"),
     ENTITY_FIELD_NOT_EXIST(50401L, "实体类字段不存在");
 
-    private final Integer code;
+    private final long code;
 
     private final String msg;
 }

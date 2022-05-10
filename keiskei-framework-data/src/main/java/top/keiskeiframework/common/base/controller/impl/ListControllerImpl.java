@@ -1,28 +1,23 @@
 package top.keiskeiframework.common.base.controller.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
-import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
-import top.keiskeiframework.common.enums.dashboard.CalcType;
-import top.keiskeiframework.common.enums.dashboard.ColumnType;
-import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
-import top.keiskeiframework.common.util.DateTimeUtils;
+import top.keiskeiframework.common.base.service.ListBaseService;
 import top.keiskeiframework.common.vo.R;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -39,35 +34,44 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
         implements IControllerService<T, ID> {
 
     @Autowired
-    private ListServiceImpl<T, ID> listService;
+    private ListBaseService<T, ID> listBaseService;
+    private final static String TRUE = "true";
+    private final static String COMPLETE = "complete";
 
-
-    @GetMapping
-    @ApiOperation("列表")
-    public R<Page<T>> page(
-            BaseRequestVO<T, ID> request,
-            BasePageVO page, @RequestParam(required = false,
-            defaultValue = "false") Boolean complete) {
-        Page<T> tPage;
-        if (complete) {
-            tPage = listService.pageComplete(request, page);
+    @Override
+    public R<T> getOne(ID id) {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String complete = request.getParameter(COMPLETE);
+        if (StringUtils.isEmpty(complete) || TRUE.equals(complete)) {
+            return R.ok(listBaseService.getByIdComplete(id));
         } else {
-            tPage = listService.page(request, page);
+            return R.ok(listBaseService.getById(id));
+        }
+    }
+
+    @Override
+    public R<Page<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
+        Page<T> tPage;
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String complete = request.getParameter(COMPLETE);
+        if (StringUtils.isEmpty(complete) || TRUE.equals(complete)) {
+            tPage = listBaseService.pageComplete(baseRequestVO, page);
+        } else {
+            tPage = listBaseService.page(baseRequestVO, page);
         }
         return R.ok(tPage);
     }
 
 
-    @GetMapping("/options")
-    @ApiOperation("下拉框")
-    public R<List<T>> options(
-            BaseRequestVO<T, ID> request,
-            @RequestParam(required = false, defaultValue = "false") Boolean complete) {
+    @Override
+    public R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
         List<T> ts;
-        if (complete) {
-            ts = listService.listComplete(request);
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String complete = request.getParameter(COMPLETE);
+        if (!StringUtils.isEmpty(complete) && TRUE.equals(complete)) {
+            ts = listBaseService.listComplete(baseRequestVO);
         } else {
-            ts = listService.list(request);
+            ts = listBaseService.list(baseRequestVO);
         }
         return R.ok(ts);
     }

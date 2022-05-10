@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 public class BasePageVO implements Serializable {
 
-    private static final Long serialVersionUID = -100073037476383441L;
+    private static final long serialVersionUID = -100073037476383441L;
     /**
      * 分页参数
      */

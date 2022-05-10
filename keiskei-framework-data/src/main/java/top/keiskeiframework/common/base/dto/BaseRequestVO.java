@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor
 public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> implements Serializable{
-    private static final Long serialVersionUID = -296451048174918297L;
+    private static final long serialVersionUID = -296451048174918297L;
     /**
      * 排序方式
      */

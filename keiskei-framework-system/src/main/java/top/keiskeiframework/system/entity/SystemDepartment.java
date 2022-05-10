@@ -1,5 +1,7 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +32,11 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value = "SystemDepartment", description = "部门管理")
 public class SystemDepartment extends TreeEntity<Integer>  {
 
-    private static final Long serialVersionUID = 4845168322937249454L;
+    private static final long serialVersionUID = 4845168322937249454L;
+
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "部门名称", dataType = "String")
     @NotBlank(message = "部门名称不能为空", groups = {Insert.class})

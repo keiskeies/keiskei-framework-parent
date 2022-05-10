@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.util;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,8 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
+import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
@@ -33,7 +36,7 @@ import java.util.stream.Collectors;
 @Component
 public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
     private final static String DEPARTMENT_COLUMN = "p";
-    private final static String CREATE_TIME_COLUMN = "create_time";
+    private final static String CREATE_TIME_COLUMN = "id";
 
     @Value("${keiskei.use-department:false}")
     public void setUseDepartment(Boolean useDepartment) {
@@ -61,12 +64,20 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         return fields;
     }
 
+    private static void validFields(Set<String> fields, List<QueryConditionVO> conditions) {
+        for (QueryConditionVO conditionVO : conditions) {
+            if (!fields.contains(conditionVO.getC())) {
+                throw new BizException(BizExceptionEnum.ERROR.getCode(), "字段:" + conditionVO.getC() + " 不存在，请检查");
+            }
+        }
+    }
+
     public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
             List<QueryConditionVO> conditions, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(conditions)) {
             Set<String> fields = getTClassFields(tClass);
-            conditions.removeIf(e -> !fields.contains(e.getC()));
+            validFields(fields, conditions);
             convertConditions(queryWrapper, conditions);
         }
 
@@ -83,7 +94,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             if (!request.conditionEmpty()) {
                 Set<String> fields = getTClassFields(tClass);
                 List<QueryConditionVO> conditions = request.getConditions();
-                conditions.removeIf(e -> !fields.contains(e.getC()));
+                validFields(fields, conditions);
                 convertConditions(queryWrapper, conditions);
             }
         }
@@ -106,7 +117,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             if (!CollectionUtils.isEmpty(fields)) {
                 if (!request.conditionEmpty()) {
                     List<QueryConditionVO> conditions = request.getConditions();
-                    conditions.removeIf(e -> !fields.contains(e.getC()));
+                    validFields(fields, conditions);
                     convertConditions(queryWrapper, conditions);
                 }
                 if (!request.showEmpty()) {
@@ -126,6 +137,15 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             }
         }
 
+        if (!hasOrder) {
+            for (Field field : tClass.getDeclaredFields()) {
+                OrderBy orderBy = field.getAnnotation(OrderBy.class);
+                if (null != orderBy) {
+                    queryWrapper.orderBy(true, orderBy.asc(),BeanUtils.humpToUnderline(field.getName()));
+                    hasOrder = true;
+                }
+            }
+        }
         if (!hasOrder) {
             queryWrapper.orderByDesc(CREATE_TIME_COLUMN);
         }

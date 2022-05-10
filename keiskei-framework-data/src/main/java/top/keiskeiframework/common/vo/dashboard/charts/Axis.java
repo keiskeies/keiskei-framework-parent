@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Axis implements Serializable {
-    private static final Long serialVersionUID = -8240149682292046994L;
+    private static final long serialVersionUID = -8240149682292046994L;
     /**
      * 坐标类型
      */
@@ -41,7 +41,7 @@ public class Axis implements Serializable {
      */
     @Data
     public static class AxisTick implements Serializable {
-        private static final Long serialVersionUID = -426431462259414820L;
+        private static final long serialVersionUID = -426431462259414820L;
         private Boolean alignWidthLabel;
         private Boolean show;
     }

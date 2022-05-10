@@ -95,7 +95,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
     }
 
     @Override
-    public Integer count(String conditions) {
+    public Long count(String conditions) {
         return treeFeignService.count(conditions).getData();
     }
 

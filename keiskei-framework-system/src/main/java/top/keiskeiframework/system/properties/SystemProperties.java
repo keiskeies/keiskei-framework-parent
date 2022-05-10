@@ -52,7 +52,7 @@ public class SystemProperties {
     /**
      * token有效时长
      */
-    private Integer tokenMinutes = 2 * 60L;
+    private Integer tokenMinutes = 2 * 60;
 
     /**
      * 最大同时在线人数
@@ -67,5 +67,5 @@ public class SystemProperties {
     /**
      * 密码错误锁定分钟数
      */
-    private Integer lockMinutes = 10L;
+    private Integer lockMinutes = 10;
 }

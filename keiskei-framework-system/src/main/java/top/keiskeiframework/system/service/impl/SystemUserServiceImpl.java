@@ -100,7 +100,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer> 
         if (cacheStorageService.overTimeNum(String.format(SystemEnum.USER_ERROR_TIMES_SUFFIX, username))) {
             LocalDateTime lockTime = LocalDateTime.now().plusMinutes(systemProperties.getLockMinutes());
             systemUser.setAccountLockTime(lockTime);
-            this.saveAndNotify(systemUser);
+            super.save(systemUser);
         }
     }
 
@@ -112,7 +112,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer> 
 
         if (SystemEnum.SUPER_ADMIN_ID == tokenUser.getId()) {
             if (null != permissionService) {
-                List<SystemPermission> systemPermissions = permissionService.findAll();
+                List<SystemPermission> systemPermissions = permissionService.list();
                 systemUserDto.setPermissions(systemPermissions.stream().map(SystemPermission::getPermission).collect(Collectors.toList()));
                 return systemUserDto;
             }

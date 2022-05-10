@@ -1,6 +1,8 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -43,7 +44,10 @@ import java.util.Collection;
 @ApiModel(value = "TableInfo", description = "表结构信息")
 public class TableInfo extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = 7715195221883078519L;
+    private static final long serialVersionUID = 7715195221883078519L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "实体类名", dataType = "String")
     @NotBlank(message = "实体类名不能为空", groups = {Insert.class, Update.class})
@@ -75,7 +79,6 @@ public class TableInfo extends ListEntity<Integer> {
     @Valid
     private transient Collection<FieldInfo> fields = new ArrayList<>();
 
-    @BatchCacheField
     private Integer moduleId;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")

@@ -51,16 +51,12 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
     public List<T> options(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
             String desc,
             String asc
     ) {
         return commonFeignService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
                 asc
         ).getData();
@@ -78,7 +74,7 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
     }
 
     @Override
-    public Integer count(String conditions) {
+    public Long count(String conditions) {
         return commonFeignService.count(conditions).getData();
     }
 

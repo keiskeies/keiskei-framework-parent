@@ -1,9 +1,9 @@
 package top.keiskeiframework.cloud.feign.service;
 
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.BaseSortDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
+import top.keiskeiframework.cloud.feign.dto.QueryConditionDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
@@ -71,7 +71,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return count
      */
     @GetMapping("/count")
-    R<Integer> count(@RequestParam(name = "conditions", required = false) String conditions);
+    R<Long> count(@RequestParam(name = "conditions", required = false) String conditions);
 
 
     /**
@@ -96,11 +96,12 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
     /**
      * 详情
      *
-     * @param id ID
+     * @param id       ID
+     * @param complete 是否完整数据
      * @return data
      */
     @GetMapping("/{id}")
-    R<T> findById(@PathVariable("id") ID id);
+    R<T> findById(@PathVariable("id") ID id, @RequestParam(required = false, defaultValue = "false") Boolean complete);
 
 
     /**
@@ -153,7 +154,6 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
     R<Boolean> delete(@PathVariable("id") ID id);
 
 
-
     /**
      * 删除多个
      *
@@ -171,7 +171,7 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
      * @return 。
      */
     @DeleteMapping("/conditions")
-    R<Boolean> deleteByConditions(@RequestAttribute String conditions);
+    R<Boolean> deleteByConditions(@RequestBody List<QueryConditionDTO> conditions);
 
 
     /**

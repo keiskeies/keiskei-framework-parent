@@ -27,7 +27,7 @@ import java.util.List;
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
 public class QueryConditionDTO implements Serializable {
 
-    private static final Long serialVersionUID = 3265390040551843537L;
+    private static final long serialVersionUID = 3265390040551843537L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
     private String c;
 

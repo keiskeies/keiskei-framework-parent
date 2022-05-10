@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.ListBaseService;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,18 +20,15 @@ import java.util.List;
  * 树形实体类基础服务实现
  * </p>
  *
- * @param <T> .
+ * @param <T>  .
  * @param <ID> .
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
-        extends AbstractListBaseServiceImpl<T, ID> implements BaseService<T, ID>, IService<T> {
-
-    @Autowired
-    protected ListServiceImpl<T, ID> listService;
-
+public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable, M extends BaseEntityMapper<T, ID>>
+        extends AbstractListBaseServiceImpl<T, ID, M>
+        implements ListBaseService<T, ID>, BaseService<T, ID>, IService<T> {
 
     @Override
     public Page<T> pageComplete(BaseRequestVO<T, ID> request, BasePageVO page) {
@@ -43,8 +43,8 @@ public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
     }
 
     @Override
-    public T getById(Serializable id) {
-        T t = listService.getByIdCache(id);
+    public T getByIdComplete(Serializable id) {
+        T t = listBaseService.getById(id);
         getManyToMany(t);
         getOneToMany(t);
         getManyToOne(t);

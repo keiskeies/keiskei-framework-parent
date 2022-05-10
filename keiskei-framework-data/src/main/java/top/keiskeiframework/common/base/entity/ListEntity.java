@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListEntity<ID extends Serializable> implements Serializable {
-    private static final Long serialVersionUID = -8025795001235125591L;
+    private static final long serialVersionUID = -8025795001235125591L;
 
     protected ID id;
 

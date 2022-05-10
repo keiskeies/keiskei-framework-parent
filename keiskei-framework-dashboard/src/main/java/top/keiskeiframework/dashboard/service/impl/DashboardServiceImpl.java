@@ -1,6 +1,7 @@
 package top.keiskeiframework.dashboard.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -51,16 +52,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> implements IDashboardService {
 
-
+    @Autowired
+    private IDashboardService dashboardService;
 
     @Override
     @Caching(evict= {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
             @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #dashboard.id")
     })
-    public Dashboard updateByIdAndNotify(Dashboard dashboard) {
-        super.updateById(dashboard);
-        return dashboard;
+    public boolean updateById(Dashboard dashboard) {
+        return super.updateById(dashboard);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> im
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id"),
             @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     })
-    public boolean removeByIdAndNotify(Serializable id) {
+    public boolean removeById(Serializable id) {
         return super.removeById(id);
     }
 
@@ -76,7 +77,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> im
     @Override
     @Cacheable(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id", unless = "#result == null")
     public ChartOptionVO getChartOption(Integer id) {
-        Dashboard dashboard = super.getByIdCache(id);
+        Dashboard dashboard = dashboardService.getById(id);
         Assert.notNull(dashboard, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
 
         LocalDateTime[] startAndEnd;
@@ -301,40 +302,40 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> im
 
     }
 
-
-    /**
-     * 图表记录数据校验
-     *
-     * @param dashboard 。
-     */
-    @Override
-    public void validate(Dashboard dashboard) {
-        if (ColumnType.TIME.equals(dashboard.getFieldType()) && StringUtils.isEmpty(dashboard.getFieldDelta())) {
-            throw new BizException(DashboardExceptionEnum.TYPE_EMPTY);
-        }
-        if (TimeTypeEnum.NORMAL.equals(dashboard.getTimeType())) {
-            if (StringUtils.isEmpty(dashboard.getStart()) || StringUtils.isEmpty(dashboard.getEnd())) {
-                throw new BizException(DashboardExceptionEnum.TIME_EMPTY);
-            }
-        }
-        Collection<DashboardDirection> yFields = dashboard.getDirections();
-        if (yFields.size() > 1) {
-            for (DashboardDirection direction : yFields) {
-                if (ChartType.LINE_BAR.equals(dashboard.getType())) {
-                    if (!ChartType.LINE.equals(direction.getType()) && !ChartType.BAR.equals(direction.getType())) {
-                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
-                    }
-                } else {
-                    if (!dashboard.getType().equals(direction.getType())) {
-                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
-                    }
-                }
-                if (!EntityFactory.columnEntityContains(direction.getEntityClass(), direction.getField())) {
-                    throw new BizException(DashboardExceptionEnum.ENTITY_FIELD_NOT_EXIST);
-                }
-            }
-        }
-    }
+//
+//    /**
+//     * 图表记录数据校验
+//     *
+//     * @param dashboard 。
+//     */
+//    @Override
+//    public void validate(Dashboard dashboard) {
+//        if (ColumnType.TIME.equals(dashboard.getFieldType()) && StringUtils.isEmpty(dashboard.getFieldDelta())) {
+//            throw new BizException(DashboardExceptionEnum.TYPE_EMPTY);
+//        }
+//        if (TimeTypeEnum.NORMAL.equals(dashboard.getTimeType())) {
+//            if (StringUtils.isEmpty(dashboard.getStart()) || StringUtils.isEmpty(dashboard.getEnd())) {
+//                throw new BizException(DashboardExceptionEnum.TIME_EMPTY);
+//            }
+//        }
+//        Collection<DashboardDirection> yFields = dashboard.getDirections();
+//        if (yFields.size() > 1) {
+//            for (DashboardDirection direction : yFields) {
+//                if (ChartType.LINE_BAR.equals(dashboard.getType())) {
+//                    if (!ChartType.LINE.equals(direction.getType()) && !ChartType.BAR.equals(direction.getType())) {
+//                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
+//                    }
+//                } else {
+//                    if (!dashboard.getType().equals(direction.getType())) {
+//                        throw new BizException(DashboardExceptionEnum.TYPE_CONFLICT);
+//                    }
+//                }
+//                if (!EntityFactory.columnEntityContains(direction.getEntityClass(), direction.getField())) {
+//                    throw new BizException(DashboardExceptionEnum.ENTITY_FIELD_NOT_EXIST);
+//                }
+//            }
+//        }
+//    }
 
     private final static List<Integer> MAX_RANGE = new ArrayList<>(64);
 

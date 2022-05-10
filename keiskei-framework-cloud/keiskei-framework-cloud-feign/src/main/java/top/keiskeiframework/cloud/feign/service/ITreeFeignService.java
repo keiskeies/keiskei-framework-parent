@@ -3,6 +3,7 @@ package top.keiskeiframework.cloud.feign.service;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.BaseSortDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
+import top.keiskeiframework.cloud.feign.dto.QueryConditionDTO;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
@@ -88,7 +89,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
      * @return count
      */
     @GetMapping("/count")
-    R<Integer> count(@RequestParam(name = "conditions", required = false) String conditions);
+    R<Long> count(@RequestParam(name = "conditions", required = false) String conditions);
 
 
     /**
@@ -195,7 +196,7 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
      * @return 。
      */
     @DeleteMapping("/conditions")
-    R<Boolean> deleteByConditions(@RequestAttribute String conditions);
+    R<Boolean> deleteByConditions(@RequestBody List<QueryConditionDTO> conditions);
 
 
     /**

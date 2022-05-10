@@ -41,7 +41,7 @@ import java.util.Collection;
 @ApiModel(value = "Dashboard", description = "图表")
 public class Dashboard extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = -5855392143364324899L;
+    private static final long serialVersionUID = -5855392143364324899L;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")
     @OrderBy

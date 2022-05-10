@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -36,9 +35,8 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value = "DashboardDirectionCondition", description = "图表横坐标查询条件")
 public class DashboardDirectionCondition extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = -2434119392535767822L;
+    private static final long serialVersionUID = -2434119392535767822L;
 
-    @BatchCacheField
     private Integer dashboardDirectionId;
 
     @ApiModelProperty(value = "字段", dataType = "String")

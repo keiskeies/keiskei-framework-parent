@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 自定义mapper方法
  * </p>
  *
  * @author James Chen right_way@foxmail.com
@@ -21,7 +21,7 @@ public class MyLogicSqlInjector extends DefaultSqlInjector {
     public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
 
         //获取父类中的集合
-        List<AbstractMethod> list = new ArrayList<>(super.getMethodList(mapperClass, tableInfo));
+        List<AbstractMethod> list = super.getMethodList(mapperClass, tableInfo);
         //自定义的方法
         list.add(new FindManyToMany());
         list.add(new SaveManyToMany());

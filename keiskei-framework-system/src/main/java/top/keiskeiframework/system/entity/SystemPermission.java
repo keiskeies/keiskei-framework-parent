@@ -1,6 +1,8 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,7 +33,10 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value = "SystemPermission", description = "操作权限")
 public class SystemPermission extends TreeEntity<Integer>  {
 
-    private static final Long serialVersionUID = -7872341210410988194L;
+    private static final long serialVersionUID = -7872341210410988194L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "权限标识", dataType = "String")
     @NotBlank(message = "权限标识不能为空", groups = {Insert.class})

@@ -1,6 +1,8 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
@@ -20,7 +21,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * <p>
@@ -39,7 +39,10 @@ import java.util.List;
 @TableName(value = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
 public class FieldEnumInfo extends ListEntity<Integer> {
-    private static final Long serialVersionUID = -7401234718671320506L;
+    private static final long serialVersionUID = -7401234718671320506L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "名称", dataType = "String")
     @NotBlank(message = "名称不能为空", groups = {Insert.class})
@@ -62,7 +65,6 @@ public class FieldEnumInfo extends ListEntity<Integer> {
     @JoinColumn(name = "field_enum_id")
     private transient Collection<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
 
-    @BatchCacheField
     private String fieldId;
 
     @ApiModelProperty(value = "排序", dataType = "Integer")

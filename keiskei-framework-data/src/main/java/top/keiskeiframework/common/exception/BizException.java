@@ -18,7 +18,7 @@ import top.keiskeiframework.common.enums.exception.IErrorCode;
 @Data
 public class BizException extends RuntimeException {
 
-    private static final Long serialVersionUID = -7098200834996845904L;
+    private static final long serialVersionUID = -7098200834996845904L;
 
     /**
      * 错误码

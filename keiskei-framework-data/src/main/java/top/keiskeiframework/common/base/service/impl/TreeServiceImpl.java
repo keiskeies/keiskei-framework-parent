@@ -1,10 +1,12 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.TreeBaseService;
 
 import java.io.Serializable;
 
@@ -17,9 +19,9 @@ import java.io.Serializable;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable>
-        extends AbstractTreeBaseServiceImpl<T, ID>
-        implements BaseService<T, ID>, IService<T> {
+public class TreeServiceImpl<T extends TreeEntity<ID>, ID extends Serializable, M extends BaseMapper<T>>
+        extends AbstractTreeBaseServiceImpl<T, ID, M>
+        implements TreeBaseService<T, ID>, BaseService<T, ID>, IService<T> {
 
 
 }

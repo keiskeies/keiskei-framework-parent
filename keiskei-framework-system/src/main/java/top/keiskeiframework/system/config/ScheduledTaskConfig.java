@@ -31,7 +31,7 @@ public class ScheduledTaskConfig implements SchedulingConfigurer {
     private IScheduledTaskService scheduledTaskService;
     @Override
     public void configureTasks(@NonNull ScheduledTaskRegistrar taskRegistrar) {
-        for (ScheduledTask scheduledTask : scheduledTaskService.findAll()) {
+        for (ScheduledTask scheduledTask : scheduledTaskService.list()) {
 
 
             Class<?> clazz;

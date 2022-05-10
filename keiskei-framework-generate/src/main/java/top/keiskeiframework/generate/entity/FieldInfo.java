@@ -1,6 +1,8 @@
 package top.keiskeiframework.generate.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +11,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import top.keiskeiframework.common.annotation.data.BatchCacheField;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.ListEntity;
@@ -21,7 +22,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * <p>
@@ -40,7 +40,10 @@ import java.util.List;
 @ApiModel(value = "FieldInfo", description = "表字段信息")
 public class FieldInfo extends ListEntity<Integer> {
 
-    private static final Long serialVersionUID = -6407989526318566170L;
+    private static final long serialVersionUID = -6407989526318566170L;
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "字段名称", dataType = "String")
     @NotBlank(message = "字段名称不能为空", groups = {Insert.class, Update.class})
@@ -94,7 +97,6 @@ public class FieldInfo extends ListEntity<Integer> {
     @JoinColumn(name = "field_id")
     private transient Collection<FieldEnumInfo> fieldEnums = new ArrayList<>();
 
-    @BatchCacheField
     private String tableId;
 
     @ApiModelProperty(value = "排序", dataType = "ID")

@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class BaseSortDTO<ID extends Serializable> implements Serializable {
-    private static final Long serialVersionUID = -899342361316647661L;
+    private static final long serialVersionUID = -899342361316647661L;
 
     /**
      * id1

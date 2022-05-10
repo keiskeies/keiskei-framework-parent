@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * 多对多查询结果
  * </p>
  *
  * @author v_chenjiamin
@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class ManyToManyResult implements Serializable{
-    private static final Long serialVersionUID = 8394766169458529140L;
+    private static final long serialVersionUID = 8394766169458529140L;
     private String entity;
     private String fieldName;
     private Object joinId;

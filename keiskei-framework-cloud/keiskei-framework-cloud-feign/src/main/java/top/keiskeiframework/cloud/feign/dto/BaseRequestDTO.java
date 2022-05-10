@@ -24,7 +24,7 @@ import java.util.List;
 public class BaseRequestDTO<T extends ListEntityDTO<ID>, ID extends Serializable> implements Serializable{
 
 
-    private static final Long serialVersionUID = 6342066245160279585L;
+    private static final long serialVersionUID = 6342066245160279585L;
     /**
      * 查询条件
      */

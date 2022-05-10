@@ -53,15 +53,11 @@ public class FrontCommonControllerImpl<T extends ListEntityDTO<ID>, ID extends S
     public R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc) {
         return R.ok(commonFrontService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
                 asc));
     }

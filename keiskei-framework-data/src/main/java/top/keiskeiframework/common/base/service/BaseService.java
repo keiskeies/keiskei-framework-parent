@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.base.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
@@ -17,7 +18,7 @@ import java.util.Map;
  * 基础服务接口
  * </p>
  *
- * @param <T> .
+ * @param <T>  .
  * @param <ID> .
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
@@ -31,10 +32,11 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
      * @param page    列表条件
      * @return .
      */
-    IPage<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
+    Page<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
 
     /**
      * 条件查询单个
+     *
      * @param request 查询条件
      * @return 。
      */
@@ -70,6 +72,7 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
 
     /**
      * 判断是否存在
+     *
      * @param request request
      * @return .
      */
@@ -86,10 +89,20 @@ public interface BaseService<T extends ListEntity<ID>, ID extends Serializable> 
 
 
     /**
-     * 删除并通知
+     * 通过字段删除
      *
+     * @param column 字段
+     * @param value  值
+     * @return 。
      */
     boolean removeByColumn(String column, Serializable value);
+
+    /**
+     * 通过条件删除
+     *
+     * @param conditions 查询条件
+     * @return 。
+     */
     boolean removeByCondition(List<QueryConditionVO> conditions);
 
     /**

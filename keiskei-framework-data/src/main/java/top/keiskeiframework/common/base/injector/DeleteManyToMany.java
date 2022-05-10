@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
 
 /**
  * <p>
- *
+ * 删除多对多
  * </p>
  *
  * @author James Chen right_way@foxmail.com

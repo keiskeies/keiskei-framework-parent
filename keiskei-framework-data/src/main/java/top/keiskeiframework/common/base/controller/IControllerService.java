@@ -1,10 +1,13 @@
 package top.keiskeiframework.common.base.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -27,6 +30,25 @@ import java.util.Map;
  */
 public interface IControllerService<T extends ListEntity<ID>, ID extends Serializable> {
 
+    /**
+     * 列表
+     *
+     * @param baseRequestVO 查询条件
+     * @param page          分页条件
+     * @return 。
+     */
+    @GetMapping
+    R<Page<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
+
+    /**
+     * 下拉框
+     *
+     * @param baseRequestVO 查询条件
+     * @param page          分页条件
+     * @return 。
+     */
+    @GetMapping("/options")
+    R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
 
     /**
      * 详情
@@ -36,15 +58,6 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      */
     @GetMapping("/{id}")
     R<T> getOne(@PathVariable("id") ID id);
-
-    /**
-     * 查询数量
-     *
-     * @param request request
-     * @return count
-     */
-    @GetMapping("/count")
-    R<Long> count(BaseRequestVO<T, ID> request);
 
     /**
      * 条件查询
@@ -63,6 +76,15 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      */
     @GetMapping("/exist")
     R<Boolean> exist(BaseRequestVO<T, ID> request);
+
+    /**
+     * 查询数量
+     *
+     * @param request request
+     * @return count
+     */
+    @GetMapping("/count")
+    R<Long> count(BaseRequestVO<T, ID> request);
 
     /**
      * 保存
@@ -91,7 +113,6 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     @PutMapping
     R<T> update(@RequestBody @Validated(Update.class) T t);
 
-
     /**
      * 更新多个
      *
@@ -101,15 +122,22 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
     @PutMapping("/multi")
     R<List<T>> update(@RequestBody @Validated(Update.class) List<T> ts);
 
-
     /**
      * 删除
      *
      * @param id ID
      * @return boolean
      */
-    @DeleteMapping("/{id]}")
-    R<Boolean> delete(@PathVariable("id") ID id);
+    @DeleteMapping("/{id}")
+    R<Boolean> deleteById(@PathVariable("id") ID id);
+
+    /**
+     * 删除
+     * @param t t
+     * @return .l
+     */
+    @DeleteMapping
+    R<Boolean> delete(@RequestBody T t);
 
     /**
      * 删除多个
@@ -118,17 +146,17 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return boolean
      */
     @DeleteMapping("/multi")
-    R<Boolean> delete(@RequestBody List<ID> ids);
+    R<Boolean> deleteMulti(@RequestBody List<ID> ids);
 
 
     /**
      * 条件删除
      *
-     * @param request 条件
+     * @param conditions 条件
      * @return 。
      */
     @DeleteMapping("/conditions")
-    R<Boolean> deleteByConditions(@RequestBody BaseRequestVO<T, ID> request);
+    R<Boolean> deleteByConditions(@RequestBody List<QueryConditionVO> conditions);
 
     /**
      * 数据统计

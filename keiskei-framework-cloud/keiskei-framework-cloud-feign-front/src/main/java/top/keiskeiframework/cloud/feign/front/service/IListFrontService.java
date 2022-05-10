@@ -27,6 +27,7 @@ public interface IListFrontService<T extends ListEntityDTO<ID>, ID extends Seria
      * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
+     * @param complete   完整数据
      * @return 。
      */
     PageResultDTO<T> page(
@@ -46,6 +47,7 @@ public interface IListFrontService<T extends ListEntityDTO<ID>, ID extends Seria
      * @param show       显示字段
      * @param desc       倒序字段
      * @param asc        正序字段
+     * @param complete   完整数据
      * @return 。
      */
     List<T> options(

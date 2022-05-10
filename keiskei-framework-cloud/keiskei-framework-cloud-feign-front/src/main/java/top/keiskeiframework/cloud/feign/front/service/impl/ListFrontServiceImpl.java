@@ -73,7 +73,7 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
 
     @Override
     public T findById(ID id) {
-        return listFeignService.findById(id).getData();
+        return listFeignService.findById(id, true).getData();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
     }
 
     @Override
-    public Integer count(String conditions) {
+    public Long count(String conditions) {
         return listFeignService.count(conditions).getData();
     }
 

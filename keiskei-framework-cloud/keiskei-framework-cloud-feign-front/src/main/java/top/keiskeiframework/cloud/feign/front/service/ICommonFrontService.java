@@ -44,8 +44,6 @@ public interface ICommonFrontService<T extends ListEntityDTO<ID>, ID extends Ser
      *
      * @param conditions 查询条件
      * @param show       显示字段
-     * @param page       页码
-     * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
      * @return 。
@@ -53,8 +51,6 @@ public interface ICommonFrontService<T extends ListEntityDTO<ID>, ID extends Ser
     List<T> options(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
             String desc,
             String asc
     );

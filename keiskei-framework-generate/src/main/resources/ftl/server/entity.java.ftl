@@ -41,7 +41,7 @@ import java.util.*;
 @ApiModel(value="${table.name}", description="${table.comment!}")
 public class ${table.name} extends ${parentName}Entity<${table.idType.value}> {
 
-    private static final Long serialVersionUID = ${serialVersionUID}L;
+    private static final long serialVersionUID = ${serialVersionUID}L;
 
 <#list table.fields as field>
 <#--        必填校验-->

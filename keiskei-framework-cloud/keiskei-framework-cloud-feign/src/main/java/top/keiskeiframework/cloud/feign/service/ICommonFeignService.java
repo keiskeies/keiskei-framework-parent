@@ -4,6 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
+import top.keiskeiframework.cloud.feign.dto.QueryConditionDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
@@ -49,8 +50,6 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
      *
      * @param conditions 查询条件
      * @param show       显示字段
-     * @param page       页码
-     * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
      * @return 。
@@ -59,8 +58,6 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
     R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc
     );
@@ -92,7 +89,7 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
      * @return count
      */
     @GetMapping("/count")
-    R<Integer> count(@RequestParam(name = "conditions", required = false) String conditions);
+    R<Long> count(@RequestParam(name = "conditions", required = false) String conditions);
 
 
     /**
@@ -169,7 +166,7 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
      * @return 。
      */
     @DeleteMapping("/conditions")
-    R<Boolean> deleteByConditions(@RequestAttribute String conditions);
+    R<Boolean> deleteByConditions(@RequestBody List<QueryConditionDTO> conditions);
 
     /**
      * 删除多个

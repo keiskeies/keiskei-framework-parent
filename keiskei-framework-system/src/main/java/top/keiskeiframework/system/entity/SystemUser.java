@@ -1,5 +1,7 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
@@ -35,7 +37,11 @@ import java.util.Set;
 @ApiModel(value = "SystemUser", description = "管理员")
 public class SystemUser extends ListEntity<Integer>  {
 
-    private static final Long serialVersionUID = -3821316560303369479L;
+    private static final long serialVersionUID = -3821316560303369479L;
+
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "账号", dataType = "String")
     @NotBlank(message = "账号不能为空", groups = {Insert.class})

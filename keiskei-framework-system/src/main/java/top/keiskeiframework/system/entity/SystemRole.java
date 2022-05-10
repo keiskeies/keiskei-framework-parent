@@ -1,5 +1,7 @@
 package top.keiskeiframework.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,9 +37,10 @@ import java.util.Set;
 @TableName(value = "sys_role")
 @ApiModel(value = "SystemRole", description = "角色")
 public class SystemRole extends ListEntity<Integer>  {
+    private static final long serialVersionUID = -6932146634496116207L;
 
-    private static final Long serialVersionUID = 1L;
-
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty(value = "角色名称", dataType = "String")
     @NotBlank(message = "角色名称不能为空", groups = {Insert.class, Update.class})
