@@ -32,6 +32,7 @@ import top.keiskeiframework.dashboard.entity.DashboardDirection;
 import top.keiskeiframework.dashboard.entity.DashboardDirectionCondition;
 import top.keiskeiframework.dashboard.enums.DashboardExceptionEnum;
 import top.keiskeiframework.dashboard.factory.EntityFactory;
+import top.keiskeiframework.dashboard.mapper.DashboardMapper;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
 import java.io.Serializable;
@@ -50,7 +51,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer> implements IDashboardService {
+public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, DashboardMapper> implements IDashboardService {
 
     @Autowired
     private IDashboardService dashboardService;

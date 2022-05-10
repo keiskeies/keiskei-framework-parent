@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.system.entity.SystemPermission;
+import top.keiskeiframework.system.mapper.SystemPermissionMapper;
 import top.keiskeiframework.system.service.ISystemPermissionService;
 
 /**
@@ -16,7 +17,7 @@ import top.keiskeiframework.system.service.ISystemPermissionService;
  */
 @Service
 //@ConditionalOnProperty({"keiskei.use-permission"})
-public class SystemPermissionServiceImpl extends TreeServiceImpl<SystemPermission, Integer> implements ISystemPermissionService {
+public class SystemPermissionServiceImpl extends TreeServiceImpl<SystemPermission, Integer, SystemPermissionMapper> implements ISystemPermissionService {
 
 
 }

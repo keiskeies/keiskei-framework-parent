@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.system.entity.ScheduledTask;
+import top.keiskeiframework.system.mapper.ScheduledTaskMapper;
 import top.keiskeiframework.system.service.IScheduledTaskService;
 import top.keiskeiframework.system.thread.ScheduledOfTask;
 
@@ -22,7 +23,7 @@ import top.keiskeiframework.system.thread.ScheduledOfTask;
  */
 @Service
 @ConditionalOnProperty({"keiskei.use-scheduled-task"})
-public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Integer> implements IScheduledTaskService {
+public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Integer, ScheduledTaskMapper> implements IScheduledTaskService {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired

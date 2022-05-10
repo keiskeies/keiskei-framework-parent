@@ -15,6 +15,7 @@ import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.system.dto.SystemUserDto;
 import top.keiskeiframework.system.entity.SystemPermission;
 import top.keiskeiframework.system.entity.SystemUser;
+import top.keiskeiframework.system.mapper.SystemUserMapper;
 import top.keiskeiframework.system.util.SecurityUtils;
 import top.keiskeiframework.system.vo.TokenGrantedAuthority;
 import top.keiskeiframework.system.vo.TokenUser;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
  * @since 2020年12月10日11:41:05
  */
 @Service
-public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer> implements ISystemUserService {
+public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, SystemUserMapper> implements ISystemUserService {
     @Autowired
     private CacheStorageService cacheStorageService;
     @Autowired

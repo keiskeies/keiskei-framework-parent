@@ -7,6 +7,7 @@ import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ProjectInfo;
+import top.keiskeiframework.generate.mapper.ProjectInfoMapper;
 import top.keiskeiframework.generate.service.IGenerateService;
 import top.keiskeiframework.generate.service.IProjectInfoService;
 
@@ -19,7 +20,7 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Integer> implements IProjectInfoService {
+public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Integer, ProjectInfoMapper> implements IProjectInfoService {
     @Autowired
     private IGenerateService generateService;
 }

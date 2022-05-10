@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.system.entity.SystemRole;
+import top.keiskeiframework.system.mapper.SystemRoleMapper;
 import top.keiskeiframework.system.service.ISystemRoleService;
 
 /**
@@ -16,7 +17,7 @@ import top.keiskeiframework.system.service.ISystemRoleService;
  */
 @Service
 //@ConditionalOnProperty({"keiskei.use-permission"})
-public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole, Integer> implements ISystemRoleService {
+public class SystemRoleServiceImpl extends ListServiceImpl<SystemRole, Integer, SystemRoleMapper> implements ISystemRoleService {
 
 
 }

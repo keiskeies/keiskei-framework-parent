@@ -11,6 +11,7 @@ import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;
 import top.keiskeiframework.logdb.entity.OperateLog;
+import top.keiskeiframework.logdb.mapper.OperateLogMapper;
 import top.keiskeiframework.logdb.service.IOperateLogService;
 
 /**
@@ -22,7 +23,7 @@ import top.keiskeiframework.logdb.service.IOperateLogService;
  * @since 2020-12-16 13:36:30
  */
 @Service
-public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Integer> implements IOperateLogService, OperateLogService {
+public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Integer, OperateLogMapper> implements IOperateLogService, OperateLogService {
 
     @Autowired
     private IOperateLogService operateLogService;

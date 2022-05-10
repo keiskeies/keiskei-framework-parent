@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import top.keiskeiframework.common.base.service.impl.TreeServiceImpl;
 import top.keiskeiframework.system.entity.SystemDepartment;
+import top.keiskeiframework.system.mapper.SystemDepartmentMapper;
 import top.keiskeiframework.system.service.ISystemDepartmentService;
 
 /**
@@ -16,7 +17,7 @@ import top.keiskeiframework.system.service.ISystemDepartmentService;
  */
 @Service
 //@ConditionalOnProperty({"keiskei.use-department"})
-public class SystemDepartmentServiceImpl extends TreeServiceImpl<SystemDepartment, Integer> implements ISystemDepartmentService {
+public class SystemDepartmentServiceImpl extends TreeServiceImpl<SystemDepartment, Integer, SystemDepartmentMapper> implements ISystemDepartmentService {
 
 
 
