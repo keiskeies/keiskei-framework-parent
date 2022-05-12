@@ -1,7 +1,6 @@
 package top.keiskeiframework.cloud.feign.service;
 
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.BaseSortDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.dto.QueryConditionDTO;
 import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
@@ -40,8 +39,9 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
     R<PageResultDTO<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
+            @RequestParam(name = "offset", required = false) Long offset,
+            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree
@@ -52,8 +52,6 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
      *
      * @param conditions 查询条件
      * @param show       显示字段
-     * @param page       页码
-     * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
      * @param id         根节点ID
@@ -64,8 +62,6 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
     R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(name = "id", required = false) ID id,

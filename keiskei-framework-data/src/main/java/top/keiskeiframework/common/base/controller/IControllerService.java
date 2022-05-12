@@ -44,11 +44,10 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * 下拉框
      *
      * @param baseRequestVO 查询条件
-     * @param page          分页条件
      * @return 。
      */
     @GetMapping("/options")
-    R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
+    R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO);
 
     /**
      * 详情

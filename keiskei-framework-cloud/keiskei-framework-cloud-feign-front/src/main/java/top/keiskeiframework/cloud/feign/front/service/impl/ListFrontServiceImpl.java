@@ -36,8 +36,9 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
     public PageResultDTO<T> page(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
+            Long offset,
+            Long page,
+            Long size,
             String desc,
             String asc,
             Boolean complete
@@ -45,6 +46,7 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
         return listFeignService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,

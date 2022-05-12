@@ -2,14 +2,12 @@ package top.keiskeiframework.cloud.feign.front.controller;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.BaseRequestDTO;
 import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>

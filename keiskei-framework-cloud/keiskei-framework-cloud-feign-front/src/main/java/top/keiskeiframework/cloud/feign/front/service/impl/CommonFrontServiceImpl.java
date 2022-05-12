@@ -32,14 +32,16 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
     public PageResultDTO<T> page(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
+            Long offset,
+            Long page,
+            Long size,
             String desc,
             String asc
     ) {
         return commonFeignService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,

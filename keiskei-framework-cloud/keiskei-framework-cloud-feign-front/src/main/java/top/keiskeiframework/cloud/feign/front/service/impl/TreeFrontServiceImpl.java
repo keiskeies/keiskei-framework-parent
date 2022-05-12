@@ -32,8 +32,9 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
     public PageResultDTO<T> page(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
+            Long offset,
+            Long page,
+            Long size,
             String desc,
             String asc,
             Boolean tree
@@ -41,6 +42,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
         PageResultDTO<T> tiPage = treeFeignService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,
@@ -60,8 +62,6 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
     public List<T> options(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
             String desc,
             String asc,
             ID id,
@@ -70,8 +70,6 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
         List<T> noTreeData = treeFeignService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
                 asc,
                 id,

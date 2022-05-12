@@ -13,6 +13,7 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
 import top.keiskeiframework.common.base.util.BaseRequestUtils;
+import top.keiskeiframework.common.dto.PageDTO;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -49,9 +50,7 @@ public abstract class AbstractBaseServiceImpl<T extends ListEntity<ID>, ID exten
 
     @Override
     public Page<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
-        return this.page(
-                new Page<>(page.getPage(), page.getSize()),
-                BaseRequestUtils.getQueryWrapper(request, getEntityClass())
+        return this.page(new PageDTO<>(page), BaseRequestUtils.getQueryWrapper(request, getEntityClass())
         );
     }
 

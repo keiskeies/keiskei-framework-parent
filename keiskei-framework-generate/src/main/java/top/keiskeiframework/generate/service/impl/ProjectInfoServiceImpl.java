@@ -1,14 +1,9 @@
 package top.keiskeiframework.generate.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.base.dto.BasePageVO;
-import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 import top.keiskeiframework.generate.mapper.ProjectInfoMapper;
-import top.keiskeiframework.generate.service.IGenerateService;
 import top.keiskeiframework.generate.service.IProjectInfoService;
 
 /**
@@ -21,6 +16,4 @@ import top.keiskeiframework.generate.service.IProjectInfoService;
  */
 @Service
 public class ProjectInfoServiceImpl extends ListServiceImpl<ProjectInfo, Integer, ProjectInfoMapper> implements IProjectInfoService {
-    @Autowired
-    private IGenerateService generateService;
 }

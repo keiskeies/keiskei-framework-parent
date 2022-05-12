@@ -33,8 +33,9 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends 
     public R<PageResultDTO<T>> list(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
+            @RequestParam(name = "offset", required = false) Long offset,
+            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(required = false, defaultValue = "true") Boolean tree
@@ -42,6 +43,7 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends 
         return R.ok(feignTreeService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,
@@ -55,8 +57,6 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends 
     public R<List<T>> options(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(name = "id", required = false) ID id,
@@ -64,8 +64,6 @@ public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends 
         return R.ok(feignTreeService.options(
                 conditions,
                 show,
-                page,
-                size,
                 desc,
                 asc,
                 id,

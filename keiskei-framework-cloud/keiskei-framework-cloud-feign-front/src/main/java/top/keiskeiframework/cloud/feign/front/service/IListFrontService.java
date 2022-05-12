@@ -23,6 +23,7 @@ public interface IListFrontService<T extends ListEntityDTO<ID>, ID extends Seria
      *
      * @param conditions 查询条件
      * @param show       显示字段
+     * @param offset       offset
      * @param page       页码
      * @param size       size
      * @param desc       倒序字段
@@ -33,8 +34,9 @@ public interface IListFrontService<T extends ListEntityDTO<ID>, ID extends Seria
     PageResultDTO<T> page(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
+            Long offset,
+            Long page,
+            Long size,
             String desc,
             String asc,
             Boolean complete

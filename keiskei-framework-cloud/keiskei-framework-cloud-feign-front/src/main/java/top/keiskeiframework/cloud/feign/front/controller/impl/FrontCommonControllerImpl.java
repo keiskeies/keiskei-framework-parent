@@ -33,14 +33,16 @@ public class FrontCommonControllerImpl<T extends ListEntityDTO<ID>, ID extends S
     public R<PageResultDTO<T>> list(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
+            @RequestParam(name = "offset", required = false) Long offset,
+            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc
     ) {
         return R.ok(commonFrontService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,

@@ -25,6 +25,7 @@ public interface ITreeFrontService<T extends TreeEntityDTO<T, ID>, ID extends Se
      *
      * @param conditions 查询条件
      * @param show       显示字段
+     * @param offset       offset
      * @param page       页码
      * @param size       size
      * @param desc       倒序字段
@@ -35,8 +36,9 @@ public interface ITreeFrontService<T extends TreeEntityDTO<T, ID>, ID extends Se
     PageResultDTO<T> page(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
+            Long offset,
+            Long page,
+            Long size,
             String desc,
             String asc,
             Boolean tree
@@ -47,8 +49,6 @@ public interface ITreeFrontService<T extends TreeEntityDTO<T, ID>, ID extends Se
      *
      * @param conditions 查询条件
      * @param show       显示字段
-     * @param page       页码
-     * @param size       size
      * @param desc       倒序字段
      * @param asc        正序字段
      * @param id         根节点ID
@@ -58,8 +58,6 @@ public interface ITreeFrontService<T extends TreeEntityDTO<T, ID>, ID extends Se
     List<T> options(
             String conditions,
             String show,
-            Integer page,
-            Integer size,
             String desc,
             String asc,
             ID id,

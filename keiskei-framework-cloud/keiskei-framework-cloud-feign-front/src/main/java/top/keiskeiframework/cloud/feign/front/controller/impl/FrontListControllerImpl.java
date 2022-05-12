@@ -33,8 +33,9 @@ public class FrontListControllerImpl<T extends ListEntityDTO<ID>, ID extends Ser
     public R<PageResultDTO<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
+            @RequestParam(name = "offset", required = false) Long offset,
+            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
             @RequestParam(required = false, defaultValue = "false") Boolean complete
@@ -42,6 +43,7 @@ public class FrontListControllerImpl<T extends ListEntityDTO<ID>, ID extends Ser
         return R.ok(listFrontService.page(
                 conditions,
                 show,
+                offset,
                 page,
                 size,
                 desc,

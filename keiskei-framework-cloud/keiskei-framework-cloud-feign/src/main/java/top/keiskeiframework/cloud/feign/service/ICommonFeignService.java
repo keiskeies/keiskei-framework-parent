@@ -29,6 +29,7 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
      *
      * @param conditions 查询条件
      * @param show       显示字段
+     * @param offset     offset
      * @param page       页码
      * @param size       size
      * @param desc       倒序字段
@@ -39,8 +40,9 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
     R<PageResultDTO<T>> page(
             @RequestParam(name = "conditions", required = false) String conditions,
             @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Integer size,
+            @RequestParam(name = "offset", required = false) Long offset,
+            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc
     );
@@ -156,7 +158,6 @@ public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Ser
      */
     @DeleteMapping("/{id}")
     R<Boolean> delete(@PathVariable("id") ID id);
-
 
 
     /**

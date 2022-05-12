@@ -61,8 +61,8 @@ public class TreeControllerImpl<T extends TreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    public R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
-        List<T> list = treeBaseService.list(baseRequestVO);
+    public R<List<T>> options(BaseRequestVO<T, ID> baseRequest) {
+        List<T> list = treeBaseService.list(baseRequest);
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String complete = request.getParameter(TREE);
         if (StringUtils.isEmpty(complete) || TRUE.equals(complete)) {

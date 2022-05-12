@@ -1,21 +1,19 @@
 package top.keiskeiframework.common.base.controller.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.BaseSortVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.BaseService;
@@ -23,11 +21,9 @@ import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
-import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.vo.R;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +32,8 @@ import java.util.Map;
  * <p>
  * controller实现抽象类
  * </p>
- * @param <T> .
+ *
+ * @param <T>  .
  * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @since 2022/4/3 20:51
@@ -50,15 +47,14 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
 
     @Override
     @ApiOperation("列表")
-    public R<Page<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
-        return R.ok(baseService.page(baseRequestVO, page));
+    public R<Page<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+        return R.ok(baseService.page(request, page));
     }
 
     @Override
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
-        Page<T> tPage = baseService.page(baseRequestVO, page);
-        return R.ok(tPage.getRecords());
+    public R<List<T>> options(BaseRequestVO<T, ID> request) {
+        return R.ok(baseService.list(request));
     }
 
     @Override

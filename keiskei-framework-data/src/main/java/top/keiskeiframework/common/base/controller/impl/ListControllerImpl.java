@@ -64,14 +64,14 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
 
 
     @Override
-    public R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page) {
+    public R<List<T>> options(BaseRequestVO<T, ID> baseRequest) {
         List<T> ts;
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String complete = request.getParameter(COMPLETE);
         if (!StringUtils.isEmpty(complete) && TRUE.equals(complete)) {
-            ts = listBaseService.listComplete(baseRequestVO);
+            ts = listBaseService.listComplete(baseRequest);
         } else {
-            ts = listBaseService.list(baseRequestVO);
+            ts = listBaseService.list(baseRequest);
         }
         return R.ok(ts);
     }

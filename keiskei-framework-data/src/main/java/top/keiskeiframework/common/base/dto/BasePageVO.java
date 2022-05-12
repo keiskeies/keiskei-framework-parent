@@ -20,11 +20,12 @@ public class BasePageVO implements Serializable {
     /**
      * 分页参数
      */
-    private Integer page;
-    private Integer size;
+    private Long page;
+    private Long offset;
+    private Long size;
 
     public BasePageVO() {
-        this.page = 1;
-        this.size = 20;
+        this.page = 1L;
+        this.size = 20L;
     }
 }
