@@ -6,18 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.ProjectInfoFileJarEnum;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -33,9 +29,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "gr_project_info")
 @ApiModel(value = "ProjectInfo", description = "项目信息")
 public class ProjectInfo extends ListEntity<Integer> {
@@ -78,8 +71,7 @@ public class ProjectInfo extends ListEntity<Integer> {
     @ApiModelProperty(value = "构建工作流", dataType = "Boolean")
     private Boolean workflow = false;
 
-    @OneToMany
-    @JoinColumn(name = "projectId")
+    @OneToMany(filedName = "projectId", targetClass = ModuleInfo.class)
     @Valid
     private transient Collection<ModuleInfo> modules = new ArrayList<>();
 }

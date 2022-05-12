@@ -11,15 +11,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.CacheTimeEnum;
-import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.enums.timer.TimeTypeEnum;
-import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.util.SpringUtils;
 import top.keiskeiframework.common.util.data.TagSerializer;
@@ -30,8 +27,6 @@ import top.keiskeiframework.common.vo.dashboard.charts.series.RadarSeries;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 import top.keiskeiframework.dashboard.entity.DashboardDirection;
 import top.keiskeiframework.dashboard.entity.DashboardDirectionCondition;
-import top.keiskeiframework.dashboard.enums.DashboardExceptionEnum;
-import top.keiskeiframework.dashboard.factory.EntityFactory;
 import top.keiskeiframework.dashboard.mapper.DashboardMapper;
 import top.keiskeiframework.dashboard.service.IDashboardService;
 
@@ -291,7 +286,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, Da
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 
-        BaseService<?,?> baseService = SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl", BaseService.class);
+        IBaseService<?,?> baseService = SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl", IBaseService.class);
         return baseService.getChartOptions(chartRequestDTO);
     }
 

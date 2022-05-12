@@ -1,6 +1,6 @@
 package top.keiskeiframework.logdb.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.logdb.entity.OperateLog;
 
 /**
@@ -11,7 +11,7 @@ import top.keiskeiframework.logdb.entity.OperateLog;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface IOperateLogService extends BaseService<OperateLog, Integer> {
+public interface IOperateLogService extends IBaseService<OperateLog, Integer> {
 
 
 }

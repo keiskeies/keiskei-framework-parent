@@ -19,9 +19,6 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements Serializable {
     private static final long serialVersionUID = -802579500126524571L;
 

@@ -6,17 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -32,9 +28,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "gr_module_info")
 @ApiModel(value = "ModuleInfo", description = "模块信息")
 public class ModuleInfo extends ListEntity<Integer> {
@@ -60,8 +53,7 @@ public class ModuleInfo extends ListEntity<Integer> {
     @NotBlank(message = "模块包名不能为空", groups = {Insert.class, Update.class})
     private String packageName;
 
-    @OneToMany
-    @JoinColumn(name = "module_id")
+    @OneToMany(filedName = "moduleId", targetClass = TableInfo.class)
     @Valid
     private transient Collection<TableInfo> tables = new ArrayList<>();
 

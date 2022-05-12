@@ -2,7 +2,6 @@ package top.keiskeiframework.common.base.controller.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -10,10 +9,9 @@ import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.service.ListBaseService;
+import top.keiskeiframework.common.base.service.IListBaseService;
 import top.keiskeiframework.common.vo.R;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
@@ -34,7 +32,7 @@ public class ListControllerImpl<T extends ListEntity<ID>, ID extends Serializabl
         implements IControllerService<T, ID> {
 
     @Autowired
-    private ListBaseService<T, ID> listBaseService;
+    private IListBaseService<T, ID> listBaseService;
     private final static String TRUE = "true";
     private final static String COMPLETE = "complete";
 

@@ -16,7 +16,7 @@ import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -43,7 +43,7 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
         implements IControllerService<T, ID> {
 
     @Autowired
-    protected BaseService<T, ID> baseService;
+    protected IBaseService<T, ID> baseService;
 
     @Override
     @ApiOperation("列表")

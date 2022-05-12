@@ -1,6 +1,6 @@
 package top.keiskeiframework.dashboard.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.vo.dashboard.charts.ChartOptionVO;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 
@@ -12,7 +12,7 @@ import top.keiskeiframework.dashboard.entity.Dashboard;
  * @author v_chenjiamin
  * @since 2021/4/13 18:39
  */
-public interface IDashboardService extends BaseService<Dashboard, Integer> {
+public interface IDashboardService extends IBaseService<Dashboard, Integer> {
 
     /**
      * 获取图表及结构

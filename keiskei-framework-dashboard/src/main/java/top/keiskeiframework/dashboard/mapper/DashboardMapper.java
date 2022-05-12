@@ -1,6 +1,6 @@
 package top.keiskeiframework.dashboard.mapper;
 
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.keiskeiframework.dashboard.entity.Dashboard;
 
 /**
@@ -11,7 +11,7 @@ import top.keiskeiframework.dashboard.entity.Dashboard;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface DashboardMapper extends BaseEntityMapper<Dashboard, Integer> {
+public interface DashboardMapper extends BaseMapper<Dashboard> {
 
 
 }

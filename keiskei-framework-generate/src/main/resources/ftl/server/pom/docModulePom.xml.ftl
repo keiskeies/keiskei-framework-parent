@@ -5,7 +5,7 @@
     <parent>
         <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>2.0.0-mp-Release</version>
+        <version>2.1.0-mp-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <dependencies>
@@ -18,5 +18,5 @@
 
     <artifactId>${name}-doc</artifactId>
     <name>${name}-doc</name>
-    <version>2.0.0-mp-Release</version>
+    <version>2.1.0-mp-Release</version>
 </project>

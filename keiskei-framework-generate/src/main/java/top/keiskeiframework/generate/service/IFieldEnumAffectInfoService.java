@@ -1,6 +1,6 @@
 package top.keiskeiframework.generate.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.generate.entity.FieldEnumAffectInfo;
 
 /**
@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.FieldEnumAffectInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface IFieldEnumAffectInfoService extends BaseService<FieldEnumAffectInfo, Integer> {
+public interface IFieldEnumAffectInfoService extends IBaseService<FieldEnumAffectInfo, Integer> {
 
 }

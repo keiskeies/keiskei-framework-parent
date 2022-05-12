@@ -6,20 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.TableInfoControllerTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoIdTypeEnum;
 import top.keiskeiframework.generate.enums.TableInfoTypeEnum;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,9 +33,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "gr_table_info")
 @ApiModel(value = "TableInfo", description = "表结构信息")
 public class TableInfo extends ListEntity<Integer> {
@@ -74,8 +67,7 @@ public class TableInfo extends ListEntity<Integer> {
     @ApiModelProperty(value = "接口类型", dataType = "String")
     private TableInfoControllerTypeEnum controllerType;
 
-    @OneToMany
-    @JoinColumn(name = "table_id")
+    @OneToMany(filedName = "tableId", targetClass = FieldInfo.class)
     @Valid
     private transient Collection<FieldInfo> fields = new ArrayList<>();
 

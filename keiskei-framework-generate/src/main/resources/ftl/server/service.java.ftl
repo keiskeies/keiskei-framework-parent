@@ -1,6 +1,6 @@
 package ${module.packageName}.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import ${module.packageName}.entity.${table.name};
 
 /**

@@ -5,21 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.ManyToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * <p>
@@ -31,12 +25,9 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "sys_role")
 @ApiModel(value = "SystemRole", description = "角色")
-public class SystemRole extends ListEntity<Integer>  {
+public class SystemRole extends ListEntity<Integer> {
     private static final long serialVersionUID = -6932146634496116207L;
 
     @TableId(type = IdType.AUTO)
@@ -46,9 +37,6 @@ public class SystemRole extends ListEntity<Integer>  {
     @NotBlank(message = "角色名称不能为空", groups = {Insert.class, Update.class})
     private String name;
 
-    @ManyToMany
-    @JoinTable(name = "sys_role_permission",
-            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "permission_id", referencedColumnName = "id")})
+    @ManyToMany(middleClass = SystemRolePermission.class, targetClass = SystemPermission.class)
     private transient Collection<SystemPermission> systemPermissions;
 }

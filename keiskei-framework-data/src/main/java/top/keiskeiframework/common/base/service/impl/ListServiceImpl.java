@@ -1,17 +1,15 @@
 package top.keiskeiframework.common.base.service.impl;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
-import top.keiskeiframework.common.base.service.BaseService;
-import top.keiskeiframework.common.base.service.ListBaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
+import top.keiskeiframework.common.base.service.IListBaseService;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,9 +24,10 @@ import java.util.List;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class ListServiceImpl<T extends ListEntity<ID>, ID extends Serializable, M extends BaseEntityMapper<T, ID>>
-        extends AbstractListBaseServiceImpl<T, ID, M>
-        implements ListBaseService<T, ID>, BaseService<T, ID>, IService<T> {
+public class ListServiceImpl
+        <T extends ListEntity<ID>, ID extends Serializable, M extends BaseMapper<T>>
+        extends AbstractListServiceImpl<T, ID, M>
+        implements IListBaseService<T, ID>, IBaseService<T, ID>, IService<T> {
 
     @Override
     public Page<T> pageComplete(BaseRequestVO<T, ID> request, BasePageVO page) {

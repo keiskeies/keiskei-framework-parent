@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.constants.BaseConstants;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
  * @since 2020/11/24 23:08
  */
 @NoArgsConstructor
-public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> implements Serializable{
+public class BaseRequestVO<T extends BaseEntity<ID>, ID extends Serializable> implements Serializable{
     private static final long serialVersionUID = -296451048174918297L;
     /**
      * 排序方式
@@ -36,7 +37,6 @@ public class BaseRequestVO<T extends ListEntity<ID>, ID extends Serializable> im
     @Setter
     @Getter
     private String desc, asc;
-
 
 
 

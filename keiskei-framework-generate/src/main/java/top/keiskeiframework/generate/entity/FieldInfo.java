@@ -6,21 +6,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldInfoRelationEnum;
 import top.keiskeiframework.generate.enums.FieldInfoTypeEnum;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -33,9 +29,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "gr_field_info")
 @ApiModel(value = "FieldInfo", description = "表字段信息")
 public class FieldInfo extends ListEntity<Integer> {
@@ -93,9 +86,8 @@ public class FieldInfo extends ListEntity<Integer> {
     @ApiModelProperty(value = "字段校验", dataType = "String")
     private String validate;
 
-    @OneToMany
-    @JoinColumn(name = "field_id")
-    private transient Collection<FieldEnumInfo> fieldEnums = new ArrayList<>();
+    @OneToMany(filedName = "fieldId", targetClass = FieldEnumInfo.class)
+    private transient Collection<FieldEnumInfo> fieldEnums;
 
     private String tableId;
 

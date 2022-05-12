@@ -12,14 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.base.annotation.ManyToMany;
+import top.keiskeiframework.common.base.annotation.ManyToOne;
 import top.keiskeiframework.common.base.entity.ListEntity;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -31,8 +30,6 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
-@NoArgsConstructor
 @TableName(value = "sys_user")
 @ApiModel(value = "SystemUser", description = "管理员")
 public class SystemUser extends ListEntity<Integer>  {
@@ -71,15 +68,11 @@ public class SystemUser extends ListEntity<Integer>  {
     private String email;
 
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
-    @ManyToMany
-    @JoinTable(name = "sys_user_role",
-            joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "roleId", referencedColumnName = "id")})
+    @ManyToMany(middleClass = SystemUserRole.class, targetClass = SystemRole.class)
     private transient Collection<SystemRole> systemRoles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
-    @ManyToOne
-    @JoinColumn(name = "departmentId")
+    @ManyToOne(filedName = "departmentId")
     private transient SystemDepartment systemDepartment;
 
     private Integer departmentId;

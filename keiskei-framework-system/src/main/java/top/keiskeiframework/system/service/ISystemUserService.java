@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.system.dto.SystemUserDto;
 import top.keiskeiframework.system.entity.SystemUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author James Chen right_way@foxmail.com
  * @since 2020年12月10日11:41:05
  */
-public interface ISystemUserService extends BaseService<SystemUser, Integer>, UserDetailsService {
+public interface ISystemUserService extends IBaseService<SystemUser, Integer>, UserDetailsService {
 
     /**
      * 添加用户密码错误次数

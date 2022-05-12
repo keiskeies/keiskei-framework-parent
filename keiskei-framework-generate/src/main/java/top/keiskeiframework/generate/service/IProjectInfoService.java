@@ -1,6 +1,6 @@
 package top.keiskeiframework.generate.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.generate.entity.ProjectInfo;
 
 /**
@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.ProjectInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface IProjectInfoService extends BaseService<ProjectInfo, Integer> {
+public interface IProjectInfoService extends IBaseService<ProjectInfo, Integer> {
 
 }

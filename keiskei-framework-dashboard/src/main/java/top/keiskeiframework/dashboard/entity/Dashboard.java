@@ -4,21 +4,17 @@ import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.enums.timer.TimeTypeEnum;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -34,9 +30,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "dashboard")
 @ApiModel(value = "Dashboard", description = "图表")
 public class Dashboard extends ListEntity<Integer> {
@@ -85,8 +78,7 @@ public class Dashboard extends ListEntity<Integer> {
     private TimeDeltaEnum fieldDelta;
 
     @ApiModelProperty(value = "y坐标", dataType = "List<DashboardDirection>")
-    @OneToMany
-    @JoinColumn(name = "dashboardId")
+    @OneToMany(filedName = "dashboardId", targetClass = DashboardDirection.class)
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
     private transient Collection<DashboardDirection> directions;
 }

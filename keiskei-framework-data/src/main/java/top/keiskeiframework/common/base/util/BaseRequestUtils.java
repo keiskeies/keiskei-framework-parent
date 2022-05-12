@@ -8,7 +8,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.BaseEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
  * @since 2021/5/20 18:42
  */
 @Component
-public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable> {
+public class BaseRequestUtils<T extends BaseEntity<ID>, ID extends Serializable> {
     private final static String DEPARTMENT_COLUMN = "p";
-    private final static String CREATE_TIME_COLUMN = "id";
+    private final static String ID_COLUMN = "id";
 
     @Value("${keiskei.use-department:false}")
     public void setUseDepartment(Boolean useDepartment) {
@@ -48,7 +48,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
      */
     private static boolean useDepartment = false;
 
-    private static <T extends ListEntity<ID>, ID extends Serializable> Set<String> getTClassFields(Class<T> tClass) {
+    private static <T extends BaseEntity<ID>, ID extends Serializable> Set<String> getTClassFields(Class<T> tClass) {
         Set<String> fields = new HashSet<>();
         for (Field field : tClass.getDeclaredFields()) {
             fields.add(field.getName());
@@ -72,7 +72,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         }
     }
 
-    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
+    public static <T extends BaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
             List<QueryConditionVO> conditions, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(conditions)) {
@@ -87,7 +87,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
         return queryWrapper;
     }
 
-    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
+    public static <T extends BaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
             BaseRequestVO<T, ID> request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (null != request) {
@@ -106,7 +106,7 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
     }
 
 
-    public static <T extends ListEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapper(
+    public static <T extends BaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapper(
             BaseRequestVO<T, ID> request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         boolean hasOrder = false;
@@ -147,15 +147,12 @@ public class BaseRequestUtils<T extends ListEntity<ID>, ID extends Serializable>
             }
         }
         if (!hasOrder) {
-            queryWrapper.orderByDesc(CREATE_TIME_COLUMN);
-        }
-        if (useDepartment) {
-            queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+            queryWrapper.orderByDesc(ID_COLUMN);
         }
         return queryWrapper;
     }
 
-    private static <T extends ListEntity<ID>, ID extends Serializable> void convertConditions(
+    private static <T extends BaseEntity<ID>, ID extends Serializable> void convertConditions(
             QueryWrapper<T> queryWrapper, List<QueryConditionVO> conditions
     ) {
         for (QueryConditionVO condition : conditions) {

@@ -1,7 +1,6 @@
 package top.keiskeiframework.system.mapper;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.keiskeiframework.system.entity.SystemPermission;
 
 /**
@@ -13,6 +12,6 @@ import top.keiskeiframework.system.entity.SystemPermission;
  * @since 2020-12-10 14:11:30
  */
 //@ConditionalOnProperty({"keiskei.use-permission"})
-public interface SystemPermissionMapper extends BaseEntityMapper<SystemPermission, Integer> {
+public interface SystemPermissionMapper extends BaseMapper<SystemPermission> {
 
 }

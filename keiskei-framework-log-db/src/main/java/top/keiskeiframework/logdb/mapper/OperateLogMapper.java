@@ -1,6 +1,6 @@
 package top.keiskeiframework.logdb.mapper;
 
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.keiskeiframework.logdb.entity.OperateLog;
 
 /**
@@ -11,6 +11,6 @@ import top.keiskeiframework.logdb.entity.OperateLog;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface OperateLogMapper extends BaseEntityMapper<OperateLog, Integer> {
+public interface OperateLogMapper extends BaseMapper<OperateLog> {
 
 }

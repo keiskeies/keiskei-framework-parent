@@ -6,20 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.generate.enums.FieldEnumInfoEffectEnum;
 import top.keiskeiframework.generate.enums.FieldEnumInfoTypeEnum;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -32,10 +28,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-
 @TableName(value = "gr_field_enum_info")
 @ApiModel(value = "FieldEnumInfo", description = "表字段枚举")
 public class FieldEnumInfo extends ListEntity<Integer> {
@@ -61,9 +53,8 @@ public class FieldEnumInfo extends ListEntity<Integer> {
     private FieldEnumInfoEffectEnum effect;
 
     @ApiModelProperty(value = "枚举影响值", dataType = "List<FieldEnumAffectInfo>")
-    @OneToMany
-    @JoinColumn(name = "field_enum_id")
-    private transient Collection<FieldEnumAffectInfo> fieldEnumAffects = new ArrayList<>();
+    @OneToMany(targetClass = FieldEnumAffectInfo.class, filedName = "fieldEnumId")
+    private transient Collection<FieldEnumAffectInfo> fieldEnumAffects;
 
     private String fieldId;
 

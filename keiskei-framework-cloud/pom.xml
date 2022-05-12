@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>2.0.0-mp-Release</version>
+        <version>2.1.0-mp-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,12 +26,12 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cloud-feign</artifactId>
-                <version>2.0.0-mp-Release</version>
+                <version>2.1.0-mp-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cloud-feign-front</artifactId>
-                <version>2.0.0-mp-Release</version>
+                <version>2.1.0-mp-Release</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -27,14 +28,10 @@ import java.time.LocalDateTime;
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ListEntity<ID extends Serializable> implements Serializable {
+public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implements Serializable {
     private static final long serialVersionUID = -8025795001235125591L;
-
-    protected ID id;
 
 
     /**
@@ -44,12 +41,7 @@ public class ListEntity<ID extends Serializable> implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     protected String p;
 
-    /**
-     * 删除标记
-     * 数据初始化来源 {@link top.keiskeiframework.common.config.MyMetaObjectHandler}
-     */
-    @TableField(fill = FieldFill.INSERT)
-    protected Integer d;
+
 
     /**
      * 数据创建人

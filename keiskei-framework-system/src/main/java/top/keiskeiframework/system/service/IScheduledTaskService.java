@@ -1,6 +1,6 @@
 package top.keiskeiframework.system.service;
 
-import top.keiskeiframework.common.base.service.BaseService;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.system.entity.ScheduledTask;
 
 /**
@@ -11,7 +11,7 @@ import top.keiskeiframework.system.entity.ScheduledTask;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-10 14:11:30
  */
-public interface IScheduledTaskService extends BaseService<ScheduledTask, Integer> {
+public interface IScheduledTaskService extends IBaseService<ScheduledTask, Integer> {
 
     /**
      * 更改任务状态

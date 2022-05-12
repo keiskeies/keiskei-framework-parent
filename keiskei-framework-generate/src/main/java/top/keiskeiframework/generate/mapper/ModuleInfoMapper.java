@@ -1,6 +1,6 @@
 package top.keiskeiframework.generate.mapper;
 
-import top.keiskeiframework.common.base.mapper.BaseEntityMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.keiskeiframework.generate.entity.ModuleInfo;
 
 /**
@@ -11,6 +11,6 @@ import top.keiskeiframework.generate.entity.ModuleInfo;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
-public interface ModuleInfoMapper extends BaseEntityMapper<ModuleInfo, Integer> {
+public interface ModuleInfoMapper extends BaseMapper<ModuleInfo> {
 
 }

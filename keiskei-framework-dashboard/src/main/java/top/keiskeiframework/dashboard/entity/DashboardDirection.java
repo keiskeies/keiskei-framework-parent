@@ -3,18 +3,14 @@ package top.keiskeiframework.dashboard.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
+import top.keiskeiframework.common.base.annotation.OneToMany;
 import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -29,9 +25,6 @@ import java.util.Collection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "dashboard_direction")
 @ApiModel(value = "DashboardDirection", description = "图表横坐标")
 public class DashboardDirection extends ListEntity<Integer> {
@@ -52,8 +45,7 @@ public class DashboardDirection extends ListEntity<Integer> {
     private String entityName;
 
     @ApiModelProperty(value = "查询条件")
-    @OneToMany
-    @JoinColumn(name = "dashboard_direction_id")
+    @OneToMany(filedName = "dashboardDirectionId", targetClass = DashboardDirectionCondition.class)
     private transient Collection<DashboardDirectionCondition> conditions;
 
     @ApiModelProperty(value = "图表类型", dataType = "String")
