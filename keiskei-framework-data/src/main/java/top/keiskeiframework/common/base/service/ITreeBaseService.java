@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.IListEntity;
 
 import java.io.Serializable;
 
@@ -15,7 +14,7 @@ import java.io.Serializable;
  * @author v_chenjiamin
  * @since 2022/4/15 15:36
  */
-public interface ITreeBaseService<T extends ListEntity<ID>, ID extends Serializable> extends IBaseService<T, ID>, IService<T> {
+public interface ITreeBaseService<T extends IListEntity<ID>, ID extends Serializable> extends IBaseService<T, ID> {
 
     /**
      * 删除单独ID，不遍历树形结构
@@ -23,6 +22,6 @@ public interface ITreeBaseService<T extends ListEntity<ID>, ID extends Serializa
      * @param id ID
      * @return 。
      */
-    boolean removeByIdSingle(Serializable id);
+    boolean removeByIdSingle(ID id);
 
 }

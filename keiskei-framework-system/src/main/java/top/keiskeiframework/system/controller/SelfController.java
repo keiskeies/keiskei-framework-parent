@@ -39,20 +39,20 @@ public class SelfController {
     @PutMapping
     public R<SystemUserDto> update(@RequestBody SystemUserDto systemUserDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        SystemUser systemUser = userService.getById(tokenUser.getId());
+        SystemUser systemUser = userService.findOneById(tokenUser.getId());
         BeanUtils.copyPropertiesIgnoreNull(systemUserDto, systemUser);
-        userService.updateById(systemUser);
+        userService.updateOne(systemUser);
         return R.ok(systemUserDto);
     }
 
     @PatchMapping
     public R<Boolean> update(@RequestBody @Validated SystemUserPasswordDto systemUserPasswordDto) {
         TokenUser tokenUser = SecurityUtils.getSessionUser();
-        SystemUser systemUser = userService.getById(tokenUser.getId());
+        SystemUser systemUser = userService.findOneById(tokenUser.getId());
         Assert.isTrue(systemUserPasswordDto.match(systemUser.getPassword()), BizExceptionEnum.AUTH_PASSWORD_ERROR.getMsg());
 
         systemUser.setPassword(systemUserPasswordDto.getNewPassword());
-        userService.updateById(systemUser);
+        userService.updateOne(systemUser);
         return R.ok(Boolean.TRUE);
     }
 

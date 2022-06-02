@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.enums.SystemEnum;
+import top.keiskeiframework.common.base.enums.SystemEnum;
 import top.keiskeiframework.system.entity.SystemPermission;
 import top.keiskeiframework.system.entity.SystemRole;
 import top.keiskeiframework.system.service.ISystemRoleService;
@@ -65,7 +65,7 @@ public class RbacAuthorityService {
 
         //获取角色权限
         for (TokenGrantedAuthority authority : authorities) {
-            SystemRole systemRole = roleService.getById(authority.getId());
+            SystemRole systemRole = roleService.findOneById(authority.getId());
             if (CollectionUtils.isEmpty(systemRole.getSystemPermissions())) {
                 continue;
             }

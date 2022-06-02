@@ -2,11 +2,10 @@ package top.keiskeiframework.logdb.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import top.keiskeiframework.common.annotation.log.Lockable;
+import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
-import top.keiskeiframework.common.enums.log.OperateTypeEnum;
+import top.keiskeiframework.common.enums.notify.OperateTypeEnum;
 import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;
@@ -36,7 +35,7 @@ public class OperateLogServiceImpl extends ListServiceImpl<OperateLog, Integer, 
         if (null != type) {
             try {
                 operateLog.setType(type);
-                ThreadPoolExecUtils.execute(() -> operateLogService.save(operateLog));
+                ThreadPoolExecUtils.execute(() -> operateLogService.saveOne(operateLog));
             } catch (Exception ignored) {
             }
         }

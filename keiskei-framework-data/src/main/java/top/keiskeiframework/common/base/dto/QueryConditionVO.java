@@ -1,6 +1,5 @@
 package top.keiskeiframework.common.base.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
-public class QueryConditionVO implements Serializable{
+public class QueryConditionVO implements Serializable {
 
     private static final long serialVersionUID = -7635199550979456815L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
@@ -40,6 +39,7 @@ public class QueryConditionVO implements Serializable{
         this.c = c;
         this.v = Collections.singletonList(v);
     }
+
     public QueryConditionVO(String c, List<? extends Serializable> v) {
         this.c = c;
         this.v = v;

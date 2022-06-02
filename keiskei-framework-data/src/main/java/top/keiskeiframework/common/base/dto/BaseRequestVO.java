@@ -7,19 +7,18 @@ import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.constants.BaseConstants;
-import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.common.base.entity.ListEntity;
-import top.keiskeiframework.common.base.entity.TreeEntity;
+import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
-import top.keiskeiframework.common.util.BeanUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @param <T> .
+ * @param <T>  .
  * @param <ID> .
  * @author James Chen right_way@foxmail.com
  * @version 1.0
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
  * @since 2020/11/24 23:08
  */
 @NoArgsConstructor
-public class BaseRequestVO<T extends BaseEntity<ID>, ID extends Serializable> implements Serializable{
+public class BaseRequestVO<T extends IBaseEntity<ID>, ID extends Serializable> implements Serializable {
     private static final long serialVersionUID = -296451048174918297L;
     /**
      * 排序方式
@@ -37,7 +36,6 @@ public class BaseRequestVO<T extends BaseEntity<ID>, ID extends Serializable> im
     @Setter
     @Getter
     private String desc, asc;
-
 
 
     /**
@@ -50,6 +48,10 @@ public class BaseRequestVO<T extends BaseEntity<ID>, ID extends Serializable> im
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionVO.class);
         }
+    }
+
+    public void setListConditions(List<QueryConditionVO> conditions) {
+        this.conditions = conditions;
     }
 
     /**

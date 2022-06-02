@@ -1,13 +1,8 @@
 package top.keiskeiframework.common.base.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
-import top.keiskeiframework.common.base.dto.BasePageVO;
-import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.IListEntity;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>
@@ -19,32 +14,7 @@ import java.util.List;
  * @author v_chenjiamin
  * @since 2022/4/15 15:36
  */
-public interface IListBaseService<T extends ListEntity<ID>, ID extends Serializable> extends IBaseService<T, ID>, IService<T> {
+public interface IListBaseService<T extends IListEntity<ID>, ID extends Serializable> extends IBaseService<T, ID> {
 
-    /**
-     * 完整数据详情
-     *
-     * @param id id
-     * @return .
-     */
-    T getByIdComplete(Serializable id);
-
-    /**
-     * 完整数据列表查询
-     *
-     * @param request 列表条件
-     * @param page    列表条件
-     * @return .
-     */
-    Page<T> pageComplete(BaseRequestVO<T, ID> request, BasePageVO page);
-
-
-    /**
-     * 完整数据列表查询
-     *
-     * @param request 查询条件
-     * @return 。
-     */
-    List<T> listComplete(BaseRequestVO<T, ID> request);
 
 }

@@ -1,8 +1,6 @@
 package top.keiskeiframework.common.dto.dashboard;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ChartType;
@@ -12,7 +10,6 @@ import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

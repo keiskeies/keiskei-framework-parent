@@ -5,16 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.keiskeiframework</groupId>
     <artifactId>keiskei-framework-parent</artifactId>
-    <version>2.1.0-mp-Release</version>
+    <version>3.0.0-Release</version>
     <modules>
-        <module>keiskei-framework-data</module>
+        <module>keiskei-framework-data-mp</module>
         <module>keiskei-framework-cloud</module>
         <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log-db</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-doc</module>
         <module>keiskei-framework-system</module>
-<!--        <module>start-demo</module>-->
+        <module>keiskei-framework-core</module>
+        <module>keiskei-framework-cache</module>
+        <module>keiskei-framework-data</module>
+        <module>start-demo</module>
+        <module>keiskei-framework-data-jpa</module>
+        <module>keiskei-framework-data-mongo</module>
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -24,65 +29,17 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>1.8</java.version>
-        <keiskei.project.version>2.1.0-mp-Release</keiskei.project.version>
+        <keiskei.project.version>3.0.0-Release</keiskei.project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-integration</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.19</version>
-        </dependency>
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.17</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
 
@@ -117,7 +74,7 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-core</artifactId>
-                <version>2.0.0-Release</version>
+                <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
@@ -126,43 +83,8 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-file-alioss</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-file-jdoss</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-file-minio</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cache</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-cache-redis</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-cache-simple</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-notify</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-notify-email</artifactId>
-                <version>2.0.0-Release</version>
+                <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
@@ -172,6 +94,11 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-data</artifactId>
+                <version>${keiskei.project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-data-mp</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>

@@ -1,7 +1,6 @@
 package top.keiskeiframework.cloud.feign.front.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -38,6 +37,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 业务异常处理
+     *
      * @param e exception
      * @return json
      */
@@ -50,6 +50,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 异常处理
+     *
      * @param e exception
      * @return json
      */

@@ -10,17 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.cache.enums.CacheTimeEnum;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
-import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.util.SpringUtils;
 import top.keiskeiframework.common.util.data.TagSerializer;
-import top.keiskeiframework.common.vo.dashboard.charts.*;
 import top.keiskeiframework.common.vo.dashboard.charts.series.LineOrBarSeries;
 import top.keiskeiframework.common.vo.dashboard.charts.series.PieSeries;
 import top.keiskeiframework.common.vo.dashboard.charts.series.RadarSeries;
@@ -52,7 +51,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, Da
     private IDashboardService dashboardService;
 
     @Override
-    @Caching(evict= {
+    @Caching(evict = {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #dashboard.id"),
             @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #dashboard.id")
     })
@@ -61,7 +60,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, Da
     }
 
     @Override
-    @Caching(evict= {
+    @Caching(evict = {
             @CacheEvict(cacheNames = CacheTimeEnum.M10, key = "targetClass.name + '-detail-' + #id"),
             @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     })
@@ -286,7 +285,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, Da
 
         String className = direction.getEntityClass().substring(direction.getEntityClass().lastIndexOf(".")).replace(".", "");
 
-        IBaseService<?,?> baseService = SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl", IBaseService.class);
+        IBaseService<?, ?> baseService = SpringUtils.getBean(lowCaseFirst(className) + "ServiceImpl", IBaseService.class);
         return baseService.getChartOptions(chartRequestDTO);
     }
 
@@ -294,7 +293,7 @@ public class DashboardServiceImpl extends ListServiceImpl<Dashboard, Integer, Da
         if (StringUtils.isEmpty(str)) {
             return "";
         }
-        return str.substring(0,1).toLowerCase(Locale.ROOT) + str.substring(1);
+        return str.substring(0, 1).toLowerCase(Locale.ROOT) + str.substring(1);
 
     }
 

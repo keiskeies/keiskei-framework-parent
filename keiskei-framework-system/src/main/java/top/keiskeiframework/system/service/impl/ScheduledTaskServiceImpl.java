@@ -34,7 +34,7 @@ public class ScheduledTaskServiceImpl extends ListServiceImpl<ScheduledTask, Int
     @Override
     public void excute(Integer id) {
 
-        ScheduledTask scheduledTask = scheduledTaskService.getById(id);
+        ScheduledTask scheduledTask = scheduledTaskService.findOneById(id);
         Assert.notNull(scheduledTask, BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
         try {
             ((ScheduledOfTask) applicationContext.getBean(Class.forName(scheduledTask.getCronKey()))).execute(scheduledTask);

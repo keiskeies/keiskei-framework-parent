@@ -18,6 +18,7 @@ public class ScheduledOfTask implements Runnable {
 
     /**
      * 定时任务方法
+     *
      * @param scheduledTask 定时任务
      */
     public void execute(ScheduledTask scheduledTask) {
@@ -30,7 +31,7 @@ public class ScheduledOfTask implements Runnable {
     @Override
     public void run() {
         IScheduledTaskService scheduledTaskService = SpringUtils.getBean(IScheduledTaskService.class);
-        ScheduledTask scheduledTask = scheduledTaskService.getById(id);
+        ScheduledTask scheduledTask = scheduledTaskService.findOneById(id);
         if (null == scheduledTask || !scheduledTask.getEnable()) {
             return;
         }

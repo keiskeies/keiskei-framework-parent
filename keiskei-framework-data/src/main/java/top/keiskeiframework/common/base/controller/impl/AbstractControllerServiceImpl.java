@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.controller.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -14,8 +13,9 @@ import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.IPageResult;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @since 2022/4/3 20:51
  */
 @Order
-public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID extends Serializable>
+public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, ID extends Serializable>
         implements IControllerService<T, ID> {
 
     @Autowired
@@ -47,32 +47,32 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
 
     @Override
     @ApiOperation("列表")
-    public R<Page<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public R<IPageResult<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         return R.ok(baseService.page(request, page));
     }
 
     @Override
     @ApiOperation("下拉框")
     public R<List<T>> options(BaseRequestVO<T, ID> request) {
-        return R.ok(baseService.list(request));
+        return R.ok(baseService.findListByCondition(request));
     }
 
     @Override
     @ApiOperation("数量")
     public R<Long> count(BaseRequestVO<T, ID> request) {
-        return R.ok(baseService.count(request));
+        return R.ok(baseService.getCount(request));
     }
 
     @Override
     @ApiOperation("详情")
     public R<T> getOne(@PathVariable ID id) {
-        return R.ok(baseService.getById(id));
+        return R.ok(baseService.findOneById(id));
     }
 
     @Override
     @ApiOperation("详情")
     public R<T> getOne(BaseRequestVO<T, ID> request) {
-        return R.ok(baseService.getOne(request));
+        return R.ok(baseService.findOneByCondition(request));
     }
 
     @Override
@@ -84,53 +84,49 @@ public abstract class AbstractControllerServiceImpl<T extends ListEntity<ID>, ID
     @Override
     @ApiOperation("新增")
     public R<T> save(@RequestBody @Validated({Insert.class}) T t) {
-        baseService.save(t);
-        return R.ok(t);
+        return R.ok(baseService.saveOne(t));
     }
 
     @Override
     @ApiOperation("更新")
     public R<T> update(@RequestBody @Validated({Update.class}) T t) {
-        baseService.updateById(t);
-        return R.ok(t);
+        return R.ok(baseService.updateOne(t));
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> deleteById(@PathVariable ID id) {
-        return R.ok(baseService.removeById(id));
+        return R.ok(baseService.deleteOneById(id));
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> delete(T t) {
-        return R.ok(baseService.removeById(t.getId()));
+        return R.ok(baseService.deleteOneById(t.getId()));
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> deleteMulti(@RequestBody List<ID> ids) {
-        return R.ok(baseService.removeByIds(ids));
+        return R.ok(baseService.deleteListByIds(ids));
     }
 
     @Override
     @ApiOperation("删除")
     public R<Boolean> deleteByConditions(List<QueryConditionVO> conditions) {
-        return R.ok(baseService.removeByCondition(conditions));
+        return R.ok(baseService.deleteListByCondition(conditions));
     }
 
     @Override
     @ApiOperation("更新")
     public R<List<T>> update(@RequestBody @Validated({Update.class}) List<T> ts) {
-        baseService.updateBatchById(ts);
-        return R.ok(ts);
+        return R.ok(baseService.updateList(ts));
     }
 
     @Override
     @ApiOperation("新增")
     public R<List<T>> save(@RequestBody @Validated({Insert.class}) List<T> ts) {
-        baseService.saveBatch(ts);
-        return R.ok(ts);
+        return R.ok(baseService.saveList(ts));
     }
 
     @Override

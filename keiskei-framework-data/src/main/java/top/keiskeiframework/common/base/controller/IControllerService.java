@@ -1,14 +1,14 @@
 package top.keiskeiframework.common.base.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.IPageResult;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IControllerService<T extends ListEntity<ID>, ID extends Serializable> {
+public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
     /**
      * 列表
@@ -38,7 +38,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
      * @return 。
      */
     @GetMapping
-    R<Page<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
+    R<IPageResult<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
 
     /**
      * 下拉框
@@ -132,6 +132,7 @@ public interface IControllerService<T extends ListEntity<ID>, ID extends Seriali
 
     /**
      * 删除
+     *
      * @param t t
      * @return .l
      */

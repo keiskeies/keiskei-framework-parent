@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.keiskeiframework.cache.enums.CacheTimeEnum;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.dto.cache.CacheDTO;
-import top.keiskeiframework.common.enums.CacheTimeEnum;
 import top.keiskeiframework.common.util.MdcUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.dashboard.entity.Dashboard;
@@ -38,7 +38,8 @@ public class DashboardController {
     @ApiOperation("列表")
     @GetMapping
     public R<List<Dashboard>> list() {
-        Dashboard dashboard = Dashboard.builder().createUserId(Integer.valueOf(MdcUtils.getUserId())).build();
+        Dashboard dashboard = new Dashboard();
+        dashboard.setCreateUserId(Integer.valueOf(MdcUtils.getUserId()));
         return R.ok(dashboardService.list(new QueryWrapper<>(dashboard)));
     }
 

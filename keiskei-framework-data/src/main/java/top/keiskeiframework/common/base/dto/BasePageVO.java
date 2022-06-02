@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.dto;
 
 import lombok.Data;
-import top.keiskeiframework.common.base.entity.ListEntity;
 
 import java.io.Serializable;
 

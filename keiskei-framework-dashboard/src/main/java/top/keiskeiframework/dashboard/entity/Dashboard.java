@@ -81,4 +81,6 @@ public class Dashboard extends ListEntity<Integer> {
     @OneToMany(filedName = "dashboardId", targetClass = DashboardDirection.class)
     @NotEmpty(message = "y坐标不能为空", groups = {Insert.class, Update.class})
     private transient Collection<DashboardDirection> directions;
+
+
 }

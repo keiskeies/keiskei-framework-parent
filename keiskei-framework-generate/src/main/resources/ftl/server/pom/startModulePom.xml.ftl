@@ -5,17 +5,17 @@
     <parent>
         <artifactId>${name}</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>2.1.0-mp-Release</version>
+        <version>3.0.0-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>${name}-start</artifactId>
     <name>${name}-start</name>
-    <version>2.1.0-mp-Release</version>
+    <version>3.0.0-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-data</artifactId>
+            <artifactId>keiskei-framework-data-mp</artifactId>
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>top.keiskeiframework</groupId>
             <artifactId>${module.name}</artifactId>
-            <version>2.1.0-mp-Release</version>
+            <version>3.0.0-Release</version>
         </dependency>
 </#list>
     </dependencies>
@@ -94,7 +94,7 @@
                 <dependency>
                     <artifactId>${name}-doc</artifactId>
                     <groupId>top.keiskeiframework</groupId>
-                    <version>2.1.0-mp-Release</version>
+                    <version>3.0.0-Release</version>
                 </dependency>
             </dependencies>
         </profile>

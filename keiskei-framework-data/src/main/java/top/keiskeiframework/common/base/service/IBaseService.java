@@ -1,16 +1,14 @@
 package top.keiskeiframework.common.base.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.IPageResult;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.entity.BaseEntity;
-import top.keiskeiframework.common.base.entity.ListEntity;
+import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -24,94 +22,41 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface IBaseService<T extends BaseEntity<ID>, ID extends Serializable> extends IService<T> {
-
-    /**
-     * 列表查询
-     *
-     * @param request 列表条件
-     * @param page    列表条件
-     * @return .
-     */
-    Page<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
-
-    /**
-     * 条件查询单个
-     *
-     * @param request 查询条件
-     * @return 。
-     */
-    T getOne(BaseRequestVO<T, ID> request);
-
-    /**
-     * 查询全部
-     *
-     * @param request 查询条件
-     * @return 。
-     */
-    List<T> list(BaseRequestVO<T, ID> request);
+public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
 
-    /**
-     * 通过单一字段查询
-     *
-     * @param column 字段名称
-     * @param value  字段值
-     * @return 。
-     */
-    List<T> listByColumn(String column, Serializable value);
+    String CACHE_TREE_NAME = "CACHE:TREE";
+    String CACHE_LIST_NAME = "CACHE:LIST";
+    String CACHE_MIDDLE_NAME = "CACHE:MIDDLE";
+
+    IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
+
+    T findOneById(Serializable id);
+    T findOneByColumn(String column, Serializable value);
+    T findOneByCondition(BaseRequestVO<T, ID> request);
+
+    T saveOne(T t);
+    T updateOne(T t);
 
 
-    /**
-     * 查询数量
-     *
-     * @param request request
-     * @return 。
-     */
-    Long count(BaseRequestVO<T, ID> request);
+    List<T> findList();
+    List<T> findListByColumn(String column, Serializable value);
+    List<T> findListByCondition(BaseRequestVO<T, ID> request);
+
+    List<T> saveList(List<T> ts);
+    List<T> updateList(List<T> ts);
+    boolean updateListByCondition(List<QueryConditionVO> conditions, T t);
 
 
-    /**
-     * 判断是否存在
-     *
-     * @param request request
-     * @return .
-     */
+
+
+    boolean deleteOneById(ID id);
+    boolean deleteListByIds(Collection<ID> ids);
+    boolean deleteListByColumn(String column, Serializable value);
+    boolean deleteListByCondition(List<QueryConditionVO> conditions);
+
+    Long getCount(BaseRequestVO<T, ID> request);
     Boolean exist(BaseRequestVO<T, ID> request);
-
-    /**
-     * 通过单一字段查询
-     *
-     * @param column 字段名称
-     * @param value  字段值
-     * @return 。
-     */
-    T findByColumn(String column, Serializable value);
-
-
-    /**
-     * 通过字段删除
-     *
-     * @param column 字段
-     * @param value  值
-     * @return 。
-     */
-    boolean removeByColumn(String column, Serializable value);
-
-    /**
-     * 通过条件删除
-     *
-     * @param conditions 查询条件
-     * @return 。
-     */
-    boolean removeByCondition(List<QueryConditionVO> conditions);
-
-    /**
-     * 数据图表
-     *
-     * @param chartRequestDTO 图表条件
-     * @return 。
-     */
     Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

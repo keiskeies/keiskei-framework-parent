@@ -5,7 +5,7 @@
     <parent>
         <artifactId>keiskei-framework-parent</artifactId>
         <groupId>top.keiskeiframework</groupId>
-        <version>2.1.0-mp-Release</version>
+        <version>3.0.0-Release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <modules>
@@ -19,11 +19,11 @@
     <packaging>pom</packaging>
     <artifactId>${name}</artifactId>
     <name>${name}</name>
-    <version>2.1.0-mp-Release</version>
+    <version>3.0.0-Release</version>
     <dependencies>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-data</artifactId>
+            <artifactId>keiskei-framework-data-mp</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -35,18 +35,18 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>${name}-start</artifactId>
-                <version>2.1.0-mp-Release</version>
+                <version>3.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>${name}-doc</artifactId>
-                <version>2.1.0-mp-Release</version>
+                <version>3.0.0-Release</version>
             </dependency>
 <#list modules as module>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>${module.name}</artifactId>
-                <version>2.1.0-mp-Release</version>
+                <version>3.0.0-Release</version>
             </dependency>
 </#list>
         </dependencies>

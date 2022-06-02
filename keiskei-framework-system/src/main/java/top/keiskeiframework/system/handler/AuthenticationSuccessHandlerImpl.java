@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import top.keiskeiframework.common.enums.log.OperateTypeEnum;
+import top.keiskeiframework.common.enums.notify.OperateTypeEnum;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;

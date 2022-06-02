@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.annotation.ManyToMany;
@@ -69,7 +67,7 @@ public class SystemUser extends ListEntity<Integer>  {
 
     @ApiModelProperty(value = "用户角色", dataType = "Set<Role>")
     @ManyToMany(middleClass = SystemUserRole.class, targetClass = SystemRole.class)
-    private transient Collection<SystemRole> systemRoles;
+    private Collection<SystemRole> systemRoles;
 
     @ApiModelProperty(value = "用户部门", dataType = "Department")
     @ManyToOne(filedName = "departmentId")

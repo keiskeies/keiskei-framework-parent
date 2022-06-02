@@ -2,35 +2,36 @@ package top.keiskeiframework.system.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.cache.service.CacheStorageService;
 import top.keiskeiframework.common.base.service.impl.ListServiceImpl;
+import top.keiskeiframework.common.base.enums.SystemEnum;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.enums.SystemEnum;
-import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.system.dto.SystemUserDto;
+import top.keiskeiframework.system.entity.SystemDepartment;
 import top.keiskeiframework.system.entity.SystemPermission;
+import top.keiskeiframework.system.entity.SystemRole;
 import top.keiskeiframework.system.entity.SystemUser;
 import top.keiskeiframework.system.mapper.SystemUserMapper;
-import top.keiskeiframework.system.util.SecurityUtils;
-import top.keiskeiframework.system.vo.TokenGrantedAuthority;
-import top.keiskeiframework.system.vo.TokenUser;
-import top.keiskeiframework.system.entity.SystemDepartment;
-import top.keiskeiframework.system.entity.SystemRole;
 import top.keiskeiframework.system.properties.SystemProperties;
 import top.keiskeiframework.system.service.ISystemDepartmentService;
 import top.keiskeiframework.system.service.ISystemPermissionService;
 import top.keiskeiframework.system.service.ISystemUserService;
+import top.keiskeiframework.system.util.SecurityUtils;
+import top.keiskeiframework.system.vo.TokenGrantedAuthority;
+import top.keiskeiframework.system.vo.TokenUser;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -42,14 +43,13 @@ import java.util.stream.Collectors;
 @Service
 public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, SystemUserMapper> implements ISystemUserService {
     @Autowired
-    private CacheStorageService cacheStorageService;
-    @Autowired
     private SystemProperties systemProperties;
     @Autowired(required = false)
     private ISystemDepartmentService departmentService;
     @Autowired(required = false)
     private ISystemPermissionService permissionService;
-
+    @Resource
+    private RedisTemplate<String, Integer> redisTemplate;
 
 
     @Override
@@ -57,7 +57,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, 
         if (StringUtils.isEmpty(username)) {
             throw new BizException(BizExceptionEnum.CHECK_FIELD);
         }
-        SystemUser systemUser = this.findByColumn("username", username);
+        SystemUser systemUser = this.findOneByColumn("username", username);
         if (null == systemUser) {
             throw new UsernameNotFoundException("用户名不存在！");
         }
@@ -67,7 +67,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, 
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
 
             if (null != departmentService) {
-                SystemDepartment systemDepartment = departmentService.getById(tokenUser.getDepartmentId());
+                SystemDepartment systemDepartment = departmentService.findOneById(tokenUser.getDepartmentId());
                 Assert.notNull(systemDepartment, BizExceptionEnum.AUTH_ACCOUNT_EXPIRED.getMsg());
                 tokenUser.setDepartment(systemDepartment.getSign());
             }
@@ -94,11 +94,20 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, 
         if (StringUtils.isEmpty(username)) {
             return;
         }
-        SystemUser systemUser = this.findByColumn("username", username);
+        SystemUser systemUser = this.findOneByColumn("username", username);
         if (null == systemUser) {
             return;
         }
-        if (cacheStorageService.overTimeNum(String.format(SystemEnum.USER_ERROR_TIMES_SUFFIX, username))) {
+        String key = String.format(SystemEnum.USER_ERROR_TIMES_SUFFIX, username);
+
+        redisTemplate.opsForValue().setIfAbsent(key, 0, 5, TimeUnit.MINUTES);
+        Long times = redisTemplate.opsForValue().increment(key, 1L);
+        if (times == null) {
+            redisTemplate.opsForValue().setIfAbsent(key, 1, 5, TimeUnit.MINUTES);
+            times = 1L;
+        }
+
+        if (times >= 5) {
             LocalDateTime lockTime = LocalDateTime.now().plusMinutes(systemProperties.getLockMinutes());
             systemUser.setAccountLockTime(lockTime);
             super.save(systemUser);
@@ -113,7 +122,7 @@ public class SystemUserServiceImpl extends ListServiceImpl<SystemUser, Integer, 
 
         if (SystemEnum.SUPER_ADMIN_ID == tokenUser.getId()) {
             if (null != permissionService) {
-                List<SystemPermission> systemPermissions = permissionService.list();
+                List<SystemPermission> systemPermissions = permissionService.findList();
                 systemUserDto.setPermissions(systemPermissions.stream().map(SystemPermission::getPermission).collect(Collectors.toList()));
                 return systemUserDto;
             }
