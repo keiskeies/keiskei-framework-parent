@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
-
+    String TIME_FIELD_DEFAULT = "createTime";
     String CACHE_TREE_NAME = "CACHE:TREE";
     String CACHE_LIST_NAME = "CACHE:LIST";
     String CACHE_MIDDLE_NAME = "CACHE:MIDDLE";

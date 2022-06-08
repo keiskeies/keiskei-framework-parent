@@ -11,6 +11,7 @@
         <module>keiskei-framework-cloud</module>
         <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log-db</module>
+        <module>keiskei-framework-log</module>
         <module>keiskei-framework-generate</module>
         <module>keiskei-framework-doc</module>
         <module>keiskei-framework-system</module>
@@ -19,7 +20,7 @@
         <module>keiskei-framework-data</module>
         <module>start-demo</module>
         <module>keiskei-framework-data-jpa</module>
-        <module>keiskei-framework-data-mongo</module>
+<!--        <module>keiskei-framework-data-mongo</module>-->
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -89,7 +90,7 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-log</artifactId>
-                <version>2.0.0-Release</version>
+                <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
