@@ -1,6 +1,7 @@
 package top.keiskeiframework.common.vo;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.domain.AbstractPageRequest;
 import org.springframework.data.domain.Page;
@@ -28,9 +29,10 @@ public class PageResult<T> extends AbstractPageRequest implements IPageResult<T>
 
     @Getter
     @Setter
-    private Long total;
+    private long total;
     @Setter
-    private Long offset;
+    @Getter
+    private long offset;
     @Getter
     @Setter
     private List<T> data;
@@ -72,32 +74,27 @@ public class PageResult<T> extends AbstractPageRequest implements IPageResult<T>
     }
 
     @Override
+    @NonNull
     public Sort getSort() {
         return sort;
     }
 
     @Override
+    @NonNull
     public Pageable next() {
         return new PageResult<>(getPageNumber() + 1, getPageSize(), getSort());
     }
 
     @Override
+    @NonNull
     public PageResult<T> previous() {
         return getPageNumber() == 0 ? this : new PageResult<>(getPageNumber() - 1, getPageSize(), getSort());
     }
 
     @Override
+    @NonNull
     public Pageable first() {
         return new PageResult<>(0, getPageSize(), getSort());
-    }
-
-    @Override
-    public long getOffset() {
-        if (null != this.offset) {
-            return this.offset;
-        } else {
-            return super.getOffset();
-        }
     }
 
     @Override
@@ -109,4 +106,5 @@ public class PageResult<T> extends AbstractPageRequest implements IPageResult<T>
     public long getPage() {
         return super.getPageNumber();
     }
+
 }

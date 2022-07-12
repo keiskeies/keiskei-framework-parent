@@ -37,17 +37,49 @@ public class BaseRequestVO<T extends IBaseEntity<ID>, ID extends Serializable> i
     @Getter
     private String desc, asc;
 
+    @Getter
+    @Setter
+    private Boolean complete;
+
+    public static <T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID > of(String column,
+                                                                                                Serializable value) {
+        BaseRequestVO<T, ID> requestVO = new BaseRequestVO<>();
+        requestVO.conditions = new ArrayList<>(1);
+        requestVO.conditions.add(new QueryConditionVO(column, value));
+        return requestVO;
+    }
+    public static <T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID > of(QueryConditionVO condition) {
+        BaseRequestVO<T, ID> requestVO = new BaseRequestVO<>();
+        requestVO.conditions = new ArrayList<>(1);
+        requestVO.conditions.add(condition);
+        return requestVO;
+    }
+
+    public static <T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID > of(List<QueryConditionVO> conditions) {
+        BaseRequestVO<T, ID> requestVO = new BaseRequestVO<>();
+        requestVO.conditions = conditions;
+        return requestVO;
+    }
+
+
+
 
     /**
      * 查询条件
      */
-    @Getter
     protected List<QueryConditionVO> conditions;
 
     public void setConditions(String conditions) {
         if (!StringUtils.isEmpty(conditions)) {
             this.conditions = JSON.parseArray(conditions, QueryConditionVO.class);
         }
+    }
+
+    public List<QueryConditionVO> getConditions() {
+        if (CollectionUtils.isEmpty(conditions)) {
+            conditions = new ArrayList<>();
+        }
+        return conditions;
     }
 
     public void setListConditions(List<QueryConditionVO> conditions) {

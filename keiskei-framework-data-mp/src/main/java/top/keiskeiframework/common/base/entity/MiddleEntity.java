@@ -2,8 +2,8 @@ package top.keiskeiframework.common.base.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
@@ -24,6 +24,6 @@ public class MiddleEntity<ID1 extends Serializable, ID2 extends Serializable> ex
     private String id;
 
     private ID1 id1;
-    private ID2 id2;
 
+    private ID2 id2;
 }

@@ -46,4 +46,11 @@ public interface IPageResult<T> {
      * @return .
      */
     long getOffset();
+
+    /**
+     * 设置数据
+     *
+     * @param ts ts
+     */
+    void setData(List<T> ts);
 }

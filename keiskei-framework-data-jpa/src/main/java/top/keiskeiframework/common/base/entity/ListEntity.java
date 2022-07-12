@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,9 +17,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.keiskeiframework.common.aop.AbstractAuditorAware;
 import top.keiskeiframework.common.util.MdcUtils;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 /**
@@ -31,7 +34,10 @@ import java.time.LocalDateTime;
  * @author James Chen right_way@foxmail.com
  * @since 2018年9月30日 下午5:12:51
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,14 +62,14 @@ public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implemen
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @CreatedBy
-    protected Integer createUserId;
+    protected ID createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link AbstractAuditorAware}
      */
     @LastModifiedBy
-    protected Integer updateUserId;
+    protected ID updateUserId;
 
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -81,5 +87,20 @@ public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implemen
     @ApiModelProperty(value = "更新时间", dataType = "LocalDateTime")
     protected LocalDateTime updateTime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        ListEntity<?> list = (ListEntity<?>) o;
+        return id != null && Objects.equals(id, list.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

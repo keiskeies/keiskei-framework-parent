@@ -43,4 +43,9 @@ public class PageResult<T> extends Page<T> implements IPage<T>, IPageResult<T> {
     public PageResult(long current, long size, long total) {
         super(current, size, total);
     }
+
+    @Override
+    public void setData(List<T> ts) {
+        super.setRecords(ts);
+    }
 }

@@ -61,19 +61,18 @@ public class RedisCacheManagerResolver extends RedisCacheManager {
     /**
      * 覆盖父类创建RedisCache，采用自定义的RedisCacheResolver
      *
-     * @param @param  name
-     * @param @param  cacheConfig
-     * @param @return
-     * @throws
-     * @Title: createRedisCache
-     * @Description: TODO
+     * @param name        name
+     * @param cacheConfig cacheConfig
+     * @return .
      */
     @Override
+    @NonNull
     protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
         return new RedisCacheResolver(name, cacheWriter, cacheConfig != null ? cacheConfig : defaultCacheConfig);
     }
 
     @Override
+    @NonNull
     public Map<String, RedisCacheConfiguration> getCacheConfigurations() {
         Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>(getCacheNames().size());
         getCacheNames().forEach(it -> {

@@ -7,20 +7,17 @@
     <artifactId>keiskei-framework-parent</artifactId>
     <version>3.0.0-Release</version>
     <modules>
-        <module>keiskei-framework-data-mp</module>
         <module>keiskei-framework-cloud</module>
         <module>keiskei-framework-dashboard</module>
-        <module>keiskei-framework-log-db</module>
         <module>keiskei-framework-log</module>
-        <module>keiskei-framework-generate</module>
+        <module>keiskei-framework-log-db</module>
         <module>keiskei-framework-doc</module>
         <module>keiskei-framework-system</module>
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-data</module>
-        <module>start-demo</module>
         <module>keiskei-framework-data-jpa</module>
-<!--        <module>keiskei-framework-data-mongo</module>-->
+        <module>keiskei-framework-data-mp</module>
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -100,11 +97,6 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-data-mp</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-generate</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>

@@ -19,6 +19,7 @@ public class RedisCacheResolver extends RedisCache {
     private final String name;
     private final RedisCacheWriter cacheWriter;
     private final ConversionService conversionService;
+    private final static String ALL_SUFFIX = "*";
 
     protected RedisCacheResolver(String name, RedisCacheWriter cacheWriter, RedisCacheConfiguration cacheConfig) {
         super(name, cacheWriter, cacheConfig);
@@ -27,20 +28,12 @@ public class RedisCacheResolver extends RedisCache {
         this.conversionService = cacheConfig.getConversionService();
     }
 
-    /**
-     *
-     * @Title: evict
-     * @Description: 重写删除的方法
-     * @param  @param key
-     * @throws
-     *
-     */
     @Override
     public void evict(@NonNull Object key) {
         if (key instanceof String) {
             String keyString = key.toString();
             // 后缀删除
-            if (keyString.endsWith("*")) {
+            if (keyString.endsWith(ALL_SUFFIX)) {
                 evictLikeSuffix(keyString);
                 return;
             }
@@ -52,7 +45,7 @@ public class RedisCacheResolver extends RedisCache {
     /**
      * 后缀匹配匹配
      *
-     * @param key
+     * @param key key
      */
     private void evictLikeSuffix(String key) {
         byte[] pattern = this.conversionService.convert(this.createCacheKey(key), byte[].class);

@@ -30,6 +30,9 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implements IListEntity<ID> {
     private static final long serialVersionUID = -8025795001235125591L;
 
@@ -48,14 +51,14 @@ public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implemen
      * 数据初始化来源 {@link top.keiskeiframework.common.config.MyMetaObjectHandler}
      */
     @TableField(fill = FieldFill.INSERT)
-    protected Integer createUserId;
+    protected ID createUserId;
 
     /**
      * 最后修改人
      * 数据初始化来源 {@link top.keiskeiframework.common.config.MyMetaObjectHandler}
      */
     @TableField(fill = FieldFill.UPDATE)
-    protected Integer updateUserId;
+    protected ID updateUserId;
 
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

@@ -1,7 +1,10 @@
 package top.keiskeiframework.common.base.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +20,9 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements ITreeEntity<ID> {
     private static final long serialVersionUID = -802579500126524571L;
 

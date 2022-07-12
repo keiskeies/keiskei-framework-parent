@@ -53,11 +53,13 @@ public class ListServiceImpl
     @Override
     public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         PageResult<T> iPage = super.page(request, page);
-        for (T record : iPage.getRecords()) {
-            getManyToMany(record);
-            getOneToMany(record);
-            getManyToOne(record);
-            getOneToOne(record);
+        if (request.getComplete()) {
+            for (T record : iPage.getRecords()) {
+                getManyToMany(record);
+                getOneToMany(record);
+                getManyToOne(record);
+                getOneToOne(record);
+            }
         }
         return iPage;
     }
@@ -88,11 +90,13 @@ public class ListServiceImpl
     @Override
     public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
         List<T> ts = super.findListByCondition(request);
-        for (T t : ts) {
-            getManyToMany(t);
-            getOneToMany(t);
-            getManyToOne(t);
-            getOneToOne(t);
+        if (request.getComplete()) {
+            for (T t : ts) {
+                getManyToMany(t);
+                getOneToMany(t);
+                getManyToOne(t);
+                getOneToOne(t);
+            }
         }
         return ts;
     }
@@ -265,7 +269,7 @@ public class ListServiceImpl
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':*'")
     public boolean deleteListByColumn(String column, Serializable value) {
-        return this.deleteListByColumn(column, value);
+        return super.deleteListByColumn(column, value);
     }
 
     @Override
@@ -313,7 +317,7 @@ public class ListServiceImpl
                         IService.class
                 );
 
-                List joinData = new ArrayList<>();
+                List<Object> joinData = new ArrayList<>();
                 if (manyToMany.id1()) {
                     List<? extends IMiddleEntity<?, ?>> middleData = middleService.getById1(t.getId());
                     if (!CollectionUtils.isEmpty(middleData)) {

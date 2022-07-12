@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.system.vo.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;

@@ -21,7 +21,6 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ApiModel(value = "QueryConditionDTO", description = "查询条件")
 public class QueryConditionVO implements Serializable {
 
@@ -40,9 +39,33 @@ public class QueryConditionVO implements Serializable {
         this.v = Collections.singletonList(v);
     }
 
+    public QueryConditionVO(String c, ConditionEnum d, Serializable v) {
+        this.c = c;
+        this.d = d;
+        this.v = Collections.singletonList(v);
+    }
+
     public QueryConditionVO(String c, List<? extends Serializable> v) {
         this.c = c;
         this.v = v;
+    }
+
+    public QueryConditionVO(String c, ConditionEnum d, List<? extends Serializable> v) {
+        this.c = c;
+        this.d = d;
+        this.v = v;
+    }
+
+    public static List<QueryConditionVO> singleCondition(String c, Serializable v) {
+        return Collections.singletonList(new QueryConditionVO(c, v));
+    }
+
+    public static List<QueryConditionVO> singleCondition(String c, List<? extends Serializable> v) {
+        return Collections.singletonList(new QueryConditionVO(c, v));
+    }
+
+    public static List<QueryConditionVO> singleCondition(String c, ConditionEnum d, List<? extends Serializable> v) {
+        return Collections.singletonList(new QueryConditionVO(c, d, v));
     }
 
     public ConditionEnum getD() {
