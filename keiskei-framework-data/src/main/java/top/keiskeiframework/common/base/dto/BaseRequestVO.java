@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  * </p>
  * @since 2020/11/24 23:08
  */
-@NoArgsConstructor
 public class BaseRequestVO<T extends IBaseEntity<ID>, ID extends Serializable> implements Serializable {
     private static final long serialVersionUID = -296451048174918297L;
     /**
@@ -40,6 +39,10 @@ public class BaseRequestVO<T extends IBaseEntity<ID>, ID extends Serializable> i
     @Getter
     @Setter
     private Boolean complete;
+
+    public BaseRequestVO() {
+        this.complete = false;
+    }
 
     public static <T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID > of(String column,
                                                                                                 Serializable value) {

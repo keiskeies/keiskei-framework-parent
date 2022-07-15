@@ -2,6 +2,7 @@ package top.keiskeiframework.common.vo;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.IPageResult;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @author v_chenjiamin
  * @since 2022/5/13 22:39
  */
+@JsonIgnoreProperties(value = {"records"})
 public class PageResult<T> extends Page<T> implements IPage<T>, IPageResult<T> {
     private static final long serialVersionUID = 3030882766859160633L;
     private Long offset;

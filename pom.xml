@@ -8,11 +8,8 @@
     <version>3.0.0-Release</version>
     <modules>
         <module>keiskei-framework-cloud</module>
-        <module>keiskei-framework-dashboard</module>
         <module>keiskei-framework-log</module>
-        <module>keiskei-framework-log-db</module>
         <module>keiskei-framework-doc</module>
-        <module>keiskei-framework-system</module>
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-data</module>
@@ -66,18 +63,8 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-file</artifactId>
-                <version>2.0.0-Release</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-core</artifactId>
                 <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-file-local</artifactId>
-                <version>2.0.0-Release</version>
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
