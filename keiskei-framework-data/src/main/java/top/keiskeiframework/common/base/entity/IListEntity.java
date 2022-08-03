@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *
+ * 列表形式实体类
  * </p>
  *
  * @author v_chenjiamin
@@ -19,6 +19,12 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      * @return 。
      */
     String getP();
+
+    /**
+     * 部门层级
+     *
+     * @param p p
+     */
     void setP(String p);
 
     /**
@@ -27,6 +33,12 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      * @return 。
      */
     ID getCreateUserId();
+
+    /**
+     * 创建人
+     *
+     * @param createUserId 。
+     */
     void setCreateUserId(ID createUserId);
 
     /**
@@ -35,6 +47,12 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      * @return 。
      */
     LocalDateTime getCreateTime();
+
+    /**
+     * 创建时间
+     *
+     * @param createTime 。
+     */
     void setCreateTime(LocalDateTime createTime);
 
     /**
@@ -43,6 +61,12 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      * @return 。
      */
     ID getUpdateUserId();
+
+    /**
+     * 更新人
+     *
+     * @param updateUserId 。
+     */
     void setUpdateUserId(ID updateUserId);
 
     /**
@@ -51,5 +75,11 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      * @return 。
      */
     LocalDateTime getUpdateTime();
+
+    /**
+     * 更新时间
+     *
+     * @param updateTime 。
+     */
     void setUpdateTime(LocalDateTime updateTime);
 }

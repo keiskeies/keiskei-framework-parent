@@ -33,6 +33,9 @@ public class PageResult<T> extends Page<T> implements IPage<T>, IPageResult<T> {
 
     @Override
     public long getOffset() {
+        if (null == this.offset) {
+            return 0L;
+        }
         return this.offset;
     }
 

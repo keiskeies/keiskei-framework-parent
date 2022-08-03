@@ -19,17 +19,17 @@ import java.util.List;
 @Data
 public class PageResultDTO<T> implements Serializable {
     private static final long serialVersionUID = 8545996863226528798L;
-    protected List<T> records;
+    protected List<T> data;
     protected Long total;
     protected Long size;
-    protected Long current;
-    protected ArrayList<OrderItemDTO> orders;
+    protected Long offset;
+    protected Long page;
 
     public PageResultDTO() {
-        this.records = Collections.emptyList();
+        this.data = Collections.emptyList();
         this.total = 0L;
+        this.offset = 0L;
         this.size = 10L;
-        this.current = 1L;
-        this.orders = new ArrayList<>();
+        this.page = 1L;
     }
 }

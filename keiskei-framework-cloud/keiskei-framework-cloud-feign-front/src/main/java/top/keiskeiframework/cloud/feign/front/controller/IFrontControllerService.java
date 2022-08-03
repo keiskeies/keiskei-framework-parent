@@ -2,7 +2,7 @@ package top.keiskeiframework.cloud.feign.front.controller;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.vo.R;
@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface IFrontControllerService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontControllerService<T extends BaseEntityDTO<ID>, ID extends Serializable> {
 
 
     /**

@@ -1,6 +1,6 @@
 package top.keiskeiframework.cloud.feign.front.controller.impl;
 
-import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
 import top.keiskeiframework.cloud.feign.front.controller.IFrontControllerService;
 
 import java.io.Serializable;
@@ -13,8 +13,7 @@ import java.io.Serializable;
  * @author James Chen right_way@foxmail.com
  * @since 2020/12/21 13:02
  */
-public class FrontTreeControllerImpl<T extends TreeEntityDTO<T, ID>, ID extends Serializable>
+public class FrontBaseControllerImpl<T extends ListEntityDTO<ID>, ID extends Serializable>
         extends AbstractFrontControllerServiceImpl<T, ID>
         implements IFrontControllerService<T, ID> {
-
 }

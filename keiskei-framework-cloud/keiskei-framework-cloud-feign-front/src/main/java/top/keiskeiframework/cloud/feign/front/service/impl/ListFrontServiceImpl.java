@@ -8,10 +8,7 @@ import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
 import top.keiskeiframework.cloud.feign.service.IListFeignService;
-import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
-import top.keiskeiframework.common.exception.BizException;
-import top.keiskeiframework.common.util.MdcUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,7 +38,8 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
             Long size,
             String desc,
             String asc,
-            Boolean complete
+            Boolean complete,
+            Boolean tree
     ) {
         return listFeignService.page(
                 conditions,
@@ -62,7 +60,8 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
             String show,
             String desc,
             String asc,
-            Boolean complete
+            Boolean complete,
+            Boolean tree
     ) {
         return listFeignService.options(
                 conditions,

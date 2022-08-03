@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -49,6 +50,10 @@ public class ListServiceImpl
 
     @Autowired
     protected ListServiceImpl<T, ID, M> listService;
+    private static final Map<String, Boolean> MANY_TO_MANY_FLAG = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> MANY_TO_ONE_FLAG = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> ONE_TO_MANY_FLAG = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> ONE_TO_ONE_FLAG = new ConcurrentHashMap<>();
 
     @Override
     public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
@@ -106,7 +111,15 @@ public class ListServiceImpl
     @Override
     @Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
     public T getById(Serializable id) {
-        return super.getById(id);
+        T t = super.getById(id);
+        if (null == t) {
+            try {
+                t = getEntityClass().newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return t;
     }
 
     @Override
@@ -283,20 +296,57 @@ public class ListServiceImpl
 
     protected boolean hasRelation() {
         Class<T> tClass = getEntityClass();
+        String tClassName = tClass.getName();
+        if (MANY_TO_MANY_FLAG.containsKey(tClassName) && MANY_TO_MANY_FLAG.get(tClassName)) {
+            return true;
+        }
+        if (MANY_TO_ONE_FLAG.containsKey(tClassName) && MANY_TO_ONE_FLAG.get(tClassName)) {
+            return true;
+        }
+        if (ONE_TO_MANY_FLAG.containsKey(tClassName) && ONE_TO_MANY_FLAG.get(tClassName)) {
+            return true;
+        }
+        if (ONE_TO_ONE_FLAG.containsKey(tClassName) && ONE_TO_ONE_FLAG.get(tClassName)) {
+            return true;
+        }
         Field[] fields = tClass.getDeclaredFields();
         for (Field field : fields) {
             if (null != field.getAnnotation(ManyToMany.class)) {
+                if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+                    MANY_TO_MANY_FLAG.put(tClassName, Boolean.TRUE);
+                }
                 return true;
             }
             if (null != field.getAnnotation(ManyToOne.class)) {
+                if (!MANY_TO_ONE_FLAG.containsKey(tClassName)) {
+                    MANY_TO_ONE_FLAG.put(tClassName, Boolean.TRUE);
+                }
                 return true;
             }
             if (null != field.getAnnotation(OneToMany.class)) {
+                if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+                    ONE_TO_MANY_FLAG.put(tClassName, Boolean.TRUE);
+                }
                 return true;
             }
             if (null != field.getAnnotation(OneToOne.class)) {
+                if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+                    ONE_TO_ONE_FLAG.put(tClassName, Boolean.TRUE);
+                }
                 return true;
             }
+        }
+        if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+            MANY_TO_MANY_FLAG.put(tClassName, Boolean.FALSE);
+        }
+        if (!MANY_TO_ONE_FLAG.containsKey(tClassName)) {
+            MANY_TO_ONE_FLAG.put(tClassName, Boolean.FALSE);
+        }
+        if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+            ONE_TO_MANY_FLAG.put(tClassName, Boolean.FALSE);
+        }
+        if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+            ONE_TO_ONE_FLAG.put(tClassName, Boolean.FALSE);
         }
         return false;
     }
@@ -305,10 +355,16 @@ public class ListServiceImpl
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_MANY_FLAG.containsKey(tClassName) && !MANY_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasManyToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
             if (null != manyToMany) {
+                hasManyToMany = true;
                 IMiddleService<?, ?, ?> middleService = SpringUtils.getBean(
                         StringUtils.firstToLowerCase(manyToMany.middleClass().getSimpleName()) + "ServiceImpl",
                         IMiddleService.class);
@@ -344,17 +400,25 @@ public class ListServiceImpl
 
             }
         }
+        if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+            MANY_TO_MANY_FLAG.put(tClassName, hasManyToMany);
+        }
     }
 
     protected void saveManyToMany(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_MANY_FLAG.containsKey(tClassName) && !MANY_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasManyToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
             if (null != manyToMany) {
-
+                hasManyToMany = true;
                 try {
                     field.setAccessible(true);
                     Object joDataObj = field.get(t);
@@ -405,10 +469,17 @@ public class ListServiceImpl
                 }
             }
         }
+        if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+            MANY_TO_MANY_FLAG.put(tClassName, hasManyToMany);
+        }
     }
 
     protected void updateManyToMany(T t) {
         if (null == t) {
+            return;
+        }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_MANY_FLAG.containsKey(tClassName) && !MANY_TO_MANY_FLAG.get(tClassName)) {
             return;
         }
         boolean hasManyToMany = false;
@@ -420,20 +491,30 @@ public class ListServiceImpl
                 break;
             }
         }
+        if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+            MANY_TO_MANY_FLAG.put(tClassName, hasManyToMany);
+        }
         if (hasManyToMany) {
             this.deleteManyToMany(t);
             this.saveManyToMany(t);
         }
+
     }
 
     protected void deleteManyToMany(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_MANY_FLAG.containsKey(tClassName) && !MANY_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasManyToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
             if (null != manyToMany) {
+                hasManyToOne = true;
                 Class<? extends MiddleEntity<?, ?>> middleClass = manyToMany.middleClass();
                 String entity = middleClass.getSimpleName();
                 IMiddleService middleService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl",
@@ -444,7 +525,9 @@ public class ListServiceImpl
                     middleService.removeById2(t.getId());
                 }
             }
-
+        }
+        if (!MANY_TO_MANY_FLAG.containsKey(tClassName)) {
+            MANY_TO_MANY_FLAG.put(tClassName, hasManyToOne);
         }
     }
 
@@ -452,12 +535,18 @@ public class ListServiceImpl
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_MANY_FLAG.containsKey(tClassName) && !ONE_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             if (null == oneToMany) {
                 continue;
             }
+            hasOneToMany = true;
             Type type = field.getGenericType();
             ParameterizedType pt = (ParameterizedType) type;
             Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
@@ -479,18 +568,27 @@ public class ListServiceImpl
                 }
             }
         }
+        if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+            ONE_TO_MANY_FLAG.put(tClassName, hasOneToMany);
+        }
     }
 
     protected void saveOneToMany(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_MANY_FLAG.containsKey(tClassName) && !ONE_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             if (null == oneToMany) {
                 continue;
             }
+            hasOneToMany = true;
             try {
                 field.setAccessible(true);
                 Object joDataObj = field.get(t);
@@ -517,18 +615,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+            ONE_TO_MANY_FLAG.put(tClassName, hasOneToMany);
+        }
     }
 
     protected void updateOneToMany(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_MANY_FLAG.containsKey(tClassName) && !ONE_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             if (null == oneToMany) {
                 continue;
             }
+            hasOneToMany = true;
             try {
                 Object joDataObj = field.get(t);
                 if (null == joDataObj) {
@@ -557,18 +664,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+            ONE_TO_MANY_FLAG.put(tClassName, hasOneToMany);
+        }
     }
 
     protected void deleteOneToMany(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_MANY_FLAG.containsKey(tClassName) && !ONE_TO_MANY_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToMany = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             if (null == oneToMany) {
                 continue;
             }
+            hasOneToMany = true;
             try {
                 ID id = t.getId();
                 IBaseService baseService = SpringUtils.getBean(
@@ -579,18 +695,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_MANY_FLAG.containsKey(tClassName)) {
+            ONE_TO_MANY_FLAG.put(tClassName, hasOneToMany);
+        }
     }
 
     protected void getOneToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_ONE_FLAG.containsKey(tClassName) && !ONE_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             if (null == oneToOne) {
                 continue;
             }
+            hasOneToOne = true;
             Type type = field.getGenericType();
             ParameterizedType pt = (ParameterizedType) type;
             Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
@@ -612,18 +737,27 @@ public class ListServiceImpl
                 }
             }
         }
+        if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+            ONE_TO_ONE_FLAG.put(tClassName, hasOneToOne);
+        }
     }
 
     protected void saveOneToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_ONE_FLAG.containsKey(tClassName) && !ONE_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             if (null == oneToOne) {
                 continue;
             }
+            hasOneToOne = true;
             try {
                 field.setAccessible(true);
                 Object joinDataObj = field.get(t);
@@ -648,18 +782,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+            ONE_TO_ONE_FLAG.put(tClassName, hasOneToOne);
+        }
     }
 
     protected void updateOneToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_ONE_FLAG.containsKey(tClassName) && !ONE_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             if (null == oneToOne) {
                 continue;
             }
+            hasOneToOne = true;
             try {
                 field.setAccessible(true);
                 Object joinDataObj = field.get(t);
@@ -684,18 +827,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+            ONE_TO_ONE_FLAG.put(tClassName, hasOneToOne);
+        }
     }
 
     protected void deleteOneToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (ONE_TO_ONE_FLAG.containsKey(tClassName) && !ONE_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasOneToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             if (null == oneToOne) {
                 continue;
             }
+            hasOneToOne = true;
             try {
                 field.setAccessible(true);
                 Object joinDataObj = field.get(t);
@@ -714,19 +866,27 @@ public class ListServiceImpl
                 e.printStackTrace();
             }
         }
+        if (!ONE_TO_ONE_FLAG.containsKey(tClassName)) {
+            ONE_TO_ONE_FLAG.put(tClassName, hasOneToOne);
+        }
     }
 
     protected void getManyToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_ONE_FLAG.containsKey(tClassName) && !MANY_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasManyToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToOne manyToMany = field.getAnnotation(ManyToOne.class);
             if (null == manyToMany) {
                 continue;
             }
-
+            hasManyToOne = true;
             Class<?> clz = field.getType();
             int value;
             try {
@@ -757,18 +917,27 @@ public class ListServiceImpl
                 }
             }
         }
+        if (!MANY_TO_ONE_FLAG.containsKey(tClassName)) {
+            MANY_TO_ONE_FLAG.put(tClassName, hasManyToOne);
+        }
     }
 
     protected void saveManyToOne(T t) {
         if (null == t) {
             return;
         }
+        String tClassName = t.getClass().getName();
+        if (MANY_TO_ONE_FLAG.containsKey(tClassName) && !MANY_TO_ONE_FLAG.get(tClassName)) {
+            return;
+        }
+        boolean hasManyToOne = false;
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             ManyToOne manyToMany = field.getAnnotation(ManyToOne.class);
             if (null == manyToMany) {
                 continue;
             }
+            hasManyToOne = true;
             try {
                 field.setAccessible(true);
                 Object joinDataObj = field.get(t);
@@ -782,6 +951,9 @@ public class ListServiceImpl
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
+        }
+        if (!MANY_TO_ONE_FLAG.containsKey(tClassName)) {
+            MANY_TO_ONE_FLAG.put(tClassName, hasManyToOne);
         }
     }
 

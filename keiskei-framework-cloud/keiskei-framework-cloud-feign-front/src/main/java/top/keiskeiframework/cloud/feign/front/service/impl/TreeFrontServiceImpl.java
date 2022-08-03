@@ -37,6 +37,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
             Long size,
             String desc,
             String asc,
+            Boolean complete,
             Boolean tree
     ) {
         PageResultDTO<T> tiPage = treeFeignService.page(
@@ -51,8 +52,8 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
         ).getData();
 
         if (tree) {
-            List<T> treeList = new TreeEntityDtoUtils<>(tiPage.getRecords()).getTreeAll();
-            tiPage.setRecords(treeList);
+            List<T> treeList = new TreeEntityDtoUtils<>(tiPage.getData()).getTreeAll();
+            tiPage.setData(treeList);
         }
         return tiPage;
     }
@@ -64,7 +65,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
             String show,
             String desc,
             String asc,
-            ID id,
+            Boolean complete,
             Boolean tree
     ) {
         List<T> noTreeData = treeFeignService.options(
@@ -72,11 +73,10 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
                 show,
                 desc,
                 asc,
-                id,
                 false
         ).getData();
         if (tree) {
-            return new TreeEntityDtoUtils<>(noTreeData).getTreeAll(id);
+            return new TreeEntityDtoUtils<>(noTreeData).getTreeAll();
         }
         return noTreeData;
     }

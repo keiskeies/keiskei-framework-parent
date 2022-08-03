@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 树形结构实体类
  * </p>
  *
  * @author v_chenjiamin
@@ -19,6 +19,12 @@ public interface ITreeEntity<ID extends Serializable> extends IListEntity<ID> {
      * @return 。
      */
     ID getParentId();
+
+    /**
+     * 上级ID
+     *
+     * @param parentId 。
+     */
     void setParentId(ID parentId);
 
     /**
@@ -27,6 +33,12 @@ public interface ITreeEntity<ID extends Serializable> extends IListEntity<ID> {
      * @return 。
      */
     String getSign();
+
+    /**
+     * 层级标识
+     *
+     * @param sign 。
+     */
     void setSign(String sign);
 
     /**
@@ -35,5 +47,11 @@ public interface ITreeEntity<ID extends Serializable> extends IListEntity<ID> {
      * @return 。
      */
     List<? extends ITreeEntity<ID>> getChildren();
+
+    /**
+     * 子集
+     *
+     * @param children 。
+     */
     void setChildren(List<? extends ITreeEntity<ID>> children);
 }

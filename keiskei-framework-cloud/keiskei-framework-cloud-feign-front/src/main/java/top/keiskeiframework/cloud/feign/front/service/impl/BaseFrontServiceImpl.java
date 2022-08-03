@@ -2,12 +2,12 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
-import top.keiskeiframework.cloud.feign.front.service.ICommonFrontService;
-import top.keiskeiframework.cloud.feign.service.ICommonFeignService;
+import top.keiskeiframework.cloud.feign.front.service.IBaseFrontService;
+import top.keiskeiframework.cloud.feign.service.IBaseFeignService;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -22,11 +22,11 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serializable> implements ICommonFrontService<T,
+public class BaseFrontServiceImpl<T extends BaseEntityDTO<ID>, ID extends Serializable> implements IBaseFrontService<T,
         ID> {
 
     @Autowired
-    protected ICommonFeignService<T, ID> commonFeignService;
+    protected IBaseFeignService<T, ID> baseFeignService;
 
     @Override
     public PageResultDTO<T> page(
@@ -36,9 +36,11 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
             Long page,
             Long size,
             String desc,
-            String asc
+            String asc,
+            Boolean complete,
+            Boolean tree
     ) {
-        return commonFeignService.page(
+        return baseFeignService.page(
                 conditions,
                 show,
                 offset,
@@ -54,9 +56,11 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
             String conditions,
             String show,
             String desc,
-            String asc
+            String asc,
+            Boolean complete,
+            Boolean tree
     ) {
-        return commonFeignService.options(
+        return baseFeignService.options(
                 conditions,
                 show,
                 desc,
@@ -66,53 +70,48 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
 
     @Override
     public T findById(ID id) {
-        return commonFeignService.findById(id).getData();
+        return baseFeignService.findById(id).getData();
     }
 
 
     @Override
     public T getOne(String conditions) {
-        return commonFeignService.getOne(conditions).getData();
+        return baseFeignService.getOne(conditions).getData();
     }
 
     @Override
     public Long count(String conditions) {
-        return commonFeignService.count(conditions).getData();
+        return baseFeignService.count(conditions).getData();
     }
 
     @Override
     public T save(T t) {
-        return commonFeignService.save(t).getData();
+        return baseFeignService.save(t).getData();
     }
 
     @Override
     public List<T> save(List<T> ts) {
-        return commonFeignService.save(ts).getData();
+        return baseFeignService.save(ts).getData();
     }
 
     @Override
     public T update(T t) {
-        return commonFeignService.update(t).getData();
+        return baseFeignService.update(t).getData();
     }
 
     @Override
     public List<T> update(List<T> ts) {
-        return commonFeignService.update(ts).getData();
+        return baseFeignService.update(ts).getData();
     }
 
     @Override
     public void deleteById(ID id) {
-        commonFeignService.delete(id);
-    }
-
-    @Override
-    public Boolean deleteById(T t) {
-        return commonFeignService.delete(t).getData();
+        baseFeignService.delete(id);
     }
 
     @Override
     public Boolean delete(List<ID> ids) {
-        return commonFeignService.delete(ids).getData();
+        return baseFeignService.delete(ids).getData();
     }
 
     @Override
@@ -127,7 +126,7 @@ public class CommonFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Seri
             String sumColumn,
             String conditions
     ) {
-        return commonFeignService.statistic(
+        return baseFeignService.statistic(
                 column,
                 columnType,
                 timeField,

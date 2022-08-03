@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.base.service.ITreeBaseService;
@@ -18,6 +20,7 @@ import top.keiskeiframework.common.base.util.BaseRequestUtils;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.TreeEntityUtils;
+import top.keiskeiframework.common.vo.PageResult;
 
 import java.io.Serializable;
 import java.util.*;
@@ -37,6 +40,30 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
     protected final static String SPILT = "/";
     @Autowired
     protected TreeServiceImpl<T, ID, M> treeService;
+
+    @Override
+    public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+        PageResult<T> result = super.page(request, page);
+        if (request.getTree()) {
+            List<T> tTree = new TreeEntityUtils<>(result.getData()).getTreeAll();
+            result.setData(tTree);
+        }
+        return result;
+    }
+
+    @Override
+    public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
+        List<T> tList;
+        if (request.requestEmpty()) {
+            tList = treeService.findList();
+        } else {
+            tList = super.findListByCondition(request);
+        }
+        if (request.getTree()) {
+            return new TreeEntityUtils<>(tList).getTreeAll();
+        }
+        return tList;
+    }
 
     @Override
     @Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")

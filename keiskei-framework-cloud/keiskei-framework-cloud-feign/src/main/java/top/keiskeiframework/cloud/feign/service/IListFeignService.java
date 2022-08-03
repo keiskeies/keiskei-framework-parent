@@ -45,7 +45,8 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
             @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "complete", defaultValue = "false", required = false) Boolean complete);
+            @RequestParam(name = "complete", defaultValue = "false", required = false) Boolean complete
+    );
 
     /**
      * 下拉框
@@ -63,7 +64,8 @@ public interface IListFeignService<T extends ListEntityDTO<ID>, ID extends Seria
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "complete", defaultValue = "false", required = false) Boolean complete);
+            @RequestParam(name = "complete", defaultValue = "false", required = false) Boolean complete
+    );
 
 
     /**

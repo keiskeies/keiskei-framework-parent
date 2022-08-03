@@ -54,7 +54,6 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
      * @param show       显示字段
      * @param desc       倒序字段
      * @param asc        正序字段
-     * @param id         根节点ID
      * @param tree       是否树状结构
      * @return 。
      */
@@ -64,7 +63,6 @@ public interface ITreeFeignService<T extends TreeEntityDTO<T, ID>, ID extends Se
             @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "desc", required = false) String desc,
             @RequestParam(name = "asc", required = false) String asc,
-            @RequestParam(name = "id", required = false) ID id,
             @RequestParam(name = "tree", required = false, defaultValue = "true") Boolean tree
     );
 

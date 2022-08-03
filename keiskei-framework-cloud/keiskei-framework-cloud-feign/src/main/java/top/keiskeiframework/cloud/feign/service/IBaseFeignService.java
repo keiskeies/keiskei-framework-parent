@@ -2,7 +2,7 @@ package top.keiskeiframework.cloud.feign.service;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.ListEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.dto.QueryConditionDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author James Chen right_way@foxmail.com
  * @since 2022/1/21 22:16
  */
-public interface ICommonFeignService<T extends ListEntityDTO<ID>, ID extends Serializable> {
+public interface IBaseFeignService<T extends BaseEntityDTO<ID>, ID extends Serializable> {
 
     /**
      * 分页查询

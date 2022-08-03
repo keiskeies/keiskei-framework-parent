@@ -40,8 +40,13 @@ public class BaseRequestVO<T extends IBaseEntity<ID>, ID extends Serializable> i
     @Setter
     private Boolean complete;
 
+    @Getter
+    @Setter
+    private Boolean tree;
+
     public BaseRequestVO() {
         this.complete = false;
+        this.tree = true;
     }
 
     public static <T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID > of(String column,
