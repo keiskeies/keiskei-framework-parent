@@ -4,6 +4,8 @@ import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
 import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
 import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
+import top.keiskeiframework.cloud.feign.vo.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -24,48 +26,19 @@ public interface IFrontService<T extends BaseEntityDTO<ID>, ID extends Serializa
     /**
      * 分页查询
      *
-     * @param conditions 查询条件
-     * @param show       显示字段
-     * @param offset     offset
-     * @param page       页码
-     * @param size       size
-     * @param desc       倒序字段
-     * @param asc        正序字段
-     * @param complete   是否查询完整数据
-     * @param tree       是否树状结构
+     * @param requestVO 查询条件
+     * @param pageVO    分页条件
      * @return 。
      */
-    PageResultDTO<T> page(
-            String conditions,
-            String show,
-            Long offset,
-            Long page,
-            Long size,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    );
+    PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO);
 
     /**
      * 下拉框
      *
-     * @param conditions 查询条件
-     * @param show       显示字段
-     * @param desc       倒序字段
-     * @param asc        正序字段
-     * @param complete   是否查询完整数据
-     * @param tree       是否树状结构
+     * @param requestVO 查询条件
      * @return 。
      */
-    List<T> options(
-            String conditions,
-            String show,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    );
+    List<T> options(BaseRequestVO requestVO);
 
 
     /**

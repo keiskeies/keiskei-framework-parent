@@ -8,6 +8,8 @@ import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IBaseFrontService;
 import top.keiskeiframework.cloud.feign.service.IBaseFeignService;
+import top.keiskeiframework.cloud.feign.vo.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -29,42 +31,25 @@ public class BaseFrontServiceImpl<T extends BaseEntityDTO<ID>, ID extends Serial
     protected IBaseFeignService<T, ID> baseFeignService;
 
     @Override
-    public PageResultDTO<T> page(
-            String conditions,
-            String show,
-            Long offset,
-            Long page,
-            Long size,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
         return baseFeignService.page(
-                conditions,
-                show,
-                offset,
-                page,
-                size,
-                desc,
-                asc
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                pageVO.getOffset(),
+                pageVO.getPage(),
+                pageVO.getSize(),
+                requestVO.getDesc(),
+                requestVO.getAsc()
         ).getData();
     }
 
     @Override
-    public List<T> options(
-            String conditions,
-            String show,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public List<T> options(BaseRequestVO requestVO) {
         return baseFeignService.options(
-                conditions,
-                show,
-                desc,
-                asc
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                requestVO.getDesc(),
+                requestVO.getAsc()
         ).getData();
     }
 

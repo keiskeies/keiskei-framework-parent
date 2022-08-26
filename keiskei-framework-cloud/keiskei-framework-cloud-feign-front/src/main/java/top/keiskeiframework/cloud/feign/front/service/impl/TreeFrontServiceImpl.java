@@ -9,6 +9,8 @@ import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.ITreeFrontService;
 import top.keiskeiframework.cloud.feign.front.util.TreeEntityDtoUtils;
 import top.keiskeiframework.cloud.feign.service.ITreeFeignService;
+import top.keiskeiframework.cloud.feign.vo.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -29,29 +31,19 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
     protected ITreeFeignService<T, ID> treeFeignService;
 
     @Override
-    public PageResultDTO<T> page(
-            String conditions,
-            String show,
-            Long offset,
-            Long page,
-            Long size,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
         PageResultDTO<T> tiPage = treeFeignService.page(
-                conditions,
-                show,
-                offset,
-                page,
-                size,
-                desc,
-                asc,
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                pageVO.getOffset(),
+                pageVO.getPage(),
+                pageVO.getSize(),
+                requestVO.getDesc(),
+                requestVO.getAsc(),
                 false
         ).getData();
 
-        if (tree) {
+        if (requestVO.getTree()) {
             List<T> treeList = new TreeEntityDtoUtils<>(tiPage.getData()).getTreeAll();
             tiPage.setData(treeList);
         }
@@ -60,22 +52,15 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
 
 
     @Override
-    public List<T> options(
-            String conditions,
-            String show,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public List<T> options(BaseRequestVO requestVO) {
         List<T> noTreeData = treeFeignService.options(
-                conditions,
-                show,
-                desc,
-                asc,
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                requestVO.getDesc(),
+                requestVO.getAsc(),
                 false
         ).getData();
-        if (tree) {
+        if (requestVO.getTree()) {
             return new TreeEntityDtoUtils<>(noTreeData).getTreeAll();
         }
         return noTreeData;

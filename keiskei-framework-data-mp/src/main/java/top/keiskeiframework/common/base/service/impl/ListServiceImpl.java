@@ -515,6 +515,16 @@ public class ListServiceImpl
             ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
             if (null != manyToMany) {
                 hasManyToOne = true;
+                field.setAccessible(true);
+                Object joDataObj = null;
+                try {
+                    joDataObj = field.get(t);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if (null == joDataObj) {
+                    continue;
+                }
                 Class<? extends MiddleEntity<?, ?>> middleClass = manyToMany.middleClass();
                 String entity = middleClass.getSimpleName();
                 IMiddleService middleService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl",

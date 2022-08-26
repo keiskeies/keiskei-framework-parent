@@ -3,11 +3,15 @@ package top.keiskeiframework.cloud.feign.front.controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
+import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
+import top.keiskeiframework.cloud.feign.vo.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -19,6 +23,25 @@ import java.io.Serializable;
  */
 public interface IFrontControllerService<T extends BaseEntityDTO<ID>, ID extends Serializable> {
 
+
+    /**
+     * 分页查询
+     *
+     * @param requestVO 查询条件
+     * @param pageVO    分页条件
+     * @return 。
+     */
+    @GetMapping
+    R<PageResultDTO<T>> page(BaseRequestVO requestVO, BasePageVO pageVO);
+
+    /**
+     * 下拉框
+     *
+     * @param requestVO 查询条件
+     * @return 。
+     */
+    @GetMapping("/options")
+    R<List<T>> options(BaseRequestVO requestVO);
 
     /**
      * 详情

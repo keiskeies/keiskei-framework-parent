@@ -8,6 +8,8 @@ import top.keiskeiframework.cloud.feign.enums.CalcType;
 import top.keiskeiframework.cloud.feign.enums.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
 import top.keiskeiframework.cloud.feign.service.IListFeignService;
+import top.keiskeiframework.cloud.feign.vo.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -30,45 +32,28 @@ public class ListFrontServiceImpl<T extends ListEntityDTO<ID>, ID extends Serial
     private IListFeignService<T, ID> listFeignService;
 
     @Override
-    public PageResultDTO<T> page(
-            String conditions,
-            String show,
-            Long offset,
-            Long page,
-            Long size,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
         return listFeignService.page(
-                conditions,
-                show,
-                offset,
-                page,
-                size,
-                desc,
-                asc,
-                complete
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                pageVO.getOffset(),
+                pageVO.getPage(),
+                pageVO.getSize(),
+                requestVO.getDesc(),
+                requestVO.getAsc(),
+                requestVO.getComplete()
         ).getData();
     }
 
 
     @Override
-    public List<T> options(
-            String conditions,
-            String show,
-            String desc,
-            String asc,
-            Boolean complete,
-            Boolean tree
-    ) {
+    public List<T> options(BaseRequestVO requestVO) {
         return listFeignService.options(
-                conditions,
-                show,
-                desc,
-                asc,
-                complete
+                requestVO.getConditions(),
+                requestVO.getShow(),
+                requestVO.getDesc(),
+                requestVO.getAsc(),
+                requestVO.getComplete()
         ).getData();
     }
 
