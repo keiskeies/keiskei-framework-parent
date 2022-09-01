@@ -1,11 +1,16 @@
 package top.keiskeiframework.common.base.util;
 
 import com.baomidou.mybatisplus.annotation.OrderBy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.keiskeiframework.common.base.annotation.ManyToMany;
+import top.keiskeiframework.common.base.annotation.ManyToOne;
+import top.keiskeiframework.common.base.annotation.OneToMany;
+import top.keiskeiframework.common.base.annotation.OneToOne;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
@@ -51,6 +56,18 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
     private static <T extends IBaseEntity<ID>, ID extends Serializable> Set<String> getTClassFields(Class<T> tClass) {
         Set<String> fields = new HashSet<>();
         for (Field field : tClass.getDeclaredFields()) {
+            if (
+                    null != field.getAnnotation(ManyToOne.class) ||
+                            null != field.getAnnotation(ManyToMany.class) ||
+                            null != field.getAnnotation(OneToOne.class) ||
+                            null != field.getAnnotation(OneToMany.class)
+             ) {
+                continue;
+            }
+            TableField tableField = field.getAnnotation(TableField.class);
+            if (null != tableField && !tableField.exist()) {
+                continue;
+            }
             fields.add(field.getName());
         }
         for (Field field : tClass.getSuperclass().getDeclaredFields()) {
@@ -61,6 +78,7 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
                 fields.add(field.getName());
             }
         }
+        fields.add(ID_COLUMN);
         return fields;
     }
 

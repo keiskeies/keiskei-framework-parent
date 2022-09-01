@@ -88,17 +88,7 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-system</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-log-db</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-dashboard</artifactId>
+                <artifactId>keiskei-framework-data-jpa</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
             <dependency>

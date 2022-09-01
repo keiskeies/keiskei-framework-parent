@@ -44,6 +44,14 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
     @Override
     public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         PageResult<T> result = super.page(request, page);
+        if (request.getComplete()) {
+            for (T record : result.getRecords()) {
+                getManyToMany(record);
+                getOneToMany(record);
+                getManyToOne(record);
+                getOneToOne(record);
+            }
+        }
         if (request.getTree()) {
             List<T> tTree = new TreeEntityUtils<>(result.getData()).getTreeAll();
             result.setData(tTree);
@@ -59,6 +67,14 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
         } else {
             tList = super.findListByCondition(request);
         }
+        if (request.getComplete()) {
+            for (T t : tList) {
+                getManyToMany(t);
+                getOneToMany(t);
+                getManyToOne(t);
+                getOneToOne(t);
+            }
+        }
         if (request.getTree()) {
             return new TreeEntityUtils<>(tList).getTreeAll();
         }
@@ -68,7 +84,12 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
     @Override
     @Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     public T findOneById(Serializable id) {
-        return super.findOneById(id);
+        T t = super.findOneById(id);
+        getManyToMany(t);
+        getOneToMany(t);
+        getManyToOne(t);
+        getOneToOne(t);
+        return t;
     }
 
     @Override
@@ -86,12 +107,17 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
             if (null == parent) {
                 throw new BizException(BizExceptionEnum.ERROR);
             }
+            saveManyToOne(t);
             super.save(t);
             t.setSign(parent.getSign() + SPILT + t.getId());
         } else {
+            saveManyToOne(t);
             super.save(t);
             t.setSign(SPILT + t.getId());
         }
+        saveManyToMany(t);
+        saveOneToMany(t);
+        saveOneToOne(t);
         super.updateOne(t);
         return true;
     }
@@ -119,7 +145,11 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
         } else {
             t.setSign(SPILT + t.getId());
         }
-        return super.updateById(t);
+        updateManyToOne(t);
+        super.updateById(t);
+        updateOneToMany(t);
+        updateOneToOne(t);
+        return true;
     }
 
 
@@ -175,7 +205,15 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
     public boolean removeByIdSingle(Serializable id) {
-        return super.removeById(id);
+        T t = treeService.getById(id);
+        if (null != t) {
+            deleteManyToMany(t);
+            deleteOneToOne(t);
+            deleteOneToMany(t);
+            deleteManyToOne(t);
+            return super.removeById(id);
+        }
+        return true;
     }
 
     @Override
@@ -192,7 +230,7 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
 
     @Override
     public T saveOne(T t) {
-        treeService.saveOne(t);
+        treeService.save(t);
         return t;
     }
 
