@@ -135,14 +135,14 @@ public abstract class AbstractServiceImpl
     @Override
     public List<T> findListByColumn(String column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(column, value);
+        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
         return this.list(queryWrapper);
     }
 
     @Override
     public boolean deleteListByColumn(String column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(column, value);
+        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
         return super.remove(queryWrapper);
     }
 
