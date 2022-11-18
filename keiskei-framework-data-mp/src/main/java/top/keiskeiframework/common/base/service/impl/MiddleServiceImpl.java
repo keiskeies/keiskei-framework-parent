@@ -32,13 +32,13 @@ public class MiddleServiceImpl
     @Override
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #id1")
     public List<T> getById1(Serializable id1) {
-        return middleService.findListByColumn("id1", id1);
+        return middleService.findListByColumn(T::getId1, id1);
     }
 
     @Override
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #id2")
     public List<T> getById2(Serializable id2) {
-        return middleService.findListByColumn("id2", id2);
+        return middleService.findListByColumn(T::getId2, id2);
     }
 
     @Override
@@ -65,13 +65,13 @@ public class MiddleServiceImpl
     @Override
     @CacheEvict(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #id1")
     public Boolean removeById1(ID1 id1) {
-        return middleService.deleteListByColumn("id1", id1);
+        return middleService.deleteListByColumn(T::getId1, id1);
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #id2")
     public Boolean removeById2(ID2 id2) {
-        return middleService.deleteListByColumn("id2", id2);
+        return middleService.deleteListByColumn(T::getId2, id2);
     }
 
 }

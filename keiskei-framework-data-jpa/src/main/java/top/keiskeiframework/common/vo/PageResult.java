@@ -8,9 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.IPageResult;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -70,6 +72,14 @@ public class PageResult<T> extends AbstractPageRequest implements IPageResult<T>
         PageResult<T> pageResult = PageResult.of(pageable.getPageNumber(), page.getSize(), pageable.getSort());
         pageResult.setData(page.getContent());
         pageResult.setTotal(page.getTotalElements());
+        return pageResult;
+    }
+
+    public static <T> PageResult<T> of(List<T> list) {
+        int total = CollectionUtils.isEmpty(list) ? 0 : list.size();
+        PageResult<T> pageResult = PageResult.of(1, total);
+        pageResult.setData(list);
+        pageResult.setTotal(total);
         return pageResult;
     }
 

@@ -36,6 +36,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -73,14 +74,21 @@ public abstract class AbstractServiceImpl<T extends IBaseEntity<ID>, ID extends 
 
     @Override
     public IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
-        Pageable pageable = new PageResult<>(page);
-
+        if (null == page) {
+            page = new BasePageVO();
+        }
         Specification<T> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = BaseRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return PageResult.of(jpaSpecificationExecutor.findAll(specification, pageable));
+        if (page.getAll()) {
+            return PageResult.of(jpaSpecificationExecutor.findAll(specification));
+        } else {
+            Pageable pageable = new PageResult<>(page);
+            return PageResult.of(jpaSpecificationExecutor.findAll(specification, pageable));
+        }
+
     }
 
     @Override
@@ -98,19 +106,18 @@ public abstract class AbstractServiceImpl<T extends IBaseEntity<ID>, ID extends 
     }
 
     @Override
-    public T findOneByColumn(String column, Serializable value) {
+    public T findOneByColumn(Function<T, ?> column, Serializable value) {
         try {
             T t = tClass.newInstance();
-            Field field = tClass.getDeclaredField(column);
-            field.setAccessible(true);
-            field.set(t, value);
+//            Field field = tClass.getDeclaredField(column.apply(t));
+//            field.setAccessible(true);
+//            field.set(t, value);
+            column.apply(t);
 
             Example<T> example = Example.of(t);
             return jpaRepository.findOne(example).orElse(null);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BizException(BizExceptionEnum.ERROR);
-        } catch (NoSuchFieldException e) {
-            throw new BizException(BizExceptionEnum.ERROR.getCode(), "字段" + column + "不存在");
         }
     }
 
@@ -231,9 +238,6 @@ public abstract class AbstractServiceImpl<T extends IBaseEntity<ID>, ID extends 
         return this.getCount(request) > 0;
     }
 
-//    public void reconfirmIndex() {
-//        entityManager.createNativeQuery("alter table " + getTClass() + " engine=InnoDB;");
-//    }
 
     @Override
     public Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO) {

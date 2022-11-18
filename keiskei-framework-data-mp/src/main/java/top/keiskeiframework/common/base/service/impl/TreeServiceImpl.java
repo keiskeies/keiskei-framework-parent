@@ -24,6 +24,7 @@ import top.keiskeiframework.common.vo.PageResult;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * 基础查询接口
@@ -155,7 +156,7 @@ public class TreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable,
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name + '*'")
-    public boolean deleteListByColumn(String column, Serializable value) {
+    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
         List<T> ts = treeService.findListByColumn(column, value);
         if (CollectionUtils.isEmpty(ts)) {
             return true;

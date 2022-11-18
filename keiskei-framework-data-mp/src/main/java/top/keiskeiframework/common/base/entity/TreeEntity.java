@@ -5,7 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +26,8 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class TreeEntity<ID extends Serializable> extends ListEntity<ID> implements ITreeEntity<ID> {
     private static final long serialVersionUID = -802579500126524571L;
 

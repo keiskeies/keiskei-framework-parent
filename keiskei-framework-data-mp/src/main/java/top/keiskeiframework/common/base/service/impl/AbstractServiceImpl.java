@@ -3,6 +3,7 @@ package top.keiskeiframework.common.base.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ import java.math.BigDecimal;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +110,21 @@ public abstract class AbstractServiceImpl
 
     @Override
     public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
-        return this.page(new PageResult<>(page), BaseRequestUtils.getQueryWrapper(request, getEntityClass()));
+        if (null == page) {
+            page = new BasePageVO();
+        }
+        if (page.getAll()) {
+            List<T> tList = this.findListByCondition(request);
+            if (CollectionUtils.isEmpty(tList)) {
+                return new PageResult<>(page.getPage(), page.getSize(), page.getOffset());
+            } else {
+                int total = tList.size();
+                PageResult<T> pageResult =new PageResult<>(page.getPage(), total, 0);
+                pageResult.setRecords(tList);
+                return pageResult;
+            }
+        }
+         return this.page(new PageResult<>(page), BaseRequestUtils.getQueryWrapper(request, getEntityClass()));
     }
 
     @Override
@@ -133,16 +149,16 @@ public abstract class AbstractServiceImpl
     }
 
     @Override
-    public List<T> findListByColumn(String column, Serializable value) {
+    public List<T> findListByColumn(Function<T, ?> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
+        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
         return this.list(queryWrapper);
     }
 
     @Override
-    public boolean deleteListByColumn(String column, Serializable value) {
+    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
+        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
         return super.remove(queryWrapper);
     }
 
@@ -159,9 +175,9 @@ public abstract class AbstractServiceImpl
 
 
     @Override
-    public T findOneByColumn(String column, Serializable value) {
+    public T findOneByColumn(Function<T, ?> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BeanUtils.humpToUnderline(column), value);
+        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
         return this.getOne(queryWrapper);
     }
 
@@ -526,10 +542,9 @@ public abstract class AbstractServiceImpl
             ID id = t.getId();
 
             String entity = clz.getSimpleName();
-            String firstId = BeanUtils.humpToUnderline(oneToMany.filedName());
             IBaseService<?, ?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl",
                     IBaseService.class);
-            List<?> joinResult = baseService.findListByColumn(firstId, id);
+            List<?> joinResult = baseService.findListByColumn(e -> BeanUtils.humpToUnderline(oneToMany.filedName()), id);
 
             if (!CollectionUtils.isEmpty(joinResult)) {
                 field.setAccessible(true);
@@ -659,10 +674,8 @@ public abstract class AbstractServiceImpl
             hasOneToMany = true;
             try {
                 ID id = t.getId();
-                IBaseService baseService = SpringUtils.getBean(
-                        StringUtils.firstToLowerCase(oneToMany.targetClass().getSimpleName()) + "ServiceImpl",
-                        IBaseService.class);
-                baseService.deleteListByColumn(BeanUtils.humpToUnderline(oneToMany.filedName()), id);
+                IBaseService baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(oneToMany.targetClass().getSimpleName()) + "ServiceImpl", IBaseService.class);
+                baseService.deleteListByColumn(e -> BeanUtils.humpToUnderline(oneToMany.filedName()), id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -695,10 +708,8 @@ public abstract class AbstractServiceImpl
             ID id = t.getId();
 
             String entity = clz.getSimpleName();
-            String firstId = BeanUtils.humpToUnderline(oneToOne.filedName());
-            IBaseService<?, ?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl",
-                    IBaseService.class);
-            IBaseEntity<?> joinResult = baseService.findOneByColumn(firstId, id);
+            IBaseService<?, ?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", IBaseService.class);
+            IBaseEntity<?> joinResult = baseService.findOneByColumn(e -> BeanUtils.humpToUnderline(oneToOne.filedName()), id);
 
             if (null != joinResult) {
                 field.setAccessible(true);
@@ -747,8 +758,7 @@ public abstract class AbstractServiceImpl
                 joinField.set(joinDataObj, id);
 
                 String entity = clz.getSimpleName();
-                IService baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) +
-                        "ServiceImpl", IService.class);
+                IService baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", IService.class);
                 baseService.save(joinDataObj);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -792,8 +802,7 @@ public abstract class AbstractServiceImpl
                 joinField.set(joinDataObj, id);
 
                 String entity = clz.getSimpleName();
-                IService baseService = SpringUtils.getBean(
-                        StringUtils.firstToLowerCase(entity) + "ServiceImpl", IService.class);
+                IService baseService = SpringUtils.getBean( StringUtils.firstToLowerCase(entity) + "ServiceImpl", IService.class);
                 baseService.updateById(field.get(t));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -831,8 +840,7 @@ public abstract class AbstractServiceImpl
                 ParameterizedType pt = (ParameterizedType) type;
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 String entity = clz.getSimpleName();
-                IService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) +
-                        "ServiceImpl", IService.class);
+                IService<?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", IService.class);
                 baseService.removeById(joinData.getId());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -876,8 +884,7 @@ public abstract class AbstractServiceImpl
             }
 
             String entity = clz.getSimpleName();
-            IBaseService<?, ?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl",
-                    IBaseService.class);
+            IBaseService<?, ?> baseService = SpringUtils.getBean(StringUtils.firstToLowerCase(entity) + "ServiceImpl", IBaseService.class);
             IBaseEntity<?> joinResult = baseService.findOneById(value);
 
             if (null != joinResult) {

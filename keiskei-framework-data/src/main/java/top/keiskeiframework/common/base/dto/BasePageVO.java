@@ -22,9 +22,14 @@ public class BasePageVO implements Serializable {
     private Long page;
     private Long offset;
     private Long size;
+    /**
+     * 是否查询所有，不进行分野
+     */
+    private Boolean all;
 
     public BasePageVO() {
         this.page = 1L;
         this.size = 20L;
+        this.all = false;
     }
 }

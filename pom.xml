@@ -13,7 +13,7 @@
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-data</module>
-        <module>keiskei-framework-data-jpa</module>
+<!--        <module>keiskei-framework-data-jpa</module>-->
         <module>keiskei-framework-data-mp</module>
     </modules>
     <parent>

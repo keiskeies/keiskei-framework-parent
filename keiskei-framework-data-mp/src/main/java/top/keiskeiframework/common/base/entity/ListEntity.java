@@ -15,7 +15,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -33,6 +36,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class ListEntity<ID extends Serializable> extends BaseEntity<ID> implements IListEntity<ID> {
     private static final long serialVersionUID = -8025795001235125591L;
 

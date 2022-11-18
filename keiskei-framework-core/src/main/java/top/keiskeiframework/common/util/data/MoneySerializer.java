@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.util.StdConverter;
  * @author 陈加敏 right_way@foxmail.com
  * @since 2019/8/5 20:45
  */
-public class MoneySerializer extends StdConverter<Integer, Double> {
+public class MoneySerializer extends StdConverter<Long, Double> {
 
     @Override
-    public Double convert(Integer val) {
+    public Double convert(Long val) {
         return val / 1000D;
     }
 }

@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -19,10 +21,15 @@ import java.io.Serializable;
 @Data
 @SuperBuilder
 @NoArgsConstructor
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity<ID extends Serializable> implements IBaseEntity<ID> {
 
     private static final long serialVersionUID = -7639279182532766702L;
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected ID id;
 
     /**

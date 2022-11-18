@@ -2,35 +2,25 @@ package top.keiskeiframework.common.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
-import top.keiskeiframework.common.base.annotation.ManyToMany;
-import top.keiskeiframework.common.base.annotation.ManyToOne;
-import top.keiskeiframework.common.base.annotation.OneToMany;
-import top.keiskeiframework.common.base.annotation.OneToOne;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
-import top.keiskeiframework.common.base.entity.*;
-import top.keiskeiframework.common.base.service.IBaseService;
+import top.keiskeiframework.common.base.entity.ListEntity;
 import top.keiskeiframework.common.base.service.IListBaseService;
-import top.keiskeiframework.common.base.service.IMiddleService;
 import top.keiskeiframework.common.util.BeanUtils;
-import top.keiskeiframework.common.util.SpringUtils;
 import top.keiskeiframework.common.vo.PageResult;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -55,12 +45,12 @@ public class ListServiceImpl
     @Override
     public PageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         PageResult<T> iPage = super.page(request, page);
-        if (request.getComplete()) {
-            for (T record : iPage.getRecords()) {
-                getManyToMany(record);
-                getOneToMany(record);
-                getManyToOne(record);
-                getOneToOne(record);
+        for (T t : iPage.getRecords()) {
+            getManyToOne(t);
+            getOneToOne(t);
+            if (request.getComplete()) {
+                getManyToMany(t);
+                getOneToMany(t);
             }
         }
         return iPage;
@@ -78,7 +68,7 @@ public class ListServiceImpl
 
 
     @Override
-    public List<T> findListByColumn(String column, Serializable value) {
+    public List<T> findListByColumn(Function<T, ?> column, Serializable value) {
         List<T> ts = super.findListByColumn(column, value);
         for (T t : ts) {
             getManyToMany(t);
@@ -92,17 +82,16 @@ public class ListServiceImpl
     @Override
     public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
         List<T> ts = super.findListByCondition(request);
-        if (request.getComplete()) {
-            for (T t : ts) {
+        for (T t : ts) {
+            getManyToOne(t);
+            getOneToOne(t);
+            if (request.getComplete()) {
                 getManyToMany(t);
                 getOneToMany(t);
-                getManyToOne(t);
-                getOneToOne(t);
             }
         }
         return ts;
     }
-
 
 
     @Override
@@ -229,7 +218,7 @@ public class ListServiceImpl
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':*'")
     public boolean remove(Wrapper<T> queryWrapper) {
-        return super.remove(queryWrapper);
+        return baseMapper.delete(queryWrapper) > 0;
     }
 
     @Override
@@ -271,14 +260,14 @@ public class ListServiceImpl
             deleteOneToOne(t);
             deleteOneToMany(t);
             deleteManyToOne(t);
-            return super.removeById(id);
+            return baseMapper.deleteById(t) >= 0;
         }
         return true;
     }
 
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':*'")
-    public boolean deleteListByColumn(String column, Serializable value) {
+    public boolean deleteListByColumn(Function<T, ?>  column, Serializable value) {
         return super.deleteListByColumn(column, value);
     }
 
@@ -287,9 +276,6 @@ public class ListServiceImpl
     public boolean deleteListByCondition(List<QueryConditionVO> conditions) {
         return super.deleteListByCondition(conditions);
     }
-
-
-
 
 
 }

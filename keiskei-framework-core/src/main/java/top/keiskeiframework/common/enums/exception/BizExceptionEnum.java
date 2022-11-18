@@ -23,7 +23,7 @@ public enum BizExceptionEnum implements IErrorCode {
 
     AUTH_ACCOUNT_LOCKED(400205L, "该账号已经被锁定！请10分钟后再试"),
     AUTH_ACCOUNT_EXPIRED(400206L, "该账号已过期！"),
-    AUTH_PASSWORD_EXPIRED(400207L, "长时间为修改密码"),
+    AUTH_PASSWORD_EXPIRED(400207L, "长时间未修改密码"),
 
 
     CHECK_FIELD(500101, "必填字段校验错误!"),

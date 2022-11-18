@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
@@ -17,6 +20,8 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class MiddleEntity<ID1 extends Serializable, ID2 extends Serializable> extends BaseEntity<String> implements IMiddleEntity<ID1, ID2> {
     private static final long serialVersionUID = -212868740901553952L;
 

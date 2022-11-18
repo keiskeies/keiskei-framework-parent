@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
     IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
 
     T findOneById(Serializable id);
-    T findOneByColumn(String column, Serializable value);
+    T findOneByColumn(Function<T, ?> column, Serializable value);
     T findOneByCondition(BaseRequestVO<T, ID> request);
 
     T saveOne(T t);
@@ -40,7 +41,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
 
 
     List<T> findList();
-    List<T> findListByColumn(String column, Serializable value);
+    List<T> findListByColumn(Function<T, ?> column, Serializable value);
     List<T> findListByCondition(BaseRequestVO<T, ID> request);
 
     List<T> saveList(List<T> ts);
@@ -52,7 +53,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
 
     boolean deleteOneById(ID id);
     boolean deleteListByIds(Collection<ID> ids);
-    boolean deleteListByColumn(String column, Serializable value);
+    boolean deleteListByColumn(Function<T, ?> colum, Serializable value);
     boolean deleteListByCondition(List<QueryConditionVO> conditions);
 
     Long getCount(BaseRequestVO<T, ID> request);

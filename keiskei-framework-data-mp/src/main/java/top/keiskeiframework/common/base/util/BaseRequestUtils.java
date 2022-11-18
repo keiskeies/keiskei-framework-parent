@@ -1,7 +1,6 @@
 package top.keiskeiframework.common.base.util;
 
 import com.baomidou.mybatisplus.annotation.OrderBy;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,17 +15,12 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.entity.TreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
-import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * <p>
@@ -43,7 +37,7 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
     private final static String DEPARTMENT_COLUMN = "p";
     private final static String ID_COLUMN = "id";
 
-    @Value("${keiskei.use-department:false}")
+    @Value("${keiskei.use-department:true}")
     public void setUseDepartment(Boolean useDepartment) {
         BaseRequestUtils.useDepartment = useDepartment;
     }
@@ -51,52 +45,26 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
     /**
      * 是否启用部门权限
      */
-    private static boolean useDepartment = false;
+    private static boolean useDepartment = true;
 
-    private static <T extends IBaseEntity<ID>, ID extends Serializable> Set<String> getTClassFields(Class<T> tClass) {
-        Set<String> fields = new HashSet<>();
-        for (Field field : tClass.getDeclaredFields()) {
-            if (
-                    null != field.getAnnotation(ManyToOne.class) ||
-                            null != field.getAnnotation(ManyToMany.class) ||
-                            null != field.getAnnotation(OneToOne.class) ||
-                            null != field.getAnnotation(OneToMany.class)
-             ) {
-                continue;
-            }
-            TableField tableField = field.getAnnotation(TableField.class);
-            if (null != tableField && !tableField.exist()) {
-                continue;
-            }
-            fields.add(field.getName());
-        }
-        for (Field field : tClass.getSuperclass().getDeclaredFields()) {
-            fields.add(field.getName());
-        }
+
+    public static <T extends IBaseEntity<ID>, ID extends Serializable> Set<Field> getTClassFields(Class<T> tClass) {
+        Set<Field> fields = new HashSet<>();
+        fields.addAll(Arrays.asList(tClass.getDeclaredFields()));
+        fields.addAll(Arrays.asList(tClass.getSuperclass().getDeclaredFields()));
+        fields.addAll(Arrays.asList(tClass.getSuperclass().getSuperclass().getDeclaredFields()));
         if (tClass.getSuperclass().equals(TreeEntity.class)) {
-            for (Field field : tClass.getSuperclass().getSuperclass().getDeclaredFields()) {
-                fields.add(field.getName());
-            }
+            fields.addAll(Arrays.asList(tClass.getSuperclass().getSuperclass().getSuperclass().getDeclaredFields()));
         }
-        fields.add(ID_COLUMN);
         return fields;
-    }
-
-    private static void validFields(Set<String> fields, List<QueryConditionVO> conditions) {
-        for (QueryConditionVO conditionVO : conditions) {
-            if (!fields.contains(conditionVO.getC())) {
-                throw new BizException(BizExceptionEnum.ERROR.getCode(), "字段:" + conditionVO.getC() + " 不存在，请检查");
-            }
-        }
     }
 
     public static <T extends IBaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
             List<QueryConditionVO> conditions, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(conditions)) {
-            Set<String> fields = getTClassFields(tClass);
-            validFields(fields, conditions);
-            convertConditions(queryWrapper, conditions);
+            Set<Field> fields = getTClassFields(tClass);
+            convertConditions(queryWrapper, conditions, fields);
         }
 
         if (useDepartment) {
@@ -110,10 +78,9 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (null != request) {
             if (!request.conditionEmpty()) {
-                Set<String> fields = getTClassFields(tClass);
+                Set<Field> fields = getTClassFields(tClass);
                 List<QueryConditionVO> conditions = request.getConditions();
-                validFields(fields, conditions);
-                convertConditions(queryWrapper, conditions);
+                convertConditions(queryWrapper, conditions, fields);
             }
         }
 
@@ -130,27 +97,31 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
         boolean hasOrder = false;
         if (null != request) {
 
-            Set<String> fields = getTClassFields(tClass);
+            Set<Field> fields = getTClassFields(tClass);
 
-            if (!CollectionUtils.isEmpty(fields)) {
-                if (!request.conditionEmpty()) {
-                    List<QueryConditionVO> conditions = request.getConditions();
-                    validFields(fields, conditions);
-                    convertConditions(queryWrapper, conditions);
-                }
-                if (!request.showEmpty()) {
-                    List<String> shows = request.getShow();
-                    shows.removeIf(e -> !fields.contains(e));
-                    queryWrapper.select(shows.stream().map(BeanUtils::humpToUnderline)
-                            .collect(Collectors.toList()).toArray(new String[]{}));
-                }
+            if (!request.conditionEmpty()) {
+                List<QueryConditionVO> conditions = request.getConditions();
+                convertConditions(queryWrapper, conditions, fields);
             }
-            if (!StringUtils.isEmpty(request.getAsc()) && fields.contains(request.getAsc())) {
-                queryWrapper.orderByAsc(BeanUtils.humpToUnderline(request.getAsc()));
+            if (!request.showEmpty()) {
+                List<String> requestShows = request.getShow();
+                List<String> shows = new ArrayList<>(requestShows.size());
+                for (String requestShow : requestShows) {
+                    String show = judgeField(requestShow, fields);
+                    if (null != show) {
+                        shows.add(BeanUtils.humpToUnderline(show));
+                    }
+                }
+                queryWrapper.select(new ArrayList<>(shows).toArray(new String[]{}));
+            }
+            String asc = judgeField(request.getAsc(), fields);
+            if (null != asc) {
+                queryWrapper.orderByAsc(BeanUtils.humpToUnderline(asc));
                 hasOrder = true;
             }
-            if (!StringUtils.isEmpty(request.getDesc()) && fields.contains(request.getDesc())) {
-                queryWrapper.orderByDesc(BeanUtils.humpToUnderline(request.getDesc()));
+            String desc = judgeField(request.getDesc(), fields);
+            if (null != desc) {
+                queryWrapper.orderByDesc(BeanUtils.humpToUnderline(desc));
                 hasOrder = true;
             }
         }
@@ -170,62 +141,79 @@ public class BaseRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable
         return queryWrapper;
     }
 
+    private static String judgeField(String column, Set<Field> fields) {
+        if (!StringUtils.isEmpty(column)) {
+            Optional<Field> fieldOptional = fields.stream().filter(e -> e.getName().equals(column)).findFirst();
+            if (fieldOptional.isPresent()) {
+                Field field = fieldOptional.get();
+                ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+                OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+                if (null != manyToOne) {
+                    return manyToOne.filedName();
+                } else if (null != oneToOne) {
+                    return oneToOne.filedName();
+                } else if (null == field.getAnnotation(ManyToMany.class) && null == field.getAnnotation(OneToMany.class)) {
+                    return column;
+                }
+            }
+        }
+        return null;
+    }
+
     private static <T extends IBaseEntity<ID>, ID extends Serializable> void convertConditions(
-            QueryWrapper<T> queryWrapper, List<QueryConditionVO> conditions
-    ) {
+            QueryWrapper<T> queryWrapper, List<QueryConditionVO> conditions, Set<Field> fields) {
         for (QueryConditionVO condition : conditions) {
-            String column = BeanUtils.humpToUnderline(condition.getC());
+            if (StringUtils.isEmpty(condition.getC()) || CollectionUtils.isEmpty(condition.getV())) {
+                continue;
+            }
+            String column = condition.getC();
+            String finalColumn = column;
+            Optional<Field> fieldOptional = fields.stream().filter(e -> e.getName().equals(finalColumn)).findFirst();
+            if (!fieldOptional.isPresent()) {
+                continue;
+            }
+            Field field = fieldOptional.get();
+            if (null != field.getAnnotation(ManyToMany.class) || null != field.getAnnotation(OneToMany.class)) {
+                continue;
+            }
+            ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+            OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+            if (null != manyToOne) {
+                column = manyToOne.filedName();
+            }
+            if (null != oneToOne) {
+                column = oneToOne.filedName();
+            }
+            column = BeanUtils.humpToUnderline(column);
             if (ConditionEnum.BT.equals(condition.getD())) {
-                if (condition.getV().size() == 2) {
-                    if (null != condition.getV().get(0) && !StringUtils.isEmpty(condition.getV().get(0).toString())
-                            && null != condition.getV().get(1) && !StringUtils.isEmpty(condition.getV().get(1).toString())) {
-                        queryWrapper.between(column, condition.getV().get(0), condition.getV().get(1));
-                    }
+                if (condition.getV().size() != 2) {
+                    continue;
+                }
+                if (null != condition.getV().get(0) && !StringUtils.isEmpty(condition.getV().get(0).toString())
+                        && null != condition.getV().get(1) && !StringUtils.isEmpty(condition.getV().get(1).toString())) {
+                    queryWrapper.between(column, condition.getV().get(0), condition.getV().get(1));
                 }
             } else if (ConditionEnum.IN.equals(condition.getD())) {
-                Object[] hasValueValues = condition.getV().stream()
-                        .filter(e -> null != e && !StringUtils.isEmpty(e.toString()))
-                        .toArray();
-                if (hasValueValues.length > 0) {
-                    if (hasValueValues.length == 1) {
-                        queryWrapper.eq(column, condition.getV().get(0));
-                    } else {
-                        queryWrapper.in(column, condition.getV());
-                    }
+                if (condition.getV().size() == 1) {
+                    queryWrapper.eq(column, condition.getV().get(0));
+                } else {
+                    queryWrapper.in(column, condition.getV());
                 }
             } else {
                 Object value = condition.getV().get(0);
-                if (null == value || StringUtils.isEmpty(value.toString())) {
+                if (StringUtils.isEmpty(value.toString())) {
                     continue;
                 }
                 switch (condition.getD()) {
-                    case LIKE:
-                        queryWrapper.like(column, value);
-                        break;
-                    case LL:
-                        queryWrapper.likeLeft(column, value);
-                        break;
-                    case LR:
-                        queryWrapper.likeRight(column, value);
-                        break;
-                    case NE:
-                        queryWrapper.ne(column, value);
-                        break;
-                    case GT:
-                        queryWrapper.gt(column, value);
-                        break;
-                    case GE:
-                        queryWrapper.ge(column, value);
-                        break;
-                    case LT:
-                        queryWrapper.lt(column, value);
-                        break;
-                    case LE:
-                        queryWrapper.le(column, value);
-                        break;
-                    default:
-                        queryWrapper.eq(column, value);
-                        break;
+                    case LIKE: queryWrapper.like(column, value); break;
+                    case LL: queryWrapper.likeLeft(column, value); break;
+                    case LR: queryWrapper.likeRight(column, value); break;
+                    case NE: queryWrapper.ne(column, value); break;
+                    case GT: queryWrapper.gt(column, value); break;
+                    case GE: queryWrapper.ge(column, value); break;
+                    case LT: queryWrapper.lt(column, value); break;
+                    case LE: queryWrapper.le(column, value); break;
+                    default: queryWrapper.eq(column, value); break;
                 }
             }
         }
