@@ -25,6 +25,11 @@
         <dependencies>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-cloud-core</artifactId>
+                <version>3.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cloud-feign</artifactId>
                 <version>3.0.0-Release</version>
             </dependency>

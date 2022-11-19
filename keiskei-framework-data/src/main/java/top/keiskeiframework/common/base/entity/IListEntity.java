@@ -32,14 +32,14 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      *
      * @return 。
      */
-    ID getCreateUserId();
+    String getCreateUserId();
 
     /**
      * 创建人
      *
      * @param createUserId 。
      */
-    void setCreateUserId(ID createUserId);
+    void setCreateUserId(String createUserId);
 
     /**
      * 创建时间
@@ -60,14 +60,14 @@ public interface IListEntity<ID extends Serializable> extends IBaseEntity<ID> {
      *
      * @return 。
      */
-    ID getUpdateUserId();
+    String getUpdateUserId();
 
     /**
      * 更新人
      *
      * @param updateUserId 。
      */
-    void setUpdateUserId(ID updateUserId);
+    void setUpdateUserId(String updateUserId);
 
     /**
      * 更新时间

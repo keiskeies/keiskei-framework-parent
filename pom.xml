@@ -13,8 +13,7 @@
         <module>keiskei-framework-core</module>
         <module>keiskei-framework-cache</module>
         <module>keiskei-framework-data</module>
-<!--        <module>keiskei-framework-data-jpa</module>-->
-        <module>keiskei-framework-data-mp</module>
+        <module>keiskei-framework-start</module>
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -83,16 +82,6 @@
             </dependency>
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-data-mp</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
-                <artifactId>keiskei-framework-data-jpa</artifactId>
-                <version>${keiskei.project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cloud-core</artifactId>
                 <version>${keiskei.project.version}</version>
             </dependency>
@@ -108,11 +97,42 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>cjm-nexus-central</id>-->
+    <!--            <name>cjm-nexus-central</name>-->
+    <!--            <url>https://j298841i37.qicp.vip/repository/maven-central/</url>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </snapshots>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </releases>-->
+    <!--        </repository>-->
+    <!--        <repository>-->
+    <!--            <id>cjm-nexus</id>-->
+    <!--            <name>cjm-nexus</name>-->
+    <!--            <url>https://j298841i37.qicp.vip/repository/cjm-repository/</url>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </snapshots>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </releases>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
+    <!--    <distributionManagement>-->
+    <!--        <repository>-->
+    <!--            <id>cjm-nexus</id>-->
+    <!--            <name>nexus cjm</name>-->
+    <!--            <url>https://j298841i37.qicp.vip/repository/cjm-repository/</url>-->
+    <!--        </repository>-->
+    <!--    </distributionManagement>-->
     <repositories>
         <repository>
             <id>cjm-nexus-central</id>
             <name>cjm-nexus-central</name>
-            <url>http://nexus.cjm.jx.cn/repository/maven-central/</url>
+            <url>http://192.168.31.236:8081/repository/maven-central/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -123,7 +143,7 @@
         <repository>
             <id>cjm-nexus</id>
             <name>cjm-nexus</name>
-            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
+            <url>http://192.168.31.236:8081/repository/cjm-repository/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -136,7 +156,7 @@
         <repository>
             <id>cjm-nexus</id>
             <name>nexus cjm</name>
-            <url>http://nexus.cjm.jx.cn/repository/cjm-repository/</url>
+            <url>http://192.168.31.236:8081/repository/cjm-repository/</url>
         </repository>
     </distributionManagement>
     <build>

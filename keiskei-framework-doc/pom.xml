@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>top.keiskeiframework</groupId>
-            <artifactId>keiskei-framework-data-mp</artifactId>
+            <artifactId>keiskei-framework-data</artifactId>
         </dependency>
     </dependencies>
 
