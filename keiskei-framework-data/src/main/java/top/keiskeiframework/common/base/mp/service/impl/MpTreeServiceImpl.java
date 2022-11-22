@@ -3,6 +3,7 @@ package top.keiskeiframework.common.base.mp.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,7 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name + '*'")
-    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
+    public boolean deleteListByColumn(SFunction<T, Serializable> column, Serializable value) {
         List<T> ts = treeService.findListByColumn(column, value);
         if (CollectionUtils.isEmpty(ts)) {
             return true;

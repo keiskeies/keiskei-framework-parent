@@ -36,6 +36,7 @@ import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
 import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
 import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 
+import javax.persistence.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -519,8 +520,8 @@ public class TableInfoHelper {
                                 annotationType.equals(MpManyToMany.class) ||
                                         annotationType.equals(MpManyToOne.class) ||
                                         annotationType.equals(MpOneToMany.class) ||
-                                        annotationType.equals(MpOneToOne.class)
-
+                                        annotationType.equals(MpOneToOne.class) ||
+                                        annotationType.equals(Transient.class)
                         ) {
                             return false;
                         }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
@@ -32,13 +33,13 @@ public class MpMiddleServiceImpl
     @Override
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #id1")
     public List<T> getById1(Serializable id1) {
-        return middleService.findListByColumn(T::getId1, id1);
+        return super.findListByColumn(T::getId1, id1);
     }
 
     @Override
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #id2")
     public List<T> getById2(Serializable id2) {
-        return middleService.findListByColumn(T::getId2, id2);
+        return super.findListByColumn(T::getId2, id2);
     }
 
     @Override
@@ -53,6 +54,15 @@ public class MpMiddleServiceImpl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CachePut(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #ts[0].id1")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id1")
+    public List<T> updateById1(List<T> ts) {
+        middleService.updateBatchById(ts);
+        return ts;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #ts[0].id2")
     @Lockable(key = "targetClass.name + ':' + #ts[0].id2")
     public List<T> saveOrUpdateById2(List<T> ts) {
@@ -61,6 +71,14 @@ public class MpMiddleServiceImpl
         return ts;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @CachePut(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #ts[0].id2")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id2")
+    public List<T> updateById2(List<T> ts) {
+        middleService.updateBatchById(ts);
+        return ts;
+    }
 
     @Override
     @CacheEvict(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #id1")

@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.service;
 
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.IPageResult;
@@ -25,7 +26,6 @@ import java.util.function.Function;
  */
 public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
-    String TIME_FIELD_DEFAULT = "createTime";
     String CACHE_TREE_NAME = "CACHE:TREE";
     String CACHE_LIST_NAME = "CACHE:LIST";
     String CACHE_MIDDLE_NAME = "CACHE:MIDDLE";
@@ -33,7 +33,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
     IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
 
     T findOneById(Serializable id);
-    T findOneByColumn(Function<T, ?> column, Serializable value);
+    T findOneByColumn(SFunction<T, Serializable> column, Serializable value);
     T findOneByCondition(BaseRequestVO<T, ID> request);
 
     T saveOne(T t);
@@ -41,7 +41,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
 
 
     List<T> findList();
-    List<T> findListByColumn(Function<T, ?> column, Serializable value);
+    List<T> findListByColumn(SFunction<T, Serializable> column, Serializable value);
     List<T> findListByCondition(BaseRequestVO<T, ID> request);
 
     List<T> saveList(List<T> ts);
@@ -53,7 +53,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
 
     boolean deleteOneById(ID id);
     boolean deleteListByIds(Collection<ID> ids);
-    boolean deleteListByColumn(Function<T, ?> colum, Serializable value);
+    boolean deleteListByColumn(SFunction<T, Serializable> colum, Serializable value);
     boolean deleteListByCondition(List<QueryConditionVO> conditions);
 
     Long getCount(BaseRequestVO<T, ID> request);

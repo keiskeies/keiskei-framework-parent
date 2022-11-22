@@ -10,8 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -23,7 +22,6 @@ import top.keiskeiframework.common.util.MdcUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * <p>
@@ -33,13 +31,12 @@ import java.util.Objects;
  * @author James Chen
  * @since 2022/11/19 17:04
  */
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class ListEntityImpl<ID extends Serializable> implements IListEntity<ID> {
+
+    private static final long serialVersionUID = -6846795795755133606L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,21 +97,4 @@ public class ListEntityImpl<ID extends Serializable> implements IListEntity<ID> 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @UpdateTimestamp
     protected LocalDateTime updateTime;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        ListEntityImpl<?> that = (ListEntityImpl<?>) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

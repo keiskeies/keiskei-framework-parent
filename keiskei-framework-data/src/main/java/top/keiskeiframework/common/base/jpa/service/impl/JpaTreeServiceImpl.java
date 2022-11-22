@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.jpa.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -121,7 +122,7 @@ public class JpaTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializab
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name + '*'")
-    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
+    public boolean deleteListByColumn(SFunction<T, Serializable> column, Serializable value) {
         return super.deleteListByColumn(column, value);
     }
 

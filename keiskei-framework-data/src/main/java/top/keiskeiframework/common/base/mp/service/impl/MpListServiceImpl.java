@@ -2,6 +2,7 @@ package top.keiskeiframework.common.base.mp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class MpListServiceImpl
 
 
     @Override
-    public List<T> findListByColumn(Function<T, ?> column, Serializable value) {
+    public List<T> findListByColumn(SFunction<T, Serializable> column, Serializable value) {
         List<T> ts = super.findListByColumn(column, value);
         for (T t : ts) {
             getManyToMany(t);
@@ -267,7 +268,7 @@ public class MpListServiceImpl
 
     @Override
     @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':*'")
-    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
+    public boolean deleteListByColumn(SFunction<T, Serializable> column, Serializable value) {
         return super.deleteListByColumn(column, value);
     }
 

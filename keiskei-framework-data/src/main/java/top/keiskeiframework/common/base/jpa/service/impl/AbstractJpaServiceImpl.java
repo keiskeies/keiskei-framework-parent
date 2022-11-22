@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.jpa.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,6 +15,7 @@ import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.IPageResult;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
+import top.keiskeiframework.common.util.ColumnFunctionUtils;
 import top.keiskeiframework.common.base.jpa.util.JpaRequestUtils;
 import top.keiskeiframework.common.base.jpa.vo.JpaPageResult;
 import top.keiskeiframework.common.base.service.IBaseService;
@@ -30,12 +32,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -105,17 +107,17 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public T findOneByColumn(Function<T, ?> column, Serializable value) {
+    public T findOneByColumn(SFunction<T, Serializable> column, Serializable value) {
         try {
             T t = tClass.newInstance();
-//            Field field = tClass.getDeclaredField(column.apply(t));
-//            field.setAccessible(true);
-//            field.set(t, value);
-            column.apply(t);
+            String columnName = ColumnFunctionUtils.getFieldName(column);
+            Field field = tClass.getDeclaredField(columnName);
+            field.setAccessible(true);
+            field.set(t, value);
 
             Example<T> example = Example.of(t);
             return jpaRepository.findOne(example).orElse(null);
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
             throw new BizException(BizExceptionEnum.ERROR);
         }
     }
@@ -157,18 +159,17 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findListByColumn(Function<T, ?> column, Serializable value) {
+    public List<T> findListByColumn(SFunction<T, Serializable> column, Serializable value) {
         try {
             T t = tClass.newInstance();
-//            Field field = tClass.getDeclaredField(column);
-//            field.setAccessible(true);
-//            field.set(t, value);
-
-            column.apply(t);
+            String columnName = ColumnFunctionUtils.getFieldName(column);
+            Field field = tClass.getDeclaredField(columnName);
+            field.setAccessible(true);
+            field.set(t, value);
 
             Example<T> example = Example.of(t);
             return jpaRepository.findAll(example);
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
             throw new BizException(BizExceptionEnum.ERROR);
         }
     }
@@ -196,7 +197,7 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
+    public boolean deleteListByColumn(SFunction<T, Serializable> column, Serializable value) {
         List<T> ts = this.findListByColumn(column, value);
         if (CollectionUtils.isEmpty(ts)) {
             return true;

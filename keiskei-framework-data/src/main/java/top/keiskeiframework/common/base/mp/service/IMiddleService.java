@@ -43,12 +43,29 @@ public interface IMiddleService
     List<T> saveOrUpdateById1(List<T> ts);
 
     /**
+     * 批量更新ID1，无插入删除，只做更新
+     *
+     * @param ts ts
+     * @return .
+     */
+    List<T> updateById1(List<T> ts);
+
+    /**
      * 批量更新ID2
      *
      * @param ts ts
      * @return .
      */
     List<T> saveOrUpdateById2(List<T> ts);
+
+
+    /**
+     * 批量更新ID2，无插入删除，只做更新
+     *
+     * @param ts ts
+     * @return .
+     */
+    List<T> updateById2(List<T> ts);
 
     /**
      * 通过ID1删除

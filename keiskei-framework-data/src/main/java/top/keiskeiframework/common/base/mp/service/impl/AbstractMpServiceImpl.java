@@ -8,27 +8,28 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
-import top.keiskeiframework.common.base.mp.annotation.MpManyToMany;
-import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
-import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
-import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.entity.IListEntity;
 import top.keiskeiframework.common.base.entity.IMiddleEntity;
+import top.keiskeiframework.common.base.mp.annotation.MpManyToMany;
+import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
+import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
+import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 import top.keiskeiframework.common.base.mp.service.IMiddleService;
-import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.base.mp.util.MpRequestUtils;
+import top.keiskeiframework.common.base.mp.vo.MpPageResult;
+import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.util.BeanUtils;
+import top.keiskeiframework.common.util.ColumnFunctionUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.util.SpringUtils;
-import top.keiskeiframework.common.base.mp.vo.MpPageResult;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -38,7 +39,6 @@ import java.math.BigDecimal;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -151,16 +151,18 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public List<T> findListByColumn(Function<T, ?> column, Serializable value) {
+    public List<T> findListByColumn(SFunction<T, Serializable> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
-        return this.list(queryWrapper);
+        String columnStr = ColumnFunctionUtils.getFiledColumnName(column);
+        queryWrapper.eq(columnStr, value);
+        return super.list(queryWrapper);
     }
 
     @Override
-    public boolean deleteListByColumn(Function<T, ?> column, Serializable value) {
+    public boolean deleteListByColumn(SFunction<T, Serializable> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
+        String columnStr = ColumnFunctionUtils.getFiledColumnName(column);
+        queryWrapper.eq(columnStr, value);
         return super.remove(queryWrapper);
     }
 
@@ -177,9 +179,10 @@ public abstract class AbstractMpServiceImpl
 
 
     @Override
-    public T findOneByColumn(Function<T, ?> column, Serializable value) {
+    public T findOneByColumn(SFunction<T, Serializable> column, Serializable value) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq((SFunction<T, ?>) column, value);
+        String columnStr = ColumnFunctionUtils.getFiledColumnName(column);
+        queryWrapper.eq(columnStr, value);
         return this.getOne(queryWrapper);
     }
 
