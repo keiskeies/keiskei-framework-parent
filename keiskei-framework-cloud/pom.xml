@@ -12,8 +12,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>keiskei-framework-cloud-feign</module>
-        <module>keiskei-framework-cloud-feign-front</module>
         <module>keiskei-framework-cloud-core</module>
+        <module>keiskei-framework-cloud-feign-front</module>
+        <module>keiskei-framework-cloud-feign-single</module>
     </modules>
     <artifactId>keiskei-framework-cloud</artifactId>
 
@@ -36,6 +37,11 @@
             <dependency>
                 <groupId>top.keiskeiframework</groupId>
                 <artifactId>keiskei-framework-cloud-feign-front</artifactId>
+                <version>3.0.0-Release</version>
+            </dependency>
+            <dependency>
+                <groupId>top.keiskeiframework</groupId>
+                <artifactId>keiskei-framework-cloud-feign-single</artifactId>
                 <version>3.0.0-Release</version>
             </dependency>
         </dependencies>

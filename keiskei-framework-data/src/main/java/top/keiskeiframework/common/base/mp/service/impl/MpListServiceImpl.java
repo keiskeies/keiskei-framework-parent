@@ -11,17 +11,16 @@ import org.springframework.cache.annotation.Cacheable;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IListEntity;
 import top.keiskeiframework.common.base.service.IListBaseService;
 import top.keiskeiframework.common.util.BeanUtils;
-import top.keiskeiframework.common.base.mp.vo.MpPageResult;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -44,9 +43,9 @@ public class MpListServiceImpl
 
 
     @Override
-    public MpPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
-        MpPageResult<T> iPage = super.page(request, page);
-        for (T t : iPage.getRecords()) {
+    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+        PageResultVO<T> iPage = super.page(request, page);
+        for (T t : iPage.getData()) {
             getManyToOne(t);
             getOneToOne(t);
             if (request.getComplete()) {

@@ -1,10 +1,7 @@
 package top.keiskeiframework.common.base.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 
 import java.io.Serializable;
@@ -13,18 +10,16 @@ import java.util.List;
 
 /**
  * <p>
- * 查询条件
+ * 查询条件接口
  * </p>
  *
- * @author v_chenjiamin
- * @since 2021/5/14 16:37
+ * @author James Chen
+ * @since 2022/11/24 17:22
  */
 @Data
-@NoArgsConstructor
-@ApiModel(value = "QueryConditionDTO", description = "查询条件")
-public class QueryConditionVO implements Serializable {
+public class QueryConditionVO implements Serializable{
 
-    private static final long serialVersionUID = -7635199550979456815L;
+    private static final long serialVersionUID = -5919100372558700811L;
     @ApiModelProperty(value = "字段条件", dataType = "String")
     private String c;
 
@@ -67,14 +62,4 @@ public class QueryConditionVO implements Serializable {
     public static List<QueryConditionVO> singleCondition(String c, ConditionEnum d, List<? extends Serializable> v) {
         return Collections.singletonList(new QueryConditionVO(c, d, v));
     }
-
-    public ConditionEnum getD() {
-        if (null == this.d) {
-            return ConditionEnum.EQ;
-        } else {
-            return d;
-        }
-    }
-
-
 }

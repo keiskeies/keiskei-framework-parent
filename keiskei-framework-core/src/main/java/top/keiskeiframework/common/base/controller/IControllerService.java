@@ -6,7 +6,7 @@ import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.IPageResult;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
@@ -33,21 +33,21 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
     /**
      * 列表
      *
-     * @param baseRequestVO 查询条件
+     * @param BaseRequestVO 查询条件
      * @param page          分页条件
      * @return 。
      */
     @GetMapping
-    R<IPageResult<T>> page(BaseRequestVO<T, ID> baseRequestVO, BasePageVO page);
+    R<PageResultVO<T>> page(BaseRequestVO<T, ID> BaseRequestVO, BasePageVO page);
 
     /**
      * 下拉框
      *
-     * @param baseRequestVO 查询条件
+     * @param BaseRequestVO 查询条件
      * @return 。
      */
     @GetMapping("/options")
-    R<List<T>> options(BaseRequestVO<T, ID> baseRequestVO);
+    R<List<T>> options(BaseRequestVO<T, ID> BaseRequestVO);
 
     /**
      * 详情

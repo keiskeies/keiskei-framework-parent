@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.entity.IListEntity;
@@ -20,16 +21,13 @@ import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
 import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 import top.keiskeiframework.common.base.mp.service.IMiddleService;
 import top.keiskeiframework.common.base.mp.util.MpRequestUtils;
-import top.keiskeiframework.common.base.mp.vo.MpPageResult;
+import top.keiskeiframework.common.base.mp.vo.MpPageRequest;
 import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
-import top.keiskeiframework.common.util.BeanUtils;
-import top.keiskeiframework.common.util.ColumnFunctionUtils;
-import top.keiskeiframework.common.util.DateTimeUtils;
-import top.keiskeiframework.common.util.SpringUtils;
+import top.keiskeiframework.common.util.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -111,22 +109,23 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public MpPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         if (null == page) {
             page = new BasePageVO();
         }
         if (page.getAll()) {
             List<T> tList = this.findListByCondition(request);
             if (CollectionUtils.isEmpty(tList)) {
-                return new MpPageResult<>(page.getPage(), page.getSize(), page.getOffset());
+                return PageResultUtils.of(page);
             } else {
-                int total = tList.size();
-                MpPageResult<T> pageResult = new MpPageResult<>(page.getPage(), total, 0);
-                pageResult.setRecords(tList);
-                return pageResult;
+                return PageResultUtils.of(tList);
             }
         }
-        return this.page(new MpPageResult<>(page), MpRequestUtils.getQueryWrapper(request, getEntityClass()));
+
+        return PageResultUtils.of(
+                super.page(new MpPageRequest<>(page),
+                        MpRequestUtils.getQueryWrapper(request, getEntityClass()))
+        );
     }
 
     @Override

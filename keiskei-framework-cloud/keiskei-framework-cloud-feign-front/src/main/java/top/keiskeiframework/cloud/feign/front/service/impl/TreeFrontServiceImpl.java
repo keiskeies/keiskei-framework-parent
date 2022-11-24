@@ -2,15 +2,15 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
-import top.keiskeiframework.cloud.feign.dto.TreeEntityDTO;
-import top.keiskeiframework.cloud.feign.enums.CalcType;
-import top.keiskeiframework.cloud.feign.enums.ColumnType;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.ITreeFrontService;
 import top.keiskeiframework.cloud.feign.front.util.TreeEntityDtoUtils;
 import top.keiskeiframework.cloud.feign.service.ITreeFeignService;
-import top.keiskeiframework.cloud.feign.vo.BasePageVO;
-import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.PageResultVO;
+import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -25,14 +25,14 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Serializable> implements ITreeFrontService<T, ID> {
+public class TreeFrontServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable> implements ITreeFrontService<T, ID> {
 
     @Autowired
     protected ITreeFeignService<T, ID> treeFeignService;
 
     @Override
-    public PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
-        PageResultDTO<T> tiPage = treeFeignService.page(
+    public PageResultVO<T> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO) {
+        PageResultVO<T> tiPage = treeFeignService.page(
                 requestVO.getConditions(),
                 requestVO.getShow(),
                 pageVO.getOffset(),
@@ -52,7 +52,7 @@ public class TreeFrontServiceImpl<T extends TreeEntityDTO<T, ID>, ID extends Ser
 
 
     @Override
-    public List<T> options(BaseRequestVO requestVO) {
+    public List<T> options(BaseRequestVO<T, ID> requestVO) {
         List<T> noTreeData = treeFeignService.options(
                 requestVO.getConditions(),
                 requestVO.getShow(),

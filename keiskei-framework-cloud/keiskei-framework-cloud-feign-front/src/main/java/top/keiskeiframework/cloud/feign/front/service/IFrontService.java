@@ -1,11 +1,11 @@
 package top.keiskeiframework.cloud.feign.front.service;
 
-import top.keiskeiframework.cloud.feign.dto.BaseEntityDTO;
-import top.keiskeiframework.cloud.feign.dto.PageResultDTO;
-import top.keiskeiframework.cloud.feign.enums.CalcType;
-import top.keiskeiframework.cloud.feign.enums.ColumnType;
-import top.keiskeiframework.cloud.feign.vo.BasePageVO;
-import top.keiskeiframework.cloud.feign.vo.BaseRequestVO;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.PageResultVO;
+import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @author JamesChen right_way@foxmail.com
  * @since 2020年12月9日20:03:04
  */
-public interface IFrontService<T extends BaseEntityDTO<ID>, ID extends Serializable> {
+public interface IFrontService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
     /**
      * 分页查询
@@ -30,7 +30,7 @@ public interface IFrontService<T extends BaseEntityDTO<ID>, ID extends Serializa
      * @param pageVO    分页条件
      * @return 。
      */
-    PageResultDTO<T> page(BaseRequestVO requestVO, BasePageVO pageVO);
+    PageResultVO<T> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO);
 
     /**
      * 下拉框
@@ -38,7 +38,7 @@ public interface IFrontService<T extends BaseEntityDTO<ID>, ID extends Serializa
      * @param requestVO 查询条件
      * @return 。
      */
-    List<T> options(BaseRequestVO requestVO);
+    List<T> options(BaseRequestVO<T, ID> requestVO);
 
 
     /**

@@ -63,7 +63,7 @@ public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> 
         if (null != request) {
             if (!request.conditionEmpty()) {
                 Set<Field> fields = getTClassFields(tClass);
-                List<QueryConditionVO> conditions = request.getConditions();
+                List<QueryConditionVO> conditions = request.getListConditions();
                 convertConditions(queryWrapper, conditions, fields);
             }
         }
@@ -82,11 +82,11 @@ public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> 
             Set<Field> fields = getTClassFields(tClass);
 
             if (!request.conditionEmpty()) {
-                List<QueryConditionVO> conditions = request.getConditions();
+                List<QueryConditionVO> conditions = request.getListConditions();
                 convertConditions(queryWrapper, conditions, fields);
             }
             if (!request.showEmpty()) {
-                List<String> requestShows = request.getShow();
+                List<String> requestShows = request.getListShow();
                 List<String> shows = new ArrayList<>(requestShows.size());
                 for (String requestShow : requestShows) {
                     String show = judgeField(requestShow, fields);

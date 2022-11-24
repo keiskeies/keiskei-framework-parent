@@ -12,12 +12,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.IPageResult;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
-import top.keiskeiframework.common.util.ColumnFunctionUtils;
 import top.keiskeiframework.common.base.jpa.util.JpaRequestUtils;
-import top.keiskeiframework.common.base.jpa.vo.JpaPageResult;
+import top.keiskeiframework.common.base.jpa.vo.JpaPageRequest;
+import top.keiskeiframework.common.util.PageResultUtils;
 import top.keiskeiframework.common.base.service.IBaseService;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
@@ -26,6 +26,7 @@ import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.BeanUtils;
+import top.keiskeiframework.common.util.ColumnFunctionUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
 
 import javax.persistence.EntityManager;
@@ -74,20 +75,20 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
 
 
     @Override
-    public IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         if (null == page) {
             page = new BasePageVO();
         }
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
         if (page.getAll()) {
-            return JpaPageResult.of(jpaSpecificationExecutor.findAll(specification));
+            return PageResultUtils.of(jpaSpecificationExecutor.findAll(specification));
         } else {
-            Pageable pageable = new JpaPageResult<>(page);
-            return JpaPageResult.of(jpaSpecificationExecutor.findAll(specification, pageable));
+            Pageable pageable = new JpaPageRequest(page);
+            return PageResultUtils.of(jpaSpecificationExecutor.findAll(specification, pageable));
         }
 
     }
@@ -95,7 +96,7 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     @Override
     public T findOneByCondition(BaseRequestVO<T, ID> request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.findOne(specification).orElse(null);
@@ -140,7 +141,7 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     @Override
     public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.findAll(specification);
@@ -227,7 +228,7 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     @Override
     public Long getCount(BaseRequestVO<T, ID> request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.count(specification);
@@ -263,18 +264,18 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
         if (!CollectionUtils.isEmpty(chartRequestDTO.getConditions())) {
 
             Expression<?> expression;
-            for (QueryConditionVO queryConditionVO : chartRequestDTO.getConditions()) {
+            for (QueryConditionVO QueryConditionVO : chartRequestDTO.getConditions()) {
 
-                Object[] hasValueValues = queryConditionVO.getV().stream()
+                Object[] hasValueValues = QueryConditionVO.getV().stream()
                         .filter(e -> !StringUtils.isEmpty(e))
                         .toArray();
                 if (hasValueValues.length > 0) {
-                    if (queryConditionVO.getC().contains(".")) {
-                        String[] columns = queryConditionVO.getC().split("\\.");
+                    if (QueryConditionVO.getC().contains(".")) {
+                        String[] columns = QueryConditionVO.getC().split("\\.");
                         Join<T, ?> join = root.join(columns[0], JoinType.INNER);
                         expression = join.get(columns[1]);
                     } else {
-                        expression = root.get(queryConditionVO.getC());
+                        expression = root.get(QueryConditionVO.getC());
                     }
 
                     if (hasValueValues.length == 1) {

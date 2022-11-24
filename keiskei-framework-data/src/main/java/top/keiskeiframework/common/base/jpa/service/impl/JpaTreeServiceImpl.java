@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * 基础查询接口

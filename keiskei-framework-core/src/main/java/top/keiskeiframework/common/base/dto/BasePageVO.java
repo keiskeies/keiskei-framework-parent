@@ -5,26 +5,19 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author James Chen right_way@foxmail.com
- * @version 1.0
  * <p>
- * 统一请求封装
+ * 分页参数接口
  * </p>
- * @since 2020/11/24 23:08
+ *
+ * @author James Chen
+ * @since 2022/11/24 18:20
  */
 @Data
 public class BasePageVO implements Serializable {
-
-    private static final long serialVersionUID = -100073037476383441L;
-    /**
-     * 分页参数
-     */
+    private static final long serialVersionUID = -8279619362417097492L;
     private Long page;
     private Long offset;
     private Long size;
-    /**
-     * 是否查询所有，不进行分野
-     */
     private Boolean all;
 
     public BasePageVO() {
@@ -32,4 +25,5 @@ public class BasePageVO implements Serializable {
         this.size = 20L;
         this.all = false;
     }
+
 }

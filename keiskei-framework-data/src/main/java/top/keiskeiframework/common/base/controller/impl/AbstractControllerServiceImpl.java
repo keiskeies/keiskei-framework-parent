@@ -13,7 +13,7 @@ import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.controller.IControllerService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.IPageResult;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.service.IBaseService;
@@ -25,6 +25,7 @@ import top.keiskeiframework.common.util.DateTimeUtils;
 import top.keiskeiframework.common.vo.R;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, I
 
     @Override
     @ApiOperation("列表")
-    public R<IPageResult<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public R<PageResultVO<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
         return R.ok(baseService.page(request, page));
     }
 
@@ -165,7 +166,7 @@ public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, I
             }
         }
         if (!StringUtils.isEmpty(conditions)) {
-            chartRequestDTO.setConditions(JSON.parseArray(conditions, QueryConditionVO.class));
+            chartRequestDTO.setConditions(new ArrayList<>(JSON.parseArray(conditions, QueryConditionVO.class)));
         }
 
         return R.ok(baseService.getChartOptions(chartRequestDTO));

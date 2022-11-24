@@ -14,21 +14,20 @@ import org.springframework.util.CollectionUtils;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
-import top.keiskeiframework.common.base.service.ITreeBaseService;
 import top.keiskeiframework.common.base.mp.util.MpRequestUtils;
+import top.keiskeiframework.common.base.service.ITreeBaseService;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.TreeEntityUtils;
-import top.keiskeiframework.common.base.mp.vo.MpPageResult;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * 基础查询接口
@@ -47,10 +46,10 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
     protected MpTreeServiceImpl<T, ID, M> treeService;
 
     @Override
-    public MpPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
-        MpPageResult<T> result = super.page(request, page);
+    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+        PageResultVO<T> result = super.page(request, page);
         if (request.getComplete()) {
-            for (T record : result.getRecords()) {
+            for (T record : result.getData()) {
                 getManyToMany(record);
                 getOneToMany(record);
                 getManyToOne(record);
@@ -67,7 +66,7 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
     @Override
     public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
         List<T> tList;
-        if (request.requestEmpty()) {
+        if (request.conditionEmpty() && request.showEmpty()) {
             tList = treeService.findList();
         } else {
             tList = super.findListByCondition(request);

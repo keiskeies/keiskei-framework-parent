@@ -3,7 +3,7 @@ package top.keiskeiframework.common.base.service;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
-import top.keiskeiframework.common.base.dto.IPageResult;
+import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -30,7 +29,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
     String CACHE_LIST_NAME = "CACHE:LIST";
     String CACHE_MIDDLE_NAME = "CACHE:MIDDLE";
 
-    IPageResult<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
+    PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
 
     T findOneById(Serializable id);
     T findOneByColumn(SFunction<T, Serializable> column, Serializable value);
