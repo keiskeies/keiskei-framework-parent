@@ -29,8 +29,13 @@ public class QueryConditionVO implements Serializable{
     @ApiModelProperty(value = "字段值", dataType = "Serializable")
     private List<? extends Serializable> v;
 
+    public QueryConditionVO() {
+        this.d = ConditionEnum.EQ;
+    }
+
     public QueryConditionVO(String c, Serializable v) {
         this.c = c;
+        this.d = ConditionEnum.EQ;
         this.v = Collections.singletonList(v);
     }
 
@@ -42,6 +47,7 @@ public class QueryConditionVO implements Serializable{
 
     public QueryConditionVO(String c, List<? extends Serializable> v) {
         this.c = c;
+        this.d = ConditionEnum.IN;
         this.v = v;
     }
 
@@ -49,17 +55,5 @@ public class QueryConditionVO implements Serializable{
         this.c = c;
         this.d = d;
         this.v = v;
-    }
-
-    public static List<QueryConditionVO> singleCondition(String c, Serializable v) {
-        return Collections.singletonList(new QueryConditionVO(c, v));
-    }
-
-    public static List<QueryConditionVO> singleCondition(String c, List<? extends Serializable> v) {
-        return Collections.singletonList(new QueryConditionVO(c, v));
-    }
-
-    public static List<QueryConditionVO> singleCondition(String c, ConditionEnum d, List<? extends Serializable> v) {
-        return Collections.singletonList(new QueryConditionVO(c, d, v));
     }
 }
