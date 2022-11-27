@@ -1,12 +1,9 @@
 package top.keiskeiframework.cloud.core.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.cloud.core.config.TokenProperties;
-import top.keiskeiframework.cloud.core.vo.TokenUser;
-import top.keiskeiframework.common.util.JwtTokenUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import javax.servlet.*;
@@ -27,9 +24,6 @@ import java.io.IOException;
 @Component
 public class TokenUserFilter implements Filter {
 
-    @Autowired
-    private TokenProperties tokenProperties;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -42,25 +36,66 @@ public class TokenUserFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        String userId = httpServletRequest.getHeader(MdcUtils.USER_ID);
-        if (StringUtils.isEmpty(userId)) {
-            String token = httpServletRequest.getHeader(tokenProperties.getTokenHeader());
-            if (!StringUtils.isEmpty(token)) {
-                TokenUser tokenUser = JwtTokenUtils.parse(token, TokenUser.class);
-                if (null != tokenUser) {
-                    MdcUtils.setUserId(tokenUser.getId() + "");
-                    MdcUtils.setUserName(tokenUser.getNickName());
-                    MdcUtils.setUserDepartment(tokenUser.getDepartment());
-                }
-            }
-        } else {
-            MdcUtils.setUserId(userId);
-            MdcUtils.setUserName(httpServletRequest.getHeader(MdcUtils.USER_NAME));
-            MdcUtils.setUserDepartment(httpServletRequest.getHeader(MdcUtils.USER_DEPARTMENT));
-        }
+        setMdcValueFromHeader(MdcUtils.USER_ID, request);
+        setMdcValueFromHeader(MdcUtils.USER_NAME, request);
+        setMdcValueFromHeader(MdcUtils.USER_DEPARTMENT, request);
+        setMdcValueFromHeader(MdcUtils.CHECK_DEPARTMENT, request);
+
+        MdcUtils.setUserIp(getIpAddress(request));
+
         filterChain.doFilter(servletRequest, servletResponse);
+    }
 
+    private static void setMdcValueFromHeader(String key, HttpServletRequest request) {
+        String value = request.getHeader(key);
+        if (!StringUtils.isEmpty(value)) {
+            MDC.put(key, value);
+        }
+    }
+
+
+    private final static String UN_KNOWN = "unKnown";
+
+    /**
+     * 获取请求真实IP
+     *
+     * @param request 。
+     * @return 。
+     */
+    private static String getIpAddress(HttpServletRequest request) {
+        String xip = request.getHeader("X-Real-IP");
+        String xFor = request.getHeader("X-Forwarded-For");
+
+        if (!StringUtils.isEmpty(xFor) && !UN_KNOWN.equalsIgnoreCase(xFor)) {
+            //多次反向代理后会有多个ip值，第一个ip才是真实ip
+            int index = xFor.indexOf(",");
+            if (index != -1) {
+                return xFor.substring(0, index);
+            } else {
+                return xFor;
+            }
+        }
+        xFor = xip;
+        if (!StringUtils.isEmpty(xFor) && !UN_KNOWN.equalsIgnoreCase(xFor)) {
+            return xFor;
+        }
+        if (!StringUtils.isEmpty(xFor) || UN_KNOWN.equalsIgnoreCase(xFor)) {
+            xFor = request.getHeader("Proxy-Client-IP");
+        }
+        if (!StringUtils.isEmpty(xFor) || UN_KNOWN.equalsIgnoreCase(xFor)) {
+            xFor = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (!StringUtils.isEmpty(xFor) || UN_KNOWN.equalsIgnoreCase(xFor)) {
+            xFor = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (!StringUtils.isEmpty(xFor) || UN_KNOWN.equalsIgnoreCase(xFor)) {
+            xFor = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (!StringUtils.isEmpty(xFor) || UN_KNOWN.equalsIgnoreCase(xFor)) {
+            xFor = request.getRemoteAddr();
+        }
+        return xFor;
     }
 }

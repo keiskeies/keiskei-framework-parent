@@ -16,8 +16,12 @@ import top.keiskeiframework.common.exception.BizException;
 public class MdcUtils {
 
     public static final String USER_ID = "userId";
+    public static final String USER_IP = "userIp";
     public static final String USER_NAME = "userName";
     public static final String USER_DEPARTMENT = "userDepartment";
+    public static final String CHECK_DEPARTMENT = "checkDepartment";
+
+    private static final String TRUE_STR = "true";
 
     public static void setUserId(String userId) {
         MDC.put(USER_ID, userId);
@@ -25,6 +29,14 @@ public class MdcUtils {
 
     public static String getUserId() {
         return MDC.get(USER_ID);
+    }
+
+    public static void setUserIp(String userIp) {
+        MDC.put(USER_IP, userIp);
+    }
+
+    public static String getUserIp() {
+        return MDC.get(USER_IP);
     }
 
     public static String getStringUserId() {
@@ -65,6 +77,17 @@ public class MdcUtils {
     }
 
     public static String getUserDepartment() {
-        return MDC.get(USER_DEPARTMENT);
+        return MDC.get(USER_DEPARTMENT) + "";
+    }
+
+    public static void setCheckDepartment(String checkDepartment) {
+        MDC.put(CHECK_DEPARTMENT, checkDepartment );
+    }
+
+    public static String getCheckDepartment() {
+        return MDC.get(CHECK_DEPARTMENT);
+    }
+    public static boolean checkDepartment() {
+        return TRUE_STR.equals(MDC.get(CHECK_DEPARTMENT));
     }
 }

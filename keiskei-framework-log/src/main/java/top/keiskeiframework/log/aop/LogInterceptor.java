@@ -13,7 +13,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.keiskeiframework.common.enums.exception.ApiErrorCode;
@@ -22,7 +21,6 @@ import top.keiskeiframework.common.util.ThreadPoolExecUtils;
 import top.keiskeiframework.common.vo.R;
 import top.keiskeiframework.log.dto.OperateLogDTO;
 import top.keiskeiframework.log.service.OperateLogService;
-import top.keiskeiframework.log.util.UserInfoUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,20 +53,11 @@ public class LogInterceptor {
         OperateLogDTO operateLog = new OperateLogDTO();
         try {
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-            String userId = MdcUtils.getUserId();
-            if (!StringUtils.isEmpty(userId)) {
-                operateLog.setUserId(Integer.valueOf(MdcUtils.getUserId()));
-            }
-            operateLog.setType(request.getMethod());
-            operateLog.setIp(UserInfoUtils.getIpAddress(request));
-            operateLog.setUrl(request.getRequestURI());
 
             MethodSignature ms = (MethodSignature) point.getSignature();
             ApiOperation annotation = ms.getMethod().getAnnotation(ApiOperation.class);
             Api api = point.getTarget().getClass().getAnnotation(Api.class);
             Object[] params = point.getArgs();
-
-            operateLog.setName(String.format(LOG_NAME_FORMATTER, String.join(",", api.tags()), annotation.value()));
 
             StringBuilder sb = new StringBuilder();
             for (Object param : params) {
@@ -76,8 +65,17 @@ public class LogInterceptor {
                     sb.append(JSON.toJSONString(param, SerializerFeature.IgnoreErrorGetter));
                 }
             }
+            operateLog.setType(request.getMethod());
+            operateLog.setIp(MdcUtils.getUserIp());
+            operateLog.setUserId(MdcUtils.getUserId());
+            operateLog.setUrl(request.getRequestURI());
             operateLog.setRequestParam(sb.toString());
-            log.info("{} - start - params: \n{}", operateLog.getName(), operateLog.getRequestParam());
+            operateLog.setName(
+                    String.format(LOG_NAME_FORMATTER,
+                            null != api && null != api.tags() ? String.join(",", api.tags()) : "",
+                            annotation.value())
+            );
+            log.info("{}-start-params:\n{}", operateLog.getName(), operateLog.getRequestParam());
         } catch (Exception e) {
             log.error("log error!", e);
         }
@@ -102,9 +100,9 @@ public class LogInterceptor {
                     if (!GET.equalsIgnoreCase(operateLog.getType())) {
                         operateLog.setResponseParam(responseParam);
                     }
-                    log.info("{} - end - timer: {}- result: \n{}", operateLog.getName(), end - start, responseParam);
+                    log.info("{}-end-timer:{}-result:\n{}", operateLog.getName(), end - start, responseParam);
                 } else {
-                    log.info("{} - end - timer: {}", operateLog.getName(), end - start);
+                    log.info("{}-end-timer:{}", operateLog.getName(), end - start);
                 }
             } catch (Exception e) {
                 log.error("log error!", e);

@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.annotation.OrderBy;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.keiskeiframework.common.base.mp.annotation.MpManyToMany;
-import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
-import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
-import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
+import top.keiskeiframework.common.base.mp.annotation.MpManyToMany;
+import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
+import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
+import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
@@ -25,12 +25,10 @@ import java.util.*;
  * 请求处理工具
  * </p>
  *
- * @param <T>  .
- * @param <ID> .
  * @author v_chenjiamin
  * @since 2021/5/20 18:42
  */
-public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> {
+public class MpRequestUtils {
     private final static String DEPARTMENT_COLUMN = "p";
     private final static String ID_COLUMN = "id";
 
@@ -53,7 +51,11 @@ public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> 
             convertConditions(queryWrapper, conditions, fields);
         }
 
-        queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+        if (MdcUtils.checkDepartment()) {
+            if (!StringUtils.isEmpty(MdcUtils.getUserDepartment())) {
+                queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+            }
+        }
         return queryWrapper;
     }
 
@@ -68,7 +70,11 @@ public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> 
             }
         }
 
-        queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+        if (MdcUtils.checkDepartment()) {
+            if (!StringUtils.isEmpty(MdcUtils.getUserDepartment())) {
+                queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
+            }
+        }
         return queryWrapper;
     }
 
@@ -119,6 +125,9 @@ public class MpRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable> 
         }
         if (!hasOrder) {
             queryWrapper.orderByDesc(ID_COLUMN);
+        }
+        if (MdcUtils.checkDepartment()) {
+            queryWrapper.likeRight(DEPARTMENT_COLUMN, MdcUtils.getUserDepartment());
         }
         return queryWrapper;
     }

@@ -21,10 +21,10 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-
         template.header(MdcUtils.USER_ID, MdcUtils.getUserId());
         template.header(MdcUtils.USER_NAME, MdcUtils.getUserName());
         template.header(MdcUtils.USER_DEPARTMENT, MdcUtils.getUserDepartment());
+        template.header(MdcUtils.CHECK_DEPARTMENT, MdcUtils.getCheckDepartment());
     }
 }
 

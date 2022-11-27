@@ -3,6 +3,7 @@ package top.keiskeiframework.common.base.mp.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,6 @@ import java.util.Set;
 public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializable, M extends BaseMapper<T>>
         extends AbstractMpServiceImpl<T, ID, M>
         implements ITreeBaseService<T, ID>, IService<T> {
-    protected final static String SPILT = "/";
     @Autowired
     protected MpTreeServiceImpl<T, ID, M> treeService;
 
@@ -113,11 +113,11 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
             }
             saveManyToOne(t);
             super.save(t);
-            t.setSign(parent.getSign() + SPILT + t.getId());
+            t.setSign(parent.getSign() + StringPool.SLASH + t.getId());
         } else {
             saveManyToOne(t);
             super.save(t);
-            t.setSign(SPILT + t.getId());
+            t.setSign(StringPool.SLASH + t.getId());
         }
         saveManyToMany(t);
         saveOneToMany(t);
@@ -145,9 +145,9 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
             if (null == parent) {
                 throw new BizException(BizExceptionEnum.ERROR);
             }
-            t.setSign(parent.getSign() + SPILT + t.getId());
+            t.setSign(parent.getSign() + StringPool.SLASH + t.getId());
         } else {
-            t.setSign(SPILT + t.getId());
+            t.setSign(StringPool.SLASH + t.getId());
         }
         updateManyToOne(t);
         super.updateById(t);

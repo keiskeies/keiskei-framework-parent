@@ -6,18 +6,17 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.integration.redis.util.RedisLockRegistry;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
-import top.keiskeiframework.common.exception.cache.LockException;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
+import top.keiskeiframework.common.exception.cache.LockException;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -32,59 +31,61 @@ import java.util.concurrent.locks.Lock;
  * @since ：19/12/11 0:33
  */
 @Aspect
-@Configuration
+@Component
 @Slf4j
 public class LockerInterceptor {
 
     @Autowired
     private RedisLockRegistry redisLockRegistry;
-
-    private final static int MAX_KEY_LENGTH = 64;
-    public final static String CACHE_SPLIT = ":";
+    private final static int MAX_KEY_LENGTH = 128;
+    private final static String TARGET_CLASS_FLAG = "targetClass";
+    private final static String V_TARGET_CLASS_FLAG = "#targetClass";
 
     @Around(value = "@annotation(top.keiskeiframework.common.annotation.annotation.Lockable)")
     public Object aroundLock(ProceedingJoinPoint point) throws Throwable {
-        String key;
-        Object[] arguments = point.getArgs();
 
-        MethodSignature signature = (MethodSignature) point.getSignature();
-        Method method = signature.getMethod();
+        Class<?> targetClass = point.getTarget().getClass();
+        Method method = ((MethodSignature) point.getSignature()).getMethod();
+
         Lockable lockable = method.getAnnotation(Lockable.class);
 
-        key = lockable.key();
-        LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();
-        String[] paramNames = u.getParameterNames(method);
-        if (null != paramNames) {
-            ExpressionParser parser = new SpelExpressionParser();
-            Expression expression = parser.parseExpression(key);
-            EvaluationContext context = new StandardEvaluationContext();
+        EvaluationContext context = new StandardEvaluationContext();
+        context.setVariable(TARGET_CLASS_FLAG, targetClass);
+        String[] paramNames = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
+        Object[] arguments = point.getArgs();
+        if (null != paramNames && null != arguments && paramNames.length == arguments.length) {
             for (int i = 0; i < arguments.length; i++) {
                 context.setVariable(paramNames[i], arguments[i]);
             }
-            String tempKey = expression.getValue(context, String.class);
-            assert tempKey != null;
-            if (tempKey.length() > MAX_KEY_LENGTH) {
-                tempKey = DigestUtils.md5DigestAsHex(tempKey.getBytes(StandardCharsets.UTF_8));
-            }
-            key = point.getTarget().getClass().getName() + CACHE_SPLIT + tempKey;
         }
-        Lock lock = redisLockRegistry.obtain(key);
+
+        String key = lockable.key();
+        if (!key.contains(V_TARGET_CLASS_FLAG) && key.contains(TARGET_CLASS_FLAG)) {
+            key = key.replaceAll(TARGET_CLASS_FLAG, V_TARGET_CLASS_FLAG);
+        }
+
+        String lockKey = new SpelExpressionParser().parseExpression(key).getValue(context, String.class);
+        if (StringUtils.isEmpty(lockKey)) {
+            throw new LockException(BizExceptionEnum.ERROR.getCode(), "lock key error, please check" + targetClass.getName() + "." + method.getName());
+        }
+        if (lockKey.length() > MAX_KEY_LENGTH) {
+            lockKey = DigestUtils.md5DigestAsHex(lockKey.getBytes(StandardCharsets.UTF_8));
+        }
+
+        Lock lock = redisLockRegistry.obtain(lockKey);
         if (null == lock) {
             throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
-
         boolean lockFlag;
         try {
             lockFlag = lock.tryLock(lockable.waitTime(), lockable.lockTimeUnit());
         } catch (InterruptedException e) {
             e.printStackTrace();
+            unlock(lock);
             throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         if (!lockFlag) {
-            try {
-                lock.unlock();
-            } catch (Exception ignore) {
-            }
+            unlock(lock);
             throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         try {
@@ -93,10 +94,15 @@ public class LockerInterceptor {
             throwable.printStackTrace();
             throw throwable;
         } finally {
-            try {
-                lock.unlock();
-            } catch (Exception ignore) {
-            }
+            unlock(lock);
+        }
+    }
+
+    private void unlock(Lock lock) {
+        try {
+            lock.unlock();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

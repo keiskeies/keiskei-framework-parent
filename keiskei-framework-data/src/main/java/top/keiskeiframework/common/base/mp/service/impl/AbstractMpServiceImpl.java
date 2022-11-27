@@ -88,7 +88,7 @@ public abstract class AbstractMpServiceImpl
 
     @Override
     public List<T> saveList(List<T> ts) {
-        this.saveBatch(ts);
+        this.saveOrUpdateBatch(ts);
         return ts;
     }
 
@@ -195,8 +195,13 @@ public abstract class AbstractMpServiceImpl
         if (StringUtils.isEmpty(timeField)) {
             timeField = "create_time";
         }
+        timeField = BeanUtils.humpToUnderline(timeField);
         if (null != chart.getStart() && null != chart.getEnd()) {
-            queryWrapper.between(BeanUtils.humpToUnderline(timeField), chart.getStart(), chart.getEnd());
+            queryWrapper.between(timeField, chart.getStart(), chart.getEnd());
+        } else if (null != chart.getStart()) {
+            queryWrapper.ge(timeField, chart.getStart());
+        } else if (null != chart.getEnd()) {
+            queryWrapper.le(timeField, chart.getEnd());
         }
 
         String column = BeanUtils.humpToUnderline(chart.getColumn());

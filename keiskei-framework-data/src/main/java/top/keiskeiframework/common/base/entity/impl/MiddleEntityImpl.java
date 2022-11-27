@@ -32,4 +32,9 @@ public class MiddleEntityImpl<ID1 extends Serializable, ID2 extends Serializable
     protected String id;
     protected ID1 id1;
     protected ID2 id2;
+
+    @Override
+    public String getId() {
+        return id1 + MIDDLE_SPLIT + id2;
+    }
 }

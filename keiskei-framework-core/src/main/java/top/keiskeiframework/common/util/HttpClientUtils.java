@@ -53,7 +53,7 @@ public class HttpClientUtils {
                 throw new RuntimeException("Could not access protected resource. Server returned http code: " + code);
             }
             get.releaseConnection();
-            return EntityUtils.toString(response.getEntity(), "UTF-8");
+            return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());

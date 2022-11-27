@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.annotation.SortBy;
@@ -13,8 +12,6 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
-import top.keiskeiframework.common.base.enums.SystemEnum;
-import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.util.MdcUtils;
 
 import javax.persistence.EntityManager;
@@ -329,9 +326,10 @@ public class JpaRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable>
         List<Predicate> predicates = new ArrayList<>();
 
         // 组装用户部门数据
-        if (!(SystemEnum.SUPER_ADMIN_ID + "").equals(MdcUtils.getUserId())) {
-            Assert.hasText(MdcUtils.getUserDepartment(), BizExceptionEnum.NOT_FOUND_ERROR.getMsg());
-            predicates.add(builder.like(root.get(DEPARTMENT_COLUMN), MdcUtils.getUserDepartment() + LIKE_FIX));
+        if (MdcUtils.checkDepartment()) {
+            if (!StringUtils.isEmpty(MdcUtils.getUserDepartment())) {
+                predicates.add(builder.like(root.get(DEPARTMENT_COLUMN), MdcUtils.getUserDepartment() + LIKE_FIX));
+            }
         }
         if (!CollectionUtils.isEmpty(conditions)) {
             Map<String, Join<T, ?>> joinMap = new HashMap<>();
