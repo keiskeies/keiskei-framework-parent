@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.base.entity.IMiddleEntity;
 import top.keiskeiframework.common.base.entity.impl.MiddleEntityImpl;
 
@@ -18,6 +19,7 @@ import javax.persistence.Table;
  * @author v_chenjiamin
  * @since 2022/11/15 15:36
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "sys_user_department")

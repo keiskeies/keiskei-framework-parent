@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
  */
 public class SecurityUtils {
 
-    public static String PASSWORD_SALT = "$KEISKEI";
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
     public final static String USER_TOKEN_KEY = "user";
 
@@ -57,15 +56,11 @@ public class SecurityUtils {
     }
 
     public static boolean matchPassword(String password, String encodePassword) {
-        return B_CRYPT_PASSWORD_ENCODER.matches(saltPassword(password), encodePassword);
+        return B_CRYPT_PASSWORD_ENCODER.matches(password, encodePassword);
     }
 
     public static String encodePassword(String password) {
-        return B_CRYPT_PASSWORD_ENCODER.encode(saltPassword(password));
-    }
-
-    private static String saltPassword(String password) {
-        return PASSWORD_SALT + password;
+        return B_CRYPT_PASSWORD_ENCODER.encode(password);
     }
 
 
@@ -111,5 +106,6 @@ public class SecurityUtils {
         }
         return xFor;
     }
+
 
 }

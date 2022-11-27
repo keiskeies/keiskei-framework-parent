@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.base.entity.impl.ListEntityImpl;
 import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
 import top.keiskeiframework.common.util.data.MoneyDeserializer;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 /**
  * @author cjm
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "per_quarter_table")

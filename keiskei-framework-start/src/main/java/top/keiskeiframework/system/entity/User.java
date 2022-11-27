@@ -4,10 +4,16 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.IListEntity;
@@ -25,6 +31,7 @@ import java.util.List;
 /**
  * @author cjm
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "sys_user")
@@ -71,27 +78,15 @@ public class User extends ListEntityImpl<Integer> implements IListEntity<Integer
     @Column(columnDefinition = "tinyint(1) default 1")
     private Boolean enabled;
 
-    /**
-     * 最后登录时间
-     */
-    @JsonIgnore
-    private LocalDateTime lastLoginTime;
-
-    /**
-     * 密码错误次数
-     */
-    @JsonIgnore
-    private Integer passwordErrorTimes;
-
-    /**
-     * 锁定时间
-     */
-    @JsonIgnore
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "锁定时间", dataType = "LocalDateTime")
     private LocalDateTime accountLockTime;
 
-    /**
-     * 账号过期时间
-     */
-    @JsonIgnore
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "账号过期时间", dataType = "LocalDateTime")
     private LocalDateTime accountExpiredTime;
 }

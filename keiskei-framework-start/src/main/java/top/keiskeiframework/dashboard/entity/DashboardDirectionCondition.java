@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.impl.ListEntityImpl;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotBlank;
  * @author v_chenjiamin
  * @since 2021/10/10 01:09
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "dashboard_direction_condition")

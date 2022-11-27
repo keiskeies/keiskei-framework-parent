@@ -21,8 +21,9 @@ public interface IUserService extends IBaseService<User, Integer>, UserDetailsSe
      * 添加用户密码错误次数
      *
      * @param username 用户名
+     * @return 错误次数
      */
-    void addPasswordErrorTimes(String username);
+    Long addPasswordErrorTimes(String username);
 
     /**
      * 获取当前用户信息

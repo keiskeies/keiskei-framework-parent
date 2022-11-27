@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.base.entity.impl.ListEntityImpl;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import javax.persistence.*;
  * @author James Chen
  * @since 2022/11/17 10:38
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "sys_user_setting")

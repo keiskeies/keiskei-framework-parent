@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.base.entity.impl.TreeEntityImpl;
 import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
 import top.keiskeiframework.common.util.data.RateDeserializer;
@@ -20,6 +21,7 @@ import javax.persistence.Transient;
 /**
  * @author cjm
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "per_inspirit_distribution")

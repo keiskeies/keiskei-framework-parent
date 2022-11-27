@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.annotation.dashboard.Chartable;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.base.entity.impl.ListEntityImpl;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
  * @author James Chen right_way@foxmail.com
  * @since 2020-12-16 13:36:30
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Chartable
 @Entity

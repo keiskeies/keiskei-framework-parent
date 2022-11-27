@@ -63,8 +63,10 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         // 不进行拦截的路径
         http.authorizeRequests().antMatchers("/api/**").permitAll();
-        if (null != systemProperties.getPermitUri()) {
-            http.authorizeRequests().antMatchers(systemProperties.getPermitUri()).permitAll();
+        if (null != systemProperties.getPermitUris()) {
+            for (AuthenticateUrl authenticateUrl : systemProperties.getPermitUris()) {
+                http.authorizeRequests().antMatchers(authenticateUrl.getMethod(), authenticateUrl.getPath()).permitAll();
+            }
         }
 
         // 登陆后可访问的路径
@@ -80,7 +82,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.authorizeRequests().anyRequest().access(
                 "@rbacAuthorityService.hasPermission(request, authentication)"
         );
-        http.rememberMe().rememberMeParameter("remember-me").tokenValiditySeconds(systemProperties.getRememberSeconds());
+        http.rememberMe().rememberMeParameter("rememberMe").tokenValiditySeconds(systemProperties.getRememberSeconds());
     }
 
     @Override
@@ -91,7 +93,7 @@ public class KeiskeiWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new VerifyCodeDaoAuthenticationProvider();
         provider.setHideUserNotFoundExceptions(false);
         provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder());

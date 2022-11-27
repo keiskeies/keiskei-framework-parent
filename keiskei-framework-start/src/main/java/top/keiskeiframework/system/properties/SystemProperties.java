@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import top.keiskeiframework.system.util.ResponseUtils;
-import top.keiskeiframework.system.util.SecurityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class SystemProperties {
     /**
      * 不进行拦截路径
      */
-    private String[] permitUri;
+    private List<AuthenticateUrl> permitUris = new ArrayList<>();
 
     /**
      * 是否允许跨域
@@ -89,16 +88,6 @@ public class SystemProperties {
      * 初始默认密码
      */
     private String defaultPassword = "Abcd@1234";
-
-    /**
-     * 密码盐
-     */
-    private String passwordSalt = "$KEISKEI";
-
-    public void setPasswordSalt(String passwordSalt) {
-        SecurityUtils.PASSWORD_SALT = passwordSalt;
-        this.passwordSalt = passwordSalt;
-    }
 
 
 }

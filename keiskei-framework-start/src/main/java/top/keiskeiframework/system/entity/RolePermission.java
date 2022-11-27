@@ -3,6 +3,7 @@ package top.keiskeiframework.system.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.base.entity.IMiddleEntity;
 import top.keiskeiframework.common.base.entity.impl.MiddleEntityImpl;
 
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 /**
  * @author cjm
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "sys_role_permission_relation")
 @Entity

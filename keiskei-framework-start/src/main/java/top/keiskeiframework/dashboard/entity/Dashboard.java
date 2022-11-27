@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.keiskeiframework.common.annotation.validate.Insert;
 import top.keiskeiframework.common.annotation.validate.Update;
 import top.keiskeiframework.common.base.entity.impl.ListEntityImpl;
@@ -29,6 +30,7 @@ import java.util.Collection;
  * @author v_chenjiamin
  * @since 2021/4/13 16:50
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "dashboard")
