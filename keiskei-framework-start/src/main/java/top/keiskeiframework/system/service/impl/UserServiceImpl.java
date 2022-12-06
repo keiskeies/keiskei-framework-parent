@@ -173,7 +173,7 @@ public class UserServiceImpl extends MpListServiceImpl<User, Integer, UserMapper
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
             List<UserDepartment> userDepartments = userDepartmentService.getById1(tokenUser.getId());
             if (!CollectionUtils.isEmpty(userDepartments)) {
-                BaseRequestVO<Department, Integer> baseRequestVO = new BaseRequestVO<>();
+                BaseRequestVO<Department, Integer> baseRequestVO = new BaseRequestVO();
                 List<Integer> departmentIds = userDepartments.stream().map(UserDepartment::getId2).collect(Collectors.toList());
                 baseRequestVO.addCondition(new QueryConditionVO("id", ConditionEnum.IN, departmentIds));
                 List<Department> departments = departmentService.findListByCondition(baseRequestVO);
@@ -223,7 +223,7 @@ public class UserServiceImpl extends MpListServiceImpl<User, Integer, UserMapper
         if (SystemEnum.SUPER_ADMIN_ID != tokenUser.getId()) {
             List<UserRole> userRoles = userRoleService.getById1(tokenUser.getId());
             if (!CollectionUtils.isEmpty(userRoles)) {
-                BaseRequestVO<Role, Integer> baseRequestVO = new BaseRequestVO<>();
+                BaseRequestVO<Role, Integer> baseRequestVO = new BaseRequestVO();
                 List<Integer> roleIds = userRoles.stream().map(UserRole::getId2).collect(Collectors.toList());
                 baseRequestVO.addCondition(new QueryConditionVO("id", ConditionEnum.IN, roleIds));
                 List<Role> roles = roleService.findListByCondition(baseRequestVO);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.base.entity.IMiddleEntity;
 
 import javax.persistence.Column;
@@ -35,6 +36,9 @@ public class MiddleEntityImpl<ID1 extends Serializable, ID2 extends Serializable
 
     @Override
     public String getId() {
+        if (!StringUtils.isEmpty(this.id)) {
+            return this.id;
+        }
         return id1 + MIDDLE_SPLIT + id2;
     }
 }

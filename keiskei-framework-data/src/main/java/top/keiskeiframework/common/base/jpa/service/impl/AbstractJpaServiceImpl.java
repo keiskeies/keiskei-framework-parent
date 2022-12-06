@@ -17,8 +17,8 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
 import top.keiskeiframework.common.base.jpa.util.JpaRequestUtils;
 import top.keiskeiframework.common.base.jpa.vo.JpaPageRequest;
-import top.keiskeiframework.common.util.PageResultUtils;
 import top.keiskeiframework.common.base.service.IBaseService;
+import top.keiskeiframework.common.base.util.QueryUtils;
 import top.keiskeiframework.common.dto.dashboard.ChartRequestDTO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
@@ -28,6 +28,7 @@ import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.ColumnFunctionUtils;
 import top.keiskeiframework.common.util.DateTimeUtils;
+import top.keiskeiframework.common.util.PageResultUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
@@ -75,12 +76,12 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
 
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO request, BasePageVO page) {
         if (null == page) {
             page = new BasePageVO();
         }
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, QueryUtils.getConditions(request));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
@@ -94,9 +95,9 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public T findOneByCondition(BaseRequestVO<T, ID> request) {
+    public T findOneByCondition(BaseRequestVO request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, QueryUtils.getConditions(request));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.findOne(specification).orElse(null);
@@ -139,9 +140,9 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
+    public List<T> findListByCondition(BaseRequestVO request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, QueryUtils.getConditions(request));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.findAll(specification);
@@ -149,9 +150,11 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
 
     @Override
     public boolean updateListByCondition(List<QueryConditionVO> conditions, T t) {
-        BaseRequestVO<T, ID> baseRequest = new BaseRequestVO<>();
-        baseRequest.setListConditions(conditions);
-        List<T> ts = this.findListByCondition(baseRequest);
+        Specification<T> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, conditions);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+        List<T> ts = jpaSpecificationExecutor.findAll(specification);
         for (T tt : ts) {
             BeanUtils.copyPropertiesIgnoreNull(t, tt);
         }
@@ -226,16 +229,16 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
     }
 
     @Override
-    public Long getCount(BaseRequestVO<T, ID> request) {
+    public Long getCount(BaseRequestVO request) {
         Specification<T> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, request.getListConditions());
+            List<Predicate> predicates = JpaRequestUtils.getPredicates(root, criteriaBuilder, QueryUtils.getConditions(request));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return jpaSpecificationExecutor.count(specification);
     }
 
     @Override
-    public Boolean exist(BaseRequestVO<T, ID> request) {
+    public Boolean exist(BaseRequestVO request) {
         return this.getCount(request) > 0;
     }
 

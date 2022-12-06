@@ -32,7 +32,7 @@ public class InspiritDistributionServiceImpl extends MpListServiceImpl<InspiritD
     @Override
     public List<InspiritDistribution> findListByQuarterTableIdAndDepartment(Integer quarterTableId) {
         String departmentSign = MdcUtils.getUserDepartment();
-        BaseRequestVO<InspiritDistribution, Integer> request = new BaseRequestVO<>();
+        BaseRequestVO<InspiritDistribution, Integer> request = new BaseRequestVO();
         request.addCondition(new QueryConditionVO("quarterTableId", ConditionEnum.EQ, quarterTableId));
         request.addCondition(new QueryConditionVO("sign", ConditionEnum.LL, departmentSign));
         List<InspiritDistribution> list = super.findListByCondition(request);

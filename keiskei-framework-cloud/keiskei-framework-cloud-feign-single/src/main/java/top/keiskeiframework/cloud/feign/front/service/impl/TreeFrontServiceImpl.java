@@ -24,7 +24,7 @@ public class TreeFrontServiceImpl<DTO extends ITreeEntity<ID>, T extends ITreeEn
         implements ITreeFrontService<DTO, ID> {
 
     @Override
-    public PageResultVO<DTO> page(BaseRequestVO<DTO, ID> requestVO, BasePageVO pageVO) {
+    public PageResultVO<DTO> page(BaseRequestVO requestVO, BasePageVO pageVO) {
         PageResultVO<DTO> tiPage =  super.page(requestVO, pageVO);
         if (requestVO.getTree()) {
             List<DTO> treeList = new TreeEntityDtoUtils<>(tiPage.getData()).getTreeAll();
@@ -34,7 +34,7 @@ public class TreeFrontServiceImpl<DTO extends ITreeEntity<ID>, T extends ITreeEn
     }
 
     @Override
-    public List<DTO> options(BaseRequestVO<DTO, ID> requestVO) {
+    public List<DTO> options(BaseRequestVO requestVO) {
         List<DTO> noTreeData = super.options(requestVO);
         if (requestVO.getTree()) {
             return new TreeEntityDtoUtils<>(noTreeData).getTreeAll();

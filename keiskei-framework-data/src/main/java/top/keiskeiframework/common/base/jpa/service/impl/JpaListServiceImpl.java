@@ -2,9 +2,11 @@ package top.keiskeiframework.common.base.jpa.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IListEntity;
 import top.keiskeiframework.common.base.service.IListBaseService;
@@ -25,6 +27,9 @@ import java.util.List;
 @Slf4j
 public class JpaListServiceImpl<T extends IListEntity<ID>, ID extends Serializable> extends AbstractJpaServiceImpl<T, ID> implements IListBaseService<T, ID> {
 
+    @Autowired
+    private JpaListServiceImpl<T, ID> jpaListService;
+
 
     @Override
     @Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id")
@@ -33,9 +38,10 @@ public class JpaListServiceImpl<T extends IListEntity<ID>, ID extends Serializab
     }
 
     @Override
-    @CachePut(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #t.id")
+    @Lockable(key = "targetClass.name + ':' + #t.hashCode()", autoUnlock = false)
     public T saveOne(T t) {
-        return super.saveOne(t);
+        t = super.saveOne(t);
+        return jpaListService.updateOne(t);
     }
 
     @Override

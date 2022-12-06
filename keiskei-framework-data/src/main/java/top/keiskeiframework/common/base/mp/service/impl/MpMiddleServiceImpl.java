@@ -45,7 +45,7 @@ public class MpMiddleServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #ts[0].id1")
-    @Lockable(key = "targetClass.name + ':' + #ts[0].id1")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id1", autoUnlock = false)
     public List<T> saveOrUpdateById1(List<T> ts) {
         middleService.removeById1(ts.get(0).getId1());
         middleService.saveBatch(ts);
@@ -55,7 +55,7 @@ public class MpMiddleServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CachePut(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID1:' + #ts[0].id1")
-    @Lockable(key = "targetClass.name + ':' + #ts[0].id1")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id1", autoUnlock = false)
     public List<T> updateById1(List<T> ts) {
         middleService.updateBatchById(ts);
         return ts;
@@ -64,7 +64,7 @@ public class MpMiddleServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     @Cacheable(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #ts[0].id2")
-    @Lockable(key = "targetClass.name + ':' + #ts[0].id2")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id2", autoUnlock = false)
     public List<T> saveOrUpdateById2(List<T> ts) {
         middleService.removeById2(ts.get(0).getId2());
         middleService.saveBatch(ts);
@@ -74,7 +74,7 @@ public class MpMiddleServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CachePut(cacheNames = CACHE_MIDDLE_NAME, key = "targetClass.name + ':ID2:' + #ts[0].id2")
-    @Lockable(key = "targetClass.name + ':' + #ts[0].id2")
+    @Lockable(key = "targetClass.name + ':' + #ts[0].id2", autoUnlock = false)
     public List<T> updateById2(List<T> ts) {
         middleService.updateBatchById(ts);
         return ts;

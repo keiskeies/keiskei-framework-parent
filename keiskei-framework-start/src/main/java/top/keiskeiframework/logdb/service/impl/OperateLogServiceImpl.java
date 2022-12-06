@@ -42,7 +42,7 @@ public class OperateLogServiceImpl extends MpListServiceImpl<OperateLog, Integer
     }
 
     @Override
-    @Lockable(key = "#t.hashCode()")
+    @Lockable(key = "targetClass.name + ':' + #operateLog.hashCode()", autoUnlock = false)
     public boolean save(OperateLog operateLog) {
         return super.save(operateLog);
     }

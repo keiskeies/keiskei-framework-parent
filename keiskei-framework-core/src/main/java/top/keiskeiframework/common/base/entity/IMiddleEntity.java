@@ -1,12 +1,10 @@
 package top.keiskeiframework.common.base.entity;
 
-import top.keiskeiframework.common.base.entity.IBaseEntity;
-
 import java.io.Serializable;
 
 /**
  * <p>
- *
+ * 中间关系表
  * </p>
  *
  * @author v_chenjiamin

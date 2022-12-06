@@ -1,7 +1,11 @@
 package top.keiskeiframework.cloud.feign.service;
 
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
+import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
@@ -24,45 +28,11 @@ import java.util.Map;
  */
 public interface IBaseFeignService<T extends IBaseEntity<ID>, ID extends Serializable> {
 
-    /**
-     * 分页查询
-     *
-     * @param conditions 查询条件
-     * @param show       显示字段
-     * @param offset     offset
-     * @param page       页码
-     * @param size       size
-     * @param desc       倒序字段
-     * @param asc        正序字段
-     * @return 。
-     */
     @GetMapping
-    R<PageResultVO<T>> page(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "offset", required = false) Long offset,
-            @RequestParam(name = "page", defaultValue = "1", required = false) Long page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) Long size,
-            @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc
-    );
+    R<PageResultVO<T>> page(@SpringQueryMap PageRequestVO pageRequestVO);
 
-    /**
-     * 下拉框
-     *
-     * @param conditions 查询条件
-     * @param show       显示字段
-     * @param desc       倒序字段
-     * @param asc        正序字段
-     * @return 。
-     */
     @GetMapping("/options")
-    R<List<T>> options(
-            @RequestParam(name = "conditions", required = false) String conditions,
-            @RequestParam(name = "show", required = false) String show,
-            @RequestParam(name = "desc", required = false) String desc,
-            @RequestParam(name = "asc", required = false) String asc
-    );
+    R<List<T>> options(@SpringQueryMap BaseRequestVO baseRequestVO);
 
 
     /**

@@ -32,7 +32,7 @@ public interface IFrontControllerService<T extends IBaseEntity<ID>, ID extends S
      * @return 。
      */
     @GetMapping
-    R<PageResultVO<T>> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO);
+    R<PageResultVO<T>> page(BaseRequestVO requestVO, BasePageVO pageVO);
 
     /**
      * 下拉框
@@ -41,7 +41,7 @@ public interface IFrontControllerService<T extends IBaseEntity<ID>, ID extends S
      * @return 。
      */
     @GetMapping("/options")
-    R<List<T>> options(BaseRequestVO<T, ID> requestVO);
+    R<List<T>> options(BaseRequestVO requestVO);
 
     /**
      * 详情

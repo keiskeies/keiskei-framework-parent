@@ -2,6 +2,7 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.ITreeFrontService;
@@ -31,19 +32,12 @@ public class TreeFrontServiceImpl<T extends ITreeEntity<ID>, ID extends Serializ
     protected ITreeFeignService<T, ID> treeFeignService;
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO) {
-        PageResultVO<T> tiPage = treeFeignService.page(
-                requestVO.getConditions(),
-                requestVO.getShow(),
-                pageVO.getOffset(),
-                pageVO.getPage(),
-                pageVO.getSize(),
-                requestVO.getDesc(),
-                requestVO.getAsc(),
-                false
-        ).getData();
+    public PageResultVO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
+        boolean tree = requestVO.getTree();
+        requestVO.setTree(false);
+        PageResultVO<T> tiPage = treeFeignService.page(new PageRequestVO(requestVO, pageVO)).getData();
 
-        if (requestVO.getTree()) {
+        if (tree) {
             List<T> treeList = new TreeEntityDtoUtils<>(tiPage.getData()).getTreeAll();
             tiPage.setData(treeList);
         }
@@ -52,15 +46,11 @@ public class TreeFrontServiceImpl<T extends ITreeEntity<ID>, ID extends Serializ
 
 
     @Override
-    public List<T> options(BaseRequestVO<T, ID> requestVO) {
-        List<T> noTreeData = treeFeignService.options(
-                requestVO.getConditions(),
-                requestVO.getShow(),
-                requestVO.getDesc(),
-                requestVO.getAsc(),
-                false
-        ).getData();
-        if (requestVO.getTree()) {
+    public List<T> options(BaseRequestVO requestVO) {
+        boolean tree = requestVO.getTree();
+        requestVO.setTree(false);
+        List<T> noTreeData = treeFeignService.options(requestVO).getData();
+        if (tree) {
             return new TreeEntityDtoUtils<>(noTreeData).getTreeAll();
         }
         return noTreeData;

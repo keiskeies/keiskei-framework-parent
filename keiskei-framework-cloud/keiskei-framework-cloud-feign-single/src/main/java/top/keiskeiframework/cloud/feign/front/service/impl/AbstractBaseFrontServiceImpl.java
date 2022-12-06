@@ -45,15 +45,15 @@ public class AbstractBaseFrontServiceImpl<DTO extends IBaseEntity<ID>, T extends
     protected IControllerService<T, ID> baseFeignService;
 
     @Override
-    public PageResultVO<DTO> page(BaseRequestVO<DTO, ID> requestVO, BasePageVO pageVO) {
-        BaseRequestVO<T, ID> requestVO1 = BaseRequestUtils.translate2T(requestVO);
+    public PageResultVO<DTO> page(BaseRequestVO requestVO, BasePageVO pageVO) {
+        BaseRequestVO requestVO1 = BaseRequestUtils.translate2T(requestVO);
         PageResultVO<T> tResult = baseFeignService.page(requestVO1, pageVO).getData();
         return BaseRequestUtils.translate2Dto(tResult, dtoClass);
     }
 
     @Override
-    public List<DTO> options(BaseRequestVO<DTO, ID> requestVO) {
-        BaseRequestVO<T, ID> requestVO1 = BaseRequestUtils.translate2T(requestVO);
+    public List<DTO> options(BaseRequestVO requestVO) {
+        BaseRequestVO requestVO1 = BaseRequestUtils.translate2T(requestVO);
         List<T> tResult = baseFeignService.options(requestVO1).getData();
         return BaseRequestUtils.translate2Dto(tResult, dtoClass);
     }
@@ -67,7 +67,7 @@ public class AbstractBaseFrontServiceImpl<DTO extends IBaseEntity<ID>, T extends
 
     @Override
     public DTO getOne(String conditions) {
-        BaseRequestVO<T, ID> requestVO = new BaseRequestVO<>();
+        BaseRequestVO requestVO = new BaseRequestVO();
         requestVO.setConditions(conditions);
         T t = baseFeignService.getOne(requestVO).getData();
         return BaseRequestUtils.translate2Dto(t, dtoClass);
@@ -75,7 +75,7 @@ public class AbstractBaseFrontServiceImpl<DTO extends IBaseEntity<ID>, T extends
 
     @Override
     public Long count(String conditions) {
-        BaseRequestVO<T, ID> requestVO = new BaseRequestVO<>();
+        BaseRequestVO requestVO = new BaseRequestVO();
         requestVO.setConditions(conditions);
         return baseFeignService.count(requestVO).getData();
     }

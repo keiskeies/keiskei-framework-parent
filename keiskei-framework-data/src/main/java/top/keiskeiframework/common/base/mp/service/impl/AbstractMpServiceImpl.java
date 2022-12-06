@@ -109,7 +109,7 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO request, BasePageVO page) {
         if (null == page) {
             page = new BasePageVO();
         }
@@ -129,12 +129,12 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
+    public List<T> findListByCondition(BaseRequestVO request) {
         return this.list(MpRequestUtils.getQueryWrapper(request, getEntityClass()));
     }
 
     @Override
-    public T findOneByCondition(BaseRequestVO<T, ID> request) {
+    public T findOneByCondition(BaseRequestVO request) {
         return this.getOne(MpRequestUtils.getQueryWrapper(request, getEntityClass()));
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public Boolean exist(BaseRequestVO<T, ID> request) {
+    public Boolean exist(BaseRequestVO request) {
         return super.count(MpRequestUtils.getQueryWrapperByConditions(request, getEntityClass())) > 0;
     }
 
@@ -172,7 +172,7 @@ public abstract class AbstractMpServiceImpl
     }
 
     @Override
-    public Long getCount(BaseRequestVO<T, ID> request) {
+    public Long getCount(BaseRequestVO request) {
         return this.count(MpRequestUtils.getQueryWrapper(request, getEntityClass()));
     }
 

@@ -49,7 +49,7 @@ public class UserPasswordServiceImpl extends MpBaseServiceImpl<UserPassword, Int
         // 查询最近修改的密码
         LocalDateTime lastTime = LocalDateTime.now().plusDays(-1L * systemProperties.getPasswordRepeatMinDay());
 
-        BaseRequestVO<UserPassword, Integer> request = new BaseRequestVO<>();
+        BaseRequestVO<UserPassword, Integer> request = new BaseRequestVO();
         request.addCondition(new QueryConditionVO("userId", userId));
         request.addCondition(new QueryConditionVO("createTime", ConditionEnum.GT, lastTime));
 

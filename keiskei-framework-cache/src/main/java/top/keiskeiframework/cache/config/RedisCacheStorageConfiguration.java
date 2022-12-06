@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -19,7 +20,10 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.redis.util.RedisLockRegistry;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.keiskeiframework.cache.enums.CacheTimeEnum;
+import top.keiskeiframework.cache.properties.KeiskeiCacheProperties;
 import top.keiskeiframework.cache.resolver.RedisCacheManagerResolver;
 
 import java.time.Duration;
@@ -35,6 +39,10 @@ import java.util.Map;
 @Configuration
 @Slf4j
 public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
+
+
+    @Autowired
+    private KeiskeiCacheProperties keiskeiCacheProperties;
 
     /**
      * @param redisConnectionFactory .
@@ -122,6 +130,14 @@ public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
         configurationMap.put(CacheTimeEnum.D5, this.getDefaultCacheConfiguration(5 * 24 * 60 * 60));
         configurationMap.put(CacheTimeEnum.D7, this.getDefaultCacheConfiguration(7 * 24 * 60 * 60));
 
+        if (!CollectionUtils.isEmpty(keiskeiCacheProperties.getTimers())) {
+            for (KeiskeiCacheProperties.CacheTimer timer : keiskeiCacheProperties.getTimers()) {
+                if (!StringUtils.isEmpty(timer.getKeySuffix()) && null != timer.getSecond() && timer.getSecond() > 0) {
+                    configurationMap.put(timer.getKeySuffix(), this.getDefaultCacheConfiguration(timer.getSecond()));
+                }
+            }
+        }
+
         return configurationMap;
     }
 
@@ -141,7 +157,6 @@ public class RedisCacheStorageConfiguration extends CachingConfigurerSupport {
 
         return RedisCacheConfiguration
                 .defaultCacheConfig()
-                .disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .entryTtl(Duration.ofSeconds(seconds));

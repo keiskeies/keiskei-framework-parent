@@ -16,7 +16,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
-import top.keiskeiframework.common.exception.cache.LockException;
+import top.keiskeiframework.common.exception.BizException;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -37,6 +37,7 @@ public class LockerInterceptor {
 
     @Autowired
     private RedisLockRegistry redisLockRegistry;
+    private final static String LOCK_KEY_SUFFIX = "LOCK:";
     private final static int MAX_KEY_LENGTH = 128;
     private final static String TARGET_CLASS_FLAG = "targetClass";
     private final static String V_TARGET_CLASS_FLAG = "#targetClass";
@@ -66,15 +67,16 @@ public class LockerInterceptor {
 
         String lockKey = new SpelExpressionParser().parseExpression(key).getValue(context, String.class);
         if (StringUtils.isEmpty(lockKey)) {
-            throw new LockException(BizExceptionEnum.ERROR.getCode(), "lock key error, please check" + targetClass.getName() + "." + method.getName());
+            throw new BizException(BizExceptionEnum.ERROR.getCode(), "lock key error, please check" + targetClass.getName() + "." + method.getName());
         }
         if (lockKey.length() > MAX_KEY_LENGTH) {
             lockKey = DigestUtils.md5DigestAsHex(lockKey.getBytes(StandardCharsets.UTF_8));
         }
+        lockKey = LOCK_KEY_SUFFIX + lockKey;
 
         Lock lock = redisLockRegistry.obtain(lockKey);
         if (null == lock) {
-            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+            throw new BizException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         boolean lockFlag;
         try {
@@ -82,16 +84,17 @@ public class LockerInterceptor {
         } catch (InterruptedException e) {
             e.printStackTrace();
             unlock(lock);
-            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+            throw new BizException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         if (!lockFlag) {
             unlock(lock);
-            throw new LockException(BizExceptionEnum.ERROR.getCode(), lockable.message());
+            throw new BizException(BizExceptionEnum.ERROR.getCode(), lockable.message());
         }
         try {
             return point.proceed();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+            unlock(lock);
             throw throwable;
         } finally {
             unlock(lock);

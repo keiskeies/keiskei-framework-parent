@@ -30,7 +30,7 @@ public interface IFrontService<T extends IBaseEntity<ID>, ID extends Serializabl
      * @param pageVO    分页条件
      * @return 。
      */
-    PageResultVO<T> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO);
+    PageResultVO<T> page(BaseRequestVO requestVO, BasePageVO pageVO);
 
     /**
      * 下拉框
@@ -38,7 +38,7 @@ public interface IFrontService<T extends IBaseEntity<ID>, ID extends Serializabl
      * @param requestVO 查询条件
      * @return 。
      */
-    List<T> options(BaseRequestVO<T, ID> requestVO);
+    List<T> options(BaseRequestVO requestVO);
 
 
     /**

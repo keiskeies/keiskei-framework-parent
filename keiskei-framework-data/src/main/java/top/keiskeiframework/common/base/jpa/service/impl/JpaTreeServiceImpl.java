@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import top.keiskeiframework.common.annotation.annotation.Lockable;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.base.service.ITreeBaseService;
@@ -51,20 +52,16 @@ public class JpaTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializab
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")
+    @Lockable(key = "targetClass.name + ':' + #t.hashCode()", autoUnlock = false)
     public T saveOne(T t) {
         if (null != t.getParentId()) {
-            T parent = treeService.findOneById(t.getParentId());
-            if (null == parent) {
+            if (null == treeService.findOneById(t.getParentId())) {
                 throw new BizException(BizExceptionEnum.ERROR);
             }
-            t = jpaRepository.save(t);
-            t.setSign(parent.getSign() + SPILT + t.getId());
-        } else {
-            t = jpaRepository.save(t);
-            t.setSign(SPILT + t.getId());
         }
 
-        return super.updateOne(t);
+        t = jpaRepository.save(t);
+        return treeService.updateOne(t);
     }
 
     @Override
@@ -73,7 +70,16 @@ public class JpaTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializab
             cacheable = {@Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #t.id")}
     )
     public T updateOne(T t) {
-        return treeService.saveOne(t);
+        if (null != t.getParentId()) {
+            T parent = treeService.findOneById(t.getParentId());
+            if (null == parent) {
+                throw new BizException(BizExceptionEnum.ERROR);
+            }
+            t.setSign(parent.getSign() + SPILT + t.getId());
+        } else {
+            t.setSign(SPILT + t.getId());
+        }
+        return jpaRepository.save(t);
     }
 
     @Override

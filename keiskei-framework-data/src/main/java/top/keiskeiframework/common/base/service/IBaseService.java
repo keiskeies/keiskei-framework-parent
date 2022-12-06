@@ -29,11 +29,11 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
     String CACHE_LIST_NAME = "CACHE:LIST";
     String CACHE_MIDDLE_NAME = "CACHE:MIDDLE";
 
-    PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page);
+    PageResultVO<T> page(BaseRequestVO request, BasePageVO page);
 
     T findOneById(Serializable id);
     T findOneByColumn(SFunction<T, Serializable> column, Serializable value);
-    T findOneByCondition(BaseRequestVO<T, ID> request);
+    T findOneByCondition(BaseRequestVO request);
 
     T saveOne(T t);
     T updateOne(T t);
@@ -41,7 +41,7 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
 
     List<T> findList();
     List<T> findListByColumn(SFunction<T, Serializable> column, Serializable value);
-    List<T> findListByCondition(BaseRequestVO<T, ID> request);
+    List<T> findListByCondition(BaseRequestVO request);
 
     List<T> saveList(List<T> ts);
     List<T> updateList(List<T> ts);
@@ -55,8 +55,8 @@ public interface IBaseService<T extends IBaseEntity<ID>, ID extends Serializable
     boolean deleteListByColumn(SFunction<T, Serializable> colum, Serializable value);
     boolean deleteListByCondition(List<QueryConditionVO> conditions);
 
-    Long getCount(BaseRequestVO<T, ID> request);
-    Boolean exist(BaseRequestVO<T, ID> request);
+    Long getCount(BaseRequestVO request);
+    Boolean exist(BaseRequestVO request);
     Map<String, Double> getChartOptions(ChartRequestDTO chartRequestDTO);
 
 }

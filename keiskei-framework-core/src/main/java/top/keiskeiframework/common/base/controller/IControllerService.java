@@ -38,7 +38,7 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
      * @return 。
      */
     @GetMapping
-    R<PageResultVO<T>> page(BaseRequestVO<T, ID> BaseRequestVO, BasePageVO page);
+    R<PageResultVO<T>> page(BaseRequestVO BaseRequestVO, BasePageVO page);
 
     /**
      * 下拉框
@@ -47,7 +47,7 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
      * @return 。
      */
     @GetMapping("/options")
-    R<List<T>> options(BaseRequestVO<T, ID> BaseRequestVO);
+    R<List<T>> options(BaseRequestVO BaseRequestVO);
 
     /**
      * 详情
@@ -65,7 +65,7 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
      * @return .
      */
     @GetMapping("/conditions")
-    R<T> getOne(BaseRequestVO<T, ID> request);
+    R<T> getOne(BaseRequestVO request);
 
     /**
      * 判断是否存在
@@ -74,7 +74,7 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
      * @return boolean
      */
     @GetMapping("/exist")
-    R<Boolean> exist(BaseRequestVO<T, ID> request);
+    R<Boolean> exist(BaseRequestVO request);
 
     /**
      * 查询数量
@@ -83,7 +83,7 @@ public interface IControllerService<T extends IBaseEntity<ID>, ID extends Serial
      * @return count
      */
     @GetMapping("/count")
-    R<Long> count(BaseRequestVO<T, ID> request);
+    R<Long> count(BaseRequestVO request);
 
     /**
      * 保存

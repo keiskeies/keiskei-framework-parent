@@ -48,19 +48,19 @@ public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, I
 
     @Override
     @ApiOperation("列表")
-    public R<PageResultVO<T>> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public R<PageResultVO<T>> page(BaseRequestVO request, BasePageVO page) {
         return R.ok(baseService.page(request, page));
     }
 
     @Override
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T, ID> request) {
+    public R<List<T>> options(BaseRequestVO request) {
         return R.ok(baseService.findListByCondition(request));
     }
 
     @Override
     @ApiOperation("数量")
-    public R<Long> count(BaseRequestVO<T, ID> request) {
+    public R<Long> count(BaseRequestVO request) {
         return R.ok(baseService.getCount(request));
     }
 
@@ -72,13 +72,13 @@ public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, I
 
     @Override
     @ApiOperation("详情")
-    public R<T> getOne(BaseRequestVO<T, ID> request) {
+    public R<T> getOne(BaseRequestVO request) {
         return R.ok(baseService.findOneByCondition(request));
     }
 
     @Override
     @ApiOperation("存在")
-    public R<Boolean> exist(BaseRequestVO<T, ID> request) {
+    public R<Boolean> exist(BaseRequestVO request) {
         return R.ok(baseService.exist(request));
     }
 

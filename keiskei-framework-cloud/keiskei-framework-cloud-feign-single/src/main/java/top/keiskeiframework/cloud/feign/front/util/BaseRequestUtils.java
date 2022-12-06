@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class BaseRequestUtils {
 
 
-    public static <DTO extends IBaseEntity<ID>, T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<T, ID> translate2T(BaseRequestVO<DTO, ID> requestVO) {
-        BaseRequestVO<T, ID> requestVO1 = new BaseRequestVO<>();
+    public static <DTO extends IBaseEntity<ID>, T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO translate2T(BaseRequestVO requestVO) {
+        BaseRequestVO requestVO1 = new BaseRequestVO();
         BeanUtils.copyProperties(requestVO, requestVO1);
         return requestVO1;
     }
@@ -53,8 +53,8 @@ public class BaseRequestUtils {
     }
 
 
-    public static <DTO extends IBaseEntity<ID>, T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO<DTO, ID> translate2Dto(BaseRequestVO<T, ID> requestVO) {
-        BaseRequestVO<DTO, ID> requestVO1 = new BaseRequestVO<>();
+    public static <DTO extends IBaseEntity<ID>, T extends IBaseEntity<ID>, ID extends Serializable> BaseRequestVO translate2Dto(BaseRequestVO requestVO) {
+        BaseRequestVO requestVO1 = new BaseRequestVO();
         BeanUtils.copyProperties(requestVO, requestVO1);
         return requestVO1;
     }

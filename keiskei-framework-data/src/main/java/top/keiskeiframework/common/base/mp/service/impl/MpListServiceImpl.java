@@ -43,7 +43,7 @@ public class MpListServiceImpl
 
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO request, BasePageVO page) {
         PageResultVO<T> iPage = super.page(request, page);
         for (T t : iPage.getData()) {
             getManyToOne(t);
@@ -80,7 +80,7 @@ public class MpListServiceImpl
     }
 
     @Override
-    public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
+    public List<T> findListByCondition(BaseRequestVO request) {
         List<T> ts = super.findListByCondition(request);
         for (T t : ts) {
             getManyToOne(t);
@@ -109,14 +109,26 @@ public class MpListServiceImpl
     }
 
     @Override
-    @Lockable(key = "targetClass.name + ':' + #t.hashCode()")
+    public T saveOne(T t) {
+        listService.save(t);
+        return t;
+    }
+
+    @Override
+    @Lockable(key = "targetClass.name + ':' + #t.hashCode()", autoUnlock = false)
     public boolean save(T t) {
         saveManyToOne(t);
         super.baseMapper.insert(t);
         saveManyToMany(t);
+        listService.cleanCache(t);
         saveOneToMany(t);
         saveOneToOne(t);
         return true;
+    }
+
+    @CacheEvict(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #t.id")
+    public void cleanCache(T t) {
+
     }
 
 

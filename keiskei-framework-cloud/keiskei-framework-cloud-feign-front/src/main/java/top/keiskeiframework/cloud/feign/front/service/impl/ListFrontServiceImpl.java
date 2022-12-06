@@ -2,6 +2,7 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;
@@ -32,29 +33,14 @@ public class ListFrontServiceImpl<T extends IListEntity<ID>, ID extends Serializ
     private IListFeignService<T, ID> listFeignService;
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO) {
-        return listFeignService.page(
-                requestVO.getConditions(),
-                requestVO.getShow(),
-                pageVO.getOffset(),
-                pageVO.getPage(),
-                pageVO.getSize(),
-                requestVO.getDesc(),
-                requestVO.getAsc(),
-                requestVO.getComplete()
-        ).getData();
+    public PageResultVO<T> page(BaseRequestVO requestVO, BasePageVO pageVO) {
+        return listFeignService.page(new PageRequestVO(requestVO, pageVO)).getData();
     }
 
 
     @Override
-    public List<T> options(BaseRequestVO<T, ID> requestVO) {
-        return listFeignService.options(
-                requestVO.getConditions(),
-                requestVO.getShow(),
-                requestVO.getDesc(),
-                requestVO.getAsc(),
-                requestVO.getComplete()
-        ).getData();
+    public List<T> options(BaseRequestVO requestVO) {
+        return listFeignService.options(requestVO).getData();
     }
 
     @Override

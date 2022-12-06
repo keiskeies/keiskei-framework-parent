@@ -32,17 +32,25 @@ public @interface Lockable {
     int waitTime() default 3000;
 
     /**
-     * 等待/超时时间 时间单位
-     *
-     * @return .
-     */
-    TimeUnit lockTimeUnit() default TimeUnit.MILLISECONDS;
-
-    /**
      * 错误提示信息
      *
      * @return 。
      */
     String message() default "点击过于频繁，请稍后再试";
+
+    /**
+     * 是否程序结束后自动释放锁
+     *
+     * @return 。
+     */
+    boolean autoUnlock() default true;
+
+
+    /**
+     * 时间单位
+     *
+     * @return .
+     */
+    TimeUnit lockTimeUnit() default TimeUnit.MILLISECONDS;
 
 }

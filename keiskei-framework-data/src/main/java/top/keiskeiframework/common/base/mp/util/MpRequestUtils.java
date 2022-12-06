@@ -13,6 +13,7 @@ import top.keiskeiframework.common.base.mp.annotation.MpManyToMany;
 import top.keiskeiframework.common.base.mp.annotation.MpManyToOne;
 import top.keiskeiframework.common.base.mp.annotation.MpOneToMany;
 import top.keiskeiframework.common.base.mp.annotation.MpOneToOne;
+import top.keiskeiframework.common.base.util.QueryUtils;
 import top.keiskeiframework.common.util.BeanUtils;
 import top.keiskeiframework.common.util.MdcUtils;
 
@@ -60,12 +61,12 @@ public class MpRequestUtils {
     }
 
     public static <T extends IBaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapperByConditions(
-            BaseRequestVO<T, ID> request, Class<T> tClass) {
+            BaseRequestVO request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (null != request) {
-            if (!request.conditionEmpty()) {
+            if (!QueryUtils.conditionEmpty(request)) {
                 Set<Field> fields = getTClassFields(tClass);
-                List<QueryConditionVO> conditions = request.getListConditions();
+                List<QueryConditionVO> conditions = QueryUtils.getConditions(request);
                 convertConditions(queryWrapper, conditions, fields);
             }
         }
@@ -80,19 +81,19 @@ public class MpRequestUtils {
 
 
     public static <T extends IBaseEntity<ID>, ID extends Serializable> QueryWrapper<T> getQueryWrapper(
-            BaseRequestVO<T, ID> request, Class<T> tClass) {
+            BaseRequestVO request, Class<T> tClass) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         boolean hasOrder = false;
         if (null != request) {
 
             Set<Field> fields = getTClassFields(tClass);
 
-            if (!request.conditionEmpty()) {
-                List<QueryConditionVO> conditions = request.getListConditions();
+            if (!QueryUtils.conditionEmpty(request)) {
+                List<QueryConditionVO> conditions = QueryUtils.getConditions(request);
                 convertConditions(queryWrapper, conditions, fields);
             }
-            if (!request.showEmpty()) {
-                List<String> requestShows = request.getListShow();
+            if (!QueryUtils.showEmpty(request)) {
+                List<String> requestShows = QueryUtils.getShow(request);
                 List<String> shows = new ArrayList<>(requestShows.size());
                 for (String requestShow : requestShows) {
                     String show = judgeField(requestShow, fields);

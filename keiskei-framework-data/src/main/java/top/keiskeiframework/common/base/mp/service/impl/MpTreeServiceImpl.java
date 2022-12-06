@@ -20,6 +20,7 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.entity.ITreeEntity;
 import top.keiskeiframework.common.base.mp.util.MpRequestUtils;
 import top.keiskeiframework.common.base.service.ITreeBaseService;
+import top.keiskeiframework.common.base.util.QueryUtils;
 import top.keiskeiframework.common.enums.exception.BizExceptionEnum;
 import top.keiskeiframework.common.exception.BizException;
 import top.keiskeiframework.common.util.TreeEntityUtils;
@@ -46,7 +47,7 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
     protected MpTreeServiceImpl<T, ID, M> treeService;
 
     @Override
-    public PageResultVO<T> page(BaseRequestVO<T, ID> request, BasePageVO page) {
+    public PageResultVO<T> page(BaseRequestVO request, BasePageVO page) {
         PageResultVO<T> result = super.page(request, page);
         if (request.getComplete()) {
             for (T record : result.getData()) {
@@ -64,9 +65,9 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
     }
 
     @Override
-    public List<T> findListByCondition(BaseRequestVO<T, ID> request) {
+    public List<T> findListByCondition(BaseRequestVO request) {
         List<T> tList;
-        if (request.conditionEmpty() && request.showEmpty()) {
+        if (QueryUtils.requestEmpty(request)) {
             tList = treeService.findList();
         } else {
             tList = super.findListByCondition(request);
@@ -104,7 +105,7 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
 
     @Override
     @CacheEvict(cacheNames = CACHE_TREE_NAME, key = "targetClass.name")
-    @Lockable(key = "#t.hashCode()")
+    @Lockable(key = "targetClass.name + ':' + #t.hashCode()", autoUnlock = false)
     public boolean save(T t) {
         if (null != t.getParentId()) {
             T parent = treeService.findOneById(t.getParentId());
@@ -122,7 +123,7 @@ public class MpTreeServiceImpl<T extends ITreeEntity<ID>, ID extends Serializabl
         saveManyToMany(t);
         saveOneToMany(t);
         saveOneToOne(t);
-        super.updateOne(t);
+        treeService.updateOne(t);
         return true;
     }
 

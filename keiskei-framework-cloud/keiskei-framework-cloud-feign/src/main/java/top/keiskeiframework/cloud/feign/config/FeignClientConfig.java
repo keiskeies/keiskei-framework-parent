@@ -1,6 +1,6 @@
 package top.keiskeiframework.cloud.feign.config;
 
-import feign.codec.ErrorDecoder;
+import feign.codec.Decoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class FeignClientConfig {
 
     @Bean
-    public ErrorDecoder errorDecoder() {
+    public Decoder errorDecoder() {
         return new FeignResultDecoder();
     }
 }

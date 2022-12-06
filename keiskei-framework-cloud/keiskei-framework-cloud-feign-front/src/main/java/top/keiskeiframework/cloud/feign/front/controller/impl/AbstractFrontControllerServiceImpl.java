@@ -35,13 +35,13 @@ public abstract class AbstractFrontControllerServiceImpl<T extends IBaseEntity<I
 
     @Override
     @ApiOperation("列表")
-    public R<PageResultVO<T>> page(BaseRequestVO<T, ID> requestVO, BasePageVO pageVO) {
+    public R<PageResultVO<T>> page(BaseRequestVO requestVO, BasePageVO pageVO) {
         return R.ok(frontService.page(requestVO, pageVO));
     }
 
     @Override
     @ApiOperation("下拉框")
-    public R<List<T>> options(BaseRequestVO<T, ID> requestVO) {
+    public R<List<T>> options(BaseRequestVO requestVO) {
         return R.ok(frontService.options(requestVO));
     }
 
