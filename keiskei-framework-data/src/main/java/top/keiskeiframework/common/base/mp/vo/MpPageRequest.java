@@ -7,7 +7,7 @@ import top.keiskeiframework.common.base.dto.BasePageVO;
 
 /**
  * <p>
- *
+ * mp page
  * </p>
  *
  * @author v_chenjiamin

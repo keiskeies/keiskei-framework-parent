@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * jpa 基础服务类
  * </p>
  *
  * @author v_chenjiamin

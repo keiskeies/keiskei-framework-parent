@@ -14,15 +14,14 @@ import java.io.Serializable;
  */
 @Data
 public class BaseRequestVO implements Serializable {
-
     private static final long serialVersionUID = -812828147724344918L;
-
     private String desc;
     private String asc;
     private Boolean complete;
     private Boolean tree;
     private String show;
     private String conditions;
+
     public BaseRequestVO() {
         this.complete = false;
         this.tree = true;

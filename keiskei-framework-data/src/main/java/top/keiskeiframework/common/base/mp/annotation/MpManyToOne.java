@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * <p>
- *
+ * ManyToOne
  * </p>
  *
  * @author v_chenjiamin

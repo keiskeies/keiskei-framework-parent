@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * <p>
- *
+ * redis 缓存配置
  * </p>
  *
  * @author v_chenjiamin

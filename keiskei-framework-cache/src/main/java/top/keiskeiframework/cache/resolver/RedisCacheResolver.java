@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 /**
  * <p>
- *
+ * redis 缓存删除通配符
  * </p>
  *
  * @author v_chenjiamin

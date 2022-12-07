@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *
+ * List entity
  * </p>
  *
  * @author James Chen

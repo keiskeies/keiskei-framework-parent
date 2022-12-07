@@ -16,15 +16,17 @@ import java.util.List;
  */
 public interface QueryCondition {
 
+    QueryCondition addCondition(String condition);
+
     QueryCondition addCondition(String c, Serializable v);
 
     QueryCondition addCondition(String c, ConditionEnum d, Serializable v);
 
     QueryCondition addCondition(String c, Serializable... vs);
 
-    QueryCondition addCondition(String c, List<? extends Serializable> vs);
+    QueryCondition addCondition(String c, List<Serializable> vs);
 
-    QueryCondition addCondition(String c, ConditionEnum d, List<? extends Serializable> vs);
+    QueryCondition addCondition(String c, ConditionEnum d, List<Serializable> vs);
 
     QueryCondition addCondition(QueryConditionVO condition);
 

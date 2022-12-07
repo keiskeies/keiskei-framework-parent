@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 中间关系表
  * </p>
  *
  * @author v_chenjiamin

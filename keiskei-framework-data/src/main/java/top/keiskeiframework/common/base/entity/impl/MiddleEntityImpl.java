@@ -15,7 +15,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * middle entity
  * </p>
  *
  * @author James Chen

@@ -10,7 +10,9 @@ import top.keiskeiframework.common.base.dto.QueryConditionVO;
 import top.keiskeiframework.common.base.enums.ConditionEnum;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -33,10 +35,26 @@ public class QueryUtils {
     }
 
     public static String getCondition(String c, ConditionEnum d, Serializable v) {
-        return String.format(VALUE_CONFIRM_FORMAT, getConditionString(c, d, v));
+        return String.format(VALUE_CONFIRM_FORMAT, getConditionItem(c, d, v));
     }
 
-    protected static String getConditionString(String c, ConditionEnum d, Serializable v) {
+    public static String getCondition(String c, List<Serializable> vs) {
+        return getCondition(c, ConditionEnum.IN, vs);
+    }
+
+    public static String getCondition(String c, ConditionEnum d, List<Serializable> vs) {
+        return String.format(VALUE_CONFIRM_FORMAT, getConditionItem(c, d, vs));
+    }
+
+    public static String getCondition(String c, Serializable... vs) {
+        return getCondition(c, ConditionEnum.IN, vs);
+    }
+
+    public static String getCondition(String c, ConditionEnum d, Serializable... vs) {
+        return String.format(VALUE_CONFIRM_FORMAT, getConditionItem(c, d, vs));
+    }
+
+    protected static String getConditionItem(String c, ConditionEnum d, Serializable v) {
         String value = v.toString();
         if (!(v instanceof Number)) {
             value = String.format(SINGLE_VALUE_FORMAT, value);
@@ -44,39 +62,8 @@ public class QueryUtils {
         return String.format(SINGLE_CONDITION_FORMAT, c, d, value);
     }
 
-    public static String getCondition(String c, List<? extends Serializable> vs) {
-        return getCondition(c, ConditionEnum.IN, vs);
-    }
 
-    public static String getCondition(String c, ConditionEnum d, List<? extends Serializable> vs) {
-        return String.format(VALUE_CONFIRM_FORMAT, getConditionString(c, d, vs));
-    }
-
-    protected static String getConditionString(String c, ConditionEnum d, List<? extends Serializable> vs) {
-        if (CollectionUtils.isEmpty(vs)) {
-            return null;
-        }
-        String value;
-        if (vs.get(0) instanceof Number) {
-            value = vs.stream().map(Object::toString).collect(Collectors.joining(","));
-        } else {
-            value = vs.stream().map(v -> String.format(SINGLE_VALUE_FORMAT, v)).collect(Collectors.joining(","));
-        }
-        return String.format(SINGLE_CONDITION_FORMAT, c, d, value);
-    }
-
-    @SafeVarargs
-    public static <V extends Serializable> String getCondition(String c, V... vs) {
-        return getCondition(c, ConditionEnum.IN, vs);
-    }
-
-    @SafeVarargs
-    public static <V extends Serializable> String getCondition(String c, ConditionEnum d, V... vs) {
-        return String.format(VALUE_CONFIRM_FORMAT, getConditionString(c, d, vs));
-    }
-
-    @SafeVarargs
-    public static <V extends Serializable> String getConditionString(String c, ConditionEnum d, V... vs) {
+    protected static String getConditionItem(String c, ConditionEnum d, Serializable... vs) {
         if (null == vs || vs.length == 0) {
             return null;
         }
@@ -85,6 +72,19 @@ public class QueryUtils {
             value = Arrays.stream(vs).map(Object::toString).collect(Collectors.joining(","));
         } else {
             value = Arrays.stream(vs).map(v -> String.format(SINGLE_VALUE_FORMAT, v)).collect(Collectors.joining(","));
+        }
+        return String.format(SINGLE_CONDITION_FORMAT, c, d, value);
+    }
+
+    protected static String getConditionItem(String c, ConditionEnum d, List<Serializable> vs) {
+        if (CollectionUtils.isEmpty(vs)) {
+            return null;
+        }
+        String value;
+        if (vs.get(0) instanceof Number) {
+            value = vs.stream().map(Object::toString).collect(Collectors.joining(","));
+        } else {
+            value = vs.stream().map(v -> String.format(SINGLE_VALUE_FORMAT, v)).collect(Collectors.joining(","));
         }
         return String.format(SINGLE_CONDITION_FORMAT, c, d, value);
     }
@@ -122,10 +122,6 @@ public class QueryUtils {
         }
     }
 
-    public static MultiStringConditionBuilder buildMultiStringCondition() {
-        return new MultiStringConditionBuilder();
-    }
-
     public static MultiConditionBuilder buildMultiCondition() {
         return new MultiConditionBuilder();
     }
@@ -134,177 +130,177 @@ public class QueryUtils {
         return new BaseRequestVOBuilder();
     }
 
-
-    public static class MultiStringConditionBuilder extends QueryUtils implements Serializable {
-
-        private static final long serialVersionUID = -7964700518842149238L;
-
-        private final StringBuilder sb;
-
-        public MultiStringConditionBuilder() {
-            this.sb = new StringBuilder();
-        }
-
-        public MultiStringConditionBuilder addCondition(String condition) {
-            sb.append(condition);
-            return this;
-        }
-
-        public MultiStringConditionBuilder addCondition(String c, Serializable v) {
-            sb.append(getConditionString(c, ConditionEnum.EQ, v));
-            return this;
-        }
-
-        public MultiStringConditionBuilder addCondition(String c, Serializable... vs) {
-            sb.append(getConditionString(c, ConditionEnum.IN, vs));
-            return this;
-        }
-
-        public String build() {
-            return String.format(VALUE_CONFIRM_FORMAT, sb);
-        }
-    }
-
     public static class MultiConditionBuilder implements QueryCondition, Serializable {
 
         private static final long serialVersionUID = 1911766069196965871L;
-        private final List<QueryConditionVO> conditions;
+        private final StringBuilder conditions;
 
-        public MultiConditionBuilder() {
-            this.conditions = new ArrayList<>();
+        MultiConditionBuilder() {
+            this.conditions = new StringBuilder();
+        }
+
+        private void appendCondition(String condition) {
+            if (this.conditions.length() > 0) {
+                this.conditions.append(SPLIT);
+            }
+            this.conditions.append(condition);
+        }
+
+        @Override
+        public MultiConditionBuilder addCondition(String condition) {
+            this.appendCondition(condition);
+            return this;
         }
 
         @Override
         public MultiConditionBuilder addCondition(QueryConditionVO condition) {
-            this.conditions.add(condition);
+            this.appendCondition(JSON.toJSONString(condition));
             return this;
         }
 
         @Override
         public MultiConditionBuilder addCondition(String c, Serializable v) {
-            this.addCondition(new QueryConditionVO(c, v));
+            this.appendCondition(getConditionItem(c, ConditionEnum.EQ, v));
             return this;
         }
 
         @Override
         public MultiConditionBuilder addCondition(String c, ConditionEnum d, Serializable v) {
-            this.addCondition(new QueryConditionVO(c, d, v));
+            this.appendCondition(getConditionItem(c, d, v));
             return this;
         }
 
         @Override
         public MultiConditionBuilder addCondition(String c, Serializable... vs) {
-            this.addCondition(new QueryConditionVO(c, ConditionEnum.IN, Arrays.asList(vs)));
+            this.appendCondition(getCondition(c, ConditionEnum.IN, Arrays.asList(vs)));
             return this;
         }
 
         @Override
-        public MultiConditionBuilder addCondition(String c, List<? extends Serializable> vs) {
-            this.addCondition(new QueryConditionVO(c, ConditionEnum.IN, vs));
+        public MultiConditionBuilder addCondition(String c, List<Serializable> vs) {
+            this.appendCondition(getCondition(c, ConditionEnum.IN, vs));
             return this;
         }
 
         @Override
-        public MultiConditionBuilder addCondition(String c, ConditionEnum d, List<? extends Serializable> vs) {
-            this.addCondition(new QueryConditionVO(c, d, vs));
+        public MultiConditionBuilder addCondition(String c, ConditionEnum d, List<Serializable> vs) {
+            this.appendCondition(getCondition(c, d, vs));
             return this;
         }
 
         @Override
         public MultiConditionBuilder addConditions(List<QueryConditionVO> conditions) {
-            this.conditions.addAll(conditions);
+            for (QueryConditionVO conditionVO : conditions) {
+                this.addCondition(conditionVO);
+            }
             return this;
         }
 
         public String build() {
-            return JSON.toJSONString(this.conditions);
+            return String.format(VALUE_CONFIRM_FORMAT, conditions);
         }
 
     }
 
     public static class BaseRequestVOBuilder implements QueryCondition, Serializable {
-
-
         private static final long serialVersionUID = -6276523055281763433L;
         private final BaseRequestVO requestVO;
-        private List<QueryConditionVO> conditions;
-        private Set<String> shows;
+        private StringBuilder conditions;
+        private StringBuilder shows;
 
         public BaseRequestVOBuilder() {
             this.requestVO = new BaseRequestVO();
         }
 
-        @Override
-        public BaseRequestVOBuilder addCondition(String c, Serializable v) {
-            initConditions();
-            this.addCondition(new QueryConditionVO(c, v));
-            return this;
+        private void appendCondition(String condition) {
+            if (null == this.conditions) {
+                this.conditions = new StringBuilder();
+            } else if (this.conditions.length() > 0) {
+                this.conditions.append(SPLIT);
+            }
+            this.conditions.append(condition);
+        }
+
+        private void appendShow(String show) {
+            if (null == this.shows) {
+                this.shows = new StringBuilder();
+            } else if (this.shows.length() > 0) {
+                this.shows.append(SPLIT);
+            }
+            this.shows.append(show);
         }
 
         @Override
-        public BaseRequestVOBuilder addCondition(String c, ConditionEnum d, Serializable v) {
-            this.addCondition(new QueryConditionVO(c, d, v));
-            return this;
-        }
-
-        @Override
-        public BaseRequestVOBuilder addCondition(String c, Serializable... vs) {
-            this.addCondition(new QueryConditionVO(c, ConditionEnum.IN, Arrays.asList(vs)));
-            return this;
-        }
-
-        @Override
-        public BaseRequestVOBuilder addCondition(String c, List<? extends Serializable> vs) {
-            this.addCondition(new QueryConditionVO(c, ConditionEnum.IN, vs));
-            return this;
-        }
-
-        @Override
-        public BaseRequestVOBuilder addCondition(String c, ConditionEnum d, List<? extends Serializable> vs) {
-            this.addCondition(new QueryConditionVO(c, d, vs));
+        public BaseRequestVOBuilder addCondition(String condition) {
+            this.appendCondition(condition);
             return this;
         }
 
         @Override
         public BaseRequestVOBuilder addCondition(QueryConditionVO condition) {
-            initConditions();
-            this.conditions.add(condition);
+            this.appendCondition(JSON.toJSONString(condition));
+            return this;
+        }
+
+        @Override
+        public BaseRequestVOBuilder addCondition(String c, Serializable v) {
+            this.appendCondition(getCondition(c, v));
+            return this;
+        }
+
+        @Override
+        public BaseRequestVOBuilder addCondition(String c, ConditionEnum d, Serializable v) {
+            this.appendCondition(getCondition(c, d, v));
+            return this;
+        }
+
+        @Override
+        public BaseRequestVOBuilder addCondition(String c, Serializable... vs) {
+            this.appendCondition(getCondition(c, ConditionEnum.IN, Arrays.asList(vs)));
+            return this;
+        }
+
+        @Override
+        public BaseRequestVOBuilder addCondition(String c, List<Serializable> vs) {
+            this.appendCondition(getCondition(c, ConditionEnum.IN, vs));
+            return this;
+        }
+
+        @Override
+        public BaseRequestVOBuilder addCondition(String c, ConditionEnum d, List<Serializable> vs) {
+            this.appendCondition(getCondition(c, d, vs));
             return this;
         }
 
         @Override
         public BaseRequestVOBuilder addConditions(List<QueryConditionVO> conditions) {
-            initConditions();
-            this.conditions.addAll(conditions);
-            return this;
-        }
-
-        private void initConditions() {
-            if (CollectionUtils.isEmpty(this.conditions)) {
-                this.conditions = new ArrayList<>();
+            for (QueryConditionVO conditionVO : conditions) {
+                this.addCondition(conditionVO);
             }
+            return this;
         }
 
         public BaseRequestVOBuilder addShow(String s) {
             if (!StringUtils.isEmpty(s)) {
-                initShow();
-                this.shows.add(s);
+                this.appendShow(s);
             }
             return this;
         }
 
         public BaseRequestVOBuilder addShows(String... ss) {
-            if (null != ss && ss.length > 0) {
-                initShow();
-                this.shows.addAll(Arrays.stream(ss).filter(s -> !StringUtils.isEmpty(s)).collect(Collectors.toList()));
+            if (null != ss) {
+                for (String s : ss) {
+                    this.addShow(s);
+                }
             }
             return this;
         }
 
         public BaseRequestVOBuilder addShows(List<String> ss) {
             if (!CollectionUtils.isEmpty(ss)) {
-                initShow();
-                this.shows.addAll(ss.stream().filter(s -> !StringUtils.isEmpty(s)).collect(Collectors.toList()));
+                for (String s : ss) {
+                    this.addShow(s);
+                }
             }
             return this;
         }
@@ -330,23 +326,16 @@ public class QueryUtils {
         }
 
         public BaseRequestVOBuilder show(String show) {
-            initShow();
-            this.shows.addAll(Arrays.asList(show.split(SPLIT)));
+            this.appendShow(show);
             return this;
         }
 
-        private void initShow() {
-            if (CollectionUtils.isEmpty(this.shows)) {
-                this.shows = new HashSet<>();
-            }
-        }
-
         public BaseRequestVO build() {
-            if (!CollectionUtils.isEmpty(this.conditions)) {
-                this.requestVO.setConditions(JSON.toJSONString(this.conditions));
+            if (!StringUtils.isEmpty(this.conditions)) {
+                this.requestVO.setConditions(String.format(VALUE_CONFIRM_FORMAT, conditions));
             }
-            if (!CollectionUtils.isEmpty(this.shows)) {
-                this.requestVO.setShow(String.join(SPLIT, this.shows));
+            if (!StringUtils.isEmpty(this.shows)) {
+                this.requestVO.setShow(this.shows.toString());
             }
             return requestVO;
         }

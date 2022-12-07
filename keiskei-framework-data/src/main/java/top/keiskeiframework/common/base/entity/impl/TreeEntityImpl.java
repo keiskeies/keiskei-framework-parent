@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * tree entity
  * </p>
  *
  * @author James Chen

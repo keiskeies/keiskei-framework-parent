@@ -102,6 +102,7 @@ public class VerificationCodeUtil {
      * @param outputStream - 保存验证码图片的文件的输出流
      * @param imgFormat    - 图片格式（JPG,PNG等）
      * @return String - 将随机生成的codeCount个验证码以字符串返回
+     * @throws IOException IOException
      */
     public static String generateVerificationCode(int width, int height, int codeCount,
                                                   OutputStream outputStream, String imgFormat) throws IOException {

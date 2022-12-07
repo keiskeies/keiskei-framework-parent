@@ -252,11 +252,12 @@ public class JpaRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable>
     /**
      * 查询数据
      *
-     * @param query  query
-     * @param show   show
-     * @param tClass tClass
-     * @param <T>    t
-     * @param <ID>   id
+     * @param query         query
+     * @param show          show
+     * @param tClass        tClass
+     * @param entityManager entityManager
+     * @param <T>           t
+     * @param <ID>          id
      * @return .
      */
     public static <T extends IBaseEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, List<String> show, Class<T> tClass, EntityManager entityManager) {
@@ -266,13 +267,14 @@ public class JpaRequestUtils<T extends IBaseEntity<ID>, ID extends Serializable>
     /**
      * 查询数据
      *
-     * @param query  query
-     * @param page   page
-     * @param size   size
-     * @param show   show
-     * @param tClass tClass
-     * @param <T>    t
-     * @param <ID>   id
+     * @param query         query
+     * @param page          page
+     * @param size          size
+     * @param show          show
+     * @param tClass        tClass
+     * @param entityManager entityManager
+     * @param <T>           t
+     * @param <ID>          id
      * @return .
      */
     public static <T extends IBaseEntity<ID>, ID extends Serializable> List<T> queryDataList(CriteriaQuery<Tuple> query, Integer page, Integer size, List<String> show, Class<T> tClass, EntityManager entityManager) {
