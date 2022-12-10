@@ -5,6 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -60,7 +61,10 @@ public class GlobalExceptionHandler {
     public R<?> error(Exception e) {
         Long code = ApiErrorCode.FAILED.getCode();
         String message;
-        if (e instanceof MethodArgumentNotValidException) {
+        if (e instanceof BindException) {
+            BindException bindException = (BindException)e;
+            message = bindException.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(",\n"));
+        } else if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
             message = methodArgumentNotValidException.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(",\n"));
         } else if (e instanceof HttpMediaTypeNotSupportedException) {

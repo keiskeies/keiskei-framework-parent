@@ -32,14 +32,6 @@ public class ChartRequestDTO implements Serializable {
      * 创建时间字段
      */
     private String timeField;
-    /**
-     * 实体类名称
-     */
-    private String entityName;
-    /**
-     * 图表类型
-     */
-    private ChartType chartType;
 
     /**
      * 字段类型
@@ -73,18 +65,10 @@ public class ChartRequestDTO implements Serializable {
      * key  字段
      * value  范围
      */
-    private List<QueryConditionVO> conditions;
+    private String conditions;
 
     public ChartRequestDTO () {
         this.calcType = CalcType.COUNT;
-    }
-    public ChartRequestDTO (ChartType chartType, ColumnType columnType, LocalDateTime start, LocalDateTime end) {
-        calcType = CalcType.COUNT;
-        this.chartType = chartType;
-        this.columnType = columnType;
-        this.start = start;
-        this.end = end;
-
     }
 
 

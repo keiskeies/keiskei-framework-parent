@@ -1,7 +1,6 @@
-package top.keiskeiframework.cloud.feign.dto;
+package top.keiskeiframework.cloud.feign.vo;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 
@@ -9,14 +8,13 @@ import java.io.Serializable;
 
 /**
  * <p>
- *
+ * 合并条件、分页请求数据
  * </p>
  *
  * @author keiskei
  * @since 2022/12/6 22:33
  */
 @Data
-@NoArgsConstructor
 public class PageRequestVO implements Serializable {
     private static final long serialVersionUID = 5639897110991198370L;
 
@@ -30,6 +28,14 @@ public class PageRequestVO implements Serializable {
     private Long offset;
     private Long size;
     private Boolean all;
+
+    public PageRequestVO() {
+        this.complete = false;
+        this.tree = true;
+        this.page = 1L;
+        this.size = 20L;
+        this.all = false;
+    }
 
     public PageRequestVO(BaseRequestVO request, BasePageVO pageVO) {
         this.desc = request.getDesc();

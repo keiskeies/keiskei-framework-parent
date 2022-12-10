@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.mp.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -189,7 +190,12 @@ public abstract class AbstractMpServiceImpl
     @Override
     public Map<String, Double> getChartOptions(ChartRequestDTO chart) {
         Class<T> tClass = getEntityClass();
-        QueryWrapper<T> queryWrapper = MpRequestUtils.getQueryWrapperByConditions(chart.getConditions(), tClass);
+
+        List<QueryConditionVO> conditions = null;
+        if (!org.springframework.util.StringUtils.isEmpty(chart.getConditions())) {
+            conditions = JSON.parseArray(chart.getConditions(), QueryConditionVO.class);
+        }
+        QueryWrapper<T> queryWrapper = MpRequestUtils.getQueryWrapperByConditions(conditions, tClass);
         // 是否指定新的创建时间字段
         String timeField = chart.getTimeField();
         if (StringUtils.isEmpty(timeField)) {

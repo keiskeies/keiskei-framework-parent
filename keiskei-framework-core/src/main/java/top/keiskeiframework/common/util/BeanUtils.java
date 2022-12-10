@@ -3,6 +3,7 @@ package top.keiskeiframework.common.util;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import top.keiskeiframework.common.base.util.QueryUtils;
 
 import java.beans.PropertyDescriptor;
 import java.util.HashSet;
@@ -84,5 +85,4 @@ public class BeanUtils {
         matcher.appendTail(sb);
         return sb.toString();
     }
-
 }

@@ -2,8 +2,7 @@ package top.keiskeiframework.cloud.feign.service;
 
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.*;
-import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
-import top.keiskeiframework.common.base.dto.BasePageVO;
+import top.keiskeiframework.cloud.feign.vo.PageRequestVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.dto.QueryConditionVO;

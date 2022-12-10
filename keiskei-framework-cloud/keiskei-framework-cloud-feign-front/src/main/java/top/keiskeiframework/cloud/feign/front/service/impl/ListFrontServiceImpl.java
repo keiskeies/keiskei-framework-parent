@@ -2,7 +2,7 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
+import top.keiskeiframework.cloud.feign.vo.PageRequestVO;
 import top.keiskeiframework.common.enums.dashboard.CalcType;
 import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.cloud.feign.front.service.IListFrontService;

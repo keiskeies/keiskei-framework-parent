@@ -97,15 +97,7 @@ public class MpListServiceImpl
     @Override
     @Cacheable(cacheNames = CACHE_LIST_NAME, key = "targetClass.name + ':' + #id", unless = "#result == null")
     public T getById(Serializable id) {
-        T t = super.getById(id);
-        if (null == t) {
-            try {
-                t = getEntityClass().newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return t;
+        return super.getById(id);
     }
 
     @Override

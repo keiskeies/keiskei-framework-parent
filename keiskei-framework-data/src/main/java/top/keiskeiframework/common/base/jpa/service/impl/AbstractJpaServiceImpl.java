@@ -1,5 +1,6 @@
 package top.keiskeiframework.common.base.jpa.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -264,10 +265,12 @@ public abstract class AbstractJpaServiceImpl<T extends IBaseEntity<ID>, ID exten
             predicates.add(builder.between(timeExpression, chartRequestDTO.getStart(), chartRequestDTO.getEnd()));
         }
 
-        if (!CollectionUtils.isEmpty(chartRequestDTO.getConditions())) {
+        if (!StringUtils.isEmpty(chartRequestDTO.getConditions())) {
+
+            List<QueryConditionVO> conditions = JSON.parseArray(chartRequestDTO.getConditions(), QueryConditionVO.class);
 
             Expression<?> expression;
-            for (QueryConditionVO QueryConditionVO : chartRequestDTO.getConditions()) {
+            for (QueryConditionVO QueryConditionVO : conditions) {
 
                 Object[] hasValueValues = QueryConditionVO.getV().stream()
                         .filter(e -> !StringUtils.isEmpty(e))

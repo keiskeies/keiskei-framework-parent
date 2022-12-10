@@ -2,15 +2,15 @@ package top.keiskeiframework.cloud.feign.front.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.keiskeiframework.cloud.feign.dto.PageRequestVO;
-import top.keiskeiframework.common.enums.dashboard.CalcType;
-import top.keiskeiframework.common.enums.dashboard.ColumnType;
+import top.keiskeiframework.cloud.feign.vo.PageRequestVO;
 import top.keiskeiframework.cloud.feign.front.service.IBaseFrontService;
 import top.keiskeiframework.cloud.feign.service.IBaseFeignService;
 import top.keiskeiframework.common.base.dto.BasePageVO;
 import top.keiskeiframework.common.base.dto.BaseRequestVO;
 import top.keiskeiframework.common.base.dto.PageResultVO;
 import top.keiskeiframework.common.base.entity.IBaseEntity;
+import top.keiskeiframework.common.enums.dashboard.CalcType;
+import top.keiskeiframework.common.enums.dashboard.ColumnType;
 import top.keiskeiframework.common.enums.timer.TimeDeltaEnum;
 
 import java.io.Serializable;
@@ -25,8 +25,7 @@ import java.util.Map;
  * @since 2020年12月9日20:03:04
  */
 @Slf4j
-public class BaseFrontServiceImpl<T extends IBaseEntity<ID>, ID extends Serializable> implements IBaseFrontService<T,
-        ID> {
+public class BaseFrontServiceImpl<T extends IBaseEntity<ID>, ID extends Serializable> implements IBaseFrontService<T, ID> {
 
     @Autowired
     protected IBaseFeignService<T, ID> baseFeignService;

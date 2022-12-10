@@ -166,7 +166,7 @@ public abstract class AbstractControllerServiceImpl<T extends IBaseEntity<ID>, I
             }
         }
         if (!StringUtils.isEmpty(conditions)) {
-            chartRequestDTO.setConditions(new ArrayList<>(JSON.parseArray(conditions, QueryConditionVO.class)));
+            chartRequestDTO.setConditions(conditions);
         }
 
         return R.ok(baseService.getChartOptions(chartRequestDTO));
