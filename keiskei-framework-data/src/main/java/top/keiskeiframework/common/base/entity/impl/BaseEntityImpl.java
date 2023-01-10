@@ -24,7 +24,6 @@ public class BaseEntityImpl<ID extends Serializable> implements IBaseEntity<ID> 
 
     private static final long serialVersionUID = -531829598114928379L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
     protected ID id;
 }

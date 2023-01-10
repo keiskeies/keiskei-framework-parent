@@ -39,7 +39,6 @@ public class ListEntityImpl<ID extends Serializable> implements IListEntity<ID> 
     private static final long serialVersionUID = -6846795795755133606L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
     protected ID id;
 
